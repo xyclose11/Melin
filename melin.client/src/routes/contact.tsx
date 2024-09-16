@@ -2,6 +2,7 @@ import { Form } from "react-router-dom";
 
 export default function Contact() {
     const contact = {
+        id: "1",
         first: "Your",
         last: "Name",
         avatar: "https://robohash.org/you.png?size=200x200",
@@ -54,7 +55,7 @@ export default function Contact() {
         <Form
         method="post"
         action="destroy"
-        onSubmit={(event) => {
+        onSubmit={(event: { preventDefault: () => void; }) => {
         if (
             !confirm(
                 "Please confirm you want to delete this record."
@@ -72,7 +73,8 @@ export default function Contact() {
     );
     }
 
-    function Favorite({ contact }) {
+    // @ts-ignore
+function Favorite({ contact }) {
         const favorite = contact.favorite;
         return (
             <Form method="post">
