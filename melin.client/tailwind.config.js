@@ -6,6 +6,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+	colors: {
+		'light-blue': '#9DD9D2',
+		'dark-blue': '#19323C',
+		'sunset': '#EEC584',
+		'taupe-gray': '#91818A',
+		'rose-quartz': '#B2A3B5'
+	},
   	extend: {
   		borderRadius: {
   			lg: 'var(--radius)',
