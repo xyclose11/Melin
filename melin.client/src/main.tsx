@@ -6,6 +6,7 @@ import './index.css'
 import Root from "./routes/root.tsx";
 import ErrorPage from "./error-page.tsx";
 import Contact from "./routes/contact.tsx";
+import SignUp from "@/routes/SignUp.tsx";
 
 const router: any = createBrowserRouter([{
     path: "/",
@@ -15,6 +16,10 @@ const router: any = createBrowserRouter([{
         {
             path: "contacts/:contactId",
             element: <Contact />,
+        },
+        {
+            path: "sign-up",
+            element: <SignUp />
         }
     ]
 }
