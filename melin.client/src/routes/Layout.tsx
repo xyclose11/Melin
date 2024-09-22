@@ -1,6 +1,6 @@
 ﻿import { Link } from "react-router-dom";
 
-import { CircleUser, Package2, Search } from "lucide-react"
+import {CircleUser, Search, SquareLibrary} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -108,38 +108,32 @@ export function NavBar() {
                     to={'#'}
                     className="flex items-center gap-2 text-lg font-semibold md:text-base"
                 >
-                    <Package2 className="h-6 w-6"/>
+                    <SquareLibrary className="h-6 w-6" />
                     <span className="sr-only">Melin</span>
                 </Link>
                 <Link
-                    to={'#'}
+                    to={'/'}
                     className="text-foreground transition-colors hover:text-foreground"
                 >
                     Home
                 </Link>
                 <Link
-                    to={'#'}
+                    to={'/dashboard'}
                     className="text-foreground transition-colors hover:text-foreground"
                 >
                     Dashboard
                 </Link>
                 <Link
-                    to={'#'}
+                    to={'/groups'}
                     className="text-foreground transition-colors hover:text-foreground"
                 >
                     Groups
                 </Link>
                 <Link
-                    to={'#'}
+                    to={'/library'}
                     className="text-foreground transition-colors hover:text-foreground"
                 >
                     Library
-                </Link>
-                <Link
-                    to={'#'}
-                    className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                    Settings
                 </Link>
             </nav>
             <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
@@ -163,9 +157,23 @@ export function NavBar() {
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator/>
-                        <DropdownMenuItem>User Settings</DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link
+                                to={'/user-settings'}
+                                className="text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                                User Settings
+                            </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator/>
-                        <DropdownMenuItem>Logout</DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link
+                                to={'/logout'}
+                                className="text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                                Logout
+                            </Link>
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
