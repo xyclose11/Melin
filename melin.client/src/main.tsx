@@ -1,5 +1,5 @@
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import {Fragment, StrictMode, Suspense} from 'react'
+import {StrictMode} from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -8,7 +8,8 @@ import ErrorPage from "./error-page.tsx";
 import Contact from "./routes/contact.tsx";
 import SignUp from "@/routes/SignUp.tsx";
 import {LoginForm} from "@/routes/Login.tsx";
-import LibraryPage from "@/routes/Library.tsx";
+import {LibraryPage} from "@/routes/Library.tsx";
+import UserSettings from "@/routes/UserSettingsPage.tsx";
 
 
 const router: any = createBrowserRouter([{
@@ -46,6 +47,7 @@ const router: any = createBrowserRouter([{
         },
         {
             path: "user-settings",
+            element: <UserSettings />
         },
         {
             path: "library-settings",
