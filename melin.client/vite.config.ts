@@ -43,9 +43,9 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '/user': {
+            '/api/auth/login': {
                 target,
-                secure: false
+                secure: true
             }
         },
         port: 5173,
