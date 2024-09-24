@@ -30,4 +30,12 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Data\tasks.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

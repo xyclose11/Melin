@@ -43,14 +43,6 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/weatherforecast': {
-                target,
-                secure: false
-            },
-            '^/citeproc': {
-                target,
-                secure: false
-            },
             '/user': {
                 target,
                 secure: false

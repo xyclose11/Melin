@@ -8,18 +8,17 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link } from "react-router-dom"
 
 export const description =
     "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account"
 
-export function SignUpForm() {
+export function UserSettings() {
     return (
         <Card className="mx-auto max-w-sm">
             <CardHeader>
-                <CardTitle className="text-xl">Sign Up</CardTitle>
+                <CardTitle className="text-xl">User Settings</CardTitle>
                 <CardDescription>
-                    Enter your information to create an account
+                    Update account information
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -48,21 +47,12 @@ export function SignUpForm() {
                         <Input id="password" type="password" />
                     </div>
                     <Button type="submit" className="w-full">
-                        Create an account
+                        Save Changes
                     </Button>
-                    <Button variant="outline" className="w-full">
-                        Sign up with GitHub
-                    </Button>
-                </div>
-                <div className="mt-4 text-center text-sm">
-                    Already have an account?{" "}
-                    <Link to="/login" className="underline">
-                        Sign in
-                    </Link>
                 </div>
             </CardContent>
         </Card>
     )
 }
 
-export default SignUpForm;
+export default UserSettings;
