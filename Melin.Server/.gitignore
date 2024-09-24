@@ -31,6 +31,8 @@ packages/
 
 # Environment files
 .env
+appsettings.json
+appsettings.Development.json
 
 # IDEs
 .vscode/
