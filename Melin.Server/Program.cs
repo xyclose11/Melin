@@ -9,6 +9,12 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<Database>(options =>
+{
+    var config = builder.Configuration;
+    var connectionString = config.GetConnectionString("MelinDatabase");
+    options.UseNpgsql(connectionString);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -30,14 +36,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddDbContext<Database>(options =>
-{
-    var config = builder.Configuration;
-    var connectionString = config.GetConnectionString("MelinDatabase");
-    options.UseNpgsql(connectionString);
-});
+
 
 builder.Services.AddHttpClient<ApiService>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        corsBuilder => corsBuilder.AllowAnyOrigin()
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .Build());
+});
 
 var app = builder.Build();
 
@@ -54,8 +65,15 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
+
+if (builder.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 app.MapControllers();
+app.UseCors();
 
 app.MapFallbackToFile("/index.html");
 

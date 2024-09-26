@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Melin.Server.Controllers;
 
@@ -19,7 +20,7 @@ public class ReferenceController : ControllerBase
         _apiService = apiService;
     }
 
-    [HttpGet(Name = "GetReference")]
+    [HttpGet, Authorize]
     public async Task<IActionResult> Get()
     {
         try
