@@ -1,4 +1,4 @@
-pipelin {
+pipeline {
 	stages {
 		stage('Clean workspace') {
 			steps {
