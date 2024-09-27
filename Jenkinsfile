@@ -1,11 +1,15 @@
-stage('Clean workspace') {
-	steps {
-		cleanWs()
-	}
-}
+pipelin {
+	stages {
+		stage('Clean workspace') {
+			steps {
+				cleanWs()
+			}
+		}
 
-stage('Build') {
-    steps {
-        dotnet publish --configuration Release
-    }
+		stage('Build') {
+			steps {
+				dotnet publish --configuration Release
+			}
+		}
+	}
 }
