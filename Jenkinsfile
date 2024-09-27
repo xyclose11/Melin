@@ -1,5 +1,11 @@
-stage ('Clean workspace') {
+stage('Clean workspace') {
 	steps {
 		cleanWs()
 	}
+}
+
+stage('Build') {
+    steps {
+        dotnet publish --configuration Release
+    }
 }
