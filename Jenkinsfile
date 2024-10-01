@@ -3,8 +3,22 @@ pipeline {
 	environment {
 		DOTNET_PATH = "/bin/Release/net8.0/:${env.PATH}"
 		MELIN_SERVER_PATH = "Melin.Server"
-	} 
+	}
+	options {
+		skipDefaultCheckout(true)
+	}
 	stages {
+		stage('Clean Workspace') {
+			steps {
+
+				cleanWs()
+	
+				checkout scm
+	
+				echo "Building ${env.JOB_NAME}"
+			}
+		}
+
 		stage('Restore Packages') {
 			steps {
 				sh "dotnet restore ${MELIN_SERVER_PATH}/Melin.Server.sln"
