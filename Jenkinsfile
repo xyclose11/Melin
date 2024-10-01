@@ -6,7 +6,7 @@ pipeline {
 	stages {
 		stage('Restore Packages') {
 			steps {
-				echo "PATH is: ${PATH}"
+				echo "PATH is: ${DOTNET_PATH}"
 				sh 'dotnet restore Melin.Server.sln'
 			}
 		}
