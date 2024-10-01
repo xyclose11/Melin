@@ -7,21 +7,19 @@ pipeline {
 	stages {
 		stage('Restore Packages') {
 			steps {
-				echo "PATH is: ${DOTNET_PATH}"
-				sh 'ls'
 				sh "dotnet restore ${MELIN_SERVER_PATH}/Melin.Server.sln"
 			}
 		}
 
 		stage('Clean') {
 			steps {
-				sh 'dotnet clean Melin.Server.sln --configuration Release'
+				sh "dotnet clean ${MELIN_SERVER_PATH}/Melin.Server.sln --configuration Release"
 			}
 		}
 
 		stage('Build') {
 			steps {
-				sh 'dotnet publish --configuration Release --no-restore'
+				sh "dotnet publish ${MELIN_SERVER_PATH} --configuration Release --no-restore"
 			}
 		}
 	}
