@@ -2,7 +2,7 @@ pipeline {
 	agent any
 	environment {
 		DOTNET_PATH = "/bin/Release/net8.0/:${env.PATH}"
-		MELIN_SERVER_PATH = "/Melin.Server"
+		MELIN_SERVER_PATH = "Melin.Server"
 	} 
 	stages {
 		stage('Restore Packages') {
