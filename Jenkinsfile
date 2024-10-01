@@ -2,7 +2,7 @@ pipeline {
 	agent any
 	stages {
 		stage('Restore Packages') {
-			stepss {
+			steps {
 				sh 'dotnet restore Melin.Server.sln'
 			}
 		}
