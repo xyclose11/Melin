@@ -102,3 +102,5 @@ bld/
 
 node_modules
 package-lock.json
+Melin.Server/appsettings.json
+Melin.Server/appsettings.Development.json
