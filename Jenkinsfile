@@ -2,11 +2,15 @@ pipeline {
 	agent any
 	stages {
 		stage('Restore Packages') {
-			sh 'dotnet restore Melin.Server.sln'
+			stepss {
+				sh 'dotnet restore Melin.Server.sln'
+			}
 		}
 
 		stage('Clean') {
-			sh 'dotnet clean Melin.Server.sln --configuration Release'
+			steps {
+				sh 'dotnet clean Melin.Server.sln --configuration Release'
+			}
 		}
 
 		stage('Build') {
