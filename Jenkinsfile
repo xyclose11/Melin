@@ -1,14 +1,17 @@
 pipeline {
+	agent any
 	stages {
-		stage('Clean workspace') {
-			steps {
-				cleanWs()
-			}
+		stage('Restore Packages') {
+			sh 'dotnet restore Melin.Server.sln'
+		}
+
+		stage('Clean') {
+			sh 'dotnet clean Melin.Server.sln --configuration Release'
 		}
 
 		stage('Build') {
 			steps {
-				dotnet publish --configuration Release
+				sh 'dotnet publish --configuration Release --no-restore'
 			}
 		}
 	}
