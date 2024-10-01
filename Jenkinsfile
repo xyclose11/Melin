@@ -1,6 +1,6 @@
 pipeline {
 	agent any
-	enviornment {
+	environment {
 		DOTNET_PATH = "/bin/Release/net8.0/:${env.PATH}"
 	} 
 	stages {
