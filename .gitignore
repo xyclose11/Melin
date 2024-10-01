@@ -53,7 +53,6 @@ dist-ssr
 .idea
 *.ntvs*
 *.njsproj
-*.sln
 *.sw?
 
 *.sln.iml
