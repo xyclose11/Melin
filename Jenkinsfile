@@ -1,3 +1,5 @@
+!#/usr/bin/env groovy
+
 pipeline {
 	agent any
 	environment {
@@ -7,6 +9,7 @@ pipeline {
 		stage('Restore Packages') {
 			steps {
 				echo "PATH is: ${DOTNET_PATH}"
+				echo "ls"
 				sh 'dotnet restore Melin.Server.sln'
 			}
 		}
