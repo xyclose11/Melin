@@ -16,19 +16,12 @@ pipeline {
 
 		stage('Clean Workspace') {
 			steps {
-				sh "pwd"
-				sh "whoami"
-
-				// cleanWs()
-		
 				echo "Building ${env.JOB_NAME}"
 			}
 		}
 
 		stage('Restore Packages') {
 			steps {
-				sh "pwd"
-				sh "ls -a"
 				sh "dotnet restore ${MELIN_SERVER_PATH}/Melin.Server.sln"
 			}
 		}
@@ -48,7 +41,7 @@ pipeline {
 		stage('Deploy') {
 			steps {
 				sh """
-					dotnet ${DOTNET_BUILD_PATH}/Melin.Server.dll
+					dotnet ${MELIN_SERVER_PATH}/${DOTNET_BUILD_PATH}/Melin.Server.dll
 				"""
 			}
 		}
