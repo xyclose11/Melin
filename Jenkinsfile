@@ -19,7 +19,7 @@ pipeline {
 				sh "pwd"
 				sh "whoami"
 
-				cleanWs()
+				// cleanWs()
 		
 				echo "Building ${env.JOB_NAME}"
 			}
