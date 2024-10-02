@@ -1,7 +1,7 @@
 pipeline {
 	agent any
 	environment {
-		DOTNET_PATH = "/bin/Release/net8.0/:${env.PATH}"
+		DOTNET_BUILD_PATH = "/bin/Release/net8.0/"
 		MELIN_SERVER_PATH = "Melin.Server"
 	}
 	options {
@@ -12,9 +12,7 @@ pipeline {
 			steps {
 
 				cleanWs()
-	
-				checkout scm
-	
+		
 				echo "Building ${env.JOB_NAME}"
 			}
 		}
@@ -34,6 +32,14 @@ pipeline {
 		stage('Build') {
 			steps {
 				sh "dotnet publish ${MELIN_SERVER_PATH} --configuration Release --no-restore"
+			}
+		}
+
+		stage('Deploy') {
+			steps {
+				sh """
+					dotnet ${DOTNET_BUILD_PATH}/Melin.Server.dll
+				"""
 			}
 		}
 	}

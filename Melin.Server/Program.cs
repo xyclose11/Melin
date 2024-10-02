@@ -18,7 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSpaStaticFiles(configuration => {
-    configuration.RootPath = "melin.client/dist";
+    configuration.RootPath = "melin.client/dist/";
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
