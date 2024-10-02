@@ -27,6 +27,8 @@ pipeline {
 
 		stage('Restore Packages') {
 			steps {
+				sh "pwd"
+				sh "ls -a"
 				sh "dotnet restore ${MELIN_SERVER_PATH}/Melin.Server.sln"
 			}
 		}
