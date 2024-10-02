@@ -1,8 +1,5 @@
 pipeline {
 	agent any
-	triggers {
-		githubPush()
-	}
 	environment {
 		DOTNET_BUILD_PATH = "/bin/Release/net8.0/"
 		MELIN_SERVER_PATH = "Melin.Server"
@@ -11,6 +8,12 @@ pipeline {
 		skipDefaultCheckout(true)
 	}
 	stages {
+		stage('Checkout') {
+			steps {
+				git credentialsId: 'xyclose11', url: 'https://github.com/xyclose11/Melin.git', branch: 'models'
+			}
+		}
+
 		stage('Clean Workspace') {
 			steps {
 				sh "pwd"
