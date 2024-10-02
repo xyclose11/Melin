@@ -19,11 +19,11 @@ pipeline {
 			}
 		}
 
-		stage('Restore Packages') {
-			steps {
-				sh "dotnet restore ${MELIN_SERVER_PATH}/Melin.Server.sln"
-			}
-		}
+		// stage('Restore Packages') {
+		// 	steps {
+		// 		sh "dotnet restore ${MELIN_SERVER_PATH}/Melin.Server.sln"
+		// 	}
+		// }
 
 		stage('Clean') {
 			steps {
