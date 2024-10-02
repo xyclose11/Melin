@@ -1,5 +1,8 @@
 pipeline {
 	agent any
+	triggers {
+		githubPush()
+	}
 	environment {
 		DOTNET_BUILD_PATH = "/bin/Release/net8.0/"
 		MELIN_SERVER_PATH = "Melin.Server"
@@ -19,11 +22,11 @@ pipeline {
 			}
 		}
 
-		// stage('Restore Packages') {
-		// 	steps {
-		// 		sh "dotnet restore ${MELIN_SERVER_PATH}/Melin.Server.sln"
-		// 	}
-		// }
+		stage('Restore Packages') {
+			steps {
+				sh "dotnet restore ${MELIN_SERVER_PATH}/Melin.Server.sln"
+			}
+		}
 
 		stage('Clean') {
 			steps {
