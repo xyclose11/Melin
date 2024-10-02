@@ -10,8 +10,8 @@ pipeline {
 	stages {
 		stage('Clean Workspace') {
 			steps {
-				echo "pwd"
-				echo "whoami"
+				sh "pwd"
+				sh "whoami"
 
 				cleanWs()
 		
