@@ -46,6 +46,14 @@ export default defineConfig({
             'api/auth/user': {
                 target,
                 secure: true
+            },
+            'api/auth/logout': {
+                target,
+                secure: true
+            },
+            'api/auth/check': {
+                target,
+                secure: true
             }
         },
         port: 5173,

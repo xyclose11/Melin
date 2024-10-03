@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {Form, Link} from "react-router-dom"
 import {useState} from "react";
-import axios from "axios";
+import {instance} from "@/utils/axiosInstance.ts";
 
 export const description =
     "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account"
@@ -22,10 +22,9 @@ export function SignUpForm() {
     const handleRegistration = async (e: any) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/register', { email, password });
-            localStorage.setItem('token', response.data.token); // Store token
+            await instance.post('register', { email, password });
         } catch (error) {
-            console.error('Login failed:', error);
+            console.error('Registration failed:', error);
         }
     };
     

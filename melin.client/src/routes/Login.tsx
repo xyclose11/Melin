@@ -21,7 +21,10 @@ export function LoginForm() {
     const handleLogin = async (e: any) => {
         e.preventDefault();
         try {
-            await instance.post('login?useCookies=true', { email, password });
+            await instance.post('login?useCookies=true', { email, password })
+                .then(function (response) {
+                    console.log(response)
+                });
         } catch (error) {
             console.error('Login failed:', error);
         }

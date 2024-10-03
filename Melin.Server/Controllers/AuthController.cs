@@ -1,15 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Melin.Server.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Melin.Server.Controllers;
 
 [ApiController]
-[Route("/api/auth/[controller]")]
+[Route("/api/[controller]")]
 public class AuthController : ControllerBase
 {
-    [HttpPost(Name = "Login")]
-    public string Login()
+    private readonly SignInManager<IdentityUser> _signInManager;
+
+    public AuthController(SignInManager<IdentityUser> signInManager)
     {
-        
-        return "John Doe";
+        _signInManager = signInManager;
+    }
+    
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return Ok();
+    }
+
+    [HttpGet("check")]
+    public IActionResult Check()
+    {
+        return Ok(User.Identity.IsAuthenticated);
     }
 }
