@@ -10,7 +10,7 @@ pipeline {
 	stages {
 		stage('Checkout') {
 			steps {
-				git credentialsId: 'xyclose11', url: 'https://github.com/xyclose11/Melin.git', branch: 'models'
+				git credentialsId: 'xyclose11', url: 'https://github.com/xyclose11/Melin.git', branch: 'userAuthSetup'
 			}
 		}
 

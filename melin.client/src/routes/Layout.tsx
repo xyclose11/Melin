@@ -22,7 +22,7 @@ export function NavBar() {
     const logout = async (e: any)=> {
         e.preventDefault();
         try {
-            await instance.post(`https://localhost:7120/api/auth/logout`)
+            await instance.post(`https://localhost:5000/api/auth/logout`)
                 // TODO CHANGE THE ABOVE URL TO BE DYNAMIC FOR THE SERVER IT IS SET ON
                 .then(function (response) {
                     console.log(response)
