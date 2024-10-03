@@ -10,8 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {Form, Link} from "react-router-dom";
 import {useState} from "react";
-import axios from "axios";
-
+import {instance} from "@/utils/axiosInstance";
 export const description =
     "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account."
 
@@ -22,7 +21,7 @@ export function LoginForm() {
     const handleLogin = async (e: any) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/auth/login', { email, password });
+            const response = await instance.post('login', { email, password });
             localStorage.setItem('token', response.data.token); // Store token
         } catch (error) {
             console.error('Login failed:', error);

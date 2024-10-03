@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Melin.Server.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/api/auth/[controller]")]
 public class UserController : ControllerBase
 {
     [HttpGet(Name = "GetUser")]

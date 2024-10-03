@@ -42,6 +42,18 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MelinReactClient",
+        corsBuilder =>
+        {
+            corsBuilder.WithOrigins("https://localhost:5173");
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.AllowCredentials();
+        });
+});
+
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
     .AddEntityFrameworkStores<DataContext>();
@@ -73,8 +85,9 @@ if (builder.Environment.IsDevelopment())
 }
 
 app.MapControllers();
-app.UseCors();
 
 app.MapFallbackToFile("/index.html");
+
+app.UseCors("MelinReactClient");
 
 app.Run();
