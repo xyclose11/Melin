@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {Form, Link} from "react-router-dom";
 import {useState} from "react";
-import axios from "axios";
+import {instance} from "@/utils/axiosInstance";
+import {useAuth} from "@/utils/AuthProvider.tsx";
 
 export const description =
     "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account."
@@ -18,12 +19,20 @@ export const description =
 export function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    // @ts-ignore
+    const { setIsAuthenticated } = useAuth(); // Get the function to update auth state
 
     const handleLogin = async (e: any) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/auth/login', { email, password });
-            localStorage.setItem('token', response.data.token); // Store token
+            await instance.post('login?useCookies=true', { email, password })
+                .then(function (response) {
+                    if (response.status === 200) {
+                        setIsAuthenticated(true);
+                    } else {
+                        setIsAuthenticated(false);
+                    }
+                });
         } catch (error) {
             console.error('Login failed:', error);
         }

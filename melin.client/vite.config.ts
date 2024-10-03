@@ -47,7 +47,15 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '/api/auth/login': {
+            'api/auth/user': {
+                target,
+                secure: true
+            },
+            'api/auth/logout': {
+                target,
+                secure: true
+            },
+            'api/auth/check': {
                 target,
                 secure: true
             }

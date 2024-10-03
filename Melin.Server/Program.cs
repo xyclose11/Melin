@@ -1,47 +1,62 @@
 using System.Text;
 using Melin.Server;
+using Melin.Server.Data;
 using Melin.Server.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddAuthentication();
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddSpaStaticFiles(configuration => {
-    configuration.RootPath = "melin.client/dist/";
-});
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
-
 builder.Services.AddDbContext<Database>(options =>
 {
     var config = builder.Configuration;
     var connectionString = config.GetConnectionString("MelinDatabase");
     options.UseNpgsql(connectionString);
 });
+
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    var config = builder.Configuration;
+    var connectionString = config.GetConnectionString("MelinDatabase");
+    options.UseNpgsql(connectionString);
+});
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+    
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MelinReactClient",
+        corsBuilder =>
+        {
+            corsBuilder.WithOrigins("https://localhost:5173");
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.AllowCredentials();
+        });
+});
+
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<DataContext>();
 
 builder.Services.AddHttpClient<ApiService>();
 
@@ -60,17 +75,28 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
 
-app.UseAuthentication();
+app.MapIdentityApi<IdentityUser>();
+
+app.UseHttpsRedirection();
+
 app.UseAuthorization();
+var cookiePolicyOptions = new CookiePolicyOptions()
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict
+};
+app.UseCookiePolicy(cookiePolicyOptions);
+app.UseAuthentication();
+
+if (builder.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
 
-app.MapGet("/test", () => "Hello ForwardededOptions!");
+app.UseCors("MelinReactClient");
+
 app.Run();

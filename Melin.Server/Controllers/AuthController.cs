@@ -1,28 +1,30 @@
-﻿using Melin.Server.Services;
-using Microsoft.AspNetCore.Identity.Data;
+﻿using Melin.Server.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Melin.Server.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("/api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly AuthService _authService;
+    private readonly SignInManager<IdentityUser> _signInManager;
 
-    public AuthController(AuthService authService)
+    public AuthController(SignInManager<IdentityUser> signInManager)
     {
-        _authService = authService;
+        _signInManager = signInManager;
+    }
+    
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return Ok();
     }
 
-    [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequest request) {
-        
-        // Validate user creds
-        Console.WriteLine(request);
-        
-        var token = _authService.GenerateToken(request.Email);
-        return Ok(new { Token = token });
-
+    [HttpGet("check")]
+    public IActionResult Check()
+    {
+        return Ok(User.Identity.IsAuthenticated);
     }
 }

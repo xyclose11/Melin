@@ -9,3 +9,6 @@
   "MelinDatabase": "Host=localhost;Username=postgres;Password={password};Database=melin"
 }
 5. Apply migrations
+
+
+References: https://www.npgsql.org/doc/index.html
