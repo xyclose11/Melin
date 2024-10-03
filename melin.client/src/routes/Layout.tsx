@@ -32,6 +32,8 @@ export function NavBar() {
         }
     };
     
+    // LAST WORKING 10/2/2024 ON SETTING UP ROLES (ADMIN, USER, GUEST) SO THAT EACH DISPLAYS DIFFERENT LAYOUTS, ETC.
+    
     return (
         <div className="flex w-full flex-col">
         <header className="fixed top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -105,7 +107,6 @@ export function NavBar() {
                             >
                                 <Button type="submit">
                                     Logout
-                                    
                                 </Button>
                             </Form>
                         </DropdownMenuItem>

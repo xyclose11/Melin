@@ -11,19 +11,27 @@ import { Label } from "@/components/ui/label"
 import {Form, Link} from "react-router-dom";
 import {useState} from "react";
 import {instance} from "@/utils/axiosInstance";
+import {useAuth} from "@/utils/AuthProvider.tsx";
+
 export const description =
     "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account."
 
 export function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    // @ts-ignore
+    const { setIsAuthenticated } = useAuth(); // Get the function to update auth state
 
     const handleLogin = async (e: any) => {
         e.preventDefault();
         try {
             await instance.post('login?useCookies=true', { email, password })
                 .then(function (response) {
-                    console.log(response)
+                    if (response.status === 200) {
+                        setIsAuthenticated(true);
+                    } else {
+                        setIsAuthenticated(false);
+                    }
                 });
         } catch (error) {
             console.error('Login failed:', error);

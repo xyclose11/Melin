@@ -10,7 +10,8 @@ import SignUp from "@/routes/SignUp.tsx";
 import {LoginForm} from "@/routes/Login.tsx";
 import {LibraryPage} from "@/routes/Library.tsx";
 import UserSettings from "@/routes/UserSettingsPage.tsx";
-
+import {AuthProvider} from "@/utils/AuthProvider.tsx"
+import PrivateRoute from "@/utils/PrivateRoute.tsx";
 
 const router: any = createBrowserRouter([{
     path: "/",
@@ -43,7 +44,7 @@ const router: any = createBrowserRouter([{
         },
         {
             path: "library",
-            element: <LibraryPage />
+            element: <PrivateRoute element={<LibraryPage></LibraryPage>}></PrivateRoute>
         },
         {
             path: "user-settings",
@@ -58,9 +59,9 @@ const router: any = createBrowserRouter([{
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      {/*<BrowserRouter>*/}
-      <RouterProvider router={router}/>
+      <AuthProvider>
+          <RouterProvider router={router}/>
           <App />
-      {/*</BrowserRouter>*/}
+      </AuthProvider>
   </StrictMode>
 )
