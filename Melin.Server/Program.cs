@@ -77,6 +77,11 @@ app.MapIdentityApi<IdentityUser>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+var cookiePolicyOptions = new CookiePolicyOptions()
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict
+};
+app.UseCookiePolicy(cookiePolicyOptions);
 app.UseAuthentication();
 
 if (builder.Environment.IsDevelopment())

@@ -21,8 +21,7 @@ export function LoginForm() {
     const handleLogin = async (e: any) => {
         e.preventDefault();
         try {
-            const response = await instance.post('login', { email, password });
-            localStorage.setItem('token', response.data.token); // Store token
+            await instance.post('login?useCookies=true', { email, password });
         } catch (error) {
             console.error('Login failed:', error);
         }
