@@ -23,6 +23,7 @@ export function SignUpForm() {
         e.preventDefault();
         try {
             await instance.post('register', { email, password });
+            console.log("SUCCESS")
         } catch (error) {
             console.error('Registration failed:', error);
         }
