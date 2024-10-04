@@ -38,12 +38,5 @@ pipeline {
 			}
 		}
 
-		stage('Deploy') {
-			steps {
-				sh """
-					dotnet ${MELIN_SERVER_PATH}/${DOTNET_BUILD_PATH}/Melin.Server.dll
-				"""
-			}
-		}
 	}
 }
