@@ -42,12 +42,18 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+if (!builder.Environment.IsDevelopment()) {
+    builder.Services.AddHttpsRedirection(options => {
+        options.HttpsPort = 443;
+    });
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("MelinReactClient",
         corsBuilder =>
         {
-            corsBuilder.WithOrigins("https://localhost:5173");
+            corsBuilder.WithOrigins("https://localhost:5173", "http://localhost:5173");
             corsBuilder.AllowAnyHeader();
             corsBuilder.AllowAnyMethod();
             corsBuilder.AllowCredentials();
@@ -72,13 +78,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
-
-
 
 app.MapIdentityApi<IdentityUser>();
 
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 var cookiePolicyOptions = new CookiePolicyOptions()
