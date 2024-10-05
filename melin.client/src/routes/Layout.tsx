@@ -14,15 +14,11 @@ import {
 import { Input } from "@/components/ui/input"
 import {instance} from "@/utils/axiosInstance.ts";
 
-export const description =
-    "A settings page. The settings page has a sidebar navigation and a main content area. The main content area has a form to update the store name and a form to update the plugins directory. The sidebar navigation has links to general, security, integrations, support, organizations, and advanced settings."
-
-
 export function NavBar() {
     const logout = async (e: any)=> {
         e.preventDefault();
         try {
-            await instance.post(`https://localhost:5000/api/auth/logout`)
+            await instance.post(`/api/auth/logout`)
                 // TODO CHANGE THE ABOVE URL TO BE DYNAMIC FOR THE SERVER IT IS SET ON
                 .then(function (response) {
                     console.log(response)
@@ -32,11 +28,8 @@ export function NavBar() {
         }
     };
     
-    // LAST WORKING 10/2/2024 ON SETTING UP ROLES (ADMIN, USER, GUEST) SO THAT EACH DISPLAYS DIFFERENT LAYOUTS, ETC.
-    
     return (
-        <div className="flex w-full flex-col">
-        <header className="fixed top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+        <header className="fixed top-0 flex h-16 items-center gap-4 border-b bg-background">
             <nav
                 className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
                 <Link
@@ -114,6 +107,5 @@ export function NavBar() {
                 </DropdownMenu>
             </div>
         </header>
-        </div>
     )
 }
