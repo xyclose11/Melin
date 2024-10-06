@@ -14,11 +14,13 @@ import {
 import { Input } from "@/components/ui/input";
 import LogoutLink from "@/routes/CustomComponents/LogoutLink.tsx";
 import UserSettingsLink from "@/routes/CustomComponents/UserSettingsLink.tsx";
-import PrivateRoute from "@/utils/PrivateRoute.tsx";
+import { useAuth } from "@/utils/AuthProvider.tsx";
 
 export function NavBar() {
+    const { isAuthenticated } = useAuth(); // Assuming you have an AuthContext
+
     return (
-        <header className="fixed top-0 flex h-16 items-center gap-4 border-b bg-background">
+        <header className="fixed top-0 p-4 flex w-screen justify-center h-16 items-center gap-4 border-b bg-background">
             <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
                 <Link
                     to={"#"}
@@ -76,18 +78,17 @@ export function NavBar() {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                            <Link
-                                to="/login"
-                                className="text-muted-foreground transition-colors hover:text-foreground"
-                            >
-                                Login
-                            </Link>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                    <PrivateRoute
-                        element={
-                            <DropdownMenuContent align="end">
+                        {!isAuthenticated ? (
+                            <DropdownMenuItem>
+                                <Link
+                                    to="/login"
+                                    className="text-muted-foreground transition-colors hover:text-foreground"
+                                >
+                                    Login
+                                </Link>
+                            </DropdownMenuItem>
+                        ) : (
+                            <>
                                 <DropdownMenuLabel>
                                     My Account
                                 </DropdownMenuLabel>
@@ -99,9 +100,9 @@ export function NavBar() {
                                 <DropdownMenuItem>
                                     <LogoutLink />
                                 </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        }
-                    />
+                            </>
+                        )}
+                    </DropdownMenuContent>
                 </DropdownMenu>
             </div>
         </header>

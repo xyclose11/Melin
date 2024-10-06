@@ -19,7 +19,6 @@ export const description =
 export function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // @ts-ignore
     const { setIsAuthenticated } = useAuth(); // Get the function to update auth state
 
     const handleLogin = async (e: any) => {
@@ -29,6 +28,7 @@ export function LoginForm() {
                 .post("login?useCookies=true", { email, password })
                 .then(function (response) {
                     if (response.status === 200) {
+                        console.log(response);
                         setIsAuthenticated(true);
                     } else {
                         setIsAuthenticated(false);

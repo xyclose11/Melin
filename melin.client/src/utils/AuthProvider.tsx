@@ -1,17 +1,37 @@
-﻿import { createContext, useContext, useState, useEffect } from "react";
+﻿import {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+    ReactNode,
+} from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 
-const AuthContext = createContext("");
 const checkAuth = async () => {
     return await instance.get(`api/Auth/check`);
 };
-// @ts-ignore
-export const AuthProvider = ({ children }) => {
+
+interface AuthContextType {
+    isAuthenticated: boolean;
+    setIsAuthenticated: (value: boolean) => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+    children,
+}) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const checkUserAuth = async () => {
-        const response = await checkAuth();
-        setIsAuthenticated(response.data);
+        try {
+            const response = await checkAuth();
+            console.log(response);
+            setIsAuthenticated(response.data); // Ensure response.data is a boolean
+        } catch (error) {
+            console.error("Failed to check authentication:", error);
+            setIsAuthenticated(false); // Handle the error case
+        }
     };
 
     useEffect(() => {
@@ -19,11 +39,16 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        // @ts-ignore
         <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error("useAuth must be used within an AuthProvider");
+    }
+    return context;
+};

@@ -5,7 +5,9 @@ export default function Root() {
     return (
         <>
             <NavBar />
-            <div id="detail">
+            <div
+                className={"flex justify-center items-center h-screen w-screen"}
+            >
                 <Outlet />
             </div>
         </>

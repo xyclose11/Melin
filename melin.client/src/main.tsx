@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
 import Root from "./routes/root.tsx";
 import ErrorPage from "./error-page.tsx";
@@ -66,7 +65,6 @@ createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <AuthProvider>
             <RouterProvider router={router} />
-            <App />
         </AuthProvider>
     </StrictMode>,
 );
