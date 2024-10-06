@@ -12,7 +12,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import Logout from "@/routes/CustomComponents/Logout.tsx";
+import LogoutLink from "@/routes/CustomComponents/LogoutLink.tsx";
+import UserSettingsLink from "@/routes/CustomComponents/UserSettingsLink.tsx";
+import PrivateRoute from "@/utils/PrivateRoute.tsx";
 
 export function NavBar() {
     return (
@@ -74,21 +76,32 @@ export function NavBar() {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem>
                             <Link
-                                to={"/user-settings"}
+                                to="/login"
                                 className="text-muted-foreground transition-colors hover:text-foreground"
                             >
-                                User Settings
+                                Login
                             </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <Logout />
-                        </DropdownMenuItem>
                     </DropdownMenuContent>
+                    <PrivateRoute
+                        element={
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>
+                                    My Account
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <UserSettingsLink />
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    <LogoutLink />
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        }
+                    />
                 </DropdownMenu>
             </div>
         </header>

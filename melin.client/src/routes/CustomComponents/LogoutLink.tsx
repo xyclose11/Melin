@@ -2,7 +2,7 @@
 import { Form } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
 
-export default function Logout() {
+export default function LogoutLink() {
     const logout = async (e: any) => {
         e.preventDefault();
         try {
