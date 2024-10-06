@@ -1,31 +1,32 @@
-﻿import { Button } from "@/components/ui/button"
+﻿import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {Form, Link} from "react-router-dom";
-import {useState} from "react";
-import {instance} from "@/utils/axiosInstance";
-import {useAuth} from "@/utils/AuthProvider.tsx";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Form, Link } from "react-router-dom";
+import { useState } from "react";
+import { instance } from "@/utils/axiosInstance";
+import { useAuth } from "@/utils/AuthProvider.tsx";
 
 export const description =
-    "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account."
+    "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.";
 
 export function LoginForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     // @ts-ignore
     const { setIsAuthenticated } = useAuth(); // Get the function to update auth state
 
     const handleLogin = async (e: any) => {
         e.preventDefault();
         try {
-            await instance.post('login?useCookies=true', { email, password })
+            await instance
+                .post("login?useCookies=true", { email, password })
                 .then(function (response) {
                     if (response.status === 200) {
                         setIsAuthenticated(true);
@@ -34,10 +35,10 @@ export function LoginForm() {
                     }
                 });
         } catch (error) {
-            console.error('Login failed:', error);
+            console.error("Login failed:", error);
         }
     };
-    
+
     return (
         <Card className="mx-auto max-w-sm">
             <CardHeader>
@@ -68,10 +69,15 @@ export function LoginForm() {
                                     type="password"
                                     placeholder="*******"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                     required
                                 />
-                                <Link to={"/reset-password"} className="ml-auto inline-block text-sm underline">
+                                <Link
+                                    to={"/reset-password"}
+                                    className="ml-auto inline-block text-sm underline"
+                                >
                                     Forgot your password?
                                 </Link>
                             </div>
@@ -84,7 +90,7 @@ export function LoginForm() {
                         </Button>
                     </div>
                 </Form>
-                    
+
                 <div className="mt-4 text-center text-sm">
                     Don&apos;t have an account?{" "}
                     <Link to={"/sign-up"} className="underline">
@@ -93,5 +99,5 @@ export function LoginForm() {
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }

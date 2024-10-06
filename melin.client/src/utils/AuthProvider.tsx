@@ -1,7 +1,7 @@
-﻿import { createContext, useContext, useState, useEffect } from 'react';
-import {instance} from "@/utils/axiosInstance.ts";
+﻿import { createContext, useContext, useState, useEffect } from "react";
+import { instance } from "@/utils/axiosInstance.ts";
 
-const AuthContext = createContext('');
+const AuthContext = createContext("");
 const checkAuth = async () => {
     return await instance.get(`api/Auth/check`);
 };

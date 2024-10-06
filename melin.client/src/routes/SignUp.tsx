@@ -1,34 +1,34 @@
-﻿import { Button } from "@/components/ui/button"
+﻿import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {Form, Link} from "react-router-dom"
-import {useState} from "react";
-import {instance} from "@/utils/axiosInstance.ts";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Form, Link } from "react-router-dom";
+import { useState } from "react";
+import { instance } from "@/utils/axiosInstance.ts";
 
 export const description =
-    "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account"
+    "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account";
 
 export function SignUpForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
     const handleRegistration = async (e: any) => {
         e.preventDefault();
         try {
-            await instance.post('register', { email, password });
-            console.log("SUCCESS")
+            await instance.post("register", { email, password });
+            console.log("SUCCESS");
         } catch (error) {
-            console.error('Registration failed:', error);
+            console.error("Registration failed:", error);
         }
     };
-    
+
     return (
         <Card className="mx-auto max-w-sm">
             <CardHeader>
@@ -43,11 +43,19 @@ export function SignUpForm() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="first-name">First name</Label>
-                                <Input id="first-name" placeholder="Max" required/>
+                                <Input
+                                    id="first-name"
+                                    placeholder="Max"
+                                    required
+                                />
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="last-name">Last name</Label>
-                                <Input id="last-name" placeholder="Robinson" required/>
+                                <Input
+                                    id="last-name"
+                                    placeholder="Robinson"
+                                    required
+                                />
                             </div>
                         </div>
                         <div className="grid gap-2">
@@ -64,11 +72,13 @@ export function SignUpForm() {
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" name="password" value={password}
-                                   onChange={(e) => setPassword(e.target.value)}
-                            >
-                                
-                            </Input>
+                            <Input
+                                id="password"
+                                type="password"
+                                name="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            ></Input>
                         </div>
                         <Button type="submit" className="w-full">
                             Create an account
@@ -86,7 +96,7 @@ export function SignUpForm() {
                 </Form>
             </CardContent>
         </Card>
-    )
+    );
 }
 
 export default SignUpForm;

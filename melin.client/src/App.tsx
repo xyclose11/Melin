@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import './App.css';
+import { useEffect } from "react";
+import "./App.css";
 
 function App() {
     // const [forecasts, setForecasts] = useState<Forecast[]>();

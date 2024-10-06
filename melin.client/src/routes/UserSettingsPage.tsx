@@ -1,25 +1,23 @@
-﻿import { Button } from "@/components/ui/button"
+﻿import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const description =
-    "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account"
+    "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account";
 
 export function UserSettings() {
     return (
         <Card className="mx-auto max-w-sm">
             <CardHeader>
                 <CardTitle className="text-xl">User Settings</CardTitle>
-                <CardDescription>
-                    Update account information
-                </CardDescription>
+                <CardDescription>Update account information</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="grid gap-4">
@@ -30,7 +28,11 @@ export function UserSettings() {
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="last-name">Last name</Label>
-                            <Input id="last-name" placeholder="Robinson" required />
+                            <Input
+                                id="last-name"
+                                placeholder="Robinson"
+                                required
+                            />
                         </div>
                     </div>
                     <div className="grid gap-2">
@@ -52,7 +54,7 @@ export function UserSettings() {
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }
 
 export default UserSettings;
