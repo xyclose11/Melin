@@ -38,11 +38,11 @@ pipeline {
 			}
 		}
 
-		stage('Deploy') {
-			steps {
-				sh "systemctl start melin.service"
-			}
-		}
+		// stage('Deploy') {
+		// 	steps {
+		// 		sh "systemctl start melin.service"
+		// 	}
+		// }
 
 	}
 }
