@@ -50,6 +50,12 @@ if (!builder.Environment.IsDevelopment()) {
 
 builder.Services.AddCors(options =>
 {
+    options.AddDefaultPolicy(
+        policy => {
+            policy.WithOrigins("https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
+        }
+    );
+
     options.AddPolicy("MelinReactClient",
         corsBuilder =>
         {
@@ -108,6 +114,7 @@ app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
 
+app.UseCors();
 app.UseCors("MelinReactClient");
 app.UseCors("MelinBackend");
 
