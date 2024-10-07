@@ -37,7 +37,7 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 export default defineConfig({
     build: {
         outDir: '../Melin.Server/wwwroot',
-        emptyOutDir: true,
+        emptyOutDir: false,
     },
     plugins: [plugin()],
     resolve: {
