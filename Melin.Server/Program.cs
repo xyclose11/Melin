@@ -53,6 +53,8 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy => {
             policy.WithOrigins("https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
         }
     );
 
