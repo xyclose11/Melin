@@ -58,6 +58,15 @@ builder.Services.AddCors(options =>
             corsBuilder.AllowAnyMethod();
             corsBuilder.AllowCredentials();
         });
+
+        options.AddPolicy("MelinBackend",
+        corsBuilder =>
+        {
+            corsBuilder.WithOrigins("https://localhost:5000", "http://localhost:5000");
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.AllowCredentials();
+        });
 });
 
 builder.Services.AddAuthorization();
@@ -100,5 +109,6 @@ app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 app.UseCors("MelinReactClient");
+app.UseCors("MelinBackend");
 
 app.Run();
