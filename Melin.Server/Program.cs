@@ -2,7 +2,9 @@ using System.Text;
 using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -55,6 +57,7 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
             policy.AllowAnyHeader();
             policy.AllowAnyMethod();
+            policy.AllowCredentials();
         }
     );
 
@@ -98,13 +101,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapIdentityApi<IdentityUser>();
 
-
 app.UseAuthorization();
-var cookiePolicyOptions = new CookiePolicyOptions()
-{
-    MinimumSameSitePolicy = SameSiteMode.Strict
-};
-app.UseCookiePolicy(cookiePolicyOptions);
 app.UseAuthentication();
 
 if (builder.Environment.IsDevelopment())
