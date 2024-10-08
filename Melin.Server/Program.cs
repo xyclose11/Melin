@@ -2,10 +2,12 @@ using System.Text;
 using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -77,6 +79,20 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login";
+        options.LogoutPath = "/Logout";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.Name = "MELIN_AUTH_COOKIE";
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    });
+
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
     .AddEntityFrameworkStores<DataContext>();
@@ -102,7 +118,7 @@ app.MapIdentityApi<IdentityUser>();
 app.UseAuthorization();
 var cookiePolicyOptions = new CookiePolicyOptions()
 {
-    MinimumSameSitePolicy = SameSiteMode.Strict
+    MinimumSameSitePolicy = SameSiteMode.None
 };
 app.UseCookiePolicy(cookiePolicyOptions);
 app.UseAuthentication();
