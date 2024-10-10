@@ -5,6 +5,7 @@ using Melin.Server.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -49,7 +50,19 @@ if (!builder.Environment.IsDevelopment()) {
     builder.Services.AddHttpsRedirection(options => {
         options.HttpsPort = 443;
     });
+
 }
+
+if (builder.Environment.IsProduction()) {
+    builder.Services.AddSpaStaticFiles(configuration => {
+        configuration.RootPath = Path.Combine("wwwroot");
+    });
+        Console.Write("PRODUCASDJASKLDJKLWIQDJALSD");
+
+
+}
+
+
 
 builder.Services.AddCors(options =>
 {
@@ -81,23 +94,29 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Login";
-        options.LogoutPath = "/Logout";
-        options.Cookie.HttpOnly = true;
-        options.Cookie.Name = "MELIN_AUTH_COOKIE";
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.Lax;
 
-        options.SlidingExpiration = true;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-    });
 
-builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
     .AddEntityFrameworkStores<DataContext>();
+builder.Services.AddAuthorization();
+
+builder.Services.Configure<IdentityOptions> (options => {
+
+});
+
+builder.Services.ConfigureApplicationCookie(options => {
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+
+    options.LoginPath = "/login";
+    options.AccessDeniedPath = "/accessdenied";
+    options.SlidingExpiration = true;
+    options.Cookie.Name = "MELIN_AUTH_COOKIE";
+    options.Cookie.Domain = "slider.valpo.edu";
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
 
 builder.Services.AddHttpClient<ApiService>();
 
@@ -113,20 +132,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (builder.Environment.IsProduction())
+{
+    app.UseSpaStaticFiles();
+}
+
+app.UseSpa(spa => {});
 
 app.MapIdentityApi<IdentityUser>();
 
 app.UseAuthorization();
-var cookiePolicyOptions = new CookiePolicyOptions()
-{
-    MinimumSameSitePolicy = SameSiteMode.None
-};
-app.UseCookiePolicy(cookiePolicyOptions);
 app.UseAuthentication();
 
 if (builder.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+} else {
+    app.UseHsts();
 }
 
 app.MapControllers();
