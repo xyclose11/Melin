@@ -3,6 +3,7 @@ using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
@@ -13,8 +14,12 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+
 
 // Add services to the container.
 builder.Services.AddDbContext<Database>(options =>
@@ -101,6 +106,16 @@ builder.Services.Configure<IdentityOptions> (options => {
 
 });
 
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddGoogle(googleOptions => {
+    googleOptions.ClientId = "";
+    googleOptions.ClientSecret = "";
+});
+
+
 builder.Services.ConfigureApplicationCookie(options => {
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
@@ -112,6 +127,12 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.Cookie.Domain = "slider.valpo.edu";
     options.Cookie.SameSite = SameSiteMode.Strict;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
 
 
@@ -147,6 +168,8 @@ if (builder.Environment.IsDevelopment())
 } else {
     app.UseHsts();
 }
+
+app.UseForwardedHeaders();
 
 app.MapControllers();
 
