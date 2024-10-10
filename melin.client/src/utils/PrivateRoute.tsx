@@ -3,7 +3,6 @@ import { useAuth } from "./AuthProvider"; // Adjust the import path based on you
 
 const PrivateRoute = ({ element }: { element: JSX.Element }) => {
     const { isAuthenticated } = useAuth(); // Assuming you have an AuthContext
-
     return isAuthenticated ? element : <Navigate to="/login" />;
 };
 

@@ -28,7 +28,6 @@ export function LoginForm() {
                 .post("login?useCookies=true", { email, password })
                 .then(function (response) {
                     if (response.status === 200) {
-                        console.log(response);
                         setIsAuthenticated(true);
                     } else {
                         setIsAuthenticated(false);
