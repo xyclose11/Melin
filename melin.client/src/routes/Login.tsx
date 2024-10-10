@@ -39,6 +39,7 @@ export function LoginForm() {
     };
 
     return (
+        <>
         <Card className="mx-auto max-w-sm">
             <CardHeader>
                 <CardTitle className="text-2xl">Login</CardTitle>
@@ -47,8 +48,8 @@ export function LoginForm() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <Form onSubmit={handleLogin}>
-                    <div className="grid gap-4">
+                <div className="grid gap-4">
+                    <Form onSubmit={handleLogin}>
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
@@ -84,11 +85,27 @@ export function LoginForm() {
                         <Button type="submit" className="w-full">
                             Login
                         </Button>
-                        <Button variant="outline" className="w-full">
-                            Login with Google
-                        </Button>
-                    </div>
-                </Form>
+                    </Form>
+                    <div id="g_id_onload"
+     data-client_id="244762801662-pvcn1eu9o7ubc74bid0idaa5k74s4dp0.apps.googleusercontent.com"
+     data-context="signin"
+     data-ux_mode="popup"
+     data-login_uri="https://slider.valpo.edu/signin-google"
+     data-nonce=""
+     data-itp_support="true">
+</div>
+
+<div className="g_id_signin"
+     data-type="standard"
+     data-shape="pill"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="center">
+</div>
+                    {/* <Button variant="outline" className="w-full">
+                    </Button> */}
+                </div>
 
                 <div className="mt-4 text-center text-sm">
                     Don&apos;t have an account?{" "}
@@ -98,5 +115,7 @@ export function LoginForm() {
                 </div>
             </CardContent>
         </Card>
+        </>
+
     );
 }
