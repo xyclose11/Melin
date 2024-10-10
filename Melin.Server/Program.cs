@@ -57,9 +57,6 @@ if (builder.Environment.IsProduction()) {
     builder.Services.AddSpaStaticFiles(configuration => {
         configuration.RootPath = Path.Combine("wwwroot");
     });
-        Console.Write("PRODUCASDJASKLDJKLWIQDJALSD");
-
-
 }
 
 
