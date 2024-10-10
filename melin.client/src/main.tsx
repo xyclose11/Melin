@@ -11,6 +11,7 @@ import { LibraryPage } from "@/routes/Library.tsx";
 import UserSettings from "@/routes/UserSettingsPage.tsx";
 import { AuthProvider } from "@/utils/AuthProvider.tsx";
 import PrivateRoute from "@/utils/PrivateRoute.tsx";
+import { CreateReferencePage } from "@/routes/CreateReferencePage.tsx";
 
 const router: any = createBrowserRouter([
     {
@@ -56,6 +57,10 @@ const router: any = createBrowserRouter([
             },
             {
                 path: "library-settings",
+            },
+            {
+                path: "create-reference",
+                element: <CreateReferencePage />,
             },
         ],
     },
