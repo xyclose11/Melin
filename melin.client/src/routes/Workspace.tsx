@@ -1,10 +1,10 @@
 ﻿import { WorkspaceToolBar } from "@/routes/CustomComponents/WorkspaceToolBar.tsx";
-import { CreateReference } from "@/routes/CustomComponents/CreateReference.tsx";
 import {
     ResizableHandle,
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { ReferenceCreationPage } from "@/routes/ReferenceCreationPage.tsx";
 
 export function Workspace() {
     return (
@@ -19,10 +19,8 @@ export function Workspace() {
             </ResizablePanel>
             <ResizableHandle withHandle className="w-1 m-1" />
             <ResizablePanel>
-                <div className="flex top-32">
-                    <div className="flex-1 p-4">
-                        <CreateReference />
-                    </div>
+                <div className="flex p-4 justify-center flex-wrap">
+                    <ReferenceCreationPage />
                 </div>
             </ResizablePanel>
         </ResizablePanelGroup>
