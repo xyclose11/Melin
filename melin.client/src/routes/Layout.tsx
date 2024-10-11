@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import LogoutLink from "@/routes/CustomComponents/LogoutLink.tsx";
 import UserSettingsLink from "@/routes/CustomComponents/UserSettingsLink.tsx";
 import { useAuth } from "@/utils/AuthProvider.tsx";
+import { ModeToggle } from "@/components/mode-toggle.tsx";
 
 export function NavBar() {
     const { isAuthenticated } = useAuth(); // Assuming you have an AuthContext
@@ -47,6 +48,7 @@ export function NavBar() {
                 >
                     Library
                 </Link>
+                <ModeToggle />
             </nav>
             <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
                 <form className="ml-auto flex-1 sm:flex-initial">

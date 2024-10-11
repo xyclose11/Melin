@@ -3,32 +3,28 @@ import { Link } from "react-router-dom";
 
 export function WorkspaceToolBar() {
     return (
-        <div className="fixed top-16 left-0 w-64 h-full p-4 bg-gray-800 text-white">
-            <nav className="flex-1">
-                <ul className="space-y-2">
-                    <li>
-                        <Button className="w-full text-left">
-                            <Link to="/CreateReferencePage" />
-                        </Button>
-                    </li>
-                    <li>
-                        <Button className="w-full text-left">
-                            Your References
-                        </Button>
-                    </li>
-                    <li>
-                        <Button className="w-full text-left">
-                            Your Groups
-                        </Button>
-                    </li>
-                    <li>
-                        <Button className="w-full text-left">Your Tags</Button>
-                    </li>
-                    <li>
-                        <Button className="w-full text-left">Settings</Button>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        <nav className="flex-1 top-16 fixed">
+            <ul className="space-y-2">
+                <li>
+                    <Button className="w-full text-left">
+                        <Link to="/CreateReferencePage" />
+                    </Button>
+                </li>
+                <li>
+                    <Button className="w-full text-left">
+                        Your References
+                    </Button>
+                </li>
+                <li>
+                    <Button className="w-full text-left">Your Groups</Button>
+                </li>
+                <li>
+                    <Button className="w-full text-left">Your Tags</Button>
+                </li>
+                <li>
+                    <Button className="w-full text-left">Settings</Button>
+                </li>
+            </ul>
+        </nav>
     );
 }
