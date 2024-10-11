@@ -20,31 +20,15 @@ public class ReferenceController : ControllerBase
     }
 
     [HttpGet, Authorize]
-    public async Task<IActionResult> Get()
+    public string Get()
     {
-        try
-        {
-            using (FileStream openStream = System.IO.File.OpenRead(@"Q:\development\dotnet\Melin\Melin.Server\Data\tasks.json"))
-            {
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                };
-
-                List<Task> tasks = await JsonSerializer.DeserializeAsync<List<Task>>(openStream, options);
-
-                foreach (var task in tasks)
-                {
-                    Console.WriteLine($"ID: {task.Id},  Status: {task.Status}");
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error reading JSON file: {ex.Message}");
-        }
-        await using FileStream stream = System.IO.File.OpenRead(@"Q:\development\dotnet\Melin\Melin.Server\Data\tasks.json");
-        return await JsonSerializer.DeserializeAsync<IActionResult>(stream);
+        
+        return "true";
     }
-    
+
+    [HttpPost, Authorize]
+    public void Post() // Create reference for user
+    {
+    }
+
 }
