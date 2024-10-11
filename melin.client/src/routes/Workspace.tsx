@@ -9,10 +9,15 @@ import {
 export function Workspace() {
     return (
         <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel collapsible={true} collapsedSize={14}>
+            <ResizablePanel
+                collapsible={true}
+                defaultSize={3}
+                maxSize={6}
+                collapsedSize={2}
+            >
                 <WorkspaceToolBar />
             </ResizablePanel>
-            <ResizableHandle withHandle />
+            <ResizableHandle withHandle className="w-1 m-1" />
             <ResizablePanel>
                 <div className="flex top-32">
                     <div className="flex-1 p-4">

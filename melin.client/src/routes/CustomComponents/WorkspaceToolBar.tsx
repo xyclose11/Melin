@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export function WorkspaceToolBar() {
     return (
-        <nav className="flex-1 top-16 fixed">
+        <nav className="flex-1">
             <ul className="space-y-2">
                 <li>
                     <Button className="w-full text-left">
