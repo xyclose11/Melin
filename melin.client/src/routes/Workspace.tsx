@@ -18,7 +18,7 @@ export function Workspace() {
                 <WorkspaceToolBar />
             </ResizablePanel>
             <ResizableHandle withHandle className="w-1 m-1" />
-            <ResizablePanel>
+            <ResizablePanel id="WorkspaceContent">
                 <div className="flex p-4 justify-center flex-wrap">
                     <ReferenceCreationPage />
                 </div>

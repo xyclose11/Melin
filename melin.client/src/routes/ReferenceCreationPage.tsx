@@ -1,11 +1,13 @@
 ﻿import { ChoiceCard } from "@/routes/ReferenceCreationPageComponents/ChoiceCard.tsx";
 import { RememberSettingCheckBox } from "@/routes/CustomComponents/RememberSettingCheckBox.tsx";
 import { SuggestionsButton } from "@/routes/CustomComponents/SuggestionsButton.tsx";
+import { ReferenceCreationBreadCrumb } from "@/routes/CustomComponents/ReferenceCreationBreadCrumb.tsx";
 
 export function ReferenceCreationPage() {
     return (
         <>
             <div className="">
+                <ReferenceCreationBreadCrumb />
                 <h1 className="font-heading mt-12 scroll-m-20 border-b pb-2 text-5xl tracking-tight first:mt-0">
                     How do you want to{" "}
                     <span className={"font-bold underline"}>create</span>?
@@ -15,7 +17,10 @@ export function ReferenceCreationPage() {
                         id="ChoiceGrid"
                         className="grid sm:grid-cols-2 gap-4 sm:gap-4"
                     >
-                        <ChoiceCard options={"Manual"} />
+                        <ChoiceCard
+                            options={"Manual"}
+                            linkTo={"create-reference"}
+                        />
                         <ChoiceCard options={"ISBN, DOI, ISSN"} />
                         <ChoiceCard options={"BibTex, BibLaTex (.bib)"} />
                         <ChoiceCard options={"CSL-JSON, JSON"} />
