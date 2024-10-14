@@ -2,9 +2,14 @@
 
 namespace Melin.Server.Models;
 
-public interface ICreator
+public class Creator
 {
-   public Author Author { get; set; }
+    public int Id { get; set; }
+    [MaxLength(512)]
+    public string FirstName { get; set; } = "";
+    
+    [MaxLength(512)]
+    public string LastName { get; set; } = "";
 }
 
 public class Author

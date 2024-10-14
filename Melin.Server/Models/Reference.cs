@@ -6,7 +6,7 @@ public class Reference
     // Base fields
     public int Id { get; set; }
     public ReferenceType Type { get; set; }
-    public ICreator[]? Creators { get; set; } = null;
+    public Creator[]? Creators { get; set; } = null;
     public string Title { get; set; } = "";
     public string? ShortTitle { get; set; } = "";
     public Language? Language { get; set; }
