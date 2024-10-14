@@ -39,11 +39,23 @@ public class ReferenceController : ControllerBase
 
     [HttpPost("create-book")]
     public async Task<ActionResult<Book>> PostReferenceBook(Book book) {
-        // find out reference type
-        _referenceContext.Reference.Add(book);
+        book.Type = ReferenceType.Book;
+        _referenceContext.Books.Add(book);
         await _referenceContext.SaveChangesAsync();
 
         return Ok();
     }
     
+    [HttpPost("create-artwork")]
+    public async Task<ActionResult<Artwork>> PostReferenceArtwork(Artwork artwork) {
+        // find out reference type
+        _referenceContext.Reference.Add(artwork);
+        await _referenceContext.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    
+
+
 }
