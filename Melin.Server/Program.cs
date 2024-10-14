@@ -16,7 +16,7 @@ using Swashbuckle.AspNetCore.Filters;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<Database>(options =>
+builder.Services.AddDbContext<ReferenceContext>(options =>
 {
     var config = builder.Configuration;
     var connectionString = config.GetConnectionString("MelinDatabase");

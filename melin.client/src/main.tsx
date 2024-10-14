@@ -11,6 +11,8 @@ import { LibraryPage } from "@/routes/Library.tsx";
 import UserSettings from "@/routes/UserSettingsPage.tsx";
 import { AuthProvider } from "@/utils/AuthProvider.tsx";
 import PrivateRoute from "@/utils/PrivateRoute.tsx";
+import { CreateReferencePage } from "@/routes/CreateReferencePage.tsx";
+import { ThemeProvider } from "@/components/theme-provider.tsx";
 
 const router: any = createBrowserRouter([
     {
@@ -57,6 +59,10 @@ const router: any = createBrowserRouter([
             {
                 path: "library-settings",
             },
+            {
+                path: "create-reference",
+                element: <CreateReferencePage />,
+            },
         ],
     },
 ]);
@@ -64,7 +70,9 @@ const router: any = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <AuthProvider>
-            <RouterProvider router={router} />
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                <RouterProvider router={router} />
+            </ThemeProvider>
         </AuthProvider>
     </StrictMode>,
 );

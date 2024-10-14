@@ -135,3 +135,8 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+#ChoiceGrid > :last-child {
+  grid-column: span 2;
+  justify-self: center; 
+}

@@ -44,6 +44,8 @@ appsettings.Development.json
 # Windows
 Thumbs.db
 
+wwwroot/*
+
 dist
 dist-ssr
 *.local
