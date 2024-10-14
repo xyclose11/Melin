@@ -1,28 +1,58 @@
-﻿import { Button } from "@/components/ui/button.tsx";
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
+import { SquarePlus } from "lucide-react";
+import { Label } from "@/components/ui/label.tsx";
 
 export function WorkspaceToolBar() {
     return (
         <nav className="flex-1">
             <ul className="space-y-2">
                 <li>
-                    <Button className="w-full text-left">
-                        <Link to="/CreateReferencePage" />
-                    </Button>
+                    <Link
+                        to={"/create-reference"}
+                        className="flex items-center gap-2 text-foreground font-semibold"
+                    >
+                        <SquarePlus />
+                        <Label className={"w-full text-left"}> Create </Label>
+                    </Link>
                 </li>
                 <li>
-                    <Button className="w-full text-left">
-                        Your References
-                    </Button>
+                    <Link
+                        to={"/create-reference"}
+                        className="flex items-center gap-2 text-foreground font-semibold"
+                    >
+                        <SquarePlus />
+                        <Label className={"w-full text-left"}>
+                            {" "}
+                            View References{" "}
+                        </Label>
+                    </Link>
                 </li>
                 <li>
-                    <Button className="w-full text-left">Your Groups</Button>
+                    <Link
+                        to={"/create-reference"}
+                        className="flex items-center gap-2 text-foreground font-semibold"
+                    >
+                        <SquarePlus />
+                        <Label className={"w-full text-left"}> Groups </Label>
+                    </Link>
                 </li>
                 <li>
-                    <Button className="w-full text-left">Your Tags</Button>
+                    <Link
+                        to={"/create-reference"}
+                        className="flex items-center gap-2 text-foreground font-semibold"
+                    >
+                        <SquarePlus />
+                        <Label className={"w-full text-left"}> Tags </Label>
+                    </Link>
                 </li>
                 <li>
-                    <Button className="w-full text-left">Settings</Button>
+                    <Link
+                        to={"/create-reference"}
+                        className="flex items-center gap-2 text-foreground font-semibold"
+                    >
+                        <SquarePlus />
+                        <Label className={"w-full text-left"}> Settings </Label>
+                    </Link>
                 </li>
             </ul>
         </nav>

@@ -1,4 +1,3 @@
-import { Outlet } from "react-router-dom";
 import { NavBar } from "@/routes/Layout.tsx";
 import { Workspace } from "@/routes/Workspace.tsx";
 
@@ -12,7 +11,7 @@ export default function Root() {
                 }
             >
                 <Workspace />
-                <Outlet />
+                {/*<Outlet />*/}
             </div>
         </>
     );

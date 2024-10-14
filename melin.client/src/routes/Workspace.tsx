@@ -4,23 +4,23 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { ReferenceCreationPage } from "@/routes/ReferenceCreationPage.tsx";
+import { Outlet } from "react-router-dom";
 
 export function Workspace() {
     return (
         <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
                 collapsible={true}
-                defaultSize={3}
-                maxSize={6}
-                collapsedSize={2}
+                defaultSize={5}
+                maxSize={7}
+                collapsedSize={3}
             >
                 <WorkspaceToolBar />
             </ResizablePanel>
             <ResizableHandle withHandle className="w-1 m-1" />
             <ResizablePanel id="WorkspaceContent">
                 <div className="flex p-4 justify-center flex-wrap">
-                    <ReferenceCreationPage />
+                    <Outlet />
                 </div>
             </ResizablePanel>
         </ResizablePanelGroup>
