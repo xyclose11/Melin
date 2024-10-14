@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Melin.Server.Migrations
 {
-    [DbContext(typeof(Database))]
+    [DbContext(typeof(ReferenceContext))]
     [Migration("20241014002606_ReferenceDetailed")]
     partial class ReferenceDetailed
     {

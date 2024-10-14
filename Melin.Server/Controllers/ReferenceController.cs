@@ -14,12 +14,12 @@ namespace Melin.Server.Controllers;
 public class ReferenceController : ControllerBase
 {
     private readonly ApiService _apiService;
-    private readonly Database _database;
+    private readonly ReferenceContext _referenceContext;
 
-    public ReferenceController(ApiService apiService, Database database)
+    public ReferenceController(ApiService apiService, ReferenceContext database)
     {
         _apiService = apiService;
-        _database = database;
+        _referenceContext = database;
     }
 
     // [HttpGet, Authorize]
@@ -31,8 +31,8 @@ public class ReferenceController : ControllerBase
     [HttpPost("create-reference")]
     public async Task<ActionResult<Reference>> PostReference(Reference reference) {
         // find out reference type
-        _database.Reference.Add(reference);
-        await _database.SaveChangesAsync();
+        _referenceContext.Reference.Add(reference);
+        await _referenceContext.SaveChangesAsync();
 
         return Ok();
     }
@@ -40,8 +40,8 @@ public class ReferenceController : ControllerBase
     [HttpPost("create-book")]
     public async Task<ActionResult<Book>> PostReferenceBook(Book book) {
         // find out reference type
-        _database.Reference.Add(book);
-        await _database.SaveChangesAsync();
+        _referenceContext.Reference.Add(book);
+        await _referenceContext.SaveChangesAsync();
 
         return Ok();
     }

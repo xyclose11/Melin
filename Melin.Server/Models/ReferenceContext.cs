@@ -2,9 +2,9 @@
 
 namespace Melin.Server.Models;
 
-public class Database : DbContext
+public class ReferenceContext : DbContext
 {
-    public Database(DbContextOptions<Database> options)
+    public ReferenceContext(DbContextOptions<ReferenceContext> options)
         : base(options)
     {}
 
