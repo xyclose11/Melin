@@ -45,6 +45,7 @@ appsettings.Development.json
 Thumbs.db
 
 wwwroot/*
+
 dist
 dist-ssr
 *.local
