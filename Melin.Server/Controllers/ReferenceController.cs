@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Melin.Server.Models;
 
 namespace Melin.Server.Controllers;
 
@@ -13,38 +14,27 @@ namespace Melin.Server.Controllers;
 public class ReferenceController : ControllerBase
 {
     private readonly ApiService _apiService;
+    private readonly Database _database;
 
-    public ReferenceController(ApiService apiService)
+    public ReferenceController(ApiService apiService, Database database)
     {
         _apiService = apiService;
+        _database = database;
     }
 
-    [HttpGet, Authorize]
-    public async Task<IActionResult> Get()
-    {
-        try
-        {
-            using (FileStream openStream = System.IO.File.OpenRead(@"Q:\development\dotnet\Melin\Melin.Server\Data\tasks.json"))
-            {
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                };
+    // [HttpGet, Authorize]
+    // public async Task<IActionResult> Get()
+    // {
+        
+    // }
 
-                List<Task> tasks = await JsonSerializer.DeserializeAsync<List<Task>>(openStream, options);
+    [HttpPost]
+    public async Task<ActionResult<Reference>> PostReference(Reference reference) {
+        // find out reference type
+        _database.Reference.Add(reference);
+        await _database.SaveChangesAsync();
 
-                foreach (var task in tasks)
-                {
-                    Console.WriteLine($"ID: {task.Id},  Status: {task.Status}");
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error reading JSON file: {ex.Message}");
-        }
-        await using FileStream stream = System.IO.File.OpenRead(@"Q:\development\dotnet\Melin\Melin.Server\Data\tasks.json");
-        return await JsonSerializer.DeserializeAsync<IActionResult>(stream);
+        return Ok();
     }
     
 }
