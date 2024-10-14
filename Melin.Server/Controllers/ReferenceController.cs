@@ -28,13 +28,20 @@ public class ReferenceController : ControllerBase
         
     // }
 
-    [HttpPost]
+    [HttpPost("create-reference")]
     public async Task<ActionResult<Reference>> PostReference(Reference reference) {
         // find out reference type
         _database.Reference.Add(reference);
         await _database.SaveChangesAsync();
 
-        
+        return Ok();
+    }
+
+    [HttpPost("create-book")]
+    public async Task<ActionResult<Book>> PostReferenceBook(Book book) {
+        // find out reference type
+        _database.Reference.Add(book);
+        await _database.SaveChangesAsync();
 
         return Ok();
     }
