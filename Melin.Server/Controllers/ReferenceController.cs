@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Melin.Server.Controllers;
 
@@ -26,6 +27,18 @@ public class ReferenceController : ControllerBase
     // public async Task<IActionResult> Get()
     // {
         
+    // }
+
+    [HttpGet("references")] // GET: all references for a user
+    public List<Reference>? GetReferences() {
+
+        var references = _referenceContext.Reference.ToList();
+        if (references != null) { return references;} else { return null;}
+    }
+
+    // [HttpGet("reference")] // GET: single reference {id}
+    // public async List<ActionResult<Reference>> GetReference(string refId) {
+
     // }
 
     [HttpPost("create-reference")]
