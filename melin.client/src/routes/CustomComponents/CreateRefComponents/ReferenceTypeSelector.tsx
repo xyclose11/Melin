@@ -28,8 +28,6 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { useContext } from "react";
-import { RefTypeContext } from "@/Contexts.ts";
 
 const refTypes = [
     { label: "Artwork", value: "artwork" },
@@ -70,28 +68,30 @@ const refTypes = [
 ] as const;
 
 const FormSchema = z.object({
-    language: z.string({
+    refType: z.string({
         required_error: "Please select a Reference Type.",
     }),
 });
 
-export function ReferenceTypeSelector() {
+export function ReferenceTypeSelector({refType, handleState}: any) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     });
 
-    // const refType = useContext(RefTypeContext);
-    //
-    // function handleChange() {
-    //     refType =
-    // }
+    
+    function handleChange() {
+        console.log("HIT")
+        handleState("test")
+    }
+
+    console.log(refType)
 
     return (
         <Form {...form}>
-            <form onChange={handleChange} className="space-y-6">
+            <form className="space-y-6">
                 <FormField
                     control={form.control}
-                    name="language"
+                    name="refType"
                     render={({ field }) => (
                         <FormItem className="flex flex-col">
                             <FormLabel>Type</FormLabel>
@@ -99,6 +99,7 @@ export function ReferenceTypeSelector() {
                                 <PopoverTrigger asChild>
                                     <FormControl>
                                         <Button
+                                            onClick={handleChange}
                                             variant="outline"
                                             role="combobox"
                                             className={cn(
@@ -113,15 +114,15 @@ export function ReferenceTypeSelector() {
                                                           types.value ===
                                                           field.value,
                                                   )?.label
-                                                : "Select language"}
+                                                : "Select Reference Type"}
                                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                         </Button>
                                     </FormControl>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-[200px] p-0">
                                     <Command>
-                                        <CommandInput placeholder="Search language..." />
-                                        <CommandList>
+                                        <CommandInput placeholder="Search Reference Types..." />
+                                        <CommandList onChange={handleChange}>
                                             <CommandEmpty>
                                                 No reference type found.
                                             </CommandEmpty>
@@ -132,7 +133,7 @@ export function ReferenceTypeSelector() {
                                                         key={types.value}
                                                         onSelect={() => {
                                                             form.setValue(
-                                                                "language",
+                                                                "refType",
                                                                 types.value,
                                                             );
                                                         }}
