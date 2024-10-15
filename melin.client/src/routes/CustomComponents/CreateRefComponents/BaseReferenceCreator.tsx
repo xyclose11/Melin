@@ -17,8 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
-    username: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
+    title: z.string().min(2, {
+        message: "Title must be at least 2 characters.",
     }),
 });
 
@@ -26,7 +26,7 @@ export function BaseReferenceCreator() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            title: "",
         },
     });
 
@@ -39,16 +39,14 @@ export function BaseReferenceCreator() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
-                    name="username"
+                    name="title"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Title</FormLabel>
                             <FormControl>
-                                <Input placeholder="shadcn" {...field} />
+                                <Input placeholder="Title" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your public display name.
-                            </FormDescription>
+                            <FormDescription></FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}

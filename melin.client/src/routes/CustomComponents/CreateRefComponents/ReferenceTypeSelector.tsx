@@ -29,7 +29,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
-const refTypes = [
+const REFERENCE_TYPES = [
     { label: "Artwork", value: "artwork" },
     { label: "Audio Recording", value: "audio-recording" },
     { label: "Bill", value: "bill" },
@@ -73,18 +73,17 @@ const FormSchema = z.object({
     }),
 });
 
-export function ReferenceTypeSelector({refType, handleState}: any) {
+export function ReferenceTypeSelector({ refType, handleState }: any) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     });
 
-    
     function handleChange() {
-        console.log("HIT")
-        handleState("test")
+        console.log("HIT");
+        handleState("test");
     }
 
-    console.log(refType)
+    console.log(refType);
 
     return (
         <Form {...form}>
@@ -109,7 +108,7 @@ export function ReferenceTypeSelector({refType, handleState}: any) {
                                             )}
                                         >
                                             {field.value
-                                                ? refTypes.find(
+                                                ? REFERENCE_TYPES.find(
                                                       (types) =>
                                                           types.value ===
                                                           field.value,
@@ -127,29 +126,31 @@ export function ReferenceTypeSelector({refType, handleState}: any) {
                                                 No reference type found.
                                             </CommandEmpty>
                                             <CommandGroup>
-                                                {refTypes.map((types) => (
-                                                    <CommandItem
-                                                        value={types.label}
-                                                        key={types.value}
-                                                        onSelect={() => {
-                                                            form.setValue(
-                                                                "refType",
-                                                                types.value,
-                                                            );
-                                                        }}
-                                                    >
-                                                        <Check
-                                                            className={cn(
-                                                                "mr-2 h-4 w-4",
-                                                                types.value ===
-                                                                    field.value
-                                                                    ? "opacity-100"
-                                                                    : "opacity-0",
-                                                            )}
-                                                        />
-                                                        {types.label}
-                                                    </CommandItem>
-                                                ))}
+                                                {REFERENCE_TYPES.map(
+                                                    (types) => (
+                                                        <CommandItem
+                                                            value={types.label}
+                                                            key={types.value}
+                                                            onSelect={() => {
+                                                                form.setValue(
+                                                                    "refType",
+                                                                    types.value,
+                                                                );
+                                                            }}
+                                                        >
+                                                            <Check
+                                                                className={cn(
+                                                                    "mr-2 h-4 w-4",
+                                                                    types.value ===
+                                                                        field.value
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0",
+                                                                )}
+                                                            />
+                                                            {types.label}
+                                                        </CommandItem>
+                                                    ),
+                                                )}
                                             </CommandGroup>
                                         </CommandList>
                                     </Command>
