@@ -15,6 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { CreatorInput } from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
 
 const formSchema = z.object({
     title: z.string().min(2, {
@@ -34,6 +35,8 @@ export function BaseReferenceCreator() {
         console.log(values);
     }
 
+    function onClickAddCreator() {}
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -51,6 +54,11 @@ export function BaseReferenceCreator() {
                         </FormItem>
                     )}
                 />
+                <CreatorInput />
+                <Button type="button" onClick={}>
+                    + Add Another
+                </Button>
+
                 <Button type="submit">Submit</Button>
             </form>
         </Form>
