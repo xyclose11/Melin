@@ -85,7 +85,8 @@ namespace Melin.Server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("Type")
+                    b.Property<int>("Type")
+                        .HasMaxLength(256)
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")

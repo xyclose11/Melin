@@ -23,17 +23,11 @@ public class ReferenceController : ControllerBase
         _referenceContext = database;
     }
 
-    // [HttpGet, Authorize]
-    // public async Task<IActionResult> Get()
-    // {
-        
-    // }
-
     [HttpGet("references")] // GET: all references for a user
-    public List<Reference>? GetReferences() {
+    public List<Reference> GetReferences() {
 
         var references = _referenceContext.Reference.ToList();
-        if (references != null) { return references;} else { return null;}
+        return references;
     }
 
     // [HttpGet("reference")] // GET: single reference {id}

@@ -8,7 +8,6 @@ public class Reference
     [Required]
     public int Id { get; set; }
     
-    [Required]
     [MaxLength(256)]
     // Base fields
     public ReferenceType? Type { get; set; }
