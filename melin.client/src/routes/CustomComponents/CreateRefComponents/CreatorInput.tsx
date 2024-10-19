@@ -20,6 +20,12 @@ const formSchema = z.object({
         message: "Last Name must be at least 2 characters.",
     }),
 });
+
+export interface CreatorFields {
+    Id: number;
+    FirstName: string;
+    LastName: string;
+}
 export function CreatorInput() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -30,37 +36,42 @@ export function CreatorInput() {
     });
 
     return (
-        <Form {...form}>
-            <form className="space-y-8 columns-2">
-                <FormField
-                    control={form.control}
-                    name="firstName"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>First Name</FormLabel>
-                            <FormControl>
-                                <Input placeholder="First Name" {...field} />
-                            </FormControl>
-                            <FormDescription></FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="lastName"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Last Name</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Last Name" {...field} />
-                            </FormControl>
-                            <FormDescription></FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </form>
-        </Form>
+        <div>
+            <Form {...form}>
+                <form className="space-y-8 columns-2">
+                    <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>First Name</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="First Name"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription></FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Last Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Last Name" {...field} />
+                                </FormControl>
+                                <FormDescription></FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>
     );
 }
