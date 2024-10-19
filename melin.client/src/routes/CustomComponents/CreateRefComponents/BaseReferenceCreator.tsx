@@ -51,12 +51,6 @@ export function BaseReferenceCreator() {
         },
     });
 
-    // function onSubmit(values: z.infer<typeof formSchema>) {
-    //
-    //     console.log(datePublished);
-    //     console.log(values);
-    // }
-
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             await instance.post("Reference/create-reference", data);

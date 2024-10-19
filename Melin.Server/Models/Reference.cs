@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Melin.Server.Models;
 
@@ -6,12 +7,13 @@ namespace Melin.Server.Models;
 public class Reference
 {
     [Required]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     
     [MaxLength(256)]
     // Base fields
     public ReferenceType? Type { get; set; }
-    public ICollection<Creator>? Creators { get; set; } = null;
+    public ICollection<Creator>? Creators { get; set; } = new List<Creator>();
     public string Title { get; set; } = "";
     public string? ShortTitle { get; set; } = "";
     public Language? Language { get; set; }
@@ -22,6 +24,6 @@ public class Reference
     public string[]? ExtraFields { get; set; } // TODO Add feature to let user add field
     
     // Logging things
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
