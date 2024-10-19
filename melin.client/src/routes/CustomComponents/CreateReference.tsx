@@ -12,7 +12,7 @@ export function CreateReference() {
     }
     return (
         <>
-            <div className={"grid grid-cols-3 gap-8"}>
+            <div className={"grid grid-cols-2 gap-2"}>
                 <ReferenceTypeSelector
                     refType={refType}
                     handleState={handleState}

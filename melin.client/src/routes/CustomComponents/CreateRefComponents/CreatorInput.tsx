@@ -1,5 +1,4 @@
 ﻿import {
-    Form,
     FormControl,
     FormDescription,
     FormField,
@@ -73,123 +72,108 @@ export function CreatorInput() {
 
     return (
         <div>
-            <Form {...form}>
-                <form className="space-y-8 columns-2">
-                    <FormField
-                        control={form.control}
-                        name="creatorType"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>creatorType</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                variant="outline"
-                                                role="combobox"
-                                                className={cn(
-                                                    "w-[200px] justify-between",
-                                                    !field.value &&
-                                                        "text-muted-foreground",
-                                                )}
-                                            >
-                                                {field.value
-                                                    ? CREATOR_TYPES.find(
-                                                          (creatorType) =>
-                                                              creatorType.value ===
-                                                              field.value,
-                                                      )?.label
-                                                    : "Select language"}
-                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-[200px] p-0">
-                                        <Command>
-                                            <CommandInput placeholder="Search language..." />
-                                            <CommandList>
-                                                <CommandEmpty>
-                                                    No language found.
-                                                </CommandEmpty>
-                                                <CommandGroup>
-                                                    {CREATOR_TYPES.map(
-                                                        (creatorType) => (
-                                                            <CommandItem
-                                                                value={
-                                                                    creatorType.label
-                                                                }
-                                                                key={
-                                                                    creatorType.value
-                                                                }
-                                                                onSelect={() => {
-                                                                    form.setValue(
-                                                                        "creatorType",
-                                                                        creatorType.value,
-                                                                    );
-                                                                }}
-                                                            >
-                                                                <Check
-                                                                    className={cn(
-                                                                        "mr-2 h-4 w-4",
-                                                                        creatorType.value ===
-                                                                            field.value
-                                                                            ? "opacity-100"
-                                                                            : "opacity-0",
-                                                                    )}
-                                                                />
-                                                                {
-                                                                    creatorType.label
-                                                                }
-                                                            </CommandItem>
-                                                        ),
-                                                    )}
-                                                </CommandGroup>
-                                            </CommandList>
-                                        </Command>
-                                    </PopoverContent>
-                                </Popover>
-                                <FormDescription>
-                                    This is the language that will be used in
-                                    the dashboard.
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+            <FormField
+                control={form.control}
+                name="creatorType"
+                render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                        <FormLabel>Creator Type</FormLabel>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <FormControl>
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        className={cn(
+                                            "w-[200px] justify-between",
+                                            !field.value &&
+                                                "text-muted-foreground",
+                                        )}
+                                    >
+                                        {field.value
+                                            ? CREATOR_TYPES.find(
+                                                  (creatorType) =>
+                                                      creatorType.value ===
+                                                      field.value,
+                                              )?.label
+                                            : "Select language"}
+                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[200px] p-0">
+                                <Command>
+                                    <CommandInput placeholder="Search language..." />
+                                    <CommandList>
+                                        <CommandEmpty>
+                                            No language found.
+                                        </CommandEmpty>
+                                        <CommandGroup>
+                                            {CREATOR_TYPES.map(
+                                                (creatorType) => (
+                                                    <CommandItem
+                                                        value={
+                                                            creatorType.label
+                                                        }
+                                                        key={creatorType.value}
+                                                        onSelect={() => {
+                                                            form.setValue(
+                                                                "creatorType",
+                                                                creatorType.value,
+                                                            );
+                                                        }}
+                                                    >
+                                                        <Check
+                                                            className={cn(
+                                                                "mr-2 h-4 w-4",
+                                                                creatorType.value ===
+                                                                    field.value
+                                                                    ? "opacity-100"
+                                                                    : "opacity-0",
+                                                            )}
+                                                        />
+                                                        {creatorType.label}
+                                                    </CommandItem>
+                                                ),
+                                            )}
+                                        </CommandGroup>
+                                    </CommandList>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
 
-                    <FormField
-                        control={form.control}
-                        name="firstName"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>First Name</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="First Name"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription></FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="lastName"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Last Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Last Name" {...field} />
-                                </FormControl>
-                                <FormDescription></FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </form>
-            </Form>
+            <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl>
+                            <Input placeholder="First Name" {...field} />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Last Name" {...field} />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
         </div>
     );
 }
