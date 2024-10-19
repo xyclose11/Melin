@@ -37,11 +37,19 @@ public class ReferenceController : ControllerBase
 
     [HttpPost("create-reference")]
     public async Task<ActionResult<Reference>> PostReference(Reference reference) {
-        // find out reference type
-        _referenceContext.Reference.Add(reference);
-        await _referenceContext.SaveChangesAsync();
+        if (reference == null) {
+            return BadRequest("Reference cannot be null.");
+        }
+        
+        try {
+            _referenceContext.Reference.Add(reference);
+            await _referenceContext.SaveChangesAsync();
 
-        return Ok();
+            return CreatedAtAction(nameof(PostReference), new { id = reference.Id }, reference);
+        } catch (Exception ex) {
+            // Log the exception (ex) here as needed
+            return StatusCode(500, "An error occurred while creating the reference.");
+        }
     }
 
     [HttpPost("create-book")]

@@ -25,6 +25,7 @@ import {
 import { cn } from "@/lib/utils.ts";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { instance } from "@/utils/axiosInstance.ts";
 
 const formSchema = z.object({
     title: z.string().min(2, {
@@ -50,9 +51,20 @@ export function BaseReferenceCreator() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
-    }
+    // function onSubmit(values: z.infer<typeof formSchema>) {
+    //
+    //     console.log(datePublished);
+    //     console.log(values);
+    // }
+
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        try {
+            await instance.post("Reference/create-reference", data);
+            console.log("SUCCESS");
+        } catch (error) {
+            console.error("Create reference failed:", error);
+        }
+    };
 
     function onClickAddCreator() {
         setCreatorArray([...creatorArray, <CreatorInput key={nextId} />]);
@@ -137,7 +149,10 @@ export function BaseReferenceCreator() {
                                             <Calendar
                                                 mode="single"
                                                 selected={datePublished}
-                                                onSelect={setDatePublished}
+                                                onSelect={(date) => {
+                                                    setDatePublished(date);
+                                                    field.onChange(date);
+                                                }}
                                                 initialFocus
                                                 {...field}
                                             />
@@ -191,10 +206,10 @@ export function BaseReferenceCreator() {
                     >
                         + Add Another
                     </Button>
+                    <Button className="col-end-2 m-2" type="submit">
+                        Submit
+                    </Button>
                 </form>
-                <Button className="col-end-2 m-2" type="submit">
-                    Submit
-                </Button>
             </Form>
         </div>
     );

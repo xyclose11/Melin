@@ -55,7 +55,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         policy => {
-            policy.WithOrigins("https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
+            policy.WithOrigins("https://localhost:5173", "https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
             policy.AllowAnyHeader();
             policy.AllowAnyMethod();
             policy.AllowCredentials();
@@ -84,12 +84,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Login";
+        options.LoginPath = "/login";
         options.LogoutPath = "/Logout";
         options.Cookie.HttpOnly = true;
         options.Cookie.Name = "MELIN_AUTH_COOKIE";
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SameSite = SameSiteMode.None;
 
         options.SlidingExpiration = true;
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
