@@ -1,8 +1,8 @@
 ﻿"use client";
 
-import { BaseReferenceCreator } from "@/routes/CustomComponents/CreateRefComponents/BaseReferenceCreator.tsx";
 import { ReferenceTypeSelector } from "@/routes/CustomComponents/CreateRefComponents/ReferenceTypeSelector.tsx";
 import { useState } from "react";
+import { CreateReferenceBook } from "@/routes/ReferenceCreationPages/CreateReferenceBook.tsx";
 export function CreateReference() {
     const [refType, setRefType] = useState("artwork"); // default is book
 
@@ -10,6 +10,7 @@ export function CreateReference() {
         setRefType(newRefType);
         console.log(refType);
     }
+
     return (
         <>
             <div className={"grid grid-cols-2 gap-2"}>
@@ -17,7 +18,7 @@ export function CreateReference() {
                     refType={refType}
                     handleState={handleState}
                 />
-                {refType === "book" && <BaseReferenceCreator />}
+                {refType === "book" && <CreateReferenceBook />}
             </div>
         </>
     );

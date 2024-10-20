@@ -2,7 +2,7 @@
 import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -15,10 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-    creatorFormSchema,
-    CreatorInput,
-} from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
+import { CreatorInput } from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
 import React, { useState } from "react";
 import {
     Popover,
@@ -29,22 +26,33 @@ import { cn } from "@/lib/utils.ts";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { instance } from "@/utils/axiosInstance.ts";
+import { baseReferenceSchema } from "@/routes/ReferenceCreationPages/BaseReferenceSchema.ts";
 
-const formSchema = z.object({
-    title: z.string().min(2, {
-        message: "Title must be at least 2 characters.",
-    }),
-    shortTitle: z.string().min(2).optional(),
-    language: z.string().min(2).optional(),
-    datePublished: z.date().optional(),
-    rights: z.string().array().optional(),
-    extraFields: z.string().array().optional(),
-    creators: z.array(creatorFormSchema).optional(),
+const bookSchema = z.object({
+    Publication: z.string().min(2).optional(),
+    BookTitle: z.string().min(2).optional(),
+    Volume: z.string().min(2).optional(),
+    Issue: z.string().min(2).optional(),
+    Pages: z.number().min(0).optional(),
+    Edition: z.string().min(2).optional(),
+    Series: z.string().min(2).optional(),
+    SeriesNumber: z.number().min(0).optional(),
+    SeriesTitle: z.number().min(0).optional(),
+    VolumeAmount: z.number().min(0).optional(),
+    PageAmount: z.number().min(0).optional(),
+    Section: z.string().min(2).optional(),
+    Place: z.string().min(2).optional(),
+    Publisher: z.string().min(2).optional(),
+    JournalAbbreviation: z.string().min(2).optional(),
+    ISBN: z.string().min(2).optional(),
+    ISSN: z.string().min(2).optional(),
 });
+
+const formSchema = baseReferenceSchema.extend({ bookSchema });
 
 let nextId = 0;
 
-export function BaseReferenceCreator() {
+export function CreateReferenceBook() {
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
 
@@ -62,11 +70,15 @@ export function BaseReferenceCreator() {
         },
     });
 
+    const {
+        control,
+        formState: { errors },
+    } = form;
+
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
             // figure out which reference type is being used
-            await instance.post(`Reference/create-reference`, data);
-            console.log("SUCCESS");
+            await instance.post(`Reference/create-book`, data);
         } catch (error) {
             console.error("Create reference failed:", error);
         }
@@ -215,6 +227,52 @@ export function BaseReferenceCreator() {
                     >
                         + Add Another
                     </Button>
+
+                    <FormField
+                        control={form.control}
+                        name="bookSchema.Publication"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Publication</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Publication"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {Object.keys(bookSchema.shape).map((key) => (
+                        <Controller
+                            key={key}
+                            control={control}
+                            name={
+                                `bookSchema.${key}` as keyof z.infer<
+                                    typeof formSchema
+                                >
+                            }
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        {key.replace(/([A-Z])/g, " $1")}:
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder={key.replace(
+                                                /([A-Z])/g,
+                                                " $1",
+                                            )}
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                    ))}
+
                     <Button className="col-end-2 m-2" type="submit">
                         Submit
                     </Button>
