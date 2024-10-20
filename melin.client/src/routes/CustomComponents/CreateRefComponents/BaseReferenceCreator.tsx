@@ -15,7 +15,10 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CreatorInput } from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
+import {
+    creatorFormSchema,
+    CreatorInput,
+} from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
 import React, { useState } from "react";
 import {
     Popover,
@@ -36,6 +39,7 @@ const formSchema = z.object({
     datePublished: z.date().optional(),
     rights: z.string().array().optional(),
     extraFields: z.string().array().optional(),
+    creators: z.array(creatorFormSchema).optional(),
 });
 
 let nextId = 0;
@@ -53,6 +57,7 @@ export function BaseReferenceCreator() {
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
+            console.log(data);
             await instance.post("Reference/create-reference", data);
             console.log("SUCCESS");
         } catch (error) {
@@ -61,7 +66,10 @@ export function BaseReferenceCreator() {
     };
 
     function onClickAddCreator() {
-        setCreatorArray([...creatorArray, <CreatorInput key={nextId} />]);
+        setCreatorArray([
+            ...creatorArray,
+            <CreatorInput name={`creators.${nextId}`} key={nextId} />,
+        ]);
         nextId++;
     }
 

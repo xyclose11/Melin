@@ -7,9 +7,8 @@
     FormMessage,
 } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import { useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils.ts";
 import {
@@ -47,7 +46,7 @@ const CREATOR_TYPES = [
     { label: "Inventor", value: "inventor" },
 ] as const;
 
-const formSchema = z.object({
+export const creatorFormSchema = z.object({
     creatorType: z.enum(
         CREATOR_TYPES.map((type) => type.value) as [string, ...string[]],
         { errorMap: () => ({ message: "Invalid Creator Type" }) },
@@ -60,21 +59,14 @@ const formSchema = z.object({
     }),
 });
 
-export function CreatorInput() {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            creatorType: "author",
-            firstName: "",
-            lastName: "",
-        },
-    });
+export function CreatorInput({ name }: { name: string }) {
+    const { control } = useFormContext();
 
     return (
         <div>
             <FormField
-                control={form.control}
-                name="creatorType"
+                control={control}
+                name={`${name}.creatorType`}
                 render={({ field }) => (
                     <FormItem className="flex flex-col">
                         <FormLabel>Creator Type</FormLabel>
@@ -96,17 +88,17 @@ export function CreatorInput() {
                                                       creatorType.value ===
                                                       field.value,
                                               )?.label
-                                            : "Select language"}
+                                            : "Select Creator Type"}
                                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                     </Button>
                                 </FormControl>
                             </PopoverTrigger>
                             <PopoverContent className="w-[200px] p-0">
                                 <Command>
-                                    <CommandInput placeholder="Search language..." />
+                                    <CommandInput placeholder="Search creator types..." />
                                     <CommandList>
                                         <CommandEmpty>
-                                            No language found.
+                                            No creator type found.
                                         </CommandEmpty>
                                         <CommandGroup>
                                             {CREATOR_TYPES.map(
@@ -117,8 +109,7 @@ export function CreatorInput() {
                                                         }
                                                         key={creatorType.value}
                                                         onSelect={() => {
-                                                            form.setValue(
-                                                                "creatorType",
+                                                            field.onChange(
                                                                 creatorType.value,
                                                             );
                                                         }}
@@ -147,8 +138,8 @@ export function CreatorInput() {
             />
 
             <FormField
-                control={form.control}
-                name="firstName"
+                control={control}
+                name={`${name}.firstName`}
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>First Name</FormLabel>
@@ -161,8 +152,8 @@ export function CreatorInput() {
                 )}
             />
             <FormField
-                control={form.control}
-                name="lastName"
+                control={control}
+                name={`${name}.lastName`}
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Last Name</FormLabel>
