@@ -1,8 +1,8 @@
 ﻿"use client";
-import { z } from "zod";
+import { z, ZodObject } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -44,7 +44,11 @@ const formSchema = z.object({
 
 let nextId = 0;
 
-export function BaseReferenceCreator() {
+export function BaseReferenceCreator({
+    refSchema,
+}: {
+    refSchema: ZodObject<any>;
+}) {
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
 
@@ -71,6 +75,8 @@ export function BaseReferenceCreator() {
             console.error("Create reference failed:", error);
         }
     };
+
+    const { control } = form;
 
     function onClickAddCreator() {
         setCreatorArray([
@@ -215,6 +221,35 @@ export function BaseReferenceCreator() {
                     >
                         + Add Another
                     </Button>
+
+                    {Object.keys(refSchema.shape).map((key) => (
+                        <Controller
+                            key={key}
+                            control={control}
+                            name={
+                                `bookSchema.${key}` as keyof z.infer<
+                                    typeof formSchema
+                                >
+                            }
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        {key.replace(/([A-Z])/g, " $1")}:
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder={key.replace(
+                                                /([A-Z])/g,
+                                                " $1",
+                                            )}
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                    ))}
+
                     <Button className="col-end-2 m-2" type="submit">
                         Submit
                     </Button>

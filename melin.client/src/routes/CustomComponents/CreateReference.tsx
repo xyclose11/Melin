@@ -2,7 +2,8 @@
 
 import { ReferenceTypeSelector } from "@/routes/CustomComponents/CreateRefComponents/ReferenceTypeSelector.tsx";
 import { useState } from "react";
-import { CreateReferenceBook } from "@/routes/ReferenceCreationPages/CreateReferenceBook.tsx";
+import { BaseReferenceCreator } from "@/routes/CustomComponents/CreateRefComponents/BaseReferenceCreator.tsx";
+import { bookSchema } from "@/routes/ReferenceCreationPages/BaseReferenceSchema.ts";
 export function CreateReference() {
     const [refType, setRefType] = useState("artwork"); // default is book
 
@@ -18,7 +19,9 @@ export function CreateReference() {
                     refType={refType}
                     handleState={handleState}
                 />
-                {refType === "book" && <CreateReferenceBook />}
+                {refType === "book" && (
+                    <BaseReferenceCreator refSchema={bookSchema} />
+                )}
             </div>
         </>
     );
