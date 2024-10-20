@@ -64,7 +64,7 @@ export function BaseReferenceCreator() {
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
-            console.log(data);
+            // figure out which reference type is being used
             await instance.post("Reference/create-reference", data);
             console.log("SUCCESS");
         } catch (error) {

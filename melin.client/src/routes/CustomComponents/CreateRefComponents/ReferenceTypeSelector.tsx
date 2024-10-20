@@ -79,8 +79,8 @@ export function ReferenceTypeSelector({ refType, handleState }: any) {
     });
 
     function handleChange() {
-        console.log("HIT");
-        handleState("test");
+        console.log(form.getValues());
+        handleState(form.getValues().refType);
     }
 
     console.log(refType);
@@ -98,7 +98,6 @@ export function ReferenceTypeSelector({ refType, handleState }: any) {
                                 <PopoverTrigger asChild>
                                     <FormControl>
                                         <Button
-                                            onClick={handleChange}
                                             variant="outline"
                                             role="combobox"
                                             className={cn(
@@ -121,7 +120,7 @@ export function ReferenceTypeSelector({ refType, handleState }: any) {
                                 <PopoverContent className="w-[200px] p-0">
                                     <Command>
                                         <CommandInput placeholder="Search Reference Types..." />
-                                        <CommandList onChange={handleChange}>
+                                        <CommandList>
                                             <CommandEmpty>
                                                 No reference type found.
                                             </CommandEmpty>
@@ -136,6 +135,7 @@ export function ReferenceTypeSelector({ refType, handleState }: any) {
                                                                     "refType",
                                                                     types.value,
                                                                 );
+                                                                handleChange();
                                                             }}
                                                         >
                                                             <Check

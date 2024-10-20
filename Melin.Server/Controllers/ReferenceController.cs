@@ -63,9 +63,10 @@ public class ReferenceController : ControllerBase
     }
     
     [HttpPost("create-artwork")]
-    public async Task<ActionResult<Artwork>> PostReferenceArtwork(Artwork artwork) {
-        // find out reference type
-        _referenceContext.Reference.Add(artwork);
+    public async Task<ActionResult<Artwork>> PostReferenceArtwork(Artwork artwork)
+    {
+        artwork.Type = ReferenceType.Artwork;
+        _referenceContext.Artworks.Add(artwork);
         await _referenceContext.SaveChangesAsync();
 
         return Ok();

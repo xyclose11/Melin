@@ -4,7 +4,7 @@ import { BaseReferenceCreator } from "@/routes/CustomComponents/CreateRefCompone
 import { ReferenceTypeSelector } from "@/routes/CustomComponents/CreateRefComponents/ReferenceTypeSelector.tsx";
 import { useState } from "react";
 export function CreateReference() {
-    const [refType, setRefType] = useState("book"); // default is book
+    const [refType, setRefType] = useState("artwork"); // default is book
 
     function handleState(newRefType: string) {
         setRefType(newRefType);
@@ -17,7 +17,7 @@ export function CreateReference() {
                     refType={refType}
                     handleState={handleState}
                 />
-                <BaseReferenceCreator />
+                {refType === "book" && <BaseReferenceCreator />}
             </div>
         </>
     );
