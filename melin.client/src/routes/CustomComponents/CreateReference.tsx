@@ -4,7 +4,7 @@ import { ReferenceTypeSelector } from "@/routes/CustomComponents/CreateRefCompon
 import { useState } from "react";
 import { BaseReferenceCreator } from "@/routes/CustomComponents/CreateRefComponents/BaseReferenceCreator.tsx";
 import {
-    artWorkSchema,
+    artworkSchema,
     bookSchema,
     legalCaseSchema,
     legislationSchema,
@@ -32,37 +32,70 @@ export function CreateReference() {
                     handleState={handleState}
                 />
                 {refType === "book" && (
-                    <BaseReferenceCreator refSchema={bookSchema} />
+                    <BaseReferenceCreator
+                        refSchema={bookSchema}
+                        schemaName="book"
+                    />
                 )}
                 {refType === "artwork" && (
-                    <BaseReferenceCreator refSchema={artWorkSchema} />
+                    <BaseReferenceCreator
+                        refSchema={artworkSchema}
+                        schemaName="artwork"
+                    />
                 )}
                 {refType === "case" && (
-                    <BaseReferenceCreator refSchema={legalCaseSchema} />
+                    <BaseReferenceCreator
+                        refSchema={legalCaseSchema}
+                        schemaName="case"
+                    />
                 )}
                 {refType === "patent" && (
-                    <BaseReferenceCreator refSchema={patentSchema} />
+                    <BaseReferenceCreator
+                        refSchema={patentSchema}
+                        schemaName="patent"
+                    />
                 )}
                 {refType === "legislation" && (
-                    <BaseReferenceCreator refSchema={legislationSchema} />
+                    <BaseReferenceCreator
+                        refSchema={legislationSchema}
+                        schemaName="legislation"
+                    />
                 )}
                 {refType === "website" && (
-                    <BaseReferenceCreator refSchema={websiteSchema} />
+                    <BaseReferenceCreator
+                        refSchema={websiteSchema}
+                        schemaName="website"
+                    />
                 )}
                 {refType === "report" && (
-                    <BaseReferenceCreator refSchema={reportSchema} />
+                    <BaseReferenceCreator
+                        refSchema={reportSchema}
+                        schemaName="report"
+                    />
                 )}
                 {refType === "presentation" && (
-                    <BaseReferenceCreator refSchema={presentationSchema} />
+                    <BaseReferenceCreator
+                        refSchema={presentationSchema}
+                        schemaName="presentation"
+                    />
                 )}
                 {refType === "primary-source" && (
-                    <BaseReferenceCreator refSchema={primarySourceSchema} />
+                    <BaseReferenceCreator
+                        refSchema={primarySourceSchema}
+                        schemaName="primary-source"
+                    />
                 )}
                 {refType === "audio-recording" && (
-                    <BaseReferenceCreator refSchema={recordingSchema} />
+                    <BaseReferenceCreator
+                        refSchema={recordingSchema}
+                        schemaName="audio-recording"
+                    />
                 )}
                 {refType === "software" && (
-                    <BaseReferenceCreator refSchema={softwareSchema} />
+                    <BaseReferenceCreator
+                        refSchema={softwareSchema}
+                        schemaName="software"
+                    />
                 )}
             </div>
         </>

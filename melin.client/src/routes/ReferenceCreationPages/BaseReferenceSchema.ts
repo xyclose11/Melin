@@ -33,9 +33,9 @@ export const bookSchema = z.object({
     ISSN: z.string().min(2).optional(),
 });
 
-export const artWorkSchema = z.object({
-    Medium: z.string().min(2).max(128),
-    Dimensions: z.string().min(2).max(128),
+export const artworkSchema = z.object({
+    Medium: z.string().min(2).max(128).default(""),
+    Dimensions: z.string().min(2).max(128).default(""),
     Scale: z.string().min(2).max(128).optional(),
     MapType: z.string().min(2).max(128).optional(),
 });
@@ -116,7 +116,7 @@ export const softwareSchema = z.object({
     Version: z.string().min(2).max(256),
     System: z.string().min(2).max(256),
     Company: z.string().min(2).max(256).optional(),
-    ProgrammingLanguage: z.string().min(2).max(256).optional(),
+    ProgrammingLanguage: z.string().min(2).max(256).optional().default(""),
 });
 
 export const websiteSchema = z.object({

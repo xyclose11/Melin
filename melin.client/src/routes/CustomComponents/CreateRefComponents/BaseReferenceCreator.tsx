@@ -31,14 +31,15 @@ import { Calendar } from "@/components/ui/calendar";
 import { instance } from "@/utils/axiosInstance.ts";
 
 const formSchema = z.object({
+    refType: z.string(),
     title: z.string().min(2, {
         message: "Title must be at least 2 characters.",
     }),
-    shortTitle: z.string().min(2).optional(),
-    language: z.string().min(2).optional(),
+    shortTitle: z.string().optional(),
+    language: z.string().optional(),
     datePublished: z.date().optional(),
-    rights: z.string().array().optional(),
-    extraFields: z.string().array().optional(),
+    rights: z.string().optional(),
+    extraFields: z.string().optional(),
     creators: z.array(creatorFormSchema).optional(),
 });
 
@@ -46,8 +47,10 @@ let nextId = 0;
 
 export function BaseReferenceCreator({
     refSchema,
+    schemaName,
 }: {
     refSchema: ZodObject<any>;
+    schemaName: string;
 }) {
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
@@ -55,7 +58,13 @@ export function BaseReferenceCreator({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            refType: "book",
             title: "",
+            shortTitle: undefined,
+            datePublished: undefined,
+            language: undefined,
+            extraFields: undefined,
+            rights: undefined,
             creators: [
                 {
                     creatorType: "author",
@@ -67,16 +76,20 @@ export function BaseReferenceCreator({
     });
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        console.log("ASD");
         try {
             // figure out which reference type is being used
-            await instance.post(`Reference/create-reference`, data);
+            await instance.post(`Reference/create-${schemaName}`, data);
             console.log("SUCCESS");
         } catch (error) {
             console.error("Create reference failed:", error);
         }
     };
 
-    const { control } = form;
+    const {
+        control,
+        formState: { errors },
+    } = form;
 
     function onClickAddCreator() {
         setCreatorArray([
@@ -249,6 +262,22 @@ export function BaseReferenceCreator({
                             )}
                         />
                     ))}
+
+                    {errors.creators && <div>{errors.creators.message}</div>}
+                    {errors.title && <div>{errors.title.message}</div>}
+                    {errors.shortTitle && (
+                        <div>{errors.shortTitle.message}</div>
+                    )}
+                    {errors.rights && <div>{errors.rights.message}</div>}
+                    {errors.datePublished && (
+                        <div>{errors.datePublished.message}</div>
+                    )}
+                    {errors.extraFields && (
+                        <div>{errors.extraFields.message}</div>
+                    )}
+                    {errors.language && <div>{errors.language.message}</div>}
+
+                    {errors.root && <div> {errors.root.message}</div>}
 
                     <Button className="col-end-2 m-2" type="submit">
                         Submit

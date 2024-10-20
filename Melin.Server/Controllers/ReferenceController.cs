@@ -30,11 +30,6 @@ public class ReferenceController : ControllerBase
         return references;
     }
 
-    // [HttpGet("reference")] // GET: single reference {id}
-    // public async List<ActionResult<Reference>> GetReference(string refId) {
-
-    // }
-
     [HttpPost("create-reference")]
     public async Task<ActionResult<Reference>> PostReference(Reference reference) {
         if (reference == null) {
@@ -65,6 +60,7 @@ public class ReferenceController : ControllerBase
     [HttpPost("create-artwork")]
     public async Task<ActionResult<Artwork>> PostReferenceArtwork(Artwork artwork)
     {
+        artwork.Language = Language.English;
         artwork.Type = ReferenceType.Artwork;
         _referenceContext.Artworks.Add(artwork);
         await _referenceContext.SaveChangesAsync();
