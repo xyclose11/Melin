@@ -1,6 +1,5 @@
 ﻿import {
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -146,7 +145,6 @@ export function CreatorInput({ name }: { name: string }) {
                         <FormControl>
                             <Input placeholder="First Name" {...field} />
                         </FormControl>
-                        <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}
@@ -160,7 +158,6 @@ export function CreatorInput({ name }: { name: string }) {
                         <FormControl>
                             <Input placeholder="Last Name" {...field} />
                         </FormControl>
-                        <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}

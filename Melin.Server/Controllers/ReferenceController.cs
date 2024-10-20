@@ -41,8 +41,6 @@ public class ReferenceController : ControllerBase
             return BadRequest("Reference cannot be null.");
         }
         
-        // normalize date
-
         reference.Type = ReferenceType.Book;
         try {
             _referenceContext.Reference.Add(reference);

@@ -52,6 +52,13 @@ export function BaseReferenceCreator() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
+            creators: [
+                {
+                    creatorType: "author",
+                    firstName: "",
+                    lastName: "",
+                },
+            ],
         },
     });
 
