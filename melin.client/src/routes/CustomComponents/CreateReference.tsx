@@ -26,77 +26,82 @@ export function CreateReference() {
 
     return (
         <>
-            <div className={"grid grid-cols-2 gap-2"}>
-                <ReferenceTypeSelector
-                    refType={refType}
-                    handleState={handleState}
-                />
-                {refType === "book" && (
-                    <BaseReferenceCreator
-                        refSchema={bookSchema}
-                        schemaName="book"
+            <div className={"grid grid-cols-4 gap-2"}>
+                <div>
+                    <ReferenceTypeSelector
+                        refType={refType}
+                        handleState={handleState}
                     />
-                )}
-                {refType === "artwork" && (
-                    <BaseReferenceCreator
-                        refSchema={artworkSchema}
-                        schemaName="artwork"
-                    />
-                )}
-                {refType === "case" && (
-                    <BaseReferenceCreator
-                        refSchema={legalCaseSchema}
-                        schemaName="case"
-                    />
-                )}
-                {refType === "patent" && (
-                    <BaseReferenceCreator
-                        refSchema={patentSchema}
-                        schemaName="patent"
-                    />
-                )}
-                {refType === "legislation" && (
-                    <BaseReferenceCreator
-                        refSchema={legislationSchema}
-                        schemaName="legislation"
-                    />
-                )}
-                {refType === "website" && (
-                    <BaseReferenceCreator
-                        refSchema={websiteSchema}
-                        schemaName="website"
-                    />
-                )}
-                {refType === "report" && (
-                    <BaseReferenceCreator
-                        refSchema={reportSchema}
-                        schemaName="report"
-                    />
-                )}
-                {refType === "presentation" && (
-                    <BaseReferenceCreator
-                        refSchema={presentationSchema}
-                        schemaName="presentation"
-                    />
-                )}
-                {refType === "primary-source" && (
-                    <BaseReferenceCreator
-                        refSchema={primarySourceSchema}
-                        schemaName="primary-source"
-                    />
-                )}
-                {refType === "audio-recording" && (
-                    <BaseReferenceCreator
-                        refSchema={recordingSchema}
-                        schemaName="audio-recording"
-                    />
-                )}
-                {refType === "software" && (
-                    <BaseReferenceCreator
-                        refSchema={softwareSchema}
-                        schemaName="software"
-                    />
-                )}
+                </div>
+
+                <div className={"col-span-2"}>
+                    {refType === "book" && (
+                        <BaseReferenceCreator
+                            refSchema={bookSchema}
+                            schemaName="book"
+                        />
+                    )}
+                    {refType === "artwork" && (
+                        <BaseReferenceCreator
+                            refSchema={artworkSchema}
+                            schemaName="artwork"
+                        />
+                    )}
+                    {refType === "case" && (
+                        <BaseReferenceCreator
+                            refSchema={legalCaseSchema}
+                            schemaName="case"
+                        />
+                    )}
+                    {refType === "patent" && (
+                        <BaseReferenceCreator
+                            refSchema={patentSchema}
+                            schemaName="patent"
+                        />
+                    )}
+                    {refType === "legislation" && (
+                        <BaseReferenceCreator
+                            refSchema={legislationSchema}
+                            schemaName="legislation"
+                        />
+                    )}
+                    {refType === "website" && (
+                        <BaseReferenceCreator
+                            refSchema={websiteSchema}
+                            schemaName="website"
+                        />
+                    )}
+                    {refType === "report" && (
+                        <BaseReferenceCreator
+                            refSchema={reportSchema}
+                            schemaName="report"
+                        />
+                    )}
+                    {refType === "presentation" && (
+                        <BaseReferenceCreator
+                            refSchema={presentationSchema}
+                            schemaName="presentation"
+                        />
+                    )}
+                    {refType === "primary-source" && (
+                        <BaseReferenceCreator
+                            refSchema={primarySourceSchema}
+                            schemaName="primary-source"
+                        />
+                    )}
+                    {refType === "audio-recording" && (
+                        <BaseReferenceCreator
+                            refSchema={recordingSchema}
+                            schemaName="audio-recording"
+                        />
+                    )}
+                    {refType === "software" && (
+                        <BaseReferenceCreator
+                            refSchema={softwareSchema}
+                            schemaName="software"
+                        />
+                    )}
+                </div>
             </div>
         </>
     );

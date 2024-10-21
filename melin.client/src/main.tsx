@@ -10,7 +10,6 @@ import { LoginForm } from "@/routes/Login.tsx";
 import { LibraryPage } from "@/routes/Library.tsx";
 import UserSettings from "@/routes/UserSettingsPage.tsx";
 import { AuthProvider } from "@/utils/AuthProvider.tsx";
-import PrivateRoute from "@/utils/PrivateRoute.tsx";
 import { CreateReferencePage } from "@/routes/CreateReferencePage.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 
@@ -47,9 +46,10 @@ const router: any = createBrowserRouter([
             {
                 path: "library",
                 element: (
-                    <PrivateRoute
-                        element={<LibraryPage></LibraryPage>}
-                    ></PrivateRoute>
+                    // <PrivateRoute
+                    //     element={<LibraryPage></LibraryPage>}
+                    // ></PrivateRoute>
+                    <LibraryPage></LibraryPage>
                 ),
             },
             {

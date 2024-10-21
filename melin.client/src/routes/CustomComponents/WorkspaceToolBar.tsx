@@ -17,7 +17,7 @@ export function WorkspaceToolBar() {
                 </li>
                 <li>
                     <Link
-                        to={"/create-reference"}
+                        to={"/library"}
                         className="flex items-center gap-2 text-foreground font-semibold"
                     >
                         <SquarePlus />
