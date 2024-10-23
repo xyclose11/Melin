@@ -14,12 +14,6 @@ public class AuthController : ControllerBase
     {
         _signInManager = signInManager;
     }
-
-    // [HttpPost("login")]
-    // public async Task<IActionResult> Login() {
-    //     var user = _signInManager.SignInAsync(User.Identity)
-    //     return Ok();
-    // }
     
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()

@@ -200,7 +200,7 @@ export function LibraryPage() {
                 setData(response.data); // Assuming response.data contains your references
                 console.log("SUCCESS");
             } catch (error) {
-                console.error("Create reference failed:", error);
+                console.error("Unable to get references:", error);
             }
         };
 

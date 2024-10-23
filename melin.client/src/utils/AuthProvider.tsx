@@ -8,7 +8,7 @@
 import { instance } from "@/utils/axiosInstance.ts";
 
 const checkAuth = async () => {
-    return await instance.get(`api/Auth/check`);
+    return await instance.get(`api/Auth/check`, { withCredentials: true });
 };
 
 interface AuthContextType {
@@ -26,7 +26,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     const checkUserAuth = async () => {
         try {
             const response = await checkAuth();
-            console.log(response);
             setIsAuthenticated(response.data); // Ensure response.data is a boolean
         } catch (error) {
             console.error("Failed to check authentication:", error);

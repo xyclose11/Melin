@@ -6,26 +6,31 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Melin.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class ReferenceController : ControllerBase
 {
     private readonly ApiService _apiService;
     private readonly ReferenceContext _referenceContext;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public ReferenceController(ApiService apiService, ReferenceContext database)
+    public ReferenceController(ApiService apiService, ReferenceContext database, UserManager<IdentityUser> userManager)
     {
         _apiService = apiService;
         _referenceContext = database;
+        _userManager = userManager;
     }
 
     [HttpGet("references")] // GET: all references for a user
-    public List<Reference> GetReferences() {
-
+    public List<Reference> GetReferences()
+    {
+        var u = User;
         var references = _referenceContext.Reference.ToList();
         return references;
     }
@@ -52,6 +57,7 @@ public class ReferenceController : ControllerBase
     public async Task<ActionResult<Book>> PostReferenceBook(Book book) {
         book.Type = ReferenceType.Book;
         _referenceContext.Books.Add(book);
+        
         await _referenceContext.SaveChangesAsync();
 
         return Ok();
@@ -60,9 +66,15 @@ public class ReferenceController : ControllerBase
     [HttpPost("create-artwork")]
     public async Task<ActionResult<Artwork>> PostReferenceArtwork(Artwork artwork)
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
         artwork.Language = Language.English;
         artwork.Type = ReferenceType.Artwork;
-        _referenceContext.Artworks.Add(artwork);
+        
+        
         await _referenceContext.SaveChangesAsync();
 
         return Ok();

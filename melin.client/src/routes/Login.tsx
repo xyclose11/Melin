@@ -25,7 +25,11 @@ export function LoginForm() {
         e.preventDefault();
         try {
             await instance
-                .post("login?useCookies=true", { email, password })
+                .post(
+                    "login?useCookies=true",
+                    { email, password },
+                    { withCredentials: true },
+                )
                 .then(function (response) {
                     if (response.status === 200) {
                         console.log(response);

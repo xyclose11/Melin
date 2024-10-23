@@ -46,16 +46,14 @@ const CREATOR_TYPES = [
 ] as const;
 
 export const creatorFormSchema = z.object({
-    creatorType: z.enum(
-        CREATOR_TYPES.map((type) => type.value) as [string, ...string[]],
-        { errorMap: () => ({ message: "Invalid Creator Type" }) },
-    ),
-    firstName: z.string().min(2, {
-        message: "First Name must be at least 2 characters.",
-    }),
-    lastName: z.string().min(2, {
-        message: "Last Name must be at least 2 characters.",
-    }),
+    creatorType: z
+        .enum(
+            CREATOR_TYPES.map((type) => type.value) as [string, ...string[]],
+            { errorMap: () => ({ message: "Invalid Creator Type" }) },
+        )
+        .optional(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
 });
 
 export function CreatorInput({ name }: { name: string }) {

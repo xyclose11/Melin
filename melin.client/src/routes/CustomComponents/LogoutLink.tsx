@@ -6,12 +6,11 @@ export default function LogoutLink() {
     const logout = async (e: any) => {
         e.preventDefault();
         try {
-            await instance
-                .post(`/api/auth/logout`)
-                // TODO CHANGE THE ABOVE URL TO BE DYNAMIC FOR THE SERVER IT IS SET ON
-                .then(function (response) {
-                    console.log(response);
-                });
+            await instance.post(
+                `/api/auth/logout`,
+                {},
+                { withCredentials: true },
+            );
         } catch (error) {
             console.error("Logout failed:", error);
         }
