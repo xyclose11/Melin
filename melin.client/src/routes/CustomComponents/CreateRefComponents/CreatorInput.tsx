@@ -46,6 +46,7 @@ const CREATOR_TYPES = [
 ] as const;
 
 export const creatorFormSchema = z.object({
+    id: z.number(),
     creatorType: z
         .enum(
             CREATOR_TYPES.map((type) => type.value) as [string, ...string[]],
@@ -154,7 +155,11 @@ export function CreatorInput({ name }: { name: string }) {
                     <FormItem>
                         <FormLabel>Last Name</FormLabel>
                         <FormControl>
-                            <Input className={"h-8"} placeholder="Last Name" {...field} />
+                            <Input
+                                className={"h-8"}
+                                placeholder="Last Name"
+                                {...field}
+                            />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

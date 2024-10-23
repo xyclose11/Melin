@@ -44,7 +44,6 @@ const formSchema = z.object({
 });
 
 let nextId = 0;
-
 export function BaseReferenceCreator({
     refSchema,
     schemaName,
@@ -100,6 +99,12 @@ export function BaseReferenceCreator({
         ]);
         nextId++;
     }
+
+    // function onClickRemoveCreator(removeId: number) {
+    //     const newArray = creatorArray.filter((creator: React.ReactNode) => {
+    //         return creator.id !== removeId;
+    //     });
+    // }
 
     return (
         <div>
@@ -230,6 +235,7 @@ export function BaseReferenceCreator({
                                     <Button
                                         className={"h-8"}
                                         variant="destructive"
+                                        type="button"
                                         size="icon"
                                     >
                                         <SquareX className="h-4 w-4" />
