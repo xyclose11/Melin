@@ -11,12 +11,13 @@ public class PagedResponse<T> : Response<T>
     public Uri NextPage { get; set; }
     public Uri PreviousPage { get; set; }
 
-    public PagedResponse(T data, int pageNumber, int pageSize)
+    public PagedResponse(T data, int pageNumber, int pageSize, int totalPages)
     {
         this.PageNumber = pageNumber;
         this.PageSize = pageSize;
         this.Data = data;
         this.Message = null;
+        this.TotalPages = totalPages;
         this.Succeeded = true;
         this.Errors = null;
     }

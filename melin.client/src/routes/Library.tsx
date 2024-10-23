@@ -35,7 +35,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 
 export type Reference = {
@@ -135,22 +135,32 @@ export function LibraryPage() {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
-
+    const [totalRef, setTotalRef] = useState(0);
     const [data, setData] = React.useState<Reference[]>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await instance.get(`Reference/references`, {
-                    withCredentials: true,
-                });
-                setData(response.data); // Assuming response.data contains your references
-                console.log("SUCCESS");
-            } catch (error) {
-                console.error("Unable to get references:", error);
-            }
-        };
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 10,
+    });
 
+    const fetchData = async () => {
+        try {
+            const response = await instance.get(
+                `Reference/references?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
+                {
+                    withCredentials: true,
+                },
+            );
+            console.log(response);
+            setPagination(response.data.pageSize);
+            setData(response.data.data);
+            setTotalRef(response.data.TotalPages);
+        } catch (error) {
+            console.error("Unable to get references:", error);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -165,11 +175,15 @@ export function LibraryPage() {
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
+        manualPagination: true,
+        onPaginationChange: setPagination,
+        rowCount: totalRef,
         state: {
             sorting,
             columnFilters,
             columnVisibility,
             rowSelection,
+            pagination,
         },
     });
 
@@ -287,8 +301,15 @@ export function LibraryPage() {
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
+                        onClick={() => {
+                            setPagination({
+                                pageSize: pagination.pageSize,
+                                pageIndex: pagination.pageIndex + 1,
+                            });
+                            fetchData();
+                            table.nextPage();
+                        }}
+                        disabled={} {/* LAST WORKING ON SETTING UP PAGINATION*/}
                     >
                         Next
                     </Button>

@@ -28,27 +28,22 @@ public class ReferenceController : ControllerBase
         _userManager = userManager;
     }
 
-    // [HttpGet("references")] // GET: all references for a user
-    // public List<Reference> GetReferences()
-    // {
-    //     var u = User;
-    //     var references = _referenceContext.Reference
-    //         .Where(r => r.OwnerEmail == u.Identity.Name)
-    //         .ToList();
-    //     return references;
-    // }
-
     [HttpGet("references")]
     public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
+        
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
         var pagedReferences = await _referenceContext.Reference
             .Where(a => a.OwnerEmail == User.Identity.Name)
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
+
+        var totalRefCount = await _referenceContext.Reference
+            .Where(a => a.OwnerEmail == User.Identity.Name)
+            .CountAsync();
         
-        return Ok(new PagedResponse<List<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize));
+        return Ok(new PagedResponse<List<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
     }
 
     [HttpPost("create-reference")]
