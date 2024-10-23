@@ -34,10 +34,12 @@ public class ReferenceController : ControllerBase
         
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
         var pagedReferences = await _referenceContext.Reference
+            .Include(r => r.Creators)
             .Where(a => a.OwnerEmail == User.Identity.Name)
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
+        
 
         var totalRefCount = await _referenceContext.Reference
             .Where(a => a.OwnerEmail == User.Identity.Name)

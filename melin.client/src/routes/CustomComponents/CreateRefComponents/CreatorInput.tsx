@@ -24,7 +24,8 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-const CREATOR_TYPES = [
+
+export const CREATOR_TYPES = [
     { label: "Author", value: "author" },
     { label: "Editor", value: "editor" },
     { label: "Series Editor", value: "series-editor" },

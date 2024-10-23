@@ -38,9 +38,21 @@ import {
 import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 
+export enum CREATOR_TYPES {
+    Author = "Author",
+}
+
+type Creator = {
+    id: number;
+    type: CREATOR_TYPES;
+    firstName: string;
+    lastName: string;
+};
+
 export type Reference = {
     id: number;
     title: string;
+    creators: Creator[];
     language: string;
 };
 
@@ -77,7 +89,7 @@ export const columns: ColumnDef<Reference>[] = [
         ),
     },
     {
-        accessorKey: "language",
+        accessorKey: "creators",
         header: ({ column }) => {
             return (
                 <Button
@@ -86,14 +98,25 @@ export const columns: ColumnDef<Reference>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    Language
+                    Creators
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
         },
-        cell: ({ row }) => (
-            <div className="lowercase">{row.getValue("title")}</div>
-        ),
+        cell: ({ row }) => {
+            const creators: Creator[] = row.getValue("creators");
+            return (
+                <div>
+                    {creators.map((creator) => (
+                        <div key={creator.id}>
+                            <div>{creator.type}</div>
+                            <div>{creator.firstName}</div>
+                            <div>{creator.lastName}</div>
+                        </div>
+                    ))}
+                </div>
+            );
+        },
     },
     {
         id: "actions",
@@ -151,7 +174,7 @@ export function LibraryPage() {
                     withCredentials: true,
                 },
             );
-            console.log(response);
+            console.log(response.data);
             setPagination(response.data.pageSize);
             setData(response.data.data);
             setTotalRef(response.data.TotalPages);
