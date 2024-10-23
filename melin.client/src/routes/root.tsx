@@ -7,11 +7,10 @@ export default function Root() {
             <NavBar />
             <div
                 className={
-                    "flex mt-16 justify-center items-center h-screen w-screen overflow-auto"
+                    "flex mt-16 justify-center items-center w-screen overflow-auto"
                 }
             >
                 <Workspace />
-                {/*<Outlet />*/}
             </div>
         </>
     );
