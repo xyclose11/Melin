@@ -15,6 +15,24 @@ public class AuthController : ControllerBase
         _signInManager = signInManager;
     }
     
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
+
+        if (result.Succeeded)
+        {
+            return Ok();
+        }
+        return Unauthorized();
+    }
+
+    
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {

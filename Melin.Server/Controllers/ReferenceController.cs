@@ -13,7 +13,6 @@ namespace Melin.Server.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize]
 public class ReferenceController : ControllerBase
 {
     private readonly ApiService _apiService;
