@@ -1,4 +1,4 @@
-﻿import { Inbox, Search, Settings, Calendar, SquarePlus, PanelsTopLeft } from "lucide-react";
+﻿import { Search, Settings, Calendar, SquarePlus, PanelsTopLeft, Boxes, Tag } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
@@ -19,14 +19,19 @@ const items = [
         icon: PanelsTopLeft,
     },
     {
-        title: "Calendar",
-        url: "#",
-        icon: Calendar,
-    },
-    {
         title: "Search",
         url: "#",
         icon: Search,
+    },
+    {
+        title: "Groups",
+        url: "#",
+        icon: Boxes,
+    },
+    {
+        title: "Tags",
+        url: "#",
+        icon: Tag,
     },
     {
         title: "Settings",
