@@ -6,13 +6,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-	colors: {
-		'light-blue': '#9DD9D2',
-		'dark-blue': '#19323C',
-		'sunset': '#EEC584',
-		'taupe-gray': '#91818A',
-		'rose-quartz': '#B2A3B5'
-	},
+  	colors: {
+  		'light-blue': '#9DD9D2',
+  		'dark-blue': '#19323C',
+  		sunset: '#EEC584',
+  		'taupe-gray': '#91818A',
+  		'rose-quartz': '#B2A3B5'
+  	},
   	extend: {
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -59,6 +59,16 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
+  			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
   			}
   		}
   	}
