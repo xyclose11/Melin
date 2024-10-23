@@ -21,7 +21,6 @@ export function CreateReference() {
 
     function handleState(newRefType: string) {
         setRefType(newRefType);
-        console.log(refType);
     }
 
     return (

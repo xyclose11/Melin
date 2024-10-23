@@ -67,9 +67,9 @@ export function BaseReferenceCreator({
             rights: undefined,
             creators: [
                 {
-                    creatorType: "author",
-                    firstName: "",
-                    lastName: "",
+                    creatorType: undefined,
+                    firstName: undefined,
+                    lastName: undefined,
                 },
             ],
         },
