@@ -309,7 +309,7 @@ export function LibraryPage() {
                             fetchData();
                             table.nextPage();
                         }}
-                        disabled={} {/* LAST WORKING ON SETTING UP PAGINATION*/}
+                        disabled={!table.getCanNextPage()}
                     >
                         Next
                     </Button>
