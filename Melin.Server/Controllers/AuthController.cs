@@ -45,4 +45,5 @@ public class AuthController : ControllerBase
     {
         return Ok(User.Identity.IsAuthenticated);
     }
+
 }
