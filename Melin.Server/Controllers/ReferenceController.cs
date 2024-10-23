@@ -63,7 +63,8 @@ public class ReferenceController : ControllerBase
     }
     
     [HttpPost("create-artwork")]
-    public async Task<ActionResult<Artwork>> PostReferenceArtwork(Artwork artwork)
+    [Authorize]
+    public async Task<ActionResult<Artwork>> PostReferenceArtwork([FromBody] Artwork artwork)
     {
         if (!User.Identity.IsAuthenticated)
         {

@@ -79,7 +79,9 @@ export function BaseReferenceCreator({
         console.log("ASD");
         try {
             // figure out which reference type is being used
-            await instance.post(`Reference/create-${schemaName}`, data);
+            await instance.post(`Reference/create-${schemaName}`, data, {
+                withCredentials: true,
+            });
             console.log("SUCCESS");
         } catch (error) {
             console.error("Create reference failed:", error);
