@@ -250,6 +250,7 @@ export function BaseReferenceCreator({
                                         {key.replace(/([A-Z])/g, " $1")}:
                                     </FormLabel>
                                     <FormControl>
+                                        {/*@ts-ignore*/}
                                         <Input
                                             placeholder={key.replace(
                                                 /([A-Z])/g,
