@@ -30,7 +30,9 @@ public class ReferenceController : ControllerBase
     public List<Reference> GetReferences()
     {
         var u = User;
-        var references = _referenceContext.Reference.ToList();
+        var references = _referenceContext.Reference
+            .Where(r => r.OwnerEmail == u.Identity.Name)
+            .ToList();
         return references;
     }
 
@@ -71,9 +73,10 @@ public class ReferenceController : ControllerBase
             return Unauthorized("User is not authenticated.");
         }
 
+        artwork.OwnerEmail = User.Identity.Name;
         artwork.Language = Language.English;
         artwork.Type = ReferenceType.Artwork;
-        
+        _referenceContext.Artworks.Add(artwork);
         
         await _referenceContext.SaveChangesAsync();
 

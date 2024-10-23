@@ -196,7 +196,9 @@ export function LibraryPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await instance.get(`Reference/references`);
+                const response = await instance.get(`Reference/references`, {
+                    withCredentials: true,
+                });
                 setData(response.data); // Assuming response.data contains your references
                 console.log("SUCCESS");
             } catch (error) {
