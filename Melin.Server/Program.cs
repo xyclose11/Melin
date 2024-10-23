@@ -55,10 +55,11 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         policy => {
-            policy.WithOrigins("https://localhost:5173", "https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
+            policy.WithOrigins("https://localhost:5173", "http://localhost:5173", "https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
             policy.AllowAnyHeader();
             policy.AllowAnyMethod();
             policy.AllowCredentials();
+            policy.SetIsOriginAllowedToAllowWildcardSubdomains();
         }
     );
 
@@ -67,6 +68,7 @@ builder.Services.AddCors(options =>
         {
             corsBuilder.WithOrigins("https://localhost:5173", "http://localhost:5173");
             corsBuilder.AllowAnyHeader();
+            corsBuilder.SetIsOriginAllowedToAllowWildcardSubdomains();
             corsBuilder.AllowAnyMethod();
             corsBuilder.AllowCredentials();
         });
@@ -81,23 +83,30 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/login";
-        options.LogoutPath = "/Logout";
-        options.Cookie.HttpOnly = true;
-        options.Cookie.Name = "MELIN_AUTH_COOKIE";
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.None;
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = true;
+});
 
-        options.SlidingExpiration = true;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-    });
-
+builder.Services.AddAuthentication()
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+        builder.Configuration.Bind("CookieSettings", options));
+    
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-    .AddEntityFrameworkStores<DataContext>();
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(3);
+    options.SlidingExpiration = true;
+    options.LoginPath = "/api/auth/login";
+    options.LogoutPath = "/api/auth/logout";
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.None;
+});
 
 builder.Services.AddHttpClient<ApiService>();
 
@@ -116,13 +125,9 @@ if (app.Environment.IsDevelopment())
 
 app.MapIdentityApi<IdentityUser>();
 
-app.UseAuthorization();
-var cookiePolicyOptions = new CookiePolicyOptions()
-{
-    MinimumSameSitePolicy = SameSiteMode.None
-};
-app.UseCookiePolicy(cookiePolicyOptions);
+app.UseCors();
 app.UseAuthentication();
+app.UseAuthorization();
 
 if (builder.Environment.IsDevelopment())
 {
@@ -132,9 +137,5 @@ if (builder.Environment.IsDevelopment())
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
-
-app.UseCors();
-app.UseCors("MelinReactClient");
-app.UseCors("MelinBackend");
 
 app.Run();

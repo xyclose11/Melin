@@ -10,6 +10,8 @@ public class Reference
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     
+    public string? OwnerEmail { get; set; }
+    
     [MaxLength(256)]
     // Base fields
     public ReferenceType? Type { get; set; }

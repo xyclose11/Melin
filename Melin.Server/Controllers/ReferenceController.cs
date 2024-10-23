@@ -4,8 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Melin.Server.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
+using Melin.Server.Wrappers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Melin.Server.Controllers;
@@ -16,18 +19,31 @@ public class ReferenceController : ControllerBase
 {
     private readonly ApiService _apiService;
     private readonly ReferenceContext _referenceContext;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public ReferenceController(ApiService apiService, ReferenceContext database)
+    public ReferenceController(ApiService apiService, ReferenceContext database, UserManager<IdentityUser> userManager)
     {
         _apiService = apiService;
         _referenceContext = database;
+        _userManager = userManager;
     }
 
-    [HttpGet("references")] // GET: all references for a user
-    public List<Reference> GetReferences() {
+    [HttpGet("references")]
+    public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
+    {
+        
+        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+        var pagedReferences = await _referenceContext.Reference
+            .Where(a => a.OwnerEmail == User.Identity.Name)
+            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+            .Take(validFilter.PageSize)
+            .ToListAsync();
 
-        var references = _referenceContext.Reference.ToList();
-        return references;
+        var totalRefCount = await _referenceContext.Reference
+            .Where(a => a.OwnerEmail == User.Identity.Name)
+            .CountAsync();
+        
+        return Ok(new PagedResponse<List<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
     }
 
     [HttpPost("create-reference")]
@@ -52,17 +68,26 @@ public class ReferenceController : ControllerBase
     public async Task<ActionResult<Book>> PostReferenceBook(Book book) {
         book.Type = ReferenceType.Book;
         _referenceContext.Books.Add(book);
+        
         await _referenceContext.SaveChangesAsync();
 
         return Ok();
     }
     
     [HttpPost("create-artwork")]
-    public async Task<ActionResult<Artwork>> PostReferenceArtwork(Artwork artwork)
+    [Authorize]
+    public async Task<ActionResult<Artwork>> PostReferenceArtwork([FromBody] Artwork artwork)
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        artwork.OwnerEmail = User.Identity.Name;
         artwork.Language = Language.English;
         artwork.Type = ReferenceType.Artwork;
         _referenceContext.Artworks.Add(artwork);
+        
         await _referenceContext.SaveChangesAsync();
 
         return Ok();

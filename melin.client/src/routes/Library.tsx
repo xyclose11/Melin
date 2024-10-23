@@ -35,48 +35,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
-
-// const data: Payment[] = [
-//     {
-//         id: "m5gr84i9",
-//         amount: 316,
-//         status: "success",
-//         email: "ken99@yahoo.com",
-//     },
-//     {
-//         id: "3u1reuv4",
-//         amount: 242,
-//         status: "success",
-//         email: "Abe45@gmail.com",
-//     },
-//     {
-//         id: "derv1ws0",
-//         amount: 837,
-//         status: "processing",
-//         email: "Monserrat44@gmail.com",
-//     },
-//     {
-//         id: "5kma53ae",
-//         amount: 874,
-//         status: "success",
-//         email: "Silas22@gmail.com",
-//     },
-//     {
-//         id: "bhqecj4p",
-//         amount: 721,
-//         status: "failed",
-//         email: "carmella@hotmail.com",
-//     },
-// ];
-
-export type Payment = {
-    id: string;
-    amount: number;
-    status: "pending" | "processing" | "success" | "failed";
-    email: string;
-};
 
 export type Reference = {
     id: number;
@@ -132,23 +92,8 @@ export const columns: ColumnDef<Reference>[] = [
             );
         },
         cell: ({ row }) => (
-            <div className="lowercase">{row.getValue("email")}</div>
+            <div className="lowercase">{row.getValue("title")}</div>
         ),
-    },
-    {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"));
-
-            // Format the amount as a dollar amount
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount);
-
-            return <div className="text-right font-medium">{formatted}</div>;
-        },
     },
     {
         id: "actions",
@@ -190,20 +135,32 @@ export function LibraryPage() {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
-
+    const [totalRef, setTotalRef] = useState(0);
     const [data, setData] = React.useState<Reference[]>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await instance.get(`Reference/references`);
-                setData(response.data); // Assuming response.data contains your references
-                console.log("SUCCESS");
-            } catch (error) {
-                console.error("Create reference failed:", error);
-            }
-        };
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 10,
+    });
 
+    const fetchData = async () => {
+        try {
+            const response = await instance.get(
+                `Reference/references?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
+                {
+                    withCredentials: true,
+                },
+            );
+            console.log(response);
+            setPagination(response.data.pageSize);
+            setData(response.data.data);
+            setTotalRef(response.data.TotalPages);
+        } catch (error) {
+            console.error("Unable to get references:", error);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -218,11 +175,15 @@ export function LibraryPage() {
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
+        manualPagination: true,
+        onPaginationChange: setPagination,
+        rowCount: totalRef,
         state: {
             sorting,
             columnFilters,
             columnVisibility,
             rowSelection,
+            pagination,
         },
     });
 
@@ -230,15 +191,15 @@ export function LibraryPage() {
         <div className="w-full light">
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter emails..."
+                    placeholder="Filter references..."
                     value={
                         (table
-                            .getColumn("email")
+                            .getColumn("title")
                             ?.getFilterValue() as string) ?? ""
                     }
                     onChange={(event) =>
                         table
-                            .getColumn("email")
+                            .getColumn("title")
                             ?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
@@ -340,8 +301,15 @@ export function LibraryPage() {
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
+                        onClick={() => {
+                            setPagination({
+                                pageSize: pagination.pageSize,
+                                pageIndex: pagination.pageIndex + 1,
+                            });
+                            fetchData();
+                            table.nextPage();
+                        }}
+                        disabled={} {/* LAST WORKING ON SETTING UP PAGINATION*/}
                     >
                         Next
                     </Button>

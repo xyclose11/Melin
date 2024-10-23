@@ -75,6 +75,9 @@ namespace Melin.Server.Migrations
                     b.Property<int?>("Language")
                         .HasColumnType("integer");
 
+                    b.Property<string>("OwnerEmail")
+                        .HasColumnType("text");
+
                     b.Property<string[]>("Rights")
                         .HasColumnType("text[]");
 
