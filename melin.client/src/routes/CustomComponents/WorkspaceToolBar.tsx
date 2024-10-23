@@ -1,4 +1,4 @@
-﻿import { Search, Settings, Calendar, SquarePlus, PanelsTopLeft, Boxes, Tag } from "lucide-react";
+﻿import { Search, Settings, SquarePlus, PanelsTopLeft, Boxes, Tag } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
@@ -44,7 +44,7 @@ export function WorkspaceToolBar() {
         <Sidebar className={"flex-1 mt-16"}>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    <SidebarGroupLabel>Melin</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
@@ -62,58 +62,5 @@ export function WorkspaceToolBar() {
                 </SidebarGroup>
             </SidebarContent>
         </Sidebar>
-        
-        // <nav className="flex-1">
-        //     <ul className="space-y-2">
-        //         <li>
-        //             <Link
-        //                 to={"/create-reference"}
-        //                 className="flex items-center gap-2 text-foreground font-semibold"
-        //             >
-        //                 <SquarePlus />
-        //                 <Label className={"w-full text-left"}> Create </Label>
-        //             </Link>
-        //         </li>
-        //         <li>
-        //             <Link
-        //                 to={"/library"}
-        //                 className="flex items-center gap-2 text-foreground font-semibold"
-        //             >
-        //                 <SquarePlus />
-        //                 <Label className={"w-full text-left"}>
-        //                     {" "}
-        //                     View References{" "}
-        //                 </Label>
-        //             </Link>
-        //         </li>
-        //         <li>
-        //             <Link
-        //                 to={"/create-reference"}
-        //                 className="flex items-center gap-2 text-foreground font-semibold"
-        //             >
-        //                 <SquarePlus />
-        //                 <Label className={"w-full text-left"}> Groups </Label>
-        //             </Link>
-        //         </li>
-        //         <li>
-        //             <Link
-        //                 to={"/create-reference"}
-        //                 className="flex items-center gap-2 text-foreground font-semibold"
-        //             >
-        //                 <SquarePlus />
-        //                 <Label className={"w-full text-left"}> Tags </Label>
-        //             </Link>
-        //         </li>
-        //         <li>
-        //             <Link
-        //                 to={"/create-reference"}
-        //                 className="flex items-center gap-2 text-foreground font-semibold"
-        //             >
-        //                 <SquarePlus />
-        //                 <Label className={"w-full text-left"}> Settings </Label>
-        //             </Link>
-        //         </li>
-        //     </ul>
-        // </nav>
     );
 }

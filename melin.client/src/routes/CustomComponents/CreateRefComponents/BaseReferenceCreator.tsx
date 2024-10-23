@@ -26,7 +26,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover.tsx";
 import { cn } from "@/lib/utils.ts";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, SquareX } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { instance } from "@/utils/axiosInstance.ts";
 
@@ -222,20 +222,29 @@ export function BaseReferenceCreator({
                             </FormItem>
                         )}
                     />
-                    <ul>
-                        {creatorArray.map((creator) => (
-                            <li key={(creator as React.ReactElement).key}>
-                                {creator}
-                            </li>
-                        ))}
-                    </ul>
-                    <Button
-                        className="m-2"
-                        type="button"
-                        onClick={onClickAddCreator}
-                    >
-                        + Add Another
-                    </Button>
+                    <div className={"col-span-2"}>
+                        <ul>
+                            {creatorArray.map((creator) => (
+                                <li key={(creator as React.ReactElement).key}>
+                                    {creator}
+                                    <Button
+                                        className={"h-8"}
+                                        variant="destructive"
+                                        size="icon"
+                                    >
+                                        <SquareX className="h-4 w-4" />
+                                    </Button>
+                                </li>
+                            ))}
+                        </ul>
+                        <Button
+                            className="m-2"
+                            type="button"
+                            onClick={onClickAddCreator}
+                        >
+                            + Add Another
+                        </Button>
+                    </div>
 
                     {Object.keys(refSchema.shape).map((key) => (
                         <Controller

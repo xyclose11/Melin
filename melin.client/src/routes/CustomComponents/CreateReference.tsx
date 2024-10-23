@@ -33,7 +33,7 @@ export function CreateReference() {
                     />
                 </div>
 
-                <div className={"col-span-2 overflow-y-auto"}>
+                <div className={"col-span-2"}>
                     {refType === "book" && (
                         <BaseReferenceCreator
                             refSchema={bookSchema}

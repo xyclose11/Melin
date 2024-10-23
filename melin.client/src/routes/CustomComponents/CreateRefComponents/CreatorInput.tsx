@@ -60,7 +60,7 @@ export function CreatorInput({ name }: { name: string }) {
     const { control } = useFormContext();
 
     return (
-        <div>
+        <div className={"grid grid-cols-4 grid-flow-col"}>
             <FormField
                 control={control}
                 name={`${name}.creatorType`}
@@ -154,7 +154,7 @@ export function CreatorInput({ name }: { name: string }) {
                     <FormItem>
                         <FormLabel>Last Name</FormLabel>
                         <FormControl>
-                            <Input placeholder="Last Name" {...field} />
+                            <Input className={"h-8"} placeholder="Last Name" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
