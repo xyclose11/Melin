@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Melin.Server.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
+using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,14 +28,27 @@ public class ReferenceController : ControllerBase
         _userManager = userManager;
     }
 
-    [HttpGet("references")] // GET: all references for a user
-    public List<Reference> GetReferences()
+    // [HttpGet("references")] // GET: all references for a user
+    // public List<Reference> GetReferences()
+    // {
+    //     var u = User;
+    //     var references = _referenceContext.Reference
+    //         .Where(r => r.OwnerEmail == u.Identity.Name)
+    //         .ToList();
+    //     return references;
+    // }
+
+    [HttpGet("references")]
+    public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
-        var u = User;
-        var references = _referenceContext.Reference
-            .Where(r => r.OwnerEmail == u.Identity.Name)
-            .ToList();
-        return references;
+        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+        var pagedReferences = await _referenceContext.Reference
+            .Where(a => a.OwnerEmail == User.Identity.Name)
+            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+            .Take(validFilter.PageSize)
+            .ToListAsync();
+        
+        return Ok(new PagedResponse<List<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize));
     }
 
     [HttpPost("create-reference")]
