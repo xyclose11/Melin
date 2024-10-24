@@ -29,7 +29,6 @@ import { cn } from "@/lib/utils.ts";
 import { CalendarIcon, SquareX } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { instance } from "@/utils/axiosInstance.ts";
-import { CREATOR_TYPES } from "@/routes/Library.tsx";
 
 const formSchema = z.object({
     refType: z.string(),

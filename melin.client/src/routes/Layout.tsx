@@ -37,10 +37,10 @@ export function NavBar() {
                     Dashboard
                 </Link>
                 <Link
-                    to={"/groups"}
+                    to={"/review"}
                     className="text-foreground transition-colors hover:text-foreground"
                 >
-                    Groups
+                    Review
                 </Link>
                 <Link
                     to={"/library"}
