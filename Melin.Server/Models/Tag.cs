@@ -16,6 +16,8 @@ public class Tag
 
     [MaxLength(256)]
     public string? Description {get; set;}
+    
+    public List<Reference> References { get; } = [];
 
     [Required]
     [MaxLength(256)]

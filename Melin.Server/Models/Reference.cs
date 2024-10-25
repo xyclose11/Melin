@@ -25,6 +25,10 @@ public class Reference
     public string[]? Rights { get; set; } // Copyright terms, license, or release
     public string[]? ExtraFields { get; set; } // TODO Add feature to let user add field
     
+    // Tagging and Grouping
+    public List<Tag> Tags { get; } = [];
+    public List<Group> Groups { get; } = [];
+    
     // Logging things
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

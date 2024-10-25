@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils.ts";
 import { CalendarIcon, SquareX } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { instance } from "@/utils/axiosInstance.ts";
+import { TagCreateDropdown } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
 
 const formSchema = z.object({
     refType: z.string(),
@@ -114,6 +115,7 @@ export function BaseReferenceCreator({
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-2 gap-2 justify-items-start grid grid-cols-2 grid-flow-row-dense"
                 >
+                    <TagCreateDropdown />
                     <FormField
                         control={form.control}
                         name="title"

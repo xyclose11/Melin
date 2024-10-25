@@ -16,7 +16,6 @@ import {
     softwareSchema,
     websiteSchema,
 } from "@/routes/ReferenceCreationPages/BaseReferenceSchema.ts";
-import { TagCreateDropdown } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
 export function CreateReference() {
     const [refType, setRefType] = useState("artwork"); // default is book
 
@@ -32,7 +31,6 @@ export function CreateReference() {
                         refType={refType}
                         handleState={handleState}
                     />
-                    <TagCreateDropdown />
                 </div>
 
                 <div className={"col-span-2"}>

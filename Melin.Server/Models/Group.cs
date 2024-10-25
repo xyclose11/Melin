@@ -16,6 +16,8 @@ public class Group {
     [MaxLength(256)]
     public string? Description {get; set;}
 
+    public List<Reference> References { get; } = [];
+
     [Required]
     [MaxLength(256)]
     public required string CreatedBy {get; set;}
