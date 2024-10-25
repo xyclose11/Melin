@@ -17,7 +17,7 @@ import PrivateRoute from "./utils/PrivateRoute.tsx";
 const router: any = createBrowserRouter([
     {
         path: "/",
-        element: <Root />,
+        element: <Root children/>,
         errorElement: <ErrorPage />,
         children: [
             {
