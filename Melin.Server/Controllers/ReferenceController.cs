@@ -85,6 +85,12 @@ public class ReferenceController : ControllerBase
             return Unauthorized("User is not authenticated.");
         }
 
+        // check for tags
+        if (artwork.Tags != null)
+        {
+            Console.WriteLine("asldkjaslkdjasldkjas;ldjasl;kdja;sldja;slkdjalskjdal;skjd" + artwork);
+        }
+
         artwork.OwnerEmail = User.Identity.Name;
         artwork.Language = Language.English;
         artwork.Type = ReferenceType.Artwork;
@@ -95,16 +101,7 @@ public class ReferenceController : ControllerBase
         return Ok();
     }
 
-    // POST: Single Tag creation
-    [HttpPost("create-tag")]
-    [Authorize]
-    public async Task<ActionResult<Tag>> PostTag([FromBody] Tag tag)
-    {
-        CheckUserAuth();
 
-        
-        return Ok();
-    }
 
     private IActionResult CheckUserAuth()
     {

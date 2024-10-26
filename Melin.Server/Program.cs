@@ -2,6 +2,7 @@ using System.Text;
 using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Models;
+using Melin.Server.Models.Context;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -17,6 +18,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<ReferenceContext>(options =>
+{
+    var config = builder.Configuration;
+    var connectionString = config.GetConnectionString("MelinDatabase");
+    options.UseNpgsql(connectionString);
+});
+
+builder.Services.AddDbContext<TagContext>(options =>
 {
     var config = builder.Configuration;
     var connectionString = config.GetConnectionString("MelinDatabase");

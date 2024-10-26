@@ -37,4 +37,10 @@
     <None Include="Data\tasks.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="ReferenceTesting\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="ReferenceTesting\obj\project.packagespec.json" />
+    <_ContentIncludedByDefault Remove="ReferenceTesting\obj\ReferenceTesting.csproj.nuget.dgspec.json" />
+  </ItemGroup>
+
 </Project>
