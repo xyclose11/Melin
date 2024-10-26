@@ -12,11 +12,10 @@ export const tagSchema = z.object({
             message: "Name must be at least 2 characters.",
         })
         .optional(),
-    createdBy: z.string()
 });
 
 export function TagCreateDropdown() {
-    const { control, setValue, watch } = useFormContext();
+    const { control, setValue, watch, formState: {errors} } = useFormContext();
 
     // Use watch to get the current tags from the form state
     const currentTags = watch("tags") || []; // Default to empty array if undefined
@@ -44,6 +43,8 @@ export function TagCreateDropdown() {
                     />
                 )}
             />
+
+            {errors.root && <div> {errors.root.message}</div>}
         </div>
     );
 }

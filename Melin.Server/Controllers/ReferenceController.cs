@@ -92,13 +92,20 @@ public class ReferenceController : ControllerBase
         // check for tags
         if (artwork.Tags != null)
         {
-            foreach (var tag in artwork.Tags)
+            if (artwork.Tags.Count > 1)
             {
-                tag.CreatedBy = User.Identity.Name;
-                var existingTag = await _tagService.GetTagAsync(tag.Id);
-                if (existingTag == null)
+                _tagService.CreateTagsAsync(artwork.Tags);
+            }
+            else
+            {
+                foreach (var tag in artwork.Tags)
                 {
-                    await _tagService.CreateTagAsync(tag);
+                    tag.CreatedBy = User.Identity.Name;
+                    var existingTag = await _tagService.GetTagAsync(tag.Id);
+                    if (existingTag == null)
+                    {
+                        await _tagService.CreateTagAsync(tag);
+                    }
                 }
             }
         }

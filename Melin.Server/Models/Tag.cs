@@ -19,9 +19,8 @@ public class Tag
     
     public List<Reference> References { get; } = [];
 
-    [Required]
     [MaxLength(256)]
-    public required string CreatedBy {get; set;}
+    public string? CreatedBy {get; set;}
 
     public DateTime CreatedAt {get; init;} = DateTime.UtcNow;
     public DateTime UpdatedAt {get; init;} = DateTime.UtcNow;

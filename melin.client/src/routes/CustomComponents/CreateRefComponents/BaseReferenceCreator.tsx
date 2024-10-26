@@ -79,9 +79,8 @@ export function BaseReferenceCreator({
             ],
             tags: [
                 {
-                    id: "0",
-                    text: "TAG1",
-                    createdBy: "harris.gustafson@outlook.com"
+                    id: "1",
+                    text: "TAG1"
                 }
             ],
         },

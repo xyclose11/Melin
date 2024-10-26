@@ -20,6 +20,22 @@ public class TagService
         return tag;
     }
 
+    public async Task<ICollection<Tag>> CreateTagsAsync(ICollection<Tag> tags)
+    {
+        foreach (var tag in tags)
+        {
+            var existingTag = await GetTagAsync(tag.Id);
+            if (existingTag == null)
+            {
+                _tagContext.Tags.Add(tag);
+            }
+        }
+
+        await _tagContext.SaveChangesAsync();
+        return tags;
+    }
+    
+
     public async Task<Tag> GetTagAsync(int id)
     {
         return await _tagContext.Tags.FindAsync(id);
