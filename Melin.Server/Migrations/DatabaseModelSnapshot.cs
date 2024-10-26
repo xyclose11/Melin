@@ -22,6 +22,21 @@ namespace Melin.Server.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("GroupReference", b =>
+                {
+                    b.Property<int>("GroupsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ReferencesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("GroupsId", "ReferencesId");
+
+                    b.HasIndex("ReferencesId");
+
+                    b.ToTable("GroupReference");
+                });
+
             modelBuilder.Entity("Melin.Server.Models.Creator", b =>
                 {
                     b.Property<int>("Id")
@@ -51,6 +66,39 @@ namespace Melin.Server.Migrations
                     b.HasIndex("ReferenceId");
 
                     b.ToTable("Creator");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Group");
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Reference", b =>
@@ -105,6 +153,54 @@ namespace Melin.Server.Migrations
                     b.HasDiscriminator().HasValue("Reference");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tag");
+                });
+
+            modelBuilder.Entity("ReferenceTag", b =>
+                {
+                    b.Property<int>("ReferencesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ReferencesId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("ReferenceTag");
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Artwork", b =>
@@ -556,11 +652,41 @@ namespace Melin.Server.Migrations
                     b.HasDiscriminator().HasValue("Website");
                 });
 
+            modelBuilder.Entity("GroupReference", b =>
+                {
+                    b.HasOne("Melin.Server.Models.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Melin.Server.Models.Reference", null)
+                        .WithMany()
+                        .HasForeignKey("ReferencesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Melin.Server.Models.Creator", b =>
                 {
                     b.HasOne("Melin.Server.Models.Reference", null)
                         .WithMany("Creators")
                         .HasForeignKey("ReferenceId");
+                });
+
+            modelBuilder.Entity("ReferenceTag", b =>
+                {
+                    b.HasOne("Melin.Server.Models.Reference", null)
+                        .WithMany()
+                        .HasForeignKey("ReferencesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Melin.Server.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Reference", b =>

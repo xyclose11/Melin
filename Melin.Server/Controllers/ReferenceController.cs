@@ -10,6 +10,7 @@ using Melin.Server.Models;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Task = System.Threading.Tasks.Task;
 
 namespace Melin.Server.Controllers;
 
@@ -61,7 +62,6 @@ public class ReferenceController : ControllerBase
 
             return CreatedAtAction(nameof(PostReference), new { id = reference.Id }, reference);
         } catch (Exception ex) {
-            // Log the exception (ex) here as needed
             return StatusCode(500, "An error occurred while creating the reference.");
         }
     }
@@ -93,6 +93,27 @@ public class ReferenceController : ControllerBase
         await _referenceContext.SaveChangesAsync();
 
         return Ok();
+    }
+
+    // POST: Single Tag creation
+    [HttpPost("create-tag")]
+    [Authorize]
+    public async Task<ActionResult<Tag>> PostTag([FromBody] Tag tag)
+    {
+        CheckUserAuth();
+
+        
+        return Ok();
+    }
+
+    private IActionResult CheckUserAuth()
+    {
+        if (User.Identity.IsAuthenticated)
+        {
+            return Ok();
+        }
+
+        return Unauthorized("User is not authenticated.");
     }
 
     

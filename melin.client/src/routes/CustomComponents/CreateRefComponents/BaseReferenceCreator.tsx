@@ -29,7 +29,10 @@ import { cn } from "@/lib/utils.ts";
 import { CalendarIcon, SquareX } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { instance } from "@/utils/axiosInstance.ts";
-import { TagCreateDropdown } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
+import {
+    TagCreateDropdown,
+    tagSchema,
+} from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
 
 const formSchema = z.object({
     refType: z.string(),
@@ -42,6 +45,7 @@ const formSchema = z.object({
     rights: z.string().optional(),
     extraFields: z.string().optional(),
     creators: z.array(creatorFormSchema).optional(),
+    tags: z.array(tagSchema).optional(),
 });
 
 let nextId = 0;
@@ -73,6 +77,7 @@ export function BaseReferenceCreator({
                     lastName: "",
                 },
             ],
+            tags: [],
         },
     });
 
@@ -83,6 +88,7 @@ export function BaseReferenceCreator({
             await instance.post(`Reference/create-${schemaName}`, data, {
                 withCredentials: true,
             });
+            console.log(data);
             console.log("SUCCESS");
         } catch (error) {
             console.error("Create reference failed:", error);
@@ -297,6 +303,7 @@ export function BaseReferenceCreator({
                         <div>{errors.extraFields.message}</div>
                     )}
                     {errors.language && <div>{errors.language.message}</div>}
+                    {errors.tags && <div> {errors.tags.message}</div>}
 
                     {errors.root && <div> {errors.root.message}</div>}
 
