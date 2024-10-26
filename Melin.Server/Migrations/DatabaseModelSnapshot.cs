@@ -175,7 +175,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");

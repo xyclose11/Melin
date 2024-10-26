@@ -11,7 +11,7 @@ public class Tag
 
     [Required]
     [MaxLength(128)]
-    public required string Name {get; set;}
+    public required string Text {get; set;}
 
 
     [MaxLength(256)]

@@ -77,7 +77,13 @@ export function BaseReferenceCreator({
                     lastName: "",
                 },
             ],
-            tags: [],
+            tags: [
+                {
+                    id: "0",
+                    text: "TAG1",
+                    createdBy: "harris.gustafson@outlook.com"
+                }
+            ],
         },
     });
 

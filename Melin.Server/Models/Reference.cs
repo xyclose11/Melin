@@ -26,8 +26,8 @@ public class Reference
     public string[]? ExtraFields { get; set; } // TODO Add feature to let user add field
     
     // Tagging and Grouping
-    public List<Tag> Tags { get; } = [];
-    public List<Group> Groups { get; } = [];
+    public ICollection<Tag>? Tags { get; set; } = new List<Tag>();
+    public ICollection<Group>? Groups { get; set; } = new List<Group>();
     
     // Logging things
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

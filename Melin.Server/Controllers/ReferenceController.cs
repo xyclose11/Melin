@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Melin.Server.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
+using Melin.Server.Models.Context;
+using Melin.Server.Services;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,12 +23,14 @@ public class ReferenceController : ControllerBase
     private readonly ApiService _apiService;
     private readonly ReferenceContext _referenceContext;
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly TagService _tagService;
 
-    public ReferenceController(ApiService apiService, ReferenceContext database, UserManager<IdentityUser> userManager)
+    public ReferenceController(ApiService apiService, ReferenceContext database, UserManager<IdentityUser> userManager, TagService tagService)
     {
         _apiService = apiService;
         _referenceContext = database;
         _userManager = userManager;
+        _tagService = tagService;
     }
 
     [HttpGet("references")]
@@ -88,7 +92,15 @@ public class ReferenceController : ControllerBase
         // check for tags
         if (artwork.Tags != null)
         {
-            Console.WriteLine("asldkjaslkdjasldkjas;ldjasl;kdja;sldja;slkdjalskjdal;skjd" + artwork);
+            foreach (var tag in artwork.Tags)
+            {
+                tag.CreatedBy = User.Identity.Name;
+                var existingTag = await _tagService.GetTagAsync(tag.Id);
+                if (existingTag == null)
+                {
+                    await _tagService.CreateTagAsync(tag);
+                }
+            }
         }
 
         artwork.OwnerEmail = User.Identity.Name;

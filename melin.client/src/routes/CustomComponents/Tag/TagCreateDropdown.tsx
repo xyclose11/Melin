@@ -12,6 +12,7 @@ export const tagSchema = z.object({
             message: "Name must be at least 2 characters.",
         })
         .optional(),
+    createdBy: z.string()
 });
 
 export function TagCreateDropdown() {

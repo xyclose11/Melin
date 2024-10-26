@@ -3,6 +3,7 @@ using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Models;
 using Melin.Server.Models.Context;
+using Melin.Server.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -23,6 +24,8 @@ builder.Services.AddDbContext<ReferenceContext>(options =>
     var connectionString = config.GetConnectionString("MelinDatabase");
     options.UseNpgsql(connectionString);
 });
+
+builder.Services.AddScoped<TagService>();
 
 builder.Services.AddDbContext<TagContext>(options =>
 {
