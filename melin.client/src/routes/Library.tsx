@@ -49,6 +49,12 @@ type Creator = {
     lastName: string;
 };
 
+type ReferenceTag = {
+    id: number;
+    text: string;
+    createdBy: string;
+}
+
 export type Reference = {
     id: number;
     title: string;
@@ -103,6 +109,7 @@ export const columns: ColumnDef<Reference>[] = [
                 </Button>
             );
         },
+        
         cell: ({ row }) => {
             const creators: Creator[] = row.getValue("creators");
             return (
@@ -112,6 +119,23 @@ export const columns: ColumnDef<Reference>[] = [
                             <div>{creator.type}</div>
                             <div>{creator.firstName}</div>
                             <div>{creator.lastName}</div>
+                        </div>
+                    ))}
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "tags",
+        header: "Tags",
+        cell: ({ row }) => {
+            const tags: ReferenceTag[] = row.getValue("tags");
+            return (
+                <div>
+                    {tags.map((tag) => (
+                        <div key={tag.id}>
+                            <div>{tag.text}</div>
+                            <div>{tag.createdBy}</div>
                         </div>
                     ))}
                 </div>
@@ -162,8 +186,8 @@ export function LibraryPage() {
     const [data, setData] = React.useState<Reference[]>([]);
 
     const [pagination, setPagination] = useState({
-        pageIndex: 0,
         pageSize: 10,
+        pageIndex: 0,
     });
 
     const fetchData = async () => {
@@ -174,8 +198,6 @@ export function LibraryPage() {
                     withCredentials: true,
                 },
             );
-            console.log(response.data);
-            setPagination(response.data.pageSize);
             setData(response.data.data);
             setTotalRef(response.data.TotalPages);
         } catch (error) {
@@ -185,7 +207,7 @@ export function LibraryPage() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [pagination]);
 
     const table = useReactTable({
         data,
@@ -325,14 +347,11 @@ export function LibraryPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => {
-                            setPagination({
-                                pageSize: pagination.pageSize,
-                                pageIndex: pagination.pageIndex + 1,
-                            });
-                            fetchData();
-                            table.nextPage();
+                            setPagination((prev) => ({
+                                ...prev,
+                                pageIndex: prev.pageIndex + 1, // Increment pageIndex here
+                            }));
                         }}
-                        disabled={!table.getCanNextPage()}
                     >
                         Next
                     </Button>

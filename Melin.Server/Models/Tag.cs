@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Melin.Server.Models;
 
@@ -16,8 +17,8 @@ public class Tag
 
     [MaxLength(256)]
     public string? Description {get; set;}
-    
-    public List<Reference> References { get; } = [];
+
+    public ICollection<Reference>? References { get; } = new List<Reference>();
 
     [MaxLength(256)]
     public string? CreatedBy {get; set;}
