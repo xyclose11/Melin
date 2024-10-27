@@ -57,6 +57,7 @@ type ReferenceTag = {
 
 export type Reference = {
     id: number;
+    type: string;
     title: string;
     creators: Creator[];
     language: string;
@@ -86,6 +87,27 @@ export const columns: ColumnDef<Reference>[] = [
         ),
         enableSorting: false,
         enableHiding: false,
+    },
+    {
+        accessorKey: "title",
+        header: "Title",
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue("title")}</div>
+        ),
+    },
+    {
+        accessorKey: "type",
+        header: "Type",
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue("type")}</div>
+        ),
+    },
+    {
+        accessorKey: "title",
+        header: "Title",
+        cell: ({ row }) => (
+            <div className="capitalize">{row.getValue("title")}</div>
+        ),
     },
     {
         accessorKey: "title",
