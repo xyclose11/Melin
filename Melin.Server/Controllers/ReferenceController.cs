@@ -178,25 +178,7 @@ public class ReferenceController : ControllerBase
                 return NotFound("Reference Not Found. Cannot Update");
             }
 
-            if (!prevArtwork.Title.Equals(artwork.Title))
-            {
-                prevArtwork.Title = artwork.Title;
-            }
-            
-            if (!prevArtwork.Language.Equals(artwork.Language))
-            {
-                prevArtwork.Language = artwork.Language;
-            }
-            
-            if (!prevArtwork.Rights.Equals(artwork.Rights))
-            {
-                prevArtwork.Rights = artwork.Rights;
-            }
-            
-            if (!prevArtwork.DatePublished.Equals(artwork.DatePublished))
-            {
-                prevArtwork.DatePublished = artwork.DatePublished;
-            }
+            await UpdateGeneralFields(prevArtwork, artwork);
             
             if (!prevArtwork.Medium.Equals(artwork.Medium))
             {
@@ -231,6 +213,39 @@ public class ReferenceController : ControllerBase
         }
     }
 
+    private async Task<ActionResult> UpdateGeneralFields(Reference prevReference, Reference newReference)
+    {
+        try
+        {
+            if (!prevReference.Title.Equals(newReference.Title))
+            {
+                prevReference.Title = newReference.Title;
+            }
+            
+            if (!prevReference.Language.Equals(newReference.Language))
+            {
+                prevReference.Language = newReference.Language;
+            }
+            
+            if (!prevReference.Rights.Equals(newReference.Rights))
+            {
+                prevReference.Rights = newReference.Rights;
+            }
+            
+            if (!prevReference.DatePublished.Equals(newReference.DatePublished))
+            {
+                prevReference.DatePublished = newReference.DatePublished;
+            }
+
+            return Ok(true);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     // DELETE: Delete single reference
     [HttpDelete("delete-reference")]
     [Authorize]
@@ -238,11 +253,15 @@ public class ReferenceController : ControllerBase
     {
         try
         {
-            await _referenceContext.Reference
+            var r = await _referenceContext.Reference
                 .Where(r => r.OwnerEmail == User.Identity.Name)
                 .Where(r => r.Id == refId)
-                .ExecuteDeleteAsync();
+                .FirstAsync();
 
+            _referenceContext.Reference.Remove(r);
+
+            await _referenceContext.SaveChangesAsync();
+            
             return Ok("Reference with the ID: " + refId + " has been deleted");
         }
         catch (Exception e)

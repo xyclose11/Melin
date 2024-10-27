@@ -34,6 +34,9 @@ public class Creator
     
     [MaxLength(512)]
     public string LastName { get; set; } = "";
+    
+    public int ReferenceId { get; set; }
+    public Reference Reference { get; set; }
 }
 
 public class Author

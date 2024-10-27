@@ -55,7 +55,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.Property<int?>("ReferenceId")
+                    b.Property<int>("ReferenceId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Types")
@@ -65,7 +65,7 @@ namespace Melin.Server.Migrations
 
                     b.HasIndex("ReferenceId");
 
-                    b.ToTable("Creator");
+                    b.ToTable("Creators");
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Group", b =>
@@ -98,7 +98,7 @@ namespace Melin.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Group");
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Reference", b =>
@@ -668,9 +668,13 @@ namespace Melin.Server.Migrations
 
             modelBuilder.Entity("Melin.Server.Models.Creator", b =>
                 {
-                    b.HasOne("Melin.Server.Models.Reference", null)
+                    b.HasOne("Melin.Server.Models.Reference", "Reference")
                         .WithMany("Creators")
-                        .HasForeignKey("ReferenceId");
+                        .HasForeignKey("ReferenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reference");
                 });
 
             modelBuilder.Entity("ReferenceTag", b =>
