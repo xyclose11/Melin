@@ -38,14 +38,14 @@ import {
 import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 
-export type Group = {
+export type Tag = {
     id: number;
     name: string;
     description: string;
     updatedAt: string;
 };
 
-export const columns: ColumnDef<Group>[] = [
+export const columns: ColumnDef<Tag>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -125,19 +125,19 @@ export const columns: ColumnDef<Group>[] = [
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => {
-            const group = row.original;
+            const tag = row.original;
 
-            const handleGroupDelete = async () => {
+            const handleTagDelete = async () => {
                 try {
                     const response = await instance.delete(
-                        `delete-group?refId=${group.id}`,
+                        `delete-tag?tagId=${tag.id}`,
                         {
                             withCredentials: true,
                         },
                     );
                     console.log(response)
                 } catch (error) {
-                    console.error("Unable to delete group:", error);
+                    console.error("Unable to delete tag:", error);
                 }
             }
 
@@ -153,14 +153,14 @@ export const columns: ColumnDef<Group>[] = [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
                             onClick={() =>
-                                navigator.clipboard.writeText(group.name)
+                                navigator.clipboard.writeText(tag.name)
                             }
                         >
                             Copy name
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleGroupDelete}>Delete</DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleTagDelete}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
@@ -168,15 +168,15 @@ export const columns: ColumnDef<Group>[] = [
     },
 ];
 
-export function GroupLibrary() {
+export function TagLibrary() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
-    const [totalGroup, setTotalGroup] = useState(0);
-    const [data, setData] = React.useState<Group[]>([]);
+    const [totalTag, setTotalTag] = useState(0);
+    const [data, setData] = React.useState<Tag[]>([]);
 
     const [pagination, setPagination] = useState({
         pageSize: 10,
@@ -186,14 +186,14 @@ export function GroupLibrary() {
     const fetchData = async () => {
         try {
             const response = await instance.get(
-                `get-owned-groups/?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
+                `get-owned-tags/?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
                 {
                     withCredentials: true,
                 },
             );
             console.log(response)
             setData(response.data);
-            setTotalGroup(response.data.TotalPages);
+            setTotalTag(response.data.TotalPages);
         } catch (error) {
             console.error("Unable to get references:", error);
         }
@@ -216,7 +216,7 @@ export function GroupLibrary() {
         onRowSelectionChange: setRowSelection,
         manualPagination: true,
         onPaginationChange: setPagination,
-        rowCount: totalGroup,
+        rowCount: totalTag,
         state: {
             sorting,
             columnFilters,
@@ -230,7 +230,7 @@ export function GroupLibrary() {
         <div className="w-full light">
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter references..."
+                    placeholder="Filter Tags..."
                     value={
                         (table
                             .getColumn("name")
