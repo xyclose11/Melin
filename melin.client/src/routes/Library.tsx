@@ -148,6 +148,20 @@ export const columns: ColumnDef<Reference>[] = [
         cell: ({ row }) => {
             const reference = row.original;
 
+             const handleReferenceDelete = async () => {
+                try {
+                    const response = await instance.delete(
+                        `Reference/delete-reference?refId=${reference.id}`,
+                        {
+                            withCredentials: true,
+                        },
+                    );
+                    console.log(response)
+                } catch (error) {
+                    console.error("Unable to delete reference:", error);
+                }
+            }
+
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -167,7 +181,7 @@ export const columns: ColumnDef<Reference>[] = [
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleReferenceDelete}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );

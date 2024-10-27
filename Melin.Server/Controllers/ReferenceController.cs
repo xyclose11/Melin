@@ -258,6 +258,11 @@ public class ReferenceController : ControllerBase
                 .Where(r => r.Id == refId)
                 .FirstAsync();
 
+            if (r == null)
+            {
+                return NotFound("Reference with ID: " + refId + " not found.");
+            }
+
             _referenceContext.Reference.Remove(r);
 
             await _referenceContext.SaveChangesAsync();
