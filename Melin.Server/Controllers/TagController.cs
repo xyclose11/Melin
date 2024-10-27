@@ -115,7 +115,10 @@ public class TagController : ControllerBase
     {
         try
         {
-            Tag t = await _referenceContext.Tags.FindAsync(tagId);
+            var ownedTags = await GetCurrentUserTagList();
+
+            Tag t = ownedTags.Find(t => t.Id == tagId);
+            
             if (t == null)
             {
                 return NotFound();
@@ -126,6 +129,74 @@ public class TagController : ControllerBase
             await _referenceContext.SaveChangesAsync();
             
             return Ok(true);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    // DELETE: Delete multiple Tags
+    [HttpDelete("delete-multiple-tags")]
+    [Authorize]
+    public async Task<ActionResult<bool>> DeleteTagRange(int[] tagIdList)
+    {
+        try
+        {
+            // validate ID list length
+            if (tagIdList.Length < 1)
+            {
+                return Problem("ERROR: Tag ID List has < 1 ids");
+            }
+
+            List<Tag> tags = new List<Tag>();
+            var ownedTags = await GetCurrentUserTagList();
+            foreach (var tagId in tagIdList)
+            {
+
+                var t = ownedTags
+                    .Find(t => t.Id == tagId);
+                
+                if (t == null)
+                {
+                    return NotFound("Tag not found with ID: " + tagId);
+                }
+                
+                tags.Add(t);
+            }
+
+            _referenceContext.Tags.RemoveRange(tags);
+            
+            
+            await _referenceContext.SaveChangesAsync();
+            
+            
+            return Ok(true);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [Authorize]
+    private async Task<List<Tag>> GetCurrentUserTagList()
+    {
+        try
+        {
+            var ownedTags = await _referenceContext.Tags
+                .Where(t => t.CreatedBy == User.Identity.Name)
+                .OrderBy(t => t.CreatedAt)
+                .ToListAsync();
+
+            if (ownedTags != null)
+            {
+                return ownedTags;
+            }
+
+            return null;
         }
         catch (Exception e)
         {
