@@ -234,9 +234,17 @@ public class TagController : ControllerBase
                 return NotFound("Tag Not Found. Cannot update");
             }
 
-            t.Text = updatedTag.Text;
+            if (!t.Text.Equals(updatedTag.Text))
+            {
+                t.Text = updatedTag.Text;
+            }
+
+            if (!t.Description.Equals(updatedTag.Description))
+            {
+                t.Description = updatedTag.Description;
+            }
+            
             t.UpdatedAt = DateTime.UtcNow;
-            t.Description = updatedTag.Description;
 
             await _referenceContext.SaveChangesAsync();
 

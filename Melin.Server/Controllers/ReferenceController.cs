@@ -32,8 +32,11 @@ public class ReferenceController : ControllerBase
         _userManager = userManager;
         _tagService = tagService;
     }
-
+    
+    
+    // GET: Get All User Owned References
     [HttpGet("references")]
+    [Authorize]
     public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
         
@@ -53,13 +56,14 @@ public class ReferenceController : ControllerBase
         return Ok(new PagedResponse<List<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
     }
 
+    // POST: Create new reference
     [HttpPost("create-reference")]
+    [Authorize]
     public async Task<ActionResult<Reference>> PostReference(Reference reference) {
         if (reference == null) {
             return BadRequest("Reference cannot be null.");
         }
         
-        reference.Type = ReferenceType.Book;
         try {
             _referenceContext.Reference.Add(reference);
             await _referenceContext.SaveChangesAsync();
@@ -71,7 +75,25 @@ public class ReferenceController : ControllerBase
     }
 
     [HttpPost("create-book")]
-    public async Task<ActionResult<Book>> PostReferenceBook(Book book) {
+    [Authorize]
+    public async Task<ActionResult<Book>> PostReferenceBook([FromBody] Book book) {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (book.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(book.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        book.OwnerEmail = User.Identity.Name;
+        book.Language = Language.English;
         book.Type = ReferenceType.Book;
         _referenceContext.Books.Add(book);
         
@@ -141,6 +163,163 @@ public class ReferenceController : ControllerBase
 
     }
 
+    
+    // UPDATE: update reference
+    [HttpPut("update-artwork")]
+    [Authorize]
+    public async Task<ActionResult<Reference>> UpdateArtwork(int refId, [FromBody] Artwork artwork)
+    {
+        try
+        {
+            var prevArtwork = await _referenceContext.Artworks.FindAsync(refId);
+
+            if (prevArtwork == null)
+            {
+                return NotFound("Reference Not Found. Cannot Update");
+            }
+
+            if (!prevArtwork.Title.Equals(artwork.Title))
+            {
+                prevArtwork.Title = artwork.Title;
+            }
+            
+            if (!prevArtwork.Language.Equals(artwork.Language))
+            {
+                prevArtwork.Language = artwork.Language;
+            }
+            
+            if (!prevArtwork.Rights.Equals(artwork.Rights))
+            {
+                prevArtwork.Rights = artwork.Rights;
+            }
+            
+            if (!prevArtwork.DatePublished.Equals(artwork.DatePublished))
+            {
+                prevArtwork.DatePublished = artwork.DatePublished;
+            }
+            
+            if (!prevArtwork.Medium.Equals(artwork.Medium))
+            {
+                prevArtwork.Medium = artwork.Medium;
+            }
+            
+            if (!prevArtwork.MapType.Equals(artwork.MapType))
+            {
+                prevArtwork.MapType = artwork.MapType;
+            }
+            
+            if (!prevArtwork.Dimensions.Equals(artwork.Dimensions))
+            {
+                prevArtwork.DatePublished = artwork.DatePublished;
+            }
+            
+            if (!prevArtwork.Scale.Equals(artwork.Scale))
+            {
+                prevArtwork.Scale = artwork.Scale;
+            }
+            
+            prevArtwork.UpdatedAt = DateTime.UtcNow;
+
+            await _referenceContext.SaveChangesAsync();
+
+            return Ok("Artwork updated successfully");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    // DELETE: Delete single reference
+    [HttpDelete("delete-reference")]
+    [Authorize]
+    public async Task<ActionResult<bool>> DeleteSpecificReference(int refId)
+    {
+        try
+        {
+            await _referenceContext.Reference
+                .Where(r => r.OwnerEmail == User.Identity.Name)
+                .Where(r => r.Id == refId)
+                .ExecuteDeleteAsync();
+
+            return Ok("Reference with the ID: " + refId + " has been deleted");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    // DELETE: Delete list of references
+    [HttpDelete("delete-multiple-references")]
+    [Authorize]
+    public async Task<ActionResult<bool>> DeleteListOfReferences(int[] refIdList)
+    {
+        try
+        {
+            if (refIdList.Length < 1)
+            {
+                return Problem("ERROR: Ref ID List has < 1 ids");
+            }
+            
+            List<Reference> references = new List<Reference>();
+            
+            var ownedRefs = await GetCurrentUserReferenceList();
+            foreach (var refId in refIdList)
+            {
+
+                var r = ownedRefs
+                    .Find(r => r.Id == refId);
+                
+                if (r == null)
+                {
+                    return NotFound("Tag not found with ID: " + refId);
+                }
+                
+                references.Add(r);
+            }
+
+            _referenceContext.Reference.RemoveRange(references);
+            
+            
+            await _referenceContext.SaveChangesAsync();
+            
+            
+            return Ok(true);
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    [Authorize]
+    private async Task<List<Reference>> GetCurrentUserReferenceList()
+    {
+        try
+        {
+            var ownedRefs = await _referenceContext.Reference
+                .Where(r => r.OwnerEmail == User.Identity.Name)
+                .OrderBy(t => t.CreatedAt)
+                .ToListAsync();
+
+            if (ownedRefs != null)
+            {
+                return ownedRefs;
+            }
+
+            return null;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
     
 
 
