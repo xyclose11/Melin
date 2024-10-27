@@ -25,7 +25,7 @@ const items = [
     },
     {
         title: "Groups",
-        url: "#",
+        url: "/groups",
         icon: Boxes,
     },
     {
