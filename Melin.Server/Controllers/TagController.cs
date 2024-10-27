@@ -152,6 +152,50 @@ public class TagController : ControllerBase
         return Problem("Unable to create Tags");
     }
     
+    // POST: Add Tag to Reference
+    [HttpPost("add-tag-on-reference")]
+    [Authorize]
+    public async Task<ActionResult<bool>> AddTagToReference(int tagId, int refId)
+    {
+        try
+        {
+            // validate Tag
+            var t = await _referenceContext.Tags
+                .Where(t => t.CreatedBy== User.Identity.Name)
+                .Where(r => r.Id == tagId)
+                .FirstAsync();
+            
+            if (t == null)
+            {
+                return NotFound("Tag with ID: " + tagId + " not found.");
+            }
+            
+            // validate Reference
+            var r = await _referenceContext.Reference
+                .Where(r => r.OwnerEmail == User.Identity.Name)
+                .Where(r => r.Id == refId)
+                .FirstAsync();
+            
+            if (r == null)
+            {
+                return NotFound("Reference with ID: " + refId + " not found.");
+            }
+            
+            // add tag to reference
+            r.Tags.Add(t);
+
+            await _referenceContext.SaveChangesAsync();
+
+            return Ok("Tag added to reference successfully");
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
     // DELETE: Delete single Tag
     [HttpPost("delete-tag")]
     [Authorize]
