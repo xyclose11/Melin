@@ -17,11 +17,12 @@ public class Group {
     public string? Description {get; set;}
 
     public List<Reference> References { get; } = [];
+    // TODO add field to track usage
 
     [Required]
     [MaxLength(256)]
     public required string CreatedBy {get; set;}
 
     public DateTime CreatedAt {get; init;} = DateTime.UtcNow;
-    public DateTime UpdatedAt {get; init;} = DateTime.UtcNow;
+    public DateTime UpdatedAt {get; set;} = DateTime.UtcNow;
 }

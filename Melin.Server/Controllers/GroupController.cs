@@ -17,15 +17,23 @@ public class GroupController : ControllerBase
     // GET: gets a specifc groups references
     [HttpGet("get-group-references")]
     [Authorize]
-    public async Task<ICollection<Reference>> GetGroup(string groupName)
+    public async Task<ActionResult<ICollection<Reference>>> GetGroup(string groupName)
     {
         try
         {
+            var userName = User.Identity.Name;
+            if (userName == null)
+            {
+                return Unauthorized("user ");
+            }
+
+            // GET owned groups
             var group = await _referenceContext.Group
+                .Where(g => g.CreatedBy == userName)
                 .Where(g => g.Name == groupName)
                 .FirstAsync();
 
-            if (group != null && group.References.Count >= 1)
+            if (group is { References.Count: >= 1 })
             {
                 return group.References;
             }
@@ -38,6 +46,39 @@ public class GroupController : ControllerBase
 
         return null;
     }
+    
+    // GET: All owned groups
+    [HttpGet("get-owned-groups")]
+    [Authorize]
+    public async Task<ActionResult<List<Group>>> GetOwnedGroups()
+    {
+        try
+        {
+            var userName = User.Identity.Name;
+            if (userName == null)
+            {
+                return Unauthorized("user ");
+            }
+
+            // GET owned groups
+            var groups = await _referenceContext.Group
+                .Where(g => g.CreatedBy == userName)
+                .OrderBy(g => g.UpdatedAt)
+                .ToListAsync();
+
+            if (groups == null)
+            {
+                return NotFound("No Groups Found");
+            }
+
+            return groups;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 
     [HttpPost("create-group")]
     [Authorize]
@@ -45,6 +86,13 @@ public class GroupController : ControllerBase
     {
         try
         {
+            
+            // check if group already exists
+            var g = await _referenceContext.Group.ContainsAsync(group); // TODO test this
+            if (g)
+            {
+                return NoContent(); // TODO put duplicate reply here
+            }
             _referenceContext.Group.Add(group);
 
             await _referenceContext.SaveChangesAsync();
@@ -56,4 +104,95 @@ public class GroupController : ControllerBase
             throw;
         }
     }
+    
+    // UPDATE: group related details, not contents
+    [HttpPost("update-group-details")]
+    [Authorize]
+    public async Task<ActionResult<Group>> UpdateGroupDetails(string groupName, [FromForm] Group updatedGroup)
+    {
+        try
+        {
+            // find group
+            var group = await _referenceContext.Group
+                .Where(g => g.Name == groupName)
+                .FirstAsync();
+
+            if (group == null)
+            {
+                return NotFound("Group Not Found. Cannot update");
+            }
+            
+            // update Group details
+            group.Name = updatedGroup.Name;
+            group.UpdatedAt = DateTime.UtcNow;
+            group.Description = updatedGroup.Description;
+
+            await _referenceContext.SaveChangesAsync();
+            
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    // POST: add references to group
+    [HttpPost("add-refs-to-group")]
+    [Authorize]
+    public async Task<ActionResult<Group>> AddReferenceToGroup(string groupName, List<int> referenceIds)
+    {
+        try
+        {
+            // find group
+            var group = await _referenceContext.Group
+                .Where(g => g.Name == groupName)
+                .FirstAsync();
+
+
+            List<Reference> references = new List<Reference>();
+
+            foreach (var referenceId in referenceIds)
+            {
+                var r = await _referenceContext.Reference.FindAsync(referenceId);
+                if (r != null)
+                {
+                    references.Add(r);
+                }
+            }
+            
+            group.References.AddRange(references);
+
+            await _referenceContext.SaveChangesAsync();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    
+    // DELETE
+    [HttpDelete("delete-group")]
+    [Authorize]
+    public async Task<ActionResult> DeleteGroup(string groupName)
+    {
+        try
+        {
+            await _referenceContext.Group
+                .Where(g => g.Name == groupName)
+                .ExecuteDeleteAsync();
+
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
 }

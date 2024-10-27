@@ -20,6 +20,7 @@ public class Tag
 
     [MaxLength(256)]
     public string? CreatedBy {get; set;}
+    // TODO add field to track how many uses the Tag has
 
     public DateTime CreatedAt {get; init;} = DateTime.UtcNow;
     public DateTime UpdatedAt {get; set;} = DateTime.UtcNow;
