@@ -1,4 +1,5 @@
-﻿using Melin.Server.Models;
+﻿using Melin.Server.Filter;
+using Melin.Server.Models;
 using Melin.Server.Models.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -48,10 +49,12 @@ public class TagController : ControllerBase
     // GET: All owned tags
     [HttpGet("get-owned-tags")]
     [Authorize]
-    public async Task<ActionResult<Tag>> GetOwnedTags()
+    public async Task<ActionResult<Tag>> GetOwnedTags([FromQuery] PaginationFilter paginationFilter)
     {
         try
         {
+            var validFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+
             var curUser = User.Identity.Name;
             if (curUser == null)
             {
@@ -60,6 +63,9 @@ public class TagController : ControllerBase
             
             var t = await _referenceContext.Tags
                 .Where(t => t.CreatedBy == curUser)
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .OrderBy(t => t.UpdatedAt)
                 .ToListAsync();
             
 

@@ -1,4 +1,5 @@
-﻿using Melin.Server.Models;
+﻿using Melin.Server.Filter;
+using Melin.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,10 +51,12 @@ public class GroupController : ControllerBase
     // GET: All owned groups
     [HttpGet("get-owned-groups")]
     [Authorize]
-    public async Task<ActionResult<List<Group>>> GetOwnedGroups()
+    public async Task<ActionResult<List<Group>>> GetOwnedGroups([FromQuery] PaginationFilter filter)
     {
         try
         {
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            
             var userName = User.Identity.Name;
             if (userName == null)
             {
@@ -63,6 +66,8 @@ public class GroupController : ControllerBase
             // GET owned groups
             var groups = await _referenceContext.Group
                 .Where(g => g.CreatedBy == userName)
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
                 .OrderBy(g => g.UpdatedAt)
                 .ToListAsync();
 
