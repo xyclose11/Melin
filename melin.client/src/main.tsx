@@ -13,7 +13,8 @@ import { AuthProvider } from "@/utils/AuthProvider.tsx";
 import { CreateReferencePage } from "@/routes/CreateReferencePage.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import PrivateRoute from "./utils/PrivateRoute.tsx";
-import {GroupLibrary} from "@/routes/GroupLibrary.tsx";
+import {GroupLibrary} from "@/routes/LibraryViews/GroupLibrary.tsx";
+import {TagLibrary} from "@/routes/LibraryViews/TagLibrary.tsx";
 
 const router: any = createBrowserRouter([
     {
@@ -46,6 +47,12 @@ const router: any = createBrowserRouter([
                 path: "groups",
                 element: (
                     <PrivateRoute element={<GroupLibrary></GroupLibrary>}></PrivateRoute>
+                )
+            },
+            {
+                path: "tags",
+                element: (
+                    <PrivateRoute element={<TagLibrary></TagLibrary>}></PrivateRoute>
                 )
             },
             {

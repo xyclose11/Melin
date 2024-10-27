@@ -30,7 +30,7 @@ const items = [
     },
     {
         title: "Tags",
-        url: "#",
+        url: "/tags",
         icon: Tag,
     },
     {

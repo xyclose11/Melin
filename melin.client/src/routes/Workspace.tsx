@@ -2,7 +2,7 @@
 
 export function Workspace() {
     return (
-            <div className="flex p-4 justify-center flex-wrap">
+            <div className="flex-grow ml-12 mr-48 justify-center">
                 <Outlet />
             </div>
     );

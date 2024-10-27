@@ -9,10 +9,10 @@ export default function Root({ children }: {children: React.ReactNode }) {
         <>
             <NavBar />
 
-        <div className={"mt-16 min-h-dvh"}>
+        <div className={"w-screen mt-16 min-h-dvh"}>
             <SidebarProvider>
                 <WorkspaceToolBar/>
-                <main className={"flex p-2 m-2"}>
+                <main className={"w-screen flex p-2 m-2"}>
                     <SidebarTrigger>
                         {children}
                     </SidebarTrigger>
