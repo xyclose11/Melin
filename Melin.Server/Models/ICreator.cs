@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Melin.Server.Models;
 
@@ -27,6 +28,7 @@ public class Creator
 {
     public int Id { get; set; }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public CreatorTypes Types { get; set; } = CreatorTypes.Author;
 
     [MaxLength(512)]

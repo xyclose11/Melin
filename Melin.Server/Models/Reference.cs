@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace Melin.Server.Models;
 
@@ -14,10 +16,13 @@ public class Reference
     
     [MaxLength(256)]
     // Base fields
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ReferenceType? Type { get; set; }
     public ICollection<Creator>? Creators { get; set; } = new List<Creator>();
     public string Title { get; set; } = "";
     public string? ShortTitle { get; set; } = "";
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public Language? Language { get; set; }
     public DateTime? DatePublished { get; set; }
     
