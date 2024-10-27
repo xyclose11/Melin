@@ -94,6 +94,8 @@ public class TagController : ControllerBase
                 return NoContent(); // TODO test this and replace with duplicate thing instead
             }
 
+            tag.CreatedBy = User.Identity.Name;
+
             _referenceContext.Tags.Add(tag);
 
             await _referenceContext.SaveChangesAsync();
@@ -105,7 +107,43 @@ public class TagController : ControllerBase
             Console.WriteLine(e);
             throw;
         }
-        
+    }
+    
+    // POST: Create multiple Tags
+    [HttpPost("create-multiple-tags")]
+    [Authorize]
+    public async Task<ActionResult<Tag>> PostMultipleTags([FromBody] List<Tag> tags)
+    {
+        try
+        {
+            string userEmail = User.Identity.Name;
+            if (userEmail == null)
+            {
+                return Problem("User not currently found: LOCATION: POST-MULTIPLE-TAGS TAG_CONTROLLER");
+            }
+            
+            foreach (var tag in tags)
+            {
+                var t = await _referenceContext.Tags.ContainsAsync(tag); // TODO test this for functionality
+                if (t)
+                {
+                    return NoContent(); // TODO test this and replace with duplicate thing instead
+                }
+
+                tag.CreatedBy = userEmail;
+
+                _referenceContext.Tags.Add(tag);
+            }
+
+            await _referenceContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        return Problem("Unable to create Tags");
     }
     
     // DELETE: Delete single Tag
@@ -180,6 +218,38 @@ public class TagController : ControllerBase
             throw;
         }
     }
+    
+    // UPDATE: update tag
+    [HttpPut("update-tag")]
+    [Authorize]
+    public async Task<ActionResult<Tag>> UpdateTag(int tagId, [FromForm] Tag updatedTag)
+    {
+        try
+        {
+            // find tag
+            var t = await _referenceContext.Tags.FindAsync(tagId);
+
+            if (t == null)
+            {
+                return NotFound("Tag Not Found. Cannot update");
+            }
+
+            t.Text = updatedTag.Text;
+            t.UpdatedAt = DateTime.UtcNow;
+            t.Description = updatedTag.Description;
+
+            await _referenceContext.SaveChangesAsync();
+
+            return Ok("Tag updated successfully");
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
 
     [Authorize]
     private async Task<List<Tag>> GetCurrentUserTagList()
