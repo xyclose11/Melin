@@ -8,6 +8,8 @@ public class ReferenceContext : DbContext
         : base(options)
     {}
 
+    public DbSet<Tag> Tags => Set<Tag>();
+    public DbSet<Group> Groups => Set<Group>();
     public DbSet<Reference> Reference => Set<Reference>();
     public DbSet<Book> Books => Set<Book>();
     public DbSet<Artwork> Artworks => Set<Artwork>();

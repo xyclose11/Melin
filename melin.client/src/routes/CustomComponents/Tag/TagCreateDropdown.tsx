@@ -16,9 +16,8 @@ export const tagSchema = z.object({
 
 export function TagCreateDropdown() {
     const { control, setValue, watch, formState: {errors} } = useFormContext();
-
-    // Use watch to get the current tags from the form state
-    const currentTags = watch("tags") || []; // Default to empty array if undefined
+    
+    const currentTags = watch("tags") || [];
 
     const [activeTagIndex, setActiveTagIndex] = React.useState<number | null>(null);
 
@@ -31,13 +30,13 @@ export function TagCreateDropdown() {
         <div>
             <FormField
                 control={control}
-                name="tags" // Ensure this matches your schema
+                name="tags"
                 render={({ field }) => (
                     <TagInput
                         {...field}
-                        placeholder="Enter a topic"
-                        tags={currentTags} // Use watched tags here
-                        setTags={handleTagChange} // Update the tags in form state
+                        placeholder="Enter a tag"
+                        tags={currentTags}
+                        setTags={handleTagChange}
                         activeTagIndex={activeTagIndex}
                         setActiveTagIndex={setActiveTagIndex}
                     />

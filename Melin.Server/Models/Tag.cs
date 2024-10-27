@@ -6,8 +6,6 @@ namespace Melin.Server.Models;
 
 public class Tag
 {
-    [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     [Required]

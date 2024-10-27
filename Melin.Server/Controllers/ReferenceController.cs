@@ -45,7 +45,6 @@ public class ReferenceController : ControllerBase
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
-        
 
         var totalRefCount = await _referenceContext.Reference
             .Where(a => a.OwnerEmail == User.Identity.Name)
@@ -93,21 +92,10 @@ public class ReferenceController : ControllerBase
         // check for tags
         if (artwork.Tags != null)
         {
-            if (artwork.Tags.Count > 1)
+            bool res = await HandleTagsWithReferencePost(artwork.Tags);
+            if (!res)
             {
-                _tagService.CreateTagsAsync(artwork.Tags);
-            }
-            else
-            {
-                foreach (var tag in artwork.Tags)
-                {
-                    tag.CreatedBy = User.Identity.Name;
-                    var existingTag = await _tagService.GetTagAsync(tag.Id);
-                    if (existingTag == null)
-                    {
-                        await _tagService.CreateTagAsync(tag);
-                    }
-                }
+                return NoContent();
             }
         }
 
@@ -121,16 +109,36 @@ public class ReferenceController : ControllerBase
         return Ok();
     }
 
-
-
-    private IActionResult CheckUserAuth()
+    private async Task<bool> HandleTagsWithReferencePost(ICollection<Tag> tags)
     {
-        if (User.Identity.IsAuthenticated)
+        try
         {
-            return Ok();
+            if (tags.Count > 1)
+            {
+                string createdBy = User.Identity.Name;
+                await _tagService.CreateTagsAsync(tags, createdBy);
+            }
+            else
+            {
+                foreach (var tag in tags)
+                {
+                    tag.CreatedBy = User.Identity.Name;
+                    var existingTag = await _tagService.GetTagAsync(tag.Id);
+                    if (existingTag == null)
+                    {
+                        await _tagService.CreateTagAsync(tag);
+                    }
+                }
+            }
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
         }
 
-        return Unauthorized("User is not authenticated.");
     }
 
     

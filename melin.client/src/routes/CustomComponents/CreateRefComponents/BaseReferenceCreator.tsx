@@ -77,20 +77,31 @@ export function BaseReferenceCreator({
                     lastName: "",
                 },
             ],
-            tags: [
-                {
-                    id: "1",
-                    text: "TAG1"
-                }
-            ],
+            tags: [],
         },
     });
 
+    function generateRandom32BitInteger() {
+        const max = 500000;
+        return Math.floor(Math.random() * (max - 0 + 1));
+    }
+
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         console.log("ASD");
+        const convertedTags = data.tags?.map((tag) => ({
+            ...tag,
+            id: generateRandom32BitInteger(),
+        }));
+
+        const newData = {
+            ...data,
+            tags: convertedTags,
+        };
+        
+        console.log(convertedTags)
         try {
             // figure out which reference type is being used
-            await instance.post(`Reference/create-${schemaName}`, data, {
+            await instance.post(`Reference/create-${schemaName}`, newData, {
                 withCredentials: true,
             });
             console.log(data);

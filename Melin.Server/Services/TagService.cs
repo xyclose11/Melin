@@ -6,43 +6,53 @@ namespace Melin.Server.Services;
 
 public class TagService
 {
-    private readonly TagContext _tagContext;
+    // private readonly TagContext _tagContext;
+    private readonly ReferenceContext _referenceContext;
 
-    public TagService(TagContext tagContext)
+    public TagService(ReferenceContext referenceContext)
     {
-        _tagContext = tagContext;
+        _referenceContext = referenceContext;
     }
+    
+    // public TagService(TagContext tagContext)
+    // {
+    //     _tagContext = tagContext;
+    // }
 
     public async Task<Tag> CreateTagAsync(Tag tag)
     {
-        _tagContext.Tags.Add(tag);
-        await _tagContext.SaveChangesAsync();
+        // _tagContext.Tags.Add(tag);
+        // await _tagContext.SaveChangesAsync();
+        _referenceContext.Tags.Add(tag);
+        await _referenceContext.SaveChangesAsync();
         return tag;
     }
 
-    public async Task<ICollection<Tag>> CreateTagsAsync(ICollection<Tag> tags)
+    public async Task<ICollection<Tag>> CreateTagsAsync(ICollection<Tag> tags, string createdBy)
     {
         foreach (var tag in tags)
         {
             var existingTag = await GetTagAsync(tag.Id);
-            if (existingTag == null)
+            if (existingTag == null && createdBy != null)
             {
-                _tagContext.Tags.Add(tag);
+                tag.CreatedBy = createdBy;
+                _referenceContext.Tags.Add(tag);
             }
         }
 
-        await _tagContext.SaveChangesAsync();
+        // await _tagContext.SaveChangesAsync();
+        await _referenceContext.SaveChangesAsync();
         return tags;
     }
     
 
     public async Task<Tag> GetTagAsync(int id)
     {
-        return await _tagContext.Tags.FindAsync(id);
+        return await _referenceContext.Tags.FindAsync(id);
     }
 
     public async Task<List<Tag>> GetAllTagsAsync()
     {
-        return await _tagContext.Tags.ToListAsync();
+        return await _referenceContext.Tags.ToListAsync();
     }
 }
