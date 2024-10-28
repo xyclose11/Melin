@@ -34,6 +34,10 @@ import {
     tagSchema,
 } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
 
+const rightsSchema = z.object({
+    name: z.string().optional(),
+});
+
 const formSchema = z.object({
     refType: z.string(),
     title: z.string().min(2, {
@@ -42,7 +46,7 @@ const formSchema = z.object({
     shortTitle: z.string().optional(),
     language: z.string().optional(),
     datePublished: z.date().optional(),
-    rights: z.string().optional(),
+    rights: z.array(rightsSchema).optional(),
     extraFields: z.string().optional(),
     creators: z.array(creatorFormSchema).optional(),
     tags: z.array(tagSchema).optional(),
@@ -64,9 +68,9 @@ export function BaseReferenceCreator({
         defaultValues: {
             refType: "book",
             title: "",
-            shortTitle: undefined,
-            datePublished: undefined,
-            language: undefined,
+            shortTitle: "",
+            datePublished: new Date(),
+            language: "English",
             extraFields: undefined,
             rights: undefined,
             creators: [
@@ -75,6 +79,7 @@ export function BaseReferenceCreator({
                     creatorType: "Author",
                     firstName: "",
                     lastName: "",
+                    reference: "",
                 },
             ],
             tags: [],
@@ -97,8 +102,8 @@ export function BaseReferenceCreator({
             ...data,
             tags: convertedTags,
         };
-        
-        console.log(convertedTags)
+
+        console.log(convertedTags);
         try {
             // figure out which reference type is being used
             await instance.post(`Reference/create-${schemaName}`, newData, {
@@ -230,7 +235,7 @@ export function BaseReferenceCreator({
                             <FormItem>
                                 <FormLabel>Rights</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Rights" {...field} />
+                                    {/*<Input placeholder="Rights" {...field} />*/}
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

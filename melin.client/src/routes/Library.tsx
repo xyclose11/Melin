@@ -53,7 +53,7 @@ type ReferenceTag = {
     id: number;
     text: string;
     createdBy: string;
-}
+};
 
 export type Reference = {
     id: number;
@@ -62,154 +62,6 @@ export type Reference = {
     creators: Creator[];
     language: string;
 };
-
-export const columns: ColumnDef<Reference>[] = [
-    {
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) =>
-                    table.toggleAllPageRowsSelected(!!value)
-                }
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: "title",
-        header: "Title",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("title")}</div>
-        ),
-    },
-    {
-        accessorKey: "type",
-        header: "Type",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("type")}</div>
-        ),
-    },
-    {
-        accessorKey: "title",
-        header: "Title",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("title")}</div>
-        ),
-    },
-    {
-        accessorKey: "title",
-        header: "Title",
-        cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("title")}</div>
-        ),
-    },
-    {
-        accessorKey: "creators",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Creators
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        },
-        
-        cell: ({ row }) => {
-            const creators: Creator[] = row.getValue("creators");
-            return (
-                <div>
-                    {creators.map((creator) => (
-                        <div key={creator.id}>
-                            <div>{creator.type}</div>
-                            <div>{creator.firstName}</div>
-                            <div>{creator.lastName}</div>
-                        </div>
-                    ))}
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: "tags",
-        header: "Tags",
-        cell: ({ row }) => {
-            const tags: ReferenceTag[] = row.getValue("tags");
-            return (
-                <div>
-                    {tags.map((tag) => (
-                        <div key={tag.id}>
-                            <div>{tag.text}</div>
-                            <div>{tag.createdBy}</div>
-                        </div>
-                    ))}
-                </div>
-            );
-        },
-    },
-    {
-        id: "actions",
-        enableHiding: false,
-        cell: ({ row }) => {
-            const reference = row.original;
-
-             const handleReferenceDelete = async () => {
-                try {
-                    const response = await instance.delete(
-                        `Reference/delete-reference?refId=${reference.id}`,
-                        {
-                            withCredentials: true,
-                        },
-                    );
-                    console.log(response)
-                } catch (error) {
-                    console.error("Unable to delete reference:", error);
-                }
-            }
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() =>
-                                navigator.clipboard.writeText(reference.title)
-                            }
-                        >
-                            Copy title
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleReferenceDelete}>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            );
-        },
-    },
-];
 
 export function LibraryPage() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -226,6 +78,147 @@ export function LibraryPage() {
         pageIndex: 0,
     });
 
+    const columns: ColumnDef<Reference>[] = [
+        {
+            id: "select",
+            header: ({ table }) => (
+                <Checkbox
+                    checked={
+                        table.getIsAllPageRowsSelected() ||
+                        (table.getIsSomePageRowsSelected() && "indeterminate")
+                    }
+                    onCheckedChange={(value) =>
+                        table.toggleAllPageRowsSelected(!!value)
+                    }
+                    aria-label="Select all"
+                />
+            ),
+            cell: ({ row }) => (
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                />
+            ),
+            enableSorting: false,
+            enableHiding: false,
+        },
+        {
+            accessorKey: "title",
+            header: "Title",
+            cell: ({ row }) => (
+                <div className="capitalize">{row.getValue("title")}</div>
+            ),
+        },
+        {
+            accessorKey: "type",
+            header: "Type",
+            cell: ({ row }) => (
+                <div className="capitalize">{row.getValue("type")}</div>
+            ),
+        },
+        {
+            accessorKey: "title",
+            header: "Title",
+            cell: ({ row }) => (
+                <div className="capitalize">{row.getValue("title")}</div>
+            ),
+        },
+        {
+            accessorKey: "title",
+            header: "Title",
+            cell: ({ row }) => (
+                <div className="capitalize">{row.getValue("title")}</div>
+            ),
+        },
+        {
+            accessorKey: "creators",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Creators
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                );
+            },
+
+            cell: ({ row }) => {
+                const creators: Creator[] = row.getValue("creators");
+                return (
+                    <div>
+                        {creators.map((creator) => (
+                            <div key={creator.id}>
+                                <div>{creator.type}</div>
+                                <div>{creator.firstName}</div>
+                                <div>{creator.lastName}</div>
+                            </div>
+                        ))}
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "tags",
+            header: "Tags",
+            cell: ({ row }) => {
+                const tags: ReferenceTag[] = row.getValue("tags");
+                return (
+                    <div>
+                        {tags.map((tag) => (
+                            <div key={tag.id}>
+                                <div>{tag.text}</div>
+                                <div>{tag.createdBy}</div>
+                            </div>
+                        ))}
+                    </div>
+                );
+            },
+        },
+        {
+            id: "actions",
+            enableHiding: false,
+            cell: ({ row }) => {
+                const reference = row.original;
+
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem
+                                onClick={() =>
+                                    navigator.clipboard.writeText(
+                                        reference.title,
+                                    )
+                                }
+                            >
+                                Copy title
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() =>
+                                    handleReferenceDelete(reference.id)
+                                }
+                            >
+                                Delete
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                );
+            },
+        },
+    ];
     const fetchData = async () => {
         try {
             const response = await instance.get(
@@ -238,6 +231,29 @@ export function LibraryPage() {
             setTotalRef(response.data.TotalPages);
         } catch (error) {
             console.error("Unable to get references:", error);
+        }
+    };
+
+    const handleReferenceDelete = async (referenceId: number) => {
+        try {
+            const response = await instance.delete(
+                `Reference/delete-reference?refId=${referenceId}`,
+                {
+                    withCredentials: true,
+                },
+            );
+
+            // Check if the delete operation was successful
+            if (response.status === 200) {
+                // Update state to remove the deleted reference
+                setData((prevData) =>
+                    prevData.filter((ref) => ref.id !== referenceId),
+                );
+            }
+
+            console.log(response);
+        } catch (error) {
+            console.error("Unable to delete reference:", error);
         }
     };
 
