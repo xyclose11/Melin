@@ -33,6 +33,7 @@ import {
     TagCreateDropdown,
     tagSchema,
 } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
+import { useToast } from "@/hooks/use-toast.ts";
 
 const rightsSchema = z.object({
     name: z.string().optional(),
@@ -62,6 +63,7 @@ export function BaseReferenceCreator({
 }) {
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -79,7 +81,6 @@ export function BaseReferenceCreator({
                     creatorType: "Author",
                     firstName: "",
                     lastName: "",
-                    reference: "",
                 },
             ],
             tags: [],
@@ -106,10 +107,21 @@ export function BaseReferenceCreator({
         console.log(convertedTags);
         try {
             // figure out which reference type is being used
-            await instance.post(`Reference/create-${schemaName}`, newData, {
-                withCredentials: true,
-            });
+            const response = await instance.post(
+                `Reference/create-${schemaName}`,
+                newData,
+                {
+                    withCredentials: true,
+                },
+            );
             console.log(data);
+            if (response.status === 200) {
+                toast({
+                    variant: "default",
+                    title: "Reference Successfully Created!",
+                    description: ``,
+                });
+            }
             console.log("SUCCESS");
         } catch (error) {
             console.error("Create reference failed:", error);

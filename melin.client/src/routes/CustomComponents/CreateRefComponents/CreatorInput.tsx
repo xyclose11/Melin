@@ -56,7 +56,6 @@ export const creatorFormSchema = z.object({
         .optional(),
     firstName: z.string().optional(),
     lastName: z.string().optional(),
-    reference: z.string().optional(),
 });
 
 export function CreatorInput({ name }: { name: string }) {
