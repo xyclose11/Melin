@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Melin.Server.Models.Binders;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace Melin.Server.Models;
@@ -18,6 +20,7 @@ public class Reference
     // Base fields
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ReferenceType? Type { get; set; }
+    [ModelBinder(BinderType = typeof(CreatorEntityBinder))]
     public ICollection<Creator>? Creators { get; set; } = new List<Creator>();
     public string Title { get; set; } = "";
     public string? ShortTitle { get; set; } = "";

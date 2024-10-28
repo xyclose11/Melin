@@ -106,6 +106,11 @@ public class ReferenceController : ControllerBase
     [Authorize]
     public async Task<ActionResult<Artwork>> PostReferenceArtwork([FromBody] Artwork artwork)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         if (!User.Identity.IsAuthenticated)
         {
             return Unauthorized("User is not authenticated.");
