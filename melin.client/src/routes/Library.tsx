@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import * as React from "react";
+import { ToastAction } from "@/components/ui/toast";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -37,6 +38,7 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
+import { useToast } from "@/hooks/use-toast.ts";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -72,6 +74,7 @@ export function LibraryPage() {
     const [rowSelection, setRowSelection] = React.useState({});
     const [totalRef, setTotalRef] = useState(0);
     const [data, setData] = React.useState<Reference[]>([]);
+    const { toast } = useToast();
 
     const [pagination, setPagination] = useState({
         pageSize: 10,
@@ -115,20 +118,6 @@ export function LibraryPage() {
             header: "Type",
             cell: ({ row }) => (
                 <div className="capitalize">{row.getValue("type")}</div>
-            ),
-        },
-        {
-            accessorKey: "title",
-            header: "Title",
-            cell: ({ row }) => (
-                <div className="capitalize">{row.getValue("title")}</div>
-            ),
-        },
-        {
-            accessorKey: "title",
-            header: "Title",
-            cell: ({ row }) => (
-                <div className="capitalize">{row.getValue("title")}</div>
             ),
         },
         {
@@ -230,6 +219,14 @@ export function LibraryPage() {
             setData(response.data.data);
             setTotalRef(response.data.TotalPages);
         } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Unable to get References",
+                description: "Please try again later",
+                action: (
+                    <ToastAction altText={"Try Again"}>Try Again</ToastAction>
+                ),
+            });
             console.error("Unable to get references:", error);
         }
     };
@@ -249,6 +246,15 @@ export function LibraryPage() {
                 setData((prevData) =>
                     prevData.filter((ref) => ref.id !== referenceId),
                 );
+
+                // show success alert & offer undo
+
+                toast({
+                    variant: "destructive",
+                    title: "Reference Successfully Deleted",
+                    description: `Reference with ID: ${referenceId} has been deleted.`,
+                    action: <ToastAction altText={"Undo"}>Undo</ToastAction>,
+                });
             }
 
             console.log(response);
