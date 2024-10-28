@@ -152,7 +152,7 @@ export function BaseReferenceCreator({
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-2 gap-2 justify-items-start grid grid-cols-2 grid-flow-row-dense"
+                    className="space-y-2 gap-2 justify-items-start grid grid-cols-2 grid-flow-row"
                 >
                     <TagCreateDropdown />
                     <FormField

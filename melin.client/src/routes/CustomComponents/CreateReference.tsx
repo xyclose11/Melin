@@ -25,14 +25,7 @@ export function CreateReference() {
 
     return (
         <>
-            <div className={"grid grid-cols-4 gap-2"}>
-                <div>
-                    <ReferenceTypeSelector
-                        refType={refType}
-                        handleState={handleState}
-                    />
-                </div>
-
+            <div className={"grid grid-cols-3 gap-4"}>
                 <div className={"col-span-2"}>
                     {refType === "book" && (
                         <BaseReferenceCreator
@@ -100,6 +93,12 @@ export function CreateReference() {
                             schemaName="software"
                         />
                     )}
+                </div>
+                <div className={"space-y-2"}>
+                    <ReferenceTypeSelector
+                        refType={refType}
+                        handleState={handleState}
+                    />
                 </div>
             </div>
         </>

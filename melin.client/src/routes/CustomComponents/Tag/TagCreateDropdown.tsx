@@ -1,4 +1,9 @@
-import { FormField } from "@/components/ui/form.tsx";
+import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+} from "@/components/ui/form.tsx";
 import { useFormContext } from "react-hook-form";
 import { Tag, TagInput } from "emblor";
 import React from "react";
@@ -15,31 +20,42 @@ export const tagSchema = z.object({
 });
 
 export function TagCreateDropdown() {
-    const { control, setValue, watch, formState: {errors} } = useFormContext();
-    
+    const {
+        control,
+        setValue,
+        watch,
+        formState: { errors },
+    } = useFormContext();
+
     const currentTags = watch("tags") || [];
 
-    const [activeTagIndex, setActiveTagIndex] = React.useState<number | null>(null);
-
+    const [activeTagIndex, setActiveTagIndex] = React.useState<number | null>(
+        null,
+    );
 
     const handleTagChange = (newTags: React.SetStateAction<Tag[]>) => {
         setValue("tags", newTags);
     };
 
     return (
-        <div>
+        <div className={"space-y-2"}>
             <FormField
                 control={control}
                 name="tags"
                 render={({ field }) => (
-                    <TagInput
-                        {...field}
-                        placeholder="Enter a tag"
-                        tags={currentTags}
-                        setTags={handleTagChange}
-                        activeTagIndex={activeTagIndex}
-                        setActiveTagIndex={setActiveTagIndex}
-                    />
+                    <FormItem>
+                        <FormLabel> Tags</FormLabel>
+                        <FormControl>
+                            <TagInput
+                                {...field}
+                                placeholder="Enter a tag"
+                                tags={currentTags}
+                                setTags={handleTagChange}
+                                activeTagIndex={activeTagIndex}
+                                setActiveTagIndex={setActiveTagIndex}
+                            />
+                        </FormControl>
+                    </FormItem>
                 )}
             />
 
