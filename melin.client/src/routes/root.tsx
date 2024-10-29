@@ -13,7 +13,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
             <div className={"w-screen min-h-dvh"}>
                 <SidebarProvider>
                     <WorkspaceToolBar />
-                    <main className={"w-screen mt-16 flex p-2 m-2"}>
+                    <main className={"w-screen mt-16 flex p-2"}>
                         <SidebarTrigger>{children}</SidebarTrigger>
                         <Workspace />
                     </main>
