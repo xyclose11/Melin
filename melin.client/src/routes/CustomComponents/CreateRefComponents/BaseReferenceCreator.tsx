@@ -77,14 +77,7 @@ export function BaseReferenceCreator({
             language: "English",
             extraFields: undefined,
             rights: undefined,
-            creators: [
-                {
-                    id: 0,
-                    creatorType: "Author",
-                    firstName: "",
-                    lastName: "",
-                },
-            ],
+            creators: [],
             tags: [],
         },
     });

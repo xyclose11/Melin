@@ -47,7 +47,7 @@ export const CREATOR_TYPES = [
 ] as const;
 
 export const creatorFormSchema = z.object({
-    id: z.number(),
+    id: z.number().optional(),
     creatorType: z
         .enum(
             CREATOR_TYPES.map((type) => type.value) as [string, ...string[]],
