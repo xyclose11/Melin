@@ -34,6 +34,7 @@ import {
     tagSchema,
 } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
+import { useNavigate } from "react-router-dom";
 
 const rightsSchema = z.object({
     name: z.string().optional(),
@@ -64,6 +65,7 @@ export function BaseReferenceCreator({
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
     const { toast } = useToast();
+    const navigate = useNavigate();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -93,7 +95,6 @@ export function BaseReferenceCreator({
     }
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        console.log("ASD");
         const convertedTags = data.tags?.map((tag) => ({
             ...tag,
             id: generateRandom32BitInteger(),
@@ -104,7 +105,6 @@ export function BaseReferenceCreator({
             tags: convertedTags,
         };
 
-        console.log(convertedTags);
         try {
             // figure out which reference type is being used
             const response = await instance.post(
@@ -114,14 +114,21 @@ export function BaseReferenceCreator({
                     withCredentials: true,
                 },
             );
-            console.log(data);
             if (response.status === 200) {
                 toast({
                     variant: "default",
                     title: "Reference Successfully Created!",
                     description: ``,
                 });
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Reference Not Created Successfully",
+                    description: ``,
+                });
             }
+
+            navigate("/library");
             console.log("SUCCESS");
         } catch (error) {
             console.error("Create reference failed:", error);
