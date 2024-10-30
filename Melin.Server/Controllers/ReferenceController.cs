@@ -112,9 +112,12 @@ public class ReferenceController : ControllerBase
         book.OwnerEmail = User.Identity.Name;
         book.Language = Language.English;
         book.Type = ReferenceType.Book;
-        _referenceContext.Books.Add(book);
+
+        _unitOfWork.References.Add(book);
+        _unitOfWork.Complete();
+        // _referenceContext.Books.Add(book);
         
-        await _referenceContext.SaveChangesAsync();
+        // await _referenceContext.SaveChangesAsync();
 
         return Ok();
     }
