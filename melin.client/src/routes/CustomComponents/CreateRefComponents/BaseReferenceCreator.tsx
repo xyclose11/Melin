@@ -240,19 +240,7 @@ export function BaseReferenceCreator({
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="rights"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Rights</FormLabel>
-                                <FormControl>
-                                    {/*<Input placeholder="Rights" {...field} />*/}
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+
                     <FormField
                         control={form.control}
                         name="extraFields"

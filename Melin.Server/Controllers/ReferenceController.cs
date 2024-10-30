@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Melin.Server.Filter;
+using Melin.Server.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
 using Melin.Server.Models.Context;
@@ -24,36 +25,52 @@ public class ReferenceController : ControllerBase
     private readonly ReferenceContext _referenceContext;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly TagService _tagService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ReferenceController(ApiService apiService, ReferenceContext database, UserManager<IdentityUser> userManager, TagService tagService)
+    public ReferenceController(ApiService apiService, ReferenceContext database, UserManager<IdentityUser> userManager, TagService tagService, IUnitOfWork unitOfWork)
     {
         _apiService = apiService;
         _referenceContext = database;
         _userManager = userManager;
         _tagService = tagService;
+        _unitOfWork = unitOfWork;
     }
     
     
     // GET: Get All User Owned References
+    // [HttpGet("references")]
+    // [Authorize]
+    // public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
+    // {
+    //     
+    //     var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+    //     var pagedReferences = await _referenceContext.Reference
+    //         .Include(t => t.Tags)
+    //         .Include(r => r.Creators)
+    //         .Where(a => a.OwnerEmail == User.Identity.Name)
+    //         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+    //         .Take(validFilter.PageSize)
+    //         .ToListAsync();
+    //
+    //     var totalRefCount = await _referenceContext.Reference
+    //         .Where(a => a.OwnerEmail == User.Identity.Name)
+    //         .CountAsync();
+    //     
+    //     return Ok(new PagedResponse<List<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
+    // }
+    
     [HttpGet("references")]
     [Authorize]
     public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
-        
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        var pagedReferences = await _referenceContext.Reference
-            .Include(t => t.Tags)
-            .Include(r => r.Creators)
-            .Where(a => a.OwnerEmail == User.Identity.Name)
-            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-            .Take(validFilter.PageSize)
-            .ToListAsync();
+        var pagedReferences = await _unitOfWork.References.GetOwnedReferences(filter, User.Identity.Name);
 
         var totalRefCount = await _referenceContext.Reference
             .Where(a => a.OwnerEmail == User.Identity.Name)
             .CountAsync();
         
-        return Ok(new PagedResponse<List<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
+        return Ok(new PagedResponse<ICollection<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
     }
 
     // POST: Create new reference
@@ -95,9 +112,12 @@ public class ReferenceController : ControllerBase
         book.OwnerEmail = User.Identity.Name;
         book.Language = Language.English;
         book.Type = ReferenceType.Book;
-        _referenceContext.Books.Add(book);
+
+        _unitOfWork.References.Add(book);
+        _unitOfWork.Complete();
+        // _referenceContext.Books.Add(book);
         
-        await _referenceContext.SaveChangesAsync();
+        // await _referenceContext.SaveChangesAsync();
 
         return Ok();
     }

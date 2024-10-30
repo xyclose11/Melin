@@ -1,21 +1,17 @@
 using System.ComponentModel.DataAnnotations;
 using Melin.Server.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Moq;
+using Task = Melin.Server.Models.Task;
 
 namespace Melin.Server.Tests;
 
 public class ReferenceControllerTests {
     [Fact]
-    public void GET_retrieves_book()
+    public async Task GET_retrieves_book()
     {
-        // Given
-        await using var application = new WebApplicationFactory<Api.Startup>();
-        using var client = application.CreateClient();
-        // When
-
-        var response = await client.GetAsync("/reference/books");
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-    
-        // Then
+        var mockRepo = new Mock<ReferenceContext>();
+        mockRepo.Setup(repo => repo.Artworks)
+            .Returns();
     }
 }
