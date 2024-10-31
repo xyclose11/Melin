@@ -35,6 +35,13 @@ import {
 } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
 import { useNavigate } from "react-router-dom";
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card.tsx";
 
 const rightsSchema = z.object({
     name: z.string().optional(),
@@ -174,200 +181,258 @@ export function BaseReferenceCreator({
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-2 gap-2 justify-items-start grid grid-cols-2 grid-flow-row"
+                        className="space-y-2 gap-2 justify-items-start grid grid-cols-3"
                     >
-                        <TagCreateDropdown />
-                        <FormField
-                            control={form.control}
-                            name="title"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Title *</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Title" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="shortTitle"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Short Title</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Short Title"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="language"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Language</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Language"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="datePublished"
-                            render={({ field }) => (
-                                <FormItem className={""}>
-                                    <FormLabel>Date Published</FormLabel>
-                                    <FormControl>
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-[280px] justify-start text-left font-normal",
-                                                        !datePublished &&
-                                                            "text-muted-foreground",
-                                                    )}
-                                                >
-                                                    <CalendarIcon />
-                                                    {datePublished ? (
-                                                        format(
-                                                            datePublished,
-                                                            "PPP",
-                                                        )
-                                                    ) : (
-                                                        <span>
-                                                            {" "}
-                                                            Click Here!{" "}
-                                                        </span>
-                                                    )}
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-auto p-0">
-                                                <Calendar
-                                                    mode="single"
-                                                    selected={datePublished}
-                                                    onSelect={(date) => {
-                                                        setDatePublished(date);
-                                                        field.onChange(date);
-                                                    }}
-                                                    initialFocus
+                        <Card>
+                            <CardHeader className={"text-center"}>
+                                <CardTitle>Tags</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <TagCreateDropdown />
+                            </CardContent>
+                        </Card>
+                        <Card className={"col-span-2 m-0"}>
+                            <CardHeader className={"m-0"}>
+                                <CardTitle>General Fields*</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <FormField
+                                    control={form.control}
+                                    name="title"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Title *</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Title"
                                                     {...field}
                                                 />
-                                            </PopoverContent>
-                                        </Popover>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="rights"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Rights</FormLabel>
-                                    <FormControl>
-                                        {/*<Input placeholder="Rights" {...field} />*/}
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="extraFields"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Extra Information</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Extra Fields"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <div className={"col-span-2"}>
-                            <ul className="grid grid-cols-2 grid-rows-1 place-items-center">
-                                {creatorArray.map((creator) => (
-                                    <li
-                                        key={
-                                            (creator as React.ReactElement).key
-                                        }
-                                        className={"col-span-3 w-full"}
-                                    >
-                                        <div
-                                            className={
-                                                "flex justify-between items-center"
-                                            }
-                                        >
-                                            {creator}
-                                            <div className={""}>
-                                                <SquareX
-                                                    className="h-5 w-5"
-                                                    onClick={() => {
-                                                        onClickRemoveCreator(
-                                                            (
-                                                                creator as React.ReactElement
-                                                            ).key,
-                                                        );
-                                                    }}
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="shortTitle"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Short Title</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Short Title"
+                                                    {...field}
                                                 />
-                                            </div>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                            <Button
-                                className="m-2"
-                                type="button"
-                                onClick={onClickAddCreator}
-                            >
-                                + Add Another
-                            </Button>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="language"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Language</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Language"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="datePublished"
+                                    render={({ field }) => (
+                                        <FormItem className={""}>
+                                            <FormLabel>
+                                                Date Published
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                "w-[280px] justify-start text-left font-normal",
+                                                                !datePublished &&
+                                                                    "text-muted-foreground",
+                                                            )}
+                                                        >
+                                                            <CalendarIcon />
+                                                            {datePublished ? (
+                                                                format(
+                                                                    datePublished,
+                                                                    "PPP",
+                                                                )
+                                                            ) : (
+                                                                <span>
+                                                                    {" "}
+                                                                    Click Here!{" "}
+                                                                </span>
+                                                            )}
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0">
+                                                        <Calendar
+                                                            mode="single"
+                                                            selected={
+                                                                datePublished
+                                                            }
+                                                            onSelect={(
+                                                                date,
+                                                            ) => {
+                                                                setDatePublished(
+                                                                    date,
+                                                                );
+                                                                field.onChange(
+                                                                    date,
+                                                                );
+                                                            }}
+                                                            initialFocus
+                                                            {...field}
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="rights"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Rights</FormLabel>
+                                            <FormControl>
+                                                {/*<Input placeholder="Rights" {...field} />*/}
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="extraFields"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Extra Information
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Extra Fields"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </CardContent>
+
+                            <CardFooter>
+                                *Applicable to all reference types
+                            </CardFooter>
+                        </Card>
+                        <div className={"col-span-3 w-full"}>
+                            <Card>
+                                <CardHeader
+                                    className={
+                                        "text-center content-center justify-center"
+                                    }
+                                >
+                                    <CardTitle>Creators</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <ul className="grid grid-cols-2 grid-rows-1 place-items-center">
+                                        {creatorArray.map((creator) => (
+                                            <li
+                                                key={
+                                                    (
+                                                        creator as React.ReactElement
+                                                    ).key
+                                                }
+                                                className={"col-span-3 w-full"}
+                                            >
+                                                <div
+                                                    className={
+                                                        "flex justify-between items-center p-1"
+                                                    }
+                                                >
+                                                    {creator}
+                                                    <div className={""}>
+                                                        <SquareX
+                                                            className="h-5 w-5"
+                                                            onClick={() => {
+                                                                onClickRemoveCreator(
+                                                                    (
+                                                                        creator as React.ReactElement
+                                                                    ).key,
+                                                                );
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <Button
+                                        className="m-2"
+                                        type="button"
+                                        onClick={onClickAddCreator}
+                                    >
+                                        + Add Another
+                                    </Button>
+                                </CardContent>
+                            </Card>
                         </div>
 
-                        {Object.keys(refSchema.shape).map((key) => (
-                            <Controller
-                                key={key}
-                                control={control}
-                                name={
-                                    `bookSchema.${key}` as keyof z.infer<
-                                        typeof formSchema
-                                    >
-                                }
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            {key.replace(/([A-Z])/g, " $1")}:
-                                        </FormLabel>
-                                        <FormControl>
-                                            {/*@ts-ignore*/}
-                                            <Input
-                                                placeholder={key.replace(
-                                                    /([A-Z])/g,
-                                                    " $1",
-                                                )}
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-                        ))}
+                        <Card className={"col-span-3 w-full"}>
+                            <CardHeader>
+                                <CardTitle>Reference Specific</CardTitle>
+                            </CardHeader>
+
+                            <CardContent className={"grid grid-cols-2 gap-4"}>
+                                {Object.keys(refSchema.shape).map((key) => (
+                                    <Controller
+                                        key={key}
+                                        control={control}
+                                        name={
+                                            `bookSchema.${key}` as keyof z.infer<
+                                                typeof formSchema
+                                            >
+                                        }
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    {key.replace(
+                                                        /([A-Z])/g,
+                                                        " $1",
+                                                    )}
+                                                    :
+                                                </FormLabel>
+                                                <FormControl className={""}>
+                                                    {/*@ts-ignore*/}
+                                                    <Input
+                                                        placeholder={key.replace(
+                                                            /([A-Z])/g,
+                                                            " $1",
+                                                        )}
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                ))}
+                            </CardContent>
+                        </Card>
 
                         {errors.creators && (
                             <div>{errors.creators.message}</div>

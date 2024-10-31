@@ -74,7 +74,7 @@ export function CreatorInput({ name }: { name: string }) {
                                         variant="secondary"
                                         role="combobox"
                                         className={cn(
-                                            "w-[80px] justify-between",
+                                            "w-[80px] h-[26px] justify-between",
                                             !field.value &&
                                                 "text-muted-foreground",
                                         )}

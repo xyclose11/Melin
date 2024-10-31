@@ -16,6 +16,7 @@ import {
     softwareSchema,
     websiteSchema,
 } from "@/routes/ReferenceCreationPages/BaseReferenceSchema.ts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export function CreateReference() {
     const [refType, setRefType] = useState("artwork"); // default is book
 
@@ -95,10 +96,17 @@ export function CreateReference() {
                     )}
                 </div>
                 <div className={"space-y-2"}>
-                    <ReferenceTypeSelector
-                        refType={refType}
-                        handleState={handleState}
-                    />
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Reference Type</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <ReferenceTypeSelector
+                                refType={refType}
+                                handleState={handleState}
+                            />
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </>
