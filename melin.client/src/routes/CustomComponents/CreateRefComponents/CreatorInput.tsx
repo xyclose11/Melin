@@ -47,7 +47,7 @@ export const CREATOR_TYPES = [
 ] as const;
 
 export const creatorFormSchema = z.object({
-    id: z.number(),
+    id: z.number().optional(),
     creatorType: z
         .enum(
             CREATOR_TYPES.map((type) => type.value) as [string, ...string[]],
@@ -62,7 +62,7 @@ export function CreatorInput({ name }: { name: string }) {
     const { control } = useFormContext();
 
     return (
-        <div className={"grid grid-cols-4 grid-flow-col"}>
+        <span className={"grid grid-cols-3"}>
             <FormField
                 control={control}
                 name={`${name}.creatorType`}
@@ -73,10 +73,10 @@ export function CreatorInput({ name }: { name: string }) {
                             <PopoverTrigger asChild>
                                 <FormControl>
                                     <Button
-                                        variant="outline"
+                                        variant="secondary"
                                         role="combobox"
                                         className={cn(
-                                            "w-[200px] justify-between",
+                                            "w-[80px] justify-between",
                                             !field.value &&
                                                 "text-muted-foreground",
                                         )}
@@ -87,8 +87,8 @@ export function CreatorInput({ name }: { name: string }) {
                                                       creatorType.value ===
                                                       field.value,
                                               )?.label
-                                            : "Select Creator Type"}
-                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            : "Type"}
+                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-100" />
                                     </Button>
                                 </FormControl>
                             </PopoverTrigger>
@@ -140,10 +140,13 @@ export function CreatorInput({ name }: { name: string }) {
                 control={control}
                 name={`${name}.firstName`}
                 render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>First Name</FormLabel>
+                    <FormItem className={"w-[120px] mr-1"}>
                         <FormControl>
-                            <Input placeholder="First Name" {...field} />
+                            <Input
+                                className={"h-8"}
+                                placeholder="First Name"
+                                {...field}
+                            />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -153,8 +156,7 @@ export function CreatorInput({ name }: { name: string }) {
                 control={control}
                 name={`${name}.lastName`}
                 render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Last Name</FormLabel>
+                    <FormItem className={"w-[120px] ml-1"}>
                         <FormControl>
                             <Input
                                 className={"h-8"}
@@ -166,6 +168,6 @@ export function CreatorInput({ name }: { name: string }) {
                     </FormItem>
                 )}
             />
-        </div>
+        </span>
     );
 }
