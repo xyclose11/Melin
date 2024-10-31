@@ -2,7 +2,6 @@
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
@@ -68,7 +67,6 @@ export function CreatorInput({ name }: { name: string }) {
                 name={`${name}.creatorType`}
                 render={({ field }) => (
                     <FormItem className="flex flex-col">
-                        <FormLabel>Creator Type</FormLabel>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <FormControl>

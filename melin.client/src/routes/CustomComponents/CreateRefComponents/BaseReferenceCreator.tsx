@@ -77,9 +77,7 @@ export function BaseReferenceCreator({
             language: "English",
             extraFields: undefined,
             rights: undefined,
-            creators: [
-                {}
-            ],
+            creators: [{}],
             tags: [],
         },
     });
@@ -303,32 +301,33 @@ export function BaseReferenceCreator({
                             )}
                         />
                         <div className={"col-span-2"}>
-                            <ul className="grid grid-cols-2 justify-center">
+                            <ul className="grid grid-cols-2 grid-rows-1 place-items-center">
                                 {creatorArray.map((creator) => (
                                     <li
                                         key={
                                             (creator as React.ReactElement).key
                                         }
-                                        className={"col-span-2"}
+                                        className={"col-span-3 w-full"}
                                     >
-                                        {creator}
-                                        <span>
-                                            <Button
-                                                className={"h-8"}
-                                                variant="destructive"
-                                                type="button"
-                                                size="icon"
-                                                onClick={() => {
-                                                    onClickRemoveCreator(
-                                                        (
-                                                            creator as React.ReactElement
-                                                        ).key,
-                                                    );
-                                                }}
-                                            >
-                                                <SquareX className="h-4 w-4" />
-                                            </Button>
-                                        </span>
+                                        <div
+                                            className={
+                                                "flex justify-between items-center"
+                                            }
+                                        >
+                                            {creator}
+                                            <div className={""}>
+                                                <SquareX
+                                                    className="h-5 w-5"
+                                                    onClick={() => {
+                                                        onClickRemoveCreator(
+                                                            (
+                                                                creator as React.ReactElement
+                                                            ).key,
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
