@@ -115,10 +115,7 @@ public class ReferenceController : ControllerBase
 
         _unitOfWork.References.Add(book);
         _unitOfWork.Complete();
-        // _referenceContext.Books.Add(book);
         
-        // await _referenceContext.SaveChangesAsync();
-
         return Ok();
     }
     

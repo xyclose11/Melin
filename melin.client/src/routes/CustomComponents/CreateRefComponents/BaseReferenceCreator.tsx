@@ -64,8 +64,8 @@ export function BaseReferenceCreator({
 }) {
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
-    const { toast } = useToast();
     const navigate = useNavigate();
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -77,14 +77,16 @@ export function BaseReferenceCreator({
             language: "English",
             extraFields: undefined,
             rights: undefined,
-            creators: [],
+            creators: [
+                {}
+            ],
             tags: [],
         },
     });
 
     function generateRandom32BitInteger() {
         const max = 500000;
-        return Math.floor(Math.random() * (max - 0 + 1));
+        return Math.floor(Math.random() * (max + 1));
     }
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -142,8 +144,6 @@ export function BaseReferenceCreator({
     }
 
     function onClickRemoveCreator(removeId: string | null) {
-        console.log(creatorArray);
-        console.log(removeId);
         if (removeId === null) {
             toast({
                 variant: "destructive",
