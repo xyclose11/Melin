@@ -18,7 +18,7 @@ import { useAuth } from "@/utils/AuthProvider.tsx";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 
 export function NavBar() {
-    const { isAuthenticated } = useAuth(); // Assuming you have an AuthContext
+    const { isAuthenticated } = useAuth();
 
     return (
         <header className="fixed top-0 p-4 flex w-screen justify-center h-16 items-center gap-4 border-b bg-background">
