@@ -32,39 +32,39 @@ import {
 const REFERENCE_TYPES = [
     { label: "Artwork", value: "artwork" },
     { label: "Audio Recording", value: "audio-recording" },
-    { label: "Bill", value: "bill" },
-    { label: "Blog Post", value: "blog-post" },
+    // { label: "Bill", value: "bill" },
+    // { label: "Blog Post", value: "blog-post" },
     { label: "Book", value: "book" },
-    { label: "Book Section", value: "book-section" },
+    // { label: "Book Section", value: "book-section" },
     { label: "Case", value: "case" },
-    { label: "Conference Paper", value: "conference-paper" },
-    { label: "Dictionary Entry", value: "dictionary-entry" },
-    { label: "Document", value: "document" },
-    { label: "Email", value: "email" },
-    { label: "Encyclopedia Article", value: "encyclopedia-article" },
-    { label: "Film", value: "film" },
-    { label: "Forum Post", value: "forum-post" },
-    { label: "Hearing", value: "hearing" },
-    { label: "Instant Message", value: "instant-message" },
-    { label: "Interview", value: "interview" },
-    { label: "Journal Article", value: "journal-article" },
-    { label: "Magazine Article", value: "magazine-article" },
-    { label: "Manuscript", value: "manuscript" },
-    { label: "Map", value: "map" },
-    { label: "Newspaper Article", value: "newspaper-article" },
+    // { label: "Conference Paper", value: "conference-paper" },
+    // { label: "Dictionary Entry", value: "dictionary-entry" },
+    // { label: "Document", value: "document" },
+    // { label: "Email", value: "email" },
+    // { label: "Encyclopedia Article", value: "encyclopedia-article" },
+    // { label: "Film", value: "film" },
+    // { label: "Forum Post", value: "forum-post" },
+    // { label: "Hearing", value: "hearing" },
+    // { label: "Instant Message", value: "instant-message" },
+    // { label: "Interview", value: "interview" },
+    // { label: "Journal Article", value: "journal-article" },
+    // { label: "Magazine Article", value: "magazine-article" },
+    // { label: "Manuscript", value: "manuscript" },
+    // { label: "Map", value: "map" },
+    // { label: "Newspaper Article", value: "newspaper-article" },
     { label: "Patent", value: "patent" },
-    { label: "Podcast", value: "podcast" },
+    // { label: "Podcast", value: "podcast" },
     { label: "Presentation", value: "presentation" },
-    { label: "Radio Broadcast", value: "radio-broadcast" },
+    // { label: "Radio Broadcast", value: "radio-broadcast" },
     { label: "Report", value: "report" },
     { label: "Software", value: "software" },
-    { label: "Statute", value: "statute" },
-    { label: "Thesis", value: "thesis" },
-    { label: "TV Broadcast", value: "tv-broadcast" },
-    { label: "Video Recording", value: "video-recording" },
-    { label: "Webpage", value: "webpage" },
-    { label: "Attachment", value: "attachment" },
-    { label: "Note", value: "note" },
+    // { label: "Statute", value: "statute" },
+    // { label: "Thesis", value: "thesis" },
+    // { label: "TV Broadcast", value: "tv-broadcast" },
+    // { label: "Video Recording", value: "video-recording" },
+    { label: "Website", value: "website" },
+    // { label: "Attachment", value: "attachment" },
+    // { label: "Note", value: "note" },
 ] as const;
 
 const FormSchema = z.object({
@@ -73,18 +73,15 @@ const FormSchema = z.object({
     }),
 });
 
-export function ReferenceTypeSelector({ refType, handleState }: any) {
+export function ReferenceTypeSelector({ handleState }: any) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     });
 
     function handleChange() {
-        console.log(form.getValues());
         handleState(form.getValues().refType);
     }
-
-    console.log(refType);
-
+    
     return (
         <Form {...form}>
             <form className="space-y-6">
