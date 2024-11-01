@@ -46,6 +46,7 @@ import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
 import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
 import { DraggableGroup } from "@/routes/GroupComponents/DraggableGroup.tsx";
+import { TagTableDisplay } from "@/routes/TagComponents/TagTableDisplay.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -174,10 +175,11 @@ export function LibraryPage() {
                 return (
                     <div>
                         {tags.map((tag) => (
-                            <div key={tag.id}>
-                                <div>{tag.text}</div>
-                                <div>{tag.createdBy}</div>
-                            </div>
+                            <TagTableDisplay
+                                key={tag.id}
+                                tagId={tag.id}
+                                name={tag.text}
+                            />
                         ))}
                     </div>
                 );
