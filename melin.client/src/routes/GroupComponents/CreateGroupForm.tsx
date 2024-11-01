@@ -14,10 +14,14 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { instance } from "@/utils/axiosInstance.ts";
+import { TextArea } from "@radix-ui/themes";
 
 const GroupFormSchema = z.object({
     name: z.string().min(2, {
         message: "Group Name must be at least 2 characters.",
+    }),
+    description: z.string().min(2, {
+        message: "Group Description must be at least 2 characters.",
     }),
 });
 
@@ -69,7 +73,7 @@ export function CreateGroupForm() {
                         name="name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Group Name</FormLabel>
+                                <FormLabel>Group Name*</FormLabel>
                                 <FormControl>
                                     <Input placeholder="name..." {...field} />
                                 </FormControl>
@@ -81,6 +85,24 @@ export function CreateGroupForm() {
                             </FormItem>
                         )}
                     />
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl>
+                                    <TextArea
+                                        placeholder="description..."
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription>Optional</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
                     <Button type="submit">Submit</Button>
                 </form>
             </Form>

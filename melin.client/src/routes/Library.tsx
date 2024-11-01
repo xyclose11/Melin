@@ -1,6 +1,11 @@
 ﻿"use client";
 
 import * as React from "react";
+// import { DndContext } from "@dnd-kit/core";
+// import { useState } from "react";
+// import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
+// import { DroppableWorkspace } from "@/routes/LibraryViews/DragNDrop/DroppableWorkspace.tsx";
+
 import { ToastAction } from "@/components/ui/toast";
 import {
     ColumnDef,
@@ -36,14 +41,20 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
-import { TagInput } from "emblor";
+import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
+import { DraggableGroup } from "@/routes/GroupComponents/DraggableGroup.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
 }
+
+type GroupType = {
+    name: string;
+    nodes: [];
+};
 
 type Creator = {
     id: number;
@@ -76,6 +87,8 @@ export function LibraryPage() {
     const [totalRef, setTotalRef] = useState(0);
     const [data, setData] = React.useState<Reference[]>([]);
     const { toast } = useToast();
+    // const [isDropped, setIsDropped] = useState(false);
+    // const libSideBar = <LibrarySideBar>Drag me</LibrarySideBar>;
 
     const [pagination, setPagination] = useState({
         pageSize: 10,
@@ -292,131 +305,180 @@ export function LibraryPage() {
         },
     });
 
+    const [userGroups, setUserGroups] = useState<ReactNode[]>([]);
+
+    const getGroups = async () => {
+        try {
+            const res = await instance.get("get-owned-groups", {
+                withCredentials: true,
+            });
+
+            if (res.status === 200) {
+                console.log(res);
+                // see if user has groups
+                if (res.data.length <= 0) {
+                    console.log("NO GROUPS");
+                }
+
+                setUserGroups(res.data);
+            } else {
+                // DISPLAY ERROR
+            }
+        } catch (e) {
+            console.log(e);
+            // DISPLAY ERROR
+        }
+    };
+
+    useEffect(() => {
+        getGroups();
+    }, []);
+
     return (
-        <div className="w-full light">
-            <div className="flex items-center py-4">
-                <Input
-                    placeholder="Filter references..."
-                    value={
-                        (table
-                            .getColumn("title")
-                            ?.getFilterValue() as string) ?? ""
-                    }
-                    onChange={(event) =>
-                        table
-                            .getColumn("title")
-                            ?.setFilterValue(event.target.value)
-                    }
-                    className="max-w-sm"
-                />
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
-                            Columns <ChevronDown className="ml-2 h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                );
-                            })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
-            <div className="rounded-md border">
-                <Table>
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
+        <div className={"flex gap-3"}>
+            {/*<DndContext onDragEnd={handleDragEnd}>*/}
+            {/*    {!isDropped ? libSideBar : null}*/}
+            {/*    <DroppableWorkspace>*/}
+            {/*        {isDropped ? libSideBar : "Drop Here"}*/}
+            {/*    </DroppableWorkspace>*/}
+            {/*</DndContext>*/}
+            <LibrarySideBar>
+                {userGroups.map((g: GroupType) => (
+                    <DraggableGroup groupName={g.name} groupNodes={g.nodes} />
+                ))}
+            </LibrarySideBar>{" "}
+            <div className="w-full light">
+                <div className="flex items-center py-4">
+                    <Input
+                        placeholder="Filter references..."
+                        value={
+                            (table
+                                .getColumn("title")
+                                ?.getFilterValue() as string) ?? ""
+                        }
+                        onChange={(event) =>
+                            table
+                                .getColumn("title")
+                                ?.setFilterValue(event.target.value)
+                        }
+                        className="max-w-sm"
+                    />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="ml-auto">
+                                Columns <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            {table
+                                .getAllColumns()
+                                .filter((column) => column.getCanHide())
+                                .map((column) => {
                                     return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                      header.column.columnDef
-                                                          .header,
-                                                      header.getContext(),
-                                                  )}
-                                        </TableHead>
+                                        <DropdownMenuCheckboxItem
+                                            key={column.id}
+                                            className="capitalize"
+                                            checked={column.getIsVisible()}
+                                            onCheckedChange={(value) =>
+                                                column.toggleVisibility(!!value)
+                                            }
+                                        >
+                                            {column.id}
+                                        </DropdownMenuCheckboxItem>
                                     );
                                 })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={
-                                        row.getIsSelected() && "selected"
-                                    }
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext(),
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
-                <div className="space-x-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        Previous
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                            setPagination((prev) => ({
-                                ...prev,
-                                pageIndex: prev.pageIndex + 1, // Increment pageIndex here
-                            }));
-                        }}
-                    >
-                        Next
-                    </Button>
+                <div className="rounded-md border">
+                    <Table>
+                        <TableHeader>
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead key={header.id}>
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                          header.column
+                                                              .columnDef.header,
+                                                          header.getContext(),
+                                                      )}
+                                            </TableHead>
+                                        );
+                                    })}
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={
+                                            row.getIsSelected() && "selected"
+                                        }
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext(),
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={columns.length}
+                                        className="h-24 text-center"
+                                    >
+                                        No results.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+                <div className="flex items-center justify-end space-x-2 py-4">
+                    <div className="flex-1 text-sm text-muted-foreground">
+                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                        {table.getFilteredRowModel().rows.length} row(s)
+                        selected.
+                    </div>
+                    <div className="space-x-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                                setPagination((prev) => ({
+                                    ...prev,
+                                    pageIndex: prev.pageIndex + 1, // Increment pageIndex here
+                                }));
+                            }}
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
     );
+
+    // function handleDragEnd(event: any) {
+    //     if (event.over && event.over.id === "droppable") {
+    //         setIsDropped(true);
+    //     }
+    // }
 }
