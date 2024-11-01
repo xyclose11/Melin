@@ -1,10 +1,28 @@
 import {
     Card,
     CardContent,
+    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card.tsx";
 import { useDraggable } from "@dnd-kit/core";
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuSub,
+    ContextMenuSubContent,
+    ContextMenuSubTrigger,
+    ContextMenuTrigger,
+} from "@/components/ui/context-menu.tsx";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover.tsx";
+import { useState } from "react";
+import { PopoverAnchor } from "@radix-ui/react-popover";
+import { CreateGroupForm } from "@/routes/GroupComponents/CreateGroupForm.tsx";
 
 export function LibrarySideBar(props: any) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -22,7 +40,22 @@ export function LibrarySideBar(props: any) {
                 <CardHeader>
                     <CardTitle>Groups</CardTitle>
                 </CardHeader>
-                <CardContent>{props.children}</CardContent>
+                <ContextMenu>
+                    <ContextMenuTrigger>
+                        <CardContent>{props.children}</CardContent>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent>
+                        <ContextMenuSub>
+                            <ContextMenuSubTrigger>
+                                Create Group
+                            </ContextMenuSubTrigger>
+                            <ContextMenuSubContent>
+                                <CreateGroupForm />
+                            </ContextMenuSubContent>
+                        </ContextMenuSub>
+                    </ContextMenuContent>
+                </ContextMenu>
+                <CardFooter></CardFooter>
             </Card>
         </>
     );

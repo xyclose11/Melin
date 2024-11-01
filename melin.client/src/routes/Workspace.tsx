@@ -2,11 +2,16 @@
 import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
 import { DraggableGroup } from "@/routes/GroupComponents/DraggableGroup.tsx";
 import { instance } from "@/utils/axiosInstance.ts";
-import React, { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 // import { DndContext } from "@dnd-kit/core";
 // import { useState } from "react";
 // import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
 // import { DroppableWorkspace } from "@/routes/LibraryViews/DragNDrop/DroppableWorkspace.tsx";
+
+type GroupType = {
+    name: string;
+    nodes: [];
+};
 
 export function Workspace() {
     // const [isDropped, setIsDropped] = useState(false);
@@ -51,11 +56,12 @@ export function Workspace() {
             {/*</DndContext>*/}
             <div className="flex gap-3">
                 <LibrarySideBar>
-                    <DraggableGroup>
-                        {userGroups.map((g) => (
-                            <div>{g}</div>
-                        ))}
-                    </DraggableGroup>
+                    {userGroups.map((g: GroupType) => (
+                        <DraggableGroup
+                            groupName={g.name}
+                            groupNodes={g.nodes}
+                        />
+                    ))}
                 </LibrarySideBar>
                 <Outlet />
             </div>
