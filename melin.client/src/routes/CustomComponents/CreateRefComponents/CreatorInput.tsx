@@ -58,7 +58,12 @@ export const creatorFormSchema = z.object({
 });
 
 export function CreatorInput({ name }: { name: string }) {
-    const { control } = useFormContext();
+    const {
+        control,
+        setValue,
+        register,
+        formState: { errors },
+    } = useFormContext();
 
     return (
         <span className={"grid grid-cols-3"}>
@@ -137,13 +142,20 @@ export function CreatorInput({ name }: { name: string }) {
             <FormField
                 control={control}
                 name={`${name}.firstName`}
-                render={({ field }) => (
+                render={() => (
                     <FormItem className={"w-[120px] mr-1"}>
                         <FormControl>
                             <Input
                                 className={"h-8"}
                                 placeholder="First Name"
-                                {...field}
+                                defaultValue=""
+                                {...register(`${name}.firstName`)}
+                                onChange={(e) => {
+                                    setValue(
+                                        `${name}.firstName`,
+                                        e.target.value,
+                                    );
+                                }}
                             />
                         </FormControl>
                         <FormMessage />
@@ -153,19 +165,27 @@ export function CreatorInput({ name }: { name: string }) {
             <FormField
                 control={control}
                 name={`${name}.lastName`}
-                render={({ field }) => (
+                render={() => (
                     <FormItem className={"w-[120px] ml-1"}>
                         <FormControl>
                             <Input
                                 className={"h-8"}
                                 placeholder="Last Name"
-                                {...field}
+                                defaultValue={""}
+                                {...register(`${name}.lastName`)}
+                                onChange={(e) => {
+                                    setValue(
+                                        `${name}.lastName`,
+                                        e.target.value,
+                                    );
+                                }}
                             />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
                 )}
             />
+            {errors.root && <div> {errors.root.message}</div>}
         </span>
     );
 }

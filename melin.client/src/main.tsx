@@ -74,14 +74,16 @@ const router: any = createBrowserRouter([
             },
             {
                 path: "user-settings",
-                element: <UserSettings />,
+                element: (
+                    <PrivateRoute element={<UserSettings />}></PrivateRoute>
+                ),
             },
             {
                 path: "library-settings",
             },
             {
                 path: "create-reference",
-                element: <CreateReferencePage />,
+                element: <PrivateRoute element={<CreateReferencePage />} />,
             },
         ],
     },

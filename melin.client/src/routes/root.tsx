@@ -8,7 +8,6 @@ import { useAuth } from "@/utils/AuthProvider.tsx";
 
 export default function Root({ children }: { children: React.ReactNode }) {
     const { isAuthenticated } = useAuth();
-
     return (
         <>
             <NavBar />
