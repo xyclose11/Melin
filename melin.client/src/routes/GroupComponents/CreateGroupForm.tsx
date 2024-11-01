@@ -20,9 +20,12 @@ const GroupFormSchema = z.object({
     name: z.string().min(2, {
         message: "Group Name must be at least 2 characters.",
     }),
-    description: z.string().min(2, {
-        message: "Group Description must be at least 2 characters.",
-    }),
+    description: z
+        .string()
+        .min(2, {
+            message: "Group Description must be at least 2 characters.",
+        })
+        .optional(),
 });
 
 export function CreateGroupForm() {
@@ -30,15 +33,14 @@ export function CreateGroupForm() {
         resolver: zodResolver(GroupFormSchema),
         defaultValues: {
             name: "",
+            description: "",
         },
     });
-    async function onSubmit(data: z.infer<typeof GroupFormSchema>) {
+    const onSubmit = async (data: z.infer<typeof GroupFormSchema>) => {
         try {
-            const res = await instance.post(
-                "create-group",
-                { data },
-                { withCredentials: true },
-            );
+            const res = await instance.post("create-group", data, {
+                withCredentials: true,
+            });
 
             if (res.status === 200) {
                 toast("Group Created!", {
@@ -60,7 +62,7 @@ export function CreateGroupForm() {
         } catch (e) {
             console.error(e);
         }
-    }
+    };
     return (
         <>
             <Form {...form}>

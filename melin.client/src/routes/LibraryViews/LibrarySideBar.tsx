@@ -9,19 +9,12 @@ import { useDraggable } from "@dnd-kit/core";
 import {
     ContextMenu,
     ContextMenuContent,
-    ContextMenuItem,
     ContextMenuSub,
     ContextMenuSubContent,
     ContextMenuSubTrigger,
     ContextMenuTrigger,
 } from "@/components/ui/context-menu.tsx";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover.tsx";
-import { useState } from "react";
-import { PopoverAnchor } from "@radix-ui/react-popover";
+
 import { CreateGroupForm } from "@/routes/GroupComponents/CreateGroupForm.tsx";
 
 export function LibrarySideBar(props: any) {
