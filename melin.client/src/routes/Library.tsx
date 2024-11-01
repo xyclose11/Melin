@@ -39,7 +39,7 @@ import {
 import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
-import {TagInput} from "emblor";
+import { TagInput } from "emblor";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -155,6 +155,7 @@ export function LibraryPage() {
         {
             accessorKey: "tags",
             header: "Tags",
+            enableHiding: true,
             cell: ({ row }) => {
                 const tags: ReferenceTag[] = row.getValue("tags");
                 return (
@@ -165,37 +166,6 @@ export function LibraryPage() {
                                 <div>{tag.createdBy}</div>
                             </div>
                         ))}
-
-                        <TagInput
-                            placeholder="Enter a tag"
-                            tags={currentTags}
-                            setTags={handleTagChange}
-                            activeTagIndex={activeTagIndex}
-                            setActiveTagIndex={setActiveTagIndex}
-                            enableAutocomplete={true}
-                            autocompleteOptions={tagAutoFill}
-                            maxTags={99}
-                            maxLength={128}
-                            showCount={true}
-                            truncate={12}
-                            clearAll={true}
-                            size={"sm"}
-                            shape={"rounded"}
-                            inlineTags ={true}
-                            textCase={"capitalize"}
-                            styleClasses = {
-                                {
-                                    input: 'w-full sm:max-w-[350px]',
-                                    tag: {
-                                        body: 'flex items-center gap-2',
-                                        closeButton: 'text-red-500 hover:text-red-600',
-                                    },
-                                }
-                            }
-                            variant = {
-                                "primary"
-                            }
-                        />
                     </div>
                 );
             },
