@@ -45,6 +45,7 @@ import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
 import { TagTableDisplay } from "@/routes/TagComponents/TagTableDisplay.tsx";
+import { useReferenceSelection } from "@/routes/Context/ReferencesSelectedContext.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -83,6 +84,8 @@ export function Library() {
     const { toast } = useToast();
     // const [isDropped, setIsDropped] = useState(false);
     // const libSideBar = <LibrarySideBar>Drag me</LibrarySideBar>;
+    const { selectedReferences, toggleReference, clearSelection } =
+        useReferenceSelection();
 
     const [pagination, setPagination] = useState({
         pageSize: 10,
@@ -98,16 +101,24 @@ export function Library() {
                         table.getIsAllPageRowsSelected() ||
                         (table.getIsSomePageRowsSelected() && "indeterminate")
                     }
-                    onCheckedChange={(value) =>
-                        table.toggleAllPageRowsSelected(!!value)
-                    }
+                    onCheckedChange={(value) => {
+                        if (value) {
+                            table
+                                .getRowModel()
+                                .rows.forEach((row) =>
+                                    toggleReference(row.original.id),
+                                );
+                        } else {
+                            clearSelection();
+                        }
+                    }}
                     aria-label="Select all"
                 />
             ),
             cell: ({ row }) => (
                 <Checkbox
-                    checked={row.getIsSelected()}
-                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    checked={selectedReferences.includes(row.original.id)}
+                    onCheckedChange={() => toggleReference(row.original.id)}
                     aria-label="Select row"
                 />
             ),
@@ -203,6 +214,9 @@ export function Library() {
                             >
                                 Copy title
                             </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>Add to Group</DropdownMenuItem>
+
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>Edit</DropdownMenuItem>
                             <DropdownMenuItem

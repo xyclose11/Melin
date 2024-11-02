@@ -5,6 +5,7 @@ import { instance } from "@/utils/axiosInstance.ts";
 import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
 import { DraggableGroup } from "@/routes/GroupComponents/DraggableGroup.tsx";
 import { Library } from "@/routes/Library.tsx";
+import { ReferenceSelectionProvider } from "@/routes/Context/ReferencesSelectedContext.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -12,7 +13,7 @@ export enum CREATOR_TYPES {
 
 type GroupType = {
     name: string;
-    nodes: [];
+    references: [];
 };
 
 type Creator = {
@@ -62,16 +63,18 @@ export function LibraryPage() {
 
     return (
         <div className={"flex gap-3"}>
-            <LibrarySideBar>
-                {userGroups.map((g: GroupType) => (
-                    <DraggableGroup
-                        key={g.name}
-                        groupName={g.name}
-                        groupNodes={g.references}
-                    />
-                ))}
-            </LibrarySideBar>{" "}
-            <Library />
+            <ReferenceSelectionProvider>
+                <LibrarySideBar>
+                    {userGroups.map((g: GroupType) => (
+                        <DraggableGroup
+                            key={g.name}
+                            groupName={g.name}
+                            groupNodes={g.references}
+                        />
+                    ))}
+                </LibrarySideBar>{" "}
+                <Library />
+            </ReferenceSelectionProvider>
         </div>
     );
 }

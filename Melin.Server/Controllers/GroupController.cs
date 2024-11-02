@@ -67,6 +67,7 @@ public class GroupController : ControllerBase
             var groups = await _referenceContext.Group
                 .Where(g => g.CreatedBy == userName)
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Include(g => g.References)
                 .Take(validFilter.PageSize)
                 .OrderBy(g => g.UpdatedAt)
                 .ToListAsync();
@@ -151,7 +152,7 @@ public class GroupController : ControllerBase
     // POST: add references to group
     [HttpPost("add-refs-to-group")]
     [Authorize]
-    public async Task<ActionResult<Group>> AddReferenceToGroup(string groupName, List<int> referenceIds)
+    public async Task<ActionResult<Group>> AddReferenceToGroup(string groupName, [FromBody] List<int> referenceIds)
     {
         try
         {

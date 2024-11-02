@@ -18,7 +18,6 @@ import {
     ContextMenuSubTrigger,
     ContextMenuTrigger,
 } from "@/components/ui/context-menu.tsx";
-import { ContextMenuItemIndicator } from "@radix-ui/react-context-menu";
 import {
     Dialog,
     DialogContent,
@@ -28,20 +27,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-
-// const GroupSchema = z.object({
-//     id: z.number(),
-//     name: z.string(),
-//     description: z.string().optional(),
-//     references: z.array(baseReferenceSchema).optional()
-// })
-
-// type GroupType = z.infer<typeof GroupSchema>
+import { useReferenceSelection } from "@/routes/Context/ReferencesSelectedContext.tsx";
+import { instance } from "@/utils/axiosInstance.ts";
 
 const GroupNodeSchema = z.object({
     id: z.number(),
-    name: z.string(),
-    children: z.array(any()).optional(),
+    title: z.string(),
 });
 
 type GroupNodeType = z.infer<typeof GroupNodeSchema>;
@@ -53,6 +44,28 @@ export function DraggableGroup({
     groupName: string;
     groupNodes: [];
 }) {
+    const { selectedReferences } = useReferenceSelection();
+
+    const handleAddReferences = async () => {
+        try {
+            const res = await instance.post(
+                `add-refs-to-group?groupName=${groupName}`,
+                selectedReferences,
+                {
+                    withCredentials: true,
+                },
+            );
+
+            if (res.status === 200) {
+                // TODO display sonner
+                console.log("SUCCESS");
+            } else {
+                console.error("UNABLE TO ADD REFERENCES TO GROUP");
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
     return (
         <>
             <Card>
@@ -97,7 +110,12 @@ export function DraggableGroup({
                                 </DialogDescription>
                             </DialogHeader>
                             <DialogFooter>
-                                <Button type="submit">Confirm</Button>
+                                <Button
+                                    type="submit"
+                                    onClick={handleAddReferences}
+                                >
+                                    Confirm
+                                </Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -105,8 +123,7 @@ export function DraggableGroup({
                 <CardContent>
                     {groupNodes.map((gn: GroupNodeType) => (
                         <div key={gn.id}>
-                            <div>{gn.name}</div>
-                            <div>{gn.children}</div>
+                            <div>{gn.title}</div>
                         </div>
                     ))}
                 </CardContent>
