@@ -7,7 +7,7 @@ import ErrorPage from "./error-page.tsx";
 import Contact from "./routes/contact.tsx";
 import SignUp from "@/routes/SignUp.tsx";
 import { LoginForm } from "@/routes/Login.tsx";
-import { LibraryPage } from "@/routes/Library.tsx";
+import { LibraryPage } from "@/routes/LibraryPage.tsx";
 import UserSettings from "@/routes/UserSettingsPage.tsx";
 import { AuthProvider } from "@/utils/AuthProvider.tsx";
 import { CreateReferencePage } from "@/routes/CreateReferencePage.tsx";
@@ -90,9 +90,9 @@ const router: any = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-        <AuthProvider>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <RouterProvider router={router} />
-            </ThemeProvider>
-        </AuthProvider>
+    <AuthProvider>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <RouterProvider router={router} />
+        </ThemeProvider>
+    </AuthProvider>,
 );

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/context-menu.tsx";
 
 import { CreateGroupForm } from "@/routes/GroupComponents/CreateGroupForm.tsx";
+import {Button} from "@/components/ui/button.tsx";
 
 export function LibrarySideBar(props: any) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -30,12 +31,11 @@ export function LibrarySideBar(props: any) {
     return (
         <>
             <Card ref={setNodeRef} style={style} {...listeners} {...attributes}>
-                <CardHeader>
+                <CardHeader className={"flex-auto"}>
                     <CardTitle>Groups</CardTitle>
-                </CardHeader>
                 <ContextMenu>
                     <ContextMenuTrigger>
-                        <CardContent>{props.children}</CardContent>
+                        <Button size={"sm"}>...</Button>
                     </ContextMenuTrigger>
                     <ContextMenuContent>
                         <ContextMenuSub>
@@ -48,6 +48,10 @@ export function LibrarySideBar(props: any) {
                         </ContextMenuSub>
                     </ContextMenuContent>
                 </ContextMenu>
+                </CardHeader>
+                    
+                <CardContent>{props.children}</CardContent>
+                
                 <CardFooter></CardFooter>
             </Card>
         </>
