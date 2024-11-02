@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
 import { DraggableGroup } from "@/routes/GroupComponents/DraggableGroup.tsx";
@@ -32,7 +32,7 @@ export type Reference = {
 };
 
 export function LibraryPage() {
-    const [userGroups, setUserGroups] = useState<ReactNode[]>([]);
+    const [userGroups, setUserGroups] = useState<GroupType[]>([]);
 
     const getGroups = async () => {
         try {

@@ -29,6 +29,9 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuSub,
 } from "@/components/ui/dropdown-menu.tsx";
+import { useToast } from "@/hooks/use-toast.ts";
+import { ToastAction } from "@/components/ui/toast.tsx";
+import * as React from "react";
 
 const GroupNodeSchema = z.object({
     id: z.number(),
@@ -45,6 +48,7 @@ export function DraggableGroup({
     groupNodes: [];
 }) {
     const { selectedReferences } = useReferenceSelection();
+    const { toast } = useToast();
 
     const handleAddReferences = async () => {
         try {
@@ -57,12 +61,34 @@ export function DraggableGroup({
             );
 
             if (res.status === 200) {
-                // TODO display sonner
-                console.log("SUCCESS");
+                toast({
+                    variant: "default",
+                    title: "Reference Added to Group",
+                    description: `Reference(s) Successfully Added to Group: ${groupName}`,
+                });
             } else {
-                console.error("UNABLE TO ADD REFERENCES TO GROUP");
+                toast({
+                    variant: "destructive",
+                    title: "Reference Unable to be added to Group",
+                    description: `Reference(s) Failed to be Added to Group: ${groupName}`,
+                    action: (
+                        <ToastAction altText={"Try Again"}>
+                            Try Again
+                        </ToastAction>
+                    ),
+                });
             }
         } catch (e) {
+            toast({
+                variant: "destructive",
+                title: "Reference Unable to be added to Group",
+                description: `Reference(s) Failed to be Added to Group: ${groupName}`,
+                action: (
+                    <ToastAction altText={"Try Again"}>
+                        Try Again
+                    </ToastAction>
+                ),
+            });
             console.error(e);
         }
     };
