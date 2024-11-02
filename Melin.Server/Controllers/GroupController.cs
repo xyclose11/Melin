@@ -1,4 +1,5 @@
-﻿using Melin.Server.Filter;
+﻿using System.Data;
+using Melin.Server.Filter;
 using Melin.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -161,6 +162,12 @@ public class GroupController : ControllerBase
                 .Where(g => g.Name == groupName)
                 .FirstAsync();
 
+            if (group == null)
+            {
+                return NotFound("Group Not Found");
+            }
+
+
 
             List<Reference> references = new List<Reference>();
 
@@ -169,7 +176,11 @@ public class GroupController : ControllerBase
                 var r = await _referenceContext.Reference.FindAsync(referenceId);
                 if (r != null)
                 {
-                    references.Add(r);
+                    // see if reference is already in the group
+                    if (!group.References.Contains(r))
+                    {
+                        references.Add(r);
+                    }
                 }
             }
             

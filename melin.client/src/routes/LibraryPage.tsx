@@ -6,6 +6,8 @@ import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
 import { DraggableGroup } from "@/routes/GroupComponents/DraggableGroup.tsx";
 import { Library } from "@/routes/Library.tsx";
 import { ReferenceSelectionProvider } from "@/routes/Context/ReferencesSelectedContext.tsx";
+import { ToastAction } from "@/components/ui/toast.tsx";
+import { useToast } from "@/hooks/use-toast.ts";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -33,6 +35,7 @@ export type Reference = {
 
 export function LibraryPage() {
     const [userGroups, setUserGroups] = useState<GroupType[]>([]);
+    const { toast } = useToast();
 
     const getGroups = async () => {
         try {
@@ -41,19 +44,27 @@ export function LibraryPage() {
             });
 
             if (res.status === 200) {
-                console.log(res);
-                // see if user has groups
-                if (res.data.length <= 0) {
-                    console.log("NO GROUPS");
-                }
-
                 setUserGroups(res.data);
             } else {
-                // DISPLAY ERROR
+                toast({
+                    variant: "destructive",
+                    title: "Unable to Populate Groups",
+                    action: (
+                        <ToastAction altText={"Try Again"}>
+                            Try Again
+                        </ToastAction>
+                    ),
+                });
             }
         } catch (e) {
+            toast({
+                variant: "destructive",
+                title: "Unable to Populate Groups",
+                action: (
+                    <ToastAction altText={"Try Again"}>Try Again</ToastAction>
+                ),
+            });
             console.log(e);
-            // DISPLAY ERROR
         }
     };
 

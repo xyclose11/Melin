@@ -6,17 +6,17 @@ import {
     CardTitle,
 } from "@/components/ui/card.tsx";
 import { useDraggable } from "@dnd-kit/core";
-import {
-    ContextMenu,
-    ContextMenuContent,
-    ContextMenuSub,
-    ContextMenuSubContent,
-    ContextMenuSubTrigger,
-    ContextMenuTrigger,
-} from "@/components/ui/context-menu.tsx";
 
 import { CreateGroupForm } from "@/routes/GroupComponents/CreateGroupForm.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu.tsx";
 
 export function LibrarySideBar(props: any) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -33,21 +33,21 @@ export function LibrarySideBar(props: any) {
             <Card ref={setNodeRef} style={style} {...listeners} {...attributes}>
                 <CardHeader className={"flex-auto"}>
                     <CardTitle>Groups</CardTitle>
-                    <ContextMenu>
-                        <ContextMenuTrigger>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
                             <Button size={"sm"}>...</Button>
-                        </ContextMenuTrigger>
-                        <ContextMenuContent>
-                            <ContextMenuSub>
-                                <ContextMenuSubTrigger>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger>
                                     Create Group
-                                </ContextMenuSubTrigger>
-                                <ContextMenuSubContent>
+                                </DropdownMenuSubTrigger>
+                                <DropdownMenuSubContent>
                                     <CreateGroupForm />
-                                </ContextMenuSubContent>
-                            </ContextMenuSub>
-                        </ContextMenuContent>
-                    </ContextMenu>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuSub>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </CardHeader>
 
                 <CardContent>{props.children}</CardContent>

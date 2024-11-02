@@ -10,20 +10,18 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { instance } from "@/utils/axiosInstance.ts";
 import { TextArea } from "@radix-ui/themes";
+import { useToast } from "@/hooks/use-toast.ts";
+import { ToastAction } from "@/components/ui/toast.tsx";
 
 export const GroupFormSchema = z.object({
     name: z.string().min(2, {
         message: "Group Name must be at least 2 characters.",
     }),
-    description: z
-        .string()
-        .optional(),
-
+    description: z.string().optional(),
 });
 
 export function CreateGroupForm() {
@@ -34,29 +32,28 @@ export function CreateGroupForm() {
             description: "",
         },
     });
+
+    const { toast } = useToast();
     const onSubmit = async (data: z.infer<typeof GroupFormSchema>) => {
         try {
-
             const res = await instance.post("create-group", data, {
-
                 withCredentials: true,
             });
 
             if (res.status === 200) {
-                toast("Group Created!", {
-                    description: `Group name:: ${data.name}`,
-                    action: {
-                        label: "Undo",
-                        onClick: () => console.log("Undo"),
-                    },
+                toast({
+                    variant: "default",
+                    title: `Group: ${data.name} Created Successfully`,
                 });
             } else {
-                toast("Group Creation Failed!", {
-                    description: `Group name:: ${data.name}`,
-                    action: {
-                        label: "Try Again",
-                        onClick: () => console.log("Try Agained"),
-                    },
+                toast({
+                    variant: "destructive",
+                    title: "Unable to Create",
+                    action: (
+                        <ToastAction altText={"Try Again"}>
+                            Try Again
+                        </ToastAction>
+                    ),
                 });
             }
         } catch (e) {

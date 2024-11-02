@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
 import { ToastAction } from "@/components/ui/toast.tsx";
-import * as React from "react";
 
 const GroupNodeSchema = z.object({
     id: z.number(),
@@ -70,7 +69,7 @@ export function DraggableGroup({
                 toast({
                     variant: "destructive",
                     title: "Reference Unable to be added to Group",
-                    description: `Reference(s) Failed to be Added to Group: ${groupName}`,
+                    description: `This reference is already in the group`,
                     action: (
                         <ToastAction altText={"Try Again"}>
                             Try Again
@@ -84,9 +83,7 @@ export function DraggableGroup({
                 title: "Reference Unable to be added to Group",
                 description: `Reference(s) Failed to be Added to Group: ${groupName}`,
                 action: (
-                    <ToastAction altText={"Try Again"}>
-                        Try Again
-                    </ToastAction>
+                    <ToastAction altText={"Try Again"}>Try Again</ToastAction>
                 ),
             });
             console.error(e);
