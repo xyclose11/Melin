@@ -118,13 +118,13 @@ public class GroupController : ControllerBase
     // UPDATE: group related details, not contents
     [HttpPost("update-group-details")]
     [Authorize]
-    public async Task<ActionResult<Group>> UpdateGroupDetails(string groupName, [FromForm] Group updatedGroup)
+    public async Task<ActionResult<Group>> UpdateGroupDetails(string prevGroupName, [FromBody] Group updatedGroup)
     {
         try
         {
             // find group
             var group = await _referenceContext.Group
-                .Where(g => g.Name == groupName)
+                .Where(g => g.Name == prevGroupName)
                 .FirstAsync();
 
             if (group == null)

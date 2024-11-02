@@ -1,4 +1,4 @@
-import {
+﻿import {
     Form,
     FormControl,
     FormDescription,
@@ -15,35 +15,26 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { instance } from "@/utils/axiosInstance.ts";
 import { TextArea } from "@radix-ui/themes";
+import {GroupFormSchema} from "@/routes/GroupComponents/CreateGroupForm.tsx";
 
-export const GroupFormSchema = z.object({
-    name: z.string().min(2, {
-        message: "Group Name must be at least 2 characters.",
-    }),
-    description: z
-        .string()
-        .optional(),
 
-});
-
-export function CreateGroupForm() {
+export function EditGroupForm({groupName}: {groupName: string}) {
     const form = useForm<z.infer<typeof GroupFormSchema>>({
         resolver: zodResolver(GroupFormSchema),
         defaultValues: {
             name: "",
-            description: "",
+            description: ""
         },
     });
     const onSubmit = async (data: z.infer<typeof GroupFormSchema>) => {
         try {
-
-            const res = await instance.post("create-group", data, {
+            const res = await instance.post(`update-group-details?prevGroupName=${encodeURIComponent(groupName)}`, data, {
 
                 withCredentials: true,
             });
 
             if (res.status === 200) {
-                toast("Group Created!", {
+                toast("Group Updated!", {
                     description: `Group name:: ${data.name}`,
                     action: {
                         label: "Undo",
@@ -51,7 +42,7 @@ export function CreateGroupForm() {
                     },
                 });
             } else {
-                toast("Group Creation Failed!", {
+                toast("Group Update Failed!", {
                     description: `Group name:: ${data.name}`,
                     action: {
                         label: "Try Again",
@@ -75,7 +66,7 @@ export function CreateGroupForm() {
                         name="name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Group Name*</FormLabel>
+                                <FormLabel>Updated Group Name*</FormLabel>
                                 <FormControl>
                                     <Input placeholder="name..." {...field} />
                                 </FormControl>

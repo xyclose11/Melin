@@ -5,6 +5,9 @@ import {
     CardTitle,
 } from "@/components/ui/card.tsx";
 import {any, z} from "zod";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
+import {Ellipsis} from "lucide-react";
+import {EditGroupForm} from "@/routes/GroupComponents/EditGroupForm.tsx";
 
 // const GroupSchema = z.object({
 //     id: z.number(),
@@ -30,14 +33,20 @@ export function DraggableGroup({
     groupName: string;
     groupNodes: [];
 }) {
-    console.log(groupName)
-    console.log(groupNodes)
     
     return (
         <>
             <Card>
                 <CardHeader>
                     <CardTitle>{groupName}</CardTitle>
+                    <Popover>
+                        <PopoverTrigger>
+                            <Ellipsis />
+                        </PopoverTrigger>
+                        <PopoverContent>
+                            <EditGroupForm groupName={groupName}/>
+                        </PopoverContent>
+                    </Popover>
                 </CardHeader>
                 <CardContent>
                     {groupNodes.map((gn: GroupNodeType) => (
