@@ -4,20 +4,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card.tsx";
-import { any, z } from "zod";
+import { z } from "zod";
 import { EllipsisVertical } from "lucide-react";
 import { EditGroupForm } from "@/routes/GroupComponents/EditGroupForm.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import {
-    ContextMenu,
-    ContextMenuContent,
-    ContextMenuItem,
-    ContextMenuSeparator,
-    ContextMenuSub,
-    ContextMenuSubContent,
-    ContextMenuSubTrigger,
-    ContextMenuTrigger,
-} from "@/components/ui/context-menu.tsx";
 import {
     Dialog,
     DialogContent,
@@ -29,6 +19,16 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { useReferenceSelection } from "@/routes/Context/ReferencesSelectedContext.tsx";
 import { instance } from "@/utils/axiosInstance.ts";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    DropdownMenuSeparator,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuSub,
+} from "@/components/ui/dropdown-menu.tsx";
 
 const GroupNodeSchema = z.object({
     id: z.number(),
@@ -72,32 +72,32 @@ export function DraggableGroup({
                 <CardHeader className={"flex"}>
                     <CardTitle>{groupName}</CardTitle>
                     <Dialog>
-                        <ContextMenu>
-                            <ContextMenuTrigger>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
                                 <Button
                                     size={"icon"}
                                     className={" p-1 h-fit w-fit"}
                                 >
                                     <EllipsisVertical size={12} />
                                 </Button>
-                            </ContextMenuTrigger>
-                            <ContextMenuContent>
-                                <ContextMenuSub>
-                                    <ContextMenuSubTrigger>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuSub>
+                                    <DropdownMenuSubTrigger>
                                         Edit Details
-                                    </ContextMenuSubTrigger>
-                                    <ContextMenuSubContent>
+                                    </DropdownMenuSubTrigger>
+                                    <DropdownMenuSubContent>
                                         <EditGroupForm groupName={groupName} />a
-                                    </ContextMenuSubContent>
-                                </ContextMenuSub>
-                                <ContextMenuSeparator />
+                                    </DropdownMenuSubContent>
+                                </DropdownMenuSub>
+                                <DropdownMenuSeparator />
                                 <DialogTrigger>
-                                    <ContextMenuItem>
+                                    <DropdownMenuItem>
                                         Add References
-                                    </ContextMenuItem>
+                                    </DropdownMenuItem>
                                 </DialogTrigger>
-                            </ContextMenuContent>
-                        </ContextMenu>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>
@@ -123,6 +123,8 @@ export function DraggableGroup({
                 <CardContent>
                     {groupNodes.map((gn: GroupNodeType) => (
                         <div key={gn.id}>
+                            {" "}
+                            {/* TODO make these draggable and collapsible */}
                             <div>{gn.title}</div>
                         </div>
                     ))}
