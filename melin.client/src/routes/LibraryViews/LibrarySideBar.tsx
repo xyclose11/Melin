@@ -8,7 +8,6 @@ import {
 import { useDraggable } from "@dnd-kit/core";
 
 import { CreateGroupForm } from "@/routes/GroupComponents/CreateGroupForm.tsx";
-import { Button } from "@/components/ui/button.tsx";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -34,9 +33,7 @@ export function LibrarySideBar(props: any) {
                 <CardHeader className={"flex-auto"}>
                     <CardTitle>Groups</CardTitle>
                     <DropdownMenu>
-                        <DropdownMenuTrigger>
-                            <Button size={"sm"}>...</Button>
-                        </DropdownMenuTrigger>
+                        <DropdownMenuTrigger>...</DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuSub>
                                 <DropdownMenuSubTrigger>

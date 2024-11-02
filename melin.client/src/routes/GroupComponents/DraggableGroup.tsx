@@ -97,12 +97,7 @@ export function DraggableGroup({
                     <Dialog>
                         <DropdownMenu>
                             <DropdownMenuTrigger>
-                                <Button
-                                    size={"icon"}
-                                    className={" p-1 h-fit w-fit"}
-                                >
-                                    <EllipsisVertical size={12} />
-                                </Button>
+                                <EllipsisVertical size={12} />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuSub>
