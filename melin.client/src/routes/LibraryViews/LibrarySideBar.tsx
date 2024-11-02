@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/context-menu.tsx";
 
 import { CreateGroupForm } from "@/routes/GroupComponents/CreateGroupForm.tsx";
-import {Button} from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button.tsx";
 
 export function LibrarySideBar(props: any) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -33,25 +33,25 @@ export function LibrarySideBar(props: any) {
             <Card ref={setNodeRef} style={style} {...listeners} {...attributes}>
                 <CardHeader className={"flex-auto"}>
                     <CardTitle>Groups</CardTitle>
-                <ContextMenu>
-                    <ContextMenuTrigger>
-                        <Button size={"sm"}>...</Button>
-                    </ContextMenuTrigger>
-                    <ContextMenuContent>
-                        <ContextMenuSub>
-                            <ContextMenuSubTrigger>
-                                Create Group
-                            </ContextMenuSubTrigger>
-                            <ContextMenuSubContent>
-                                <CreateGroupForm />
-                            </ContextMenuSubContent>
-                        </ContextMenuSub>
-                    </ContextMenuContent>
-                </ContextMenu>
+                    <ContextMenu>
+                        <ContextMenuTrigger>
+                            <Button size={"sm"}>...</Button>
+                        </ContextMenuTrigger>
+                        <ContextMenuContent>
+                            <ContextMenuSub>
+                                <ContextMenuSubTrigger>
+                                    Create Group
+                                </ContextMenuSubTrigger>
+                                <ContextMenuSubContent>
+                                    <CreateGroupForm />
+                                </ContextMenuSubContent>
+                            </ContextMenuSub>
+                        </ContextMenuContent>
+                    </ContextMenu>
                 </CardHeader>
-                    
+
                 <CardContent>{props.children}</CardContent>
-                
+
                 <CardFooter></CardFooter>
             </Card>
         </>

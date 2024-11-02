@@ -82,8 +82,7 @@ export function Library() {
     const [totalRef, setTotalRef] = useState(0);
     const [data, setData] = React.useState<Reference[]>([]);
     const { toast } = useToast();
-    // const [isDropped, setIsDropped] = useState(false);
-    // const libSideBar = <LibrarySideBar>Drag me</LibrarySideBar>;
+
     const { selectedReferences, toggleReference, clearSelection } =
         useReferenceSelection();
 

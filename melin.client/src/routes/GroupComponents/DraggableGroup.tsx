@@ -68,7 +68,7 @@ export function DraggableGroup({
     };
     return (
         <>
-            <Card>
+            <Card className={"mb-2"}>
                 <CardHeader className={"flex"}>
                     <CardTitle>{groupName}</CardTitle>
                     <Dialog>
@@ -120,7 +120,7 @@ export function DraggableGroup({
                         </DialogContent>
                     </Dialog>
                 </CardHeader>
-                <CardContent>
+                <CardContent className={"p-2"}>
                     {groupNodes.map((gn: GroupNodeType) => (
                         <div key={gn.id}>
                             {" "}
