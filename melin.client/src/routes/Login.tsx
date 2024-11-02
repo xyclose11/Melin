@@ -8,10 +8,12 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { instance } from "@/utils/axiosInstance";
 import { useAuth } from "@/utils/AuthProvider.tsx";
+import { ToastAction } from "@/components/ui/toast.tsx";
+import { useToast } from "@/hooks/use-toast.ts";
 
 export const description =
     "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.";
@@ -20,16 +22,42 @@ export function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { setIsAuthenticated } = useAuth(); // Get the function to update auth state
+    const { toast } = useToast();
+    const navigate = useNavigate();
 
     const handleLogin = async (e: any) => {
         e.preventDefault();
         try {
             await instance
-                .post("login?useCookies=true", { email, password })
+                .post(
+                    "login?useCookies=true",
+                    { email, password },
+                    { withCredentials: true },
+                )
                 .then(function (response) {
                     if (response.status === 200) {
+                        // show Toast
+                        toast({
+                            title: "Successfully Logged In",
+                            description: `Reference with ID: has been deleted.`,
+                            action: (
+                                <ToastAction altText={"Undo"}>Undo</ToastAction>
+                            ),
+                        });
                         setIsAuthenticated(true);
+
+                        // route user
+                        navigate("/library");
                     } else {
+                        toast({
+                            title: "Login Failed",
+                            description: "Please try again later",
+                            action: (
+                                <ToastAction altText={"Try Again"}>
+                                    Try Again
+                                </ToastAction>
+                            ),
+                        });
                         setIsAuthenticated(false);
                     }
                 });
