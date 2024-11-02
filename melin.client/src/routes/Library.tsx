@@ -345,8 +345,9 @@ export function LibraryPage() {
             {/*    </DroppableWorkspace>*/}
             {/*</DndContext>*/}
             <LibrarySideBar>
+
                 {userGroups.map((g: GroupType) => (
-                    <DraggableGroup groupName={g.name} groupNodes={g.nodes} />
+                    <DraggableGroup key={g.name} groupName={g.name} groupNodes={g.references} />
                 ))}
             </LibrarySideBar>{" "}
             <div className="w-full light">

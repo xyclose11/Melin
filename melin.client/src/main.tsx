@@ -90,11 +90,9 @@ const router: any = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
         <AuthProvider>
             <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                 <RouterProvider router={router} />
             </ThemeProvider>
         </AuthProvider>
-    </StrictMode>,
 );

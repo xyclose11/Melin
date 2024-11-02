@@ -91,6 +91,11 @@ public class GroupController : ControllerBase
     {
         try
         {
+            // updated createdBy
+            if (group.CreatedBy == null)
+            {
+                group.CreatedBy = User.Identity.Name;
+            }
             
             // check if group already exists
             var g = await _referenceContext.Group.ContainsAsync(group); // TODO test this

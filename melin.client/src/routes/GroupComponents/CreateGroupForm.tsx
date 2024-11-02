@@ -26,6 +26,7 @@ const GroupFormSchema = z.object({
             message: "Group Description must be at least 2 characters.",
         })
         .optional(),
+
 });
 
 export function CreateGroupForm() {
@@ -38,7 +39,9 @@ export function CreateGroupForm() {
     });
     const onSubmit = async (data: z.infer<typeof GroupFormSchema>) => {
         try {
+
             const res = await instance.post("create-group", data, {
+
                 withCredentials: true,
             });
 
