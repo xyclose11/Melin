@@ -1,15 +1,14 @@
 import { Badge } from "@/components/ui/badge.tsx";
-import {
-    ContextMenu,
-    ContextMenuContent,
-    ContextMenuItem,
-    ContextMenuSub,
-    ContextMenuSubContent,
-    ContextMenuSubTrigger,
-    ContextMenuTrigger,
-} from "@/components/ui/context-menu.tsx";
-import { ContextMenuArrow } from "@radix-ui/react-context-menu";
 import { CreateGroupForm } from "@/routes/GroupComponents/CreateGroupForm.tsx";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu.tsx";
 
 export function TagTableDisplay({
     name,
@@ -20,22 +19,24 @@ export function TagTableDisplay({
 }) {
     return (
         <>
-            <ContextMenu>
-                <ContextMenuTrigger>
+            <DropdownMenu>
+                <DropdownMenuTrigger>
                     <Badge variant="secondary">{name}</Badge>
-                </ContextMenuTrigger>
-                <ContextMenuContent>
-                    <ContextMenuItem>
-                        <ContextMenuSub>
-                            <ContextMenuSubTrigger>Edit</ContextMenuSubTrigger>
-                            <ContextMenuSubContent>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem>
+                        <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                                Edit
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuSubContent>
                                 <CreateGroupForm />
-                            </ContextMenuSubContent>
-                        </ContextMenuSub>
-                    </ContextMenuItem>
-                    <ContextMenuItem>Remove From Reference</ContextMenuItem>
-                </ContextMenuContent>
-            </ContextMenu>
+                            </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>Remove From Reference</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </>
     );
 }
