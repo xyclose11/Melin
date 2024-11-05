@@ -5,6 +5,7 @@ import React from "react";
 import { NavBar } from "@/routes/Layout.tsx";
 import { Toaster } from "@/components/ui/toaster";
 import { useAuth } from "@/utils/AuthProvider.tsx";
+import { Outlet } from "react-router-dom";
 
 export default function Root({ children }: { children: React.ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -16,6 +17,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
                 {!isAuthenticated ? (
                     <main className={"w-screen mt-16 flex p-2"}>
                         {children}
+                        <Outlet />
                     </main>
                 ) : (
                     <SidebarProvider>
