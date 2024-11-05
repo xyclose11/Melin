@@ -88,16 +88,19 @@ public class TagController : ControllerBase
     // POST: Single Tag creation
     [HttpPost("create-tag")]
     [Authorize]
-    public async Task<ActionResult<Tag>> PostTag([FromBody] Tag tag)
+    public async Task<ActionResult<Tag>> CreateTag([FromBody] Tag tag)
     {
 
         try
         {
             // check if tag already exists
-            var t = await _referenceContext.Tags.ContainsAsync(tag); // TODO test this for functionality
+            // var t = await _referenceContext.Tags.ContainsAsync(tag);
+            var t = await _referenceContext.Tags
+                .AnyAsync(t => t.Text == tag.Text);
+            
             if (t)
             {
-                return NoContent(); // TODO test this and replace with duplicate thing instead
+                return NoContent();
             }
 
             tag.CreatedBy = User.Identity.Name;
