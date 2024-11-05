@@ -306,7 +306,7 @@ export function BaseReferenceCreator({
                                 <FormField
                                     control={form.control}
                                     name="rights"
-                                    render={({ field }) => (
+                                    render={() => (
                                         <FormItem>
                                             <FormLabel>Rights</FormLabel>
                                             <FormControl>

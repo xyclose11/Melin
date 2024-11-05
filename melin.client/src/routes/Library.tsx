@@ -180,7 +180,6 @@ export function Library() {
                         {tags.map((tag) => (
                             <TagTableDisplay
                                 key={tag.id}
-                                tagId={tag.id}
                                 name={tag.text}
                             />
                         ))}

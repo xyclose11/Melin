@@ -1,7 +1,6 @@
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -32,21 +31,21 @@ export function EditTagForm() {
         },
     });
 
-    const getTagData = async () => {
-        try {
-            const res = await instance.get("get-owned-tags", {
-                withCredentials: true,
-            });
+    // const getTagData = async () => {
+    //     try {
+    //         const res = await instance.get("get-owned-tags", {
+    //             withCredentials: true,
+    //         });
 
-            if (res.status === 200) {
-            } else {
-                console.error("UNABLE TO RETRIEVE TAGS");
-                // TODO display the error
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    };
+    //         if (res.status === 200) {
+    //         } else {
+    //             console.error("UNABLE TO RETRIEVE TAGS");
+    //             // TODO display the error
+    //         }
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // };
 
     const onSubmit = async (data: z.infer<typeof TagFormSchema>) => {
         try {

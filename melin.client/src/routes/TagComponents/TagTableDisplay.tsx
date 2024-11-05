@@ -8,15 +8,11 @@ import {
     ContextMenuSubTrigger,
     ContextMenuTrigger,
 } from "@/components/ui/context-menu.tsx";
-import { ContextMenuArrow } from "@radix-ui/react-context-menu";
-import { CreateGroupForm } from "@/routes/GroupComponents/CreateGroupForm.tsx";
 
 export function TagTableDisplay({
     name,
-    tagId,
 }: {
     name: string;
-    tagId: number;
 }) {
     return (
         <>
@@ -29,7 +25,7 @@ export function TagTableDisplay({
                         <ContextMenuSub>
                             <ContextMenuSubTrigger>Edit</ContextMenuSubTrigger>
                             <ContextMenuSubContent>
-                                <CreateGroupForm />
+                                {/* <CreateGroupForm /> */}
                             </ContextMenuSubContent>
                         </ContextMenuSub>
                     </ContextMenuItem>
