@@ -32,7 +32,7 @@ export function LoginForm() {
                 .post(
                     "login?useCookies=true",
                     { email, password },
-                    { withCredentials: true },
+                    { withCredentials: false },
                 )
                 .then(function (response) {
                     if (response.status === 200) {
