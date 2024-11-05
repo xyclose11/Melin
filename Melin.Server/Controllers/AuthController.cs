@@ -23,12 +23,18 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
+        try {
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, lockoutOnFailure: false);
 
-        if (result.Succeeded)
-        {
-            return Ok();
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+        } catch(Exception e) {
+            return BadRequest(e);
         }
+
+
         return Unauthorized();
     }
 
