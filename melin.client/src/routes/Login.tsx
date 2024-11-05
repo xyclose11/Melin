@@ -30,7 +30,7 @@ export function LoginForm() {
         try {
             await instance
                 .post(
-                    "login?useCookies=true",
+                    "api/Auth/login?useCookies=true",
                     { email, password },
                     { withCredentials: false },
                 )
