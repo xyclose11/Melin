@@ -268,6 +268,8 @@ public class TagController : ControllerBase
             {
                 return NotFound("Reference with ID: " + request.RefId + " not found.");
             }
+
+            var currentTags = r.Tags.ToList();
             
             // add tag to reference
             foreach (var tag in request.Tags)
@@ -290,10 +292,23 @@ public class TagController : ControllerBase
                     var existingTag = await _referenceContext.Tags
                         .Where(t => t.CreatedBy == User.Identity.Name)
                         .FirstAsync(t => t.Text == tag.Text);
-                    r.Tags.Add(existingTag);
+
+                    if (!r.Tags.Contains(existingTag))
+                    {
+                        r.Tags.Add(existingTag);
+
+                    }
                 }
                 
                 // if not create new tag
+            }
+
+            foreach (var currentTag in currentTags)
+            {
+                if (!request.Tags.Any(t => t.Text == currentTag.Text))
+                {
+                    r.Tags.Remove(currentTag);
+                }
             }
 
             await _referenceContext.SaveChangesAsync();
