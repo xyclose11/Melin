@@ -273,16 +273,25 @@ public class TagController : ControllerBase
             foreach (var tag in request.Tags)
             {
                 // see if tag exists
+                var tagExist = await _referenceContext.Tags
+                    .Where(t => t.CreatedBy == User.Identity.Name)
+                    .FirstAsync(t => t.Text == tag.Text);
+                
+                tag.CreatedBy = User.Identity.Name;
 
-                if (!r.Tags.Contains(tag))
+                if (tagExist == null)
                 {
-                    tag.CreatedBy = User.Identity.Name;
                     // add it to the Tag DB first
                     _referenceContext.Tags.Add(tag);
-                    
                     r.Tags.Add(tag);
 
                 }
+                else
+                {
+                    r.Tags.Add(tagExist);
+                }
+
+
 
                 // if not create new tag
             }
