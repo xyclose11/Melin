@@ -1,6 +1,7 @@
 ﻿using Melin.Server.Filter;
 using Melin.Server.Models;
 using Melin.Server.Models.Context;
+using Melin.Server.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -186,6 +187,49 @@ public class TagController : ControllerBase
             
             // add tag to reference
             r.Tags.Add(t);
+
+            await _referenceContext.SaveChangesAsync();
+
+            return Ok("Tag added to reference successfully");
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    [HttpPost("add-tags-to-reference")]
+    [Authorize]
+    public async Task<ActionResult<bool>> AddTagsToReference([FromBody] AddTagsRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            if (request.Tags.Count <= 0)
+            {
+                return NoContent();
+            }
+            // validate Reference
+            var r = await _referenceContext.Reference
+                .Where(r => r.OwnerEmail == User.Identity.Name)
+                .Where(r => r.Id == request.RefId)
+                .FirstAsync();
+            
+            if (r == null)
+            {
+                return NotFound("Reference with ID: " + request.RefId + " not found.");
+            }
+            
+            // add tag to reference
+            foreach (var tag in request.Tags)
+            {
+                r.Tags.Add(tag);
+            }
 
             await _referenceContext.SaveChangesAsync();
 

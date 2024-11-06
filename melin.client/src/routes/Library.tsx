@@ -19,7 +19,12 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import {
+    ArrowUpDown,
+    ChevronDown,
+    MoreHorizontal,
+    SquarePlusIcon,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -46,6 +51,17 @@ import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
 import { TagTableDisplay } from "@/routes/TagComponents/TagTableDisplay.tsx";
 import { useReferenceSelection } from "@/routes/Context/ReferencesSelectedContext.tsx";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { TagInput } from "emblor";
+import { CreateTagDropdown } from "@/routes/CustomComponents/Tag/CreateTagDropdown.tsx";
+import { AddTagToReference } from "@/routes/CustomComponents/Tag/AddTagToReference.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -90,6 +106,8 @@ export function Library() {
         pageSize: 10,
         pageIndex: 0,
     });
+
+    function handleAddTag() {}
 
     const columns: ColumnDef<Reference>[] = [
         {
@@ -177,13 +195,30 @@ export function Library() {
                 const tags: ReferenceTag[] = row.getValue("tags");
                 return (
                     <div>
-                        {tags.map((tag) => (
-                            <TagTableDisplay
-                                key={tag.id}
-                                tagId={tag.id}
-                                name={tag.text}
-                            />
-                        ))}
+                        <div>
+                            {tags.map((tag) => (
+                                <TagTableDisplay
+                                    key={tag.id}
+                                    tagId={tag.id}
+                                    name={tag.text}
+                                />
+                            ))}
+                        </div>
+                        <div>
+                            <Dialog>
+                                <DialogTrigger>
+                                    <SquarePlusIcon />
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Add Tag(s)</DialogTitle>
+                                    </DialogHeader>
+                                    <AddTagToReference
+                                        refId={row.original.id}
+                                    />
+                                </DialogContent>
+                            </Dialog>
+                        </div>
                     </div>
                 );
             },
