@@ -1,14 +1,10 @@
-import {
-    FormControl,
-    FormField,
-    FormItem,
-} from "@/components/ui/form.tsx";
+import { FormControl, FormField, FormItem } from "@/components/ui/form.tsx";
 import { useFormContext } from "react-hook-form";
 import { Tag, TagInput } from "emblor";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
-import {instance} from "@/utils/axiosInstance.ts";
-import {useToast} from "@/hooks/use-toast.ts";
+import { instance } from "@/utils/axiosInstance.ts";
+import { useToast } from "@/hooks/use-toast.ts";
 
 export const tagSchema = z.object({
     id: z.string(),
@@ -18,6 +14,7 @@ export const tagSchema = z.object({
             message: "Name must be at least 2 characters.",
         })
         .optional(),
+    createdBy: z.string().optional(),
 });
 
 export function TagCreateDropdown() {
@@ -27,7 +24,7 @@ export function TagCreateDropdown() {
         watch,
         formState: { errors },
     } = useFormContext();
-    
+
     const { toast } = useToast();
 
     const currentTags = watch("tags") || [];
@@ -35,21 +32,18 @@ export function TagCreateDropdown() {
     const [activeTagIndex, setActiveTagIndex] = React.useState<number | null>(
         null,
     );
-    
+
     const [tagAutoFill, setTagAutoFill] = useState<Tag[]>();
 
     const getUserTags = async () => {
         try {
             // figure out which reference type is being used
-            const response = await instance.get(
-                `get-owned-tags`,
-                {
-                    withCredentials: true,
-                },
-            );
-            
+            const response = await instance.get(`get-owned-tags`, {
+                withCredentials: true,
+            });
+
             if (response.status === 200) {
-                setTagAutoFill(response.data)
+                setTagAutoFill(response.data);
             } else {
                 toast({
                     variant: "destructive",
@@ -57,7 +51,6 @@ export function TagCreateDropdown() {
                     description: ``,
                 });
             }
-
         } catch (error) {
             toast({
                 variant: "destructive",
@@ -69,7 +62,7 @@ export function TagCreateDropdown() {
 
     // load all user tags
     useEffect(() => {
-        getUserTags()
+        getUserTags();
     }, []);
 
     const handleTagChange = (newTags: React.SetStateAction<Tag[]>) => {
@@ -100,20 +93,17 @@ export function TagCreateDropdown() {
                                 clearAll={true}
                                 size={"sm"}
                                 shape={"rounded"}
-                                inlineTags ={true}
+                                inlineTags={true}
                                 textCase={"capitalize"}
-                                styleClasses = {
-                                    {
-                                        input: 'w-full sm:max-w-[350px]',
-                                        tag: {
-                                            body: 'flex items-center gap-2',
-                                            closeButton: 'text-red-500 hover:text-red-600',
-                                        },           
-                                    }
-                                }
-                                variant = {
-                                    "primary"
-                                }
+                                styleClasses={{
+                                    input: "w-full sm:max-w-[350px]",
+                                    tag: {
+                                        body: "flex items-center gap-2",
+                                        closeButton:
+                                            "text-red-500 hover:text-red-600",
+                                    },
+                                }}
+                                variant={"primary"}
                             />
                         </FormControl>
                     </FormItem>

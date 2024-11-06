@@ -71,8 +71,8 @@ type Creator = {
     lastName: string;
 };
 
-type ReferenceTag = {
-    id: number;
+export type ReferenceTag = {
+    id: number | string;
     text: string;
     createdBy: string;
 };
@@ -187,14 +187,19 @@ export function Library() {
             header: "Tags",
             enableHiding: true,
             cell: ({ row }) => {
-                const tags: ReferenceTag[] = row.getValue("tags");
+                // const tags: ReferenceTag[] = row.getValue("tags");
+                const [tags, setTags] = useState<ReferenceTag[]>(
+                    row.getValue("tags"),
+                );
                 return (
                     <div>
                         <div>
                             {tags.map((tag) => (
                                 <TagTableDisplay
                                     key={tag.id}
-                                    tagId={tag.id}
+                                    tagId={
+                                        typeof tag.id === "number" ? tag.id : -1
+                                    }
                                     refId={row.original.id}
                                     name={tag.text}
                                 />
@@ -211,6 +216,7 @@ export function Library() {
                                     </DialogHeader>
                                     <AddTagToReference
                                         refId={row.original.id}
+                                        stateChanger={setTags}
                                     />
                                 </DialogContent>
                             </Dialog>

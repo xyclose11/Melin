@@ -13,13 +13,20 @@ import { useToast } from "@/hooks/use-toast.ts";
 import { tagSchema } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button.tsx";
+import { ReferenceTag } from "@/routes/Library.tsx";
 
 export const addTagSchema = z.object({
     tags: z.array(tagSchema),
     refId: z.number(),
 });
 
-export function AddTagToReference({ refId }: { refId: number }) {
+export function AddTagToReference({
+    refId,
+    stateChanger,
+}: {
+    refId: number;
+    stateChanger: React.Dispatch<React.SetStateAction<ReferenceTag[]>>;
+}) {
     const form = useForm<z.infer<typeof addTagSchema>>({
         resolver: zodResolver(addTagSchema),
         defaultValues: {
@@ -124,8 +131,12 @@ export function AddTagToReference({ refId }: { refId: number }) {
         getCurrentAppliedTags();
     }, []);
 
-    const handleTagChange = (newTags: React.SetStateAction<Tag[]>) => {
+    const handleTagChange = (newTags: Tag[]) => {
         setCurrentTags(newTags);
+        stateChanger(newTags);
+
+        console.log(newTags);
+
         form.setValue("tags", newTags as [Tag, ...Tag[]]);
     };
 
@@ -147,7 +158,6 @@ export function AddTagToReference({ refId }: { refId: number }) {
         };
 
         try {
-            console.log(newData);
             const res = await instance.post(`add-tags-to-reference`, newData, {
                 withCredentials: true,
             });
