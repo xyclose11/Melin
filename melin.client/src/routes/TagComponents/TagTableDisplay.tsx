@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge.tsx";
-import { CreateGroupForm } from "@/routes/GroupComponents/CreateGroupForm.tsx";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,6 +9,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
 import { instance } from "@/utils/axiosInstance.ts";
+import { EditTagForm } from "@/routes/TagComponents/EditTagForm.tsx";
 
 export function TagTableDisplay({
     name,
@@ -39,19 +39,17 @@ export function TagTableDisplay({
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <Badge variant="secondary">{name}</Badge>
+                    <Badge variant="secondary">
+                        {name.length > 16 ? name.slice(0, 16) + "..." : name}
+                    </Badge>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuItem>
-                        <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>
-                                Edit
-                            </DropdownMenuSubTrigger>
-                            <DropdownMenuSubContent>
-                                <CreateGroupForm />
-                            </DropdownMenuSubContent>
-                        </DropdownMenuSub>
-                    </DropdownMenuItem>
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>Edit</DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                            <EditTagForm tagText={name} />
+                        </DropdownMenuSubContent>
+                    </DropdownMenuSub>
                     <DropdownMenuItem onClick={removeTagFromRef}>
                         Remove From Reference
                     </DropdownMenuItem>

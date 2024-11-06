@@ -447,12 +447,14 @@ public class TagController : ControllerBase
     // UPDATE: update tag
     [HttpPut("update-tag")]
     [Authorize]
-    public async Task<ActionResult<Tag>> UpdateTag(int tagId, [FromForm] Tag updatedTag)
+    public async Task<ActionResult<Tag>> UpdateTag([FromBody] Tag updatedTag, string curTagName)
     {
         try
         {
             // find tag
-            var t = await _referenceContext.Tags.FindAsync(tagId);
+            var t = await _referenceContext.Tags
+                .Where(t => t.CreatedBy == User.Identity.Name)
+                .FirstAsync(t => t.Text == curTagName);
 
             if (t == null)
             {
@@ -462,11 +464,6 @@ public class TagController : ControllerBase
             if (!t.Text.Equals(updatedTag.Text))
             {
                 t.Text = updatedTag.Text;
-            }
-
-            if (!t.Description.Equals(updatedTag.Description))
-            {
-                t.Description = updatedTag.Description;
             }
             
             t.UpdatedAt = DateTime.UtcNow;

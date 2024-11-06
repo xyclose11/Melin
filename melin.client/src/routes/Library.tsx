@@ -187,13 +187,12 @@ export function Library() {
             header: "Tags",
             enableHiding: true,
             cell: ({ row }) => {
-                // const tags: ReferenceTag[] = row.getValue("tags");
                 const [tags, setTags] = useState<ReferenceTag[]>(
                     row.getValue("tags"),
                 );
                 return (
-                    <div>
-                        <div>
+                    <div className={"max-w-[25%]"}>
+                        <div className={"flex gap-1 flex-wrap"}>
                             {tags.map((tag) => (
                                 <TagTableDisplay
                                     key={tag.id}
@@ -204,22 +203,24 @@ export function Library() {
                                     name={tag.text}
                                 />
                             ))}
-                        </div>
-                        <div>
-                            <Dialog>
-                                <DialogTrigger>
-                                    <SquarePlusIcon />
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Add Tag(s)</DialogTitle>
-                                    </DialogHeader>
-                                    <AddTagToReference
-                                        refId={row.original.id}
-                                        stateChanger={setTags}
-                                    />
-                                </DialogContent>
-                            </Dialog>
+                            <div className={"justify-self-end self-end"}>
+                                <Dialog>
+                                    <DialogTrigger>
+                                        <SquarePlusIcon />
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                Add Tag(s)
+                                            </DialogTitle>
+                                        </DialogHeader>
+                                        <AddTagToReference
+                                            refId={row.original.id}
+                                            stateChanger={setTags}
+                                        />
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
                         </div>
                     </div>
                 );
