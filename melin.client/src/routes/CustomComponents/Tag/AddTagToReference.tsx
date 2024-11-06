@@ -42,7 +42,7 @@ export function AddTagToReference({ refId }: { refId: number }) {
         try {
             // figure out which reference type is being used
             const response = await instance.get(
-                `get-owned-tags?pageNumber=${0}&pageSize=${25}`,
+                `get-owned-tags?pageNumber=${0}&pageSize=${100}`,
                 {
                     withCredentials: true,
                 },
