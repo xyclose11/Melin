@@ -308,6 +308,54 @@ public class TagController : ControllerBase
         }
     }
     
+    // POST: Add Tag to Reference
+    [HttpPost("remove-tag-on-reference")]
+    [Authorize]
+    public async Task<ActionResult<bool>> RemoveTagFromReference([FromQuery] int tagId, [FromQuery] int refId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            // validate Tag
+            var t = await _referenceContext.Tags
+                .Where(t => t.CreatedBy== User.Identity.Name)
+                .Where(r => r.Id == tagId)
+                .FirstAsync();
+            
+            if (t == null)
+            {
+                return NotFound("Tag with ID: " + tagId + " not found.");
+            }
+            
+            // validate Reference
+            var r = await _referenceContext.Reference
+                .Where(r => r.OwnerEmail == User.Identity.Name)
+                .Where(r => r.Id == refId)
+                .Include(t => t.Tags)
+                .FirstAsync();
+            
+            if (r == null)
+            {
+                return NotFound("Reference with ID: " + refId + " not found.");
+            }
+
+            r.Tags.Remove(t);
+
+            await _referenceContext.SaveChangesAsync();
+
+            return Ok("Tag removed from reference successfully");
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
     // DELETE: Delete single Tag
     [HttpPost("delete-tag")]
     [Authorize]

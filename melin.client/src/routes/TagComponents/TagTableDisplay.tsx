@@ -9,14 +9,32 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
+import { instance } from "@/utils/axiosInstance.ts";
 
 export function TagTableDisplay({
     name,
     tagId,
+    refId,
 }: {
     name: string;
     tagId: number;
+    refId: number;
 }) {
+    const removeTagFromRef = async () => {
+        try {
+            const res = await instance.post(
+                `remove-tag-on-reference?tagId=${tagId}&refId=${refId}`,
+                null,
+                {
+                    withCredentials: true,
+                },
+            );
+            console.log(res);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     return (
         <>
             <DropdownMenu>
@@ -34,7 +52,9 @@ export function TagTableDisplay({
                             </DropdownMenuSubContent>
                         </DropdownMenuSub>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>Remove From Reference</DropdownMenuItem>
+                    <DropdownMenuItem onClick={removeTagFromRef}>
+                        Remove From Reference
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

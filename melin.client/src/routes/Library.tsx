@@ -195,6 +195,7 @@ export function Library() {
                                 <TagTableDisplay
                                     key={tag.id}
                                     tagId={tag.id}
+                                    refId={row.original.id}
                                     name={tag.text}
                                 />
                             ))}

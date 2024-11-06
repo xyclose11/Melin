@@ -38,7 +38,7 @@ export function AddTagToReference({ refId }: { refId: number }) {
 
     const [tagAutoFill, setTagAutoFill] = useState<Tag[]>([]);
 
-    const getUserTags = async () => {
+    const getAllUserTags = async () => {
         try {
             // figure out which reference type is being used
             const response = await instance.get(
@@ -78,9 +78,50 @@ export function AddTagToReference({ refId }: { refId: number }) {
         }
     };
 
+    const getCurrentAppliedTags = async () => {
+        try {
+            // figure out which reference type is being used
+            const response = await instance.get(
+                `get-owned-tags-for-reference?pageNumber=${0}&pageSize=${100}&refId=${refId}`,
+                {
+                    withCredentials: true,
+                },
+            );
+
+            console.log(response);
+
+            response.data.map(
+                (t: {
+                    id: number | string;
+                    text: string;
+                    description: string;
+                }) => {
+                    t.id = String(t.id);
+                },
+            );
+
+            if (response.status === 200) {
+                setCurrentTags(response.data);
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Tag Retrieval Not Successful",
+                    description: ``,
+                });
+            }
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Tag Retrieval Not Successful",
+                description: ``,
+            });
+        }
+    };
+
     // load all user tags
     useEffect(() => {
-        getUserTags();
+        getAllUserTags();
+        getCurrentAppliedTags();
     }, []);
 
     const handleTagChange = (newTags: React.SetStateAction<Tag[]>) => {
@@ -122,7 +163,7 @@ export function AddTagToReference({ refId }: { refId: number }) {
                     title: "Tag Unable to be Added!",
                     description: `Please Try Again`,
                 });
-                console.error("ERROR");
+                console.error(res);
             }
         } catch (e) {
             console.error(e);
