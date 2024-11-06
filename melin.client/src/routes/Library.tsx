@@ -54,13 +54,10 @@ import { useReferenceSelection } from "@/routes/Context/ReferencesSelectedContex
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { TagInput } from "emblor";
-import { CreateTagDropdown } from "@/routes/CustomComponents/Tag/CreateTagDropdown.tsx";
 import { AddTagToReference } from "@/routes/CustomComponents/Tag/AddTagToReference.tsx";
 
 export enum CREATOR_TYPES {
@@ -106,8 +103,6 @@ export function Library() {
         pageSize: 10,
         pageIndex: 0,
     });
-
-    function handleAddTag() {}
 
     const columns: ColumnDef<Reference>[] = [
         {

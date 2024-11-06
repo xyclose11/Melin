@@ -12,21 +12,23 @@ import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
 import { tagSchema } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button.tsx";
 
 export const addTagSchema = z.object({
     tags: z.array(tagSchema),
-    refId: z.string(),
+    refId: z.number(),
 });
 
-export function AddTagToReference({ refId }: { refId: string }) {
+export function AddTagToReference({ refId }: { refId: number }) {
     const form = useForm<z.infer<typeof addTagSchema>>({
         resolver: zodResolver(addTagSchema),
         defaultValues: {
             tags: [],
-            refId: "",
+            refId: -1,
         },
     });
 
+    const errors = form.formState.errors;
     const { toast } = useToast();
 
     const [currentTags, setCurrentTags] = useState<Tag[]>([]);
@@ -39,11 +41,25 @@ export function AddTagToReference({ refId }: { refId: string }) {
     const getUserTags = async () => {
         try {
             // figure out which reference type is being used
-            const response = await instance.get(`get-owned-tags`, {
-                withCredentials: true,
-            });
+            const response = await instance.get(
+                `get-owned-tags-for-reference?pageNumber=${0}&pageSize=${25}&refId=${refId}`,
+                {
+                    withCredentials: true,
+                },
+            );
 
             console.log(response);
+
+            response.data.map(
+                (t: {
+                    id: number | string;
+                    text: string;
+                    description: string;
+                }) => {
+                    t.id = String(t.id);
+                },
+            );
+
             if (response.status === 200) {
                 setTagAutoFill(response.data);
             } else {
@@ -72,27 +88,53 @@ export function AddTagToReference({ refId }: { refId: string }) {
         form.setValue("tags", newTags as [Tag, ...Tag[]]);
     };
 
+    function generateRandom32BitInteger() {
+        const max = 500000;
+        return Math.floor(Math.random() * (max + 1));
+    }
+
     const addTag = async (data: z.infer<typeof addTagSchema>) => {
+        const convertedTags = data.tags?.map((tag) => ({
+            ...tag,
+            id: generateRandom32BitInteger(),
+        }));
+
+        const newData = {
+            ...data,
+            refId: refId,
+            tags: convertedTags,
+        };
+
         try {
-            data.refId = refId;
-            const res = await instance.post(`add-tags-to-reference`, data, {
+            console.log(newData);
+            const res = await instance.post(`add-tags-to-reference`, newData, {
                 withCredentials: true,
             });
 
             if (res.status === 200) {
-                console.log("SUCCESS");
+                toast({
+                    variant: "default",
+                    title: "Tag Successfully Added!",
+                });
             } else {
-                console.log("ERROR");
+                toast({
+                    variant: "destructive",
+                    title: "Tag Unable to be Added!",
+                    description: `Please Try Again`,
+                });
+                console.error("ERROR");
             }
         } catch (e) {
             console.error(e);
         }
     };
 
+    const onInvalid = (errors: any) => console.error(errors);
+
     return (
         <div className={"space-y-2"}>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(addTag)}>
+                <form onSubmit={form.handleSubmit(addTag, onInvalid)}>
                     <FormField
                         control={form.control}
                         name="tags"
@@ -128,10 +170,13 @@ export function AddTagToReference({ refId }: { refId: string }) {
                                         variant={"primary"}
                                     />
                                 </FormControl>
-                                <button type="submit">Submit</button>
+                                <Button type="submit">Submit</Button>
                             </FormItem>
                         )}
                     />
+                    {errors.refId && <div>{errors.refId.message}</div>}
+                    {errors.root && <div>{errors.root.message}</div>}
+                    {errors.tags && <div>{errors.tags.message}</div>}
                 </form>
             </Form>
 

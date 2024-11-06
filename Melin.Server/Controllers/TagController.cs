@@ -85,6 +85,49 @@ public class TagController : ControllerBase
         }
     }
     
+    // GET: All owned tags
+    [HttpGet("get-owned-tags-for-reference")]
+    [Authorize]
+    public async Task<ActionResult<Tag>> GetOwnedTagsForReference([FromQuery] PaginationFilter paginationFilter, [FromQuery] int refId)
+    {
+        try
+        {
+            var validFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+
+            var curUser = User.Identity.Name;
+            if (curUser == null)
+            {
+                return NotFound("User not logged in or User not found");
+            }
+
+            var reference = await _referenceContext.Reference
+                .Where(r => r.OwnerEmail == curUser)
+                .Where(r => r.Id == refId)
+                .Include(t => t.Tags)
+                .FirstAsync();
+                
+
+            var t = reference.Tags
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToList();
+
+
+            if (t != null)
+            {
+                return Ok(t);
+            }
+
+            return NotFound();
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
     
     // POST: Single Tag creation
     [HttpPost("create-tag")]
@@ -216,6 +259,7 @@ public class TagController : ControllerBase
             }
             // validate Reference
             var r = await _referenceContext.Reference
+                .Include(t => t.Tags)
                 .Where(r => r.OwnerEmail == User.Identity.Name)
                 .Where(r => r.Id == request.RefId)
                 .FirstAsync();
@@ -228,7 +272,19 @@ public class TagController : ControllerBase
             // add tag to reference
             foreach (var tag in request.Tags)
             {
-                r.Tags.Add(tag);
+                // see if tag exists
+
+                if (!r.Tags.Contains(tag))
+                {
+                    tag.CreatedBy = User.Identity.Name;
+                    // add it to the Tag DB first
+                    _referenceContext.Tags.Add(tag);
+                    
+                    r.Tags.Add(tag);
+
+                }
+
+                // if not create new tag
             }
 
             await _referenceContext.SaveChangesAsync();
