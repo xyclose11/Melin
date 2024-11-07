@@ -10,6 +10,7 @@
   <ItemGroup>
     <Folder Include="src\app\" />
     <Folder Include="src\routes\UserSettings\" />
-    <Folder Include="src\__tests__\" />
+    <Folder Include="src\__tests__\__ReferenceTests__\" />
+    <Folder Include="tests\components\reference\" />
   </ItemGroup>
 </Project>

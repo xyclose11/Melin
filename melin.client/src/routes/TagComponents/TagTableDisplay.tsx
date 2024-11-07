@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge.tsx";
+import { Badge } from "../../components/ui/badge.tsx";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -7,9 +7,9 @@ import {
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu.tsx";
-import { instance } from "@/utils/axiosInstance.ts";
-import { EditTagForm } from "@/routes/TagComponents/EditTagForm.tsx";
+} from "../../components/ui/dropdown-menu.tsx";
+import { instance } from "../../utils/axiosInstance.ts";
+import { EditTagForm } from "../../routes/TagComponents/EditTagForm.tsx";
 
 export function TagTableDisplay({
     name,
