@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Melin.Server.Models;
 
+
 namespace Melin.Server.Tests;
 
 public class ReferenceModelTest

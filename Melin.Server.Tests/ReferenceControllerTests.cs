@@ -1,41 +1,39 @@
 using System.ComponentModel.DataAnnotations;
 using Melin.Server.Controllers;
+using Melin.Server.Filter;
+using Melin.Server.Interfaces;
 using Melin.Server.Models;
 using Melin.Server.Models.Repository;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Melin.Server.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Task = Melin.Server.Models.Task;
 
 namespace Melin.Server.Tests;
 
+
 public class ReferenceControllerTests {
-    [Fact]
-    public async Task GET_retrieves_book_by_ID()
-    {
-        var mockRepo = new Mock<IReferenceRepository>();
-        mockRepo.Setup(repo => repo.GetById(4))
-            .Returns(GetReferences());
-        var controller = new ReferenceController(mockRepo.Object);
-
-        var res = await controller.GetReferences();
-
-    }
+    private readonly ApiService _apiService;
+    private readonly ReferenceContext _referenceContext;
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly TagService _tagService;
+    private readonly IUnitOfWork _unitOfWork;
     
-    private List<Reference> GetReferences()
+    [Fact]
+    public async void GetReference_Returns_OkResult()
     {
-        var sessions = new List<Reference>();
-        sessions.Add(new Reference()
-        {
-            Id = 1,
-            Title = "Test One",
-            ShortTitle = "T1"
-        });
-        sessions.Add(new Reference()
-        {
-            Id = 2,
-            Title = "Test Two",
-            ShortTitle = "T2"
-        });
-        return sessions;
+        var referenceRepositoryMock = new Mock<IReferenceRepository>();
+        referenceRepositoryMock.Setup(repo => repo.GetAll())
+            .Returns(new List<Reference>());
+
+        var referenceService = new ReferenceRepository(referenceRepositoryMock.Object);
+        
+        var controller = new ReferenceController(_apiService, _referenceContext, _userManager, _tagService, _unitOfWork);
+        
+        var result = await controller.GetSingleReference(1);
+
+        Assert.IsType<Ok>(result);
     }
 }

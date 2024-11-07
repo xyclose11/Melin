@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Melin.Server", "Melin.Server.csproj", "{18DB0333-7CA6-4B55-AD49-9958F8723A9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Melin.Server.Tests", "..\Melin.Server.Tests\Melin.Server.Tests.csproj", "{4F438E39-E9D2-4357-BBF1-2158C6D09399}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{18DB0333-7CA6-4B55-AD49-9958F8723A9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18DB0333-7CA6-4B55-AD49-9958F8723A9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18DB0333-7CA6-4B55-AD49-9958F8723A9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F438E39-E9D2-4357-BBF1-2158C6D09399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F438E39-E9D2-4357-BBF1-2158C6D09399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F438E39-E9D2-4357-BBF1-2158C6D09399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F438E39-E9D2-4357-BBF1-2158C6D09399}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

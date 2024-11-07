@@ -58,6 +58,32 @@ public class ReferenceController : ControllerBase
     //     
     //     return Ok(new PagedResponse<List<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
     // }
+
+    [HttpGet("get-single-reference")]
+    [Authorize]
+    public async Task<IActionResult> GetSingleReference(int refId)
+    {
+        try
+        {
+            var reference = await _referenceContext.Reference
+                .Where(r => r.Id == refId)
+                .FirstAsync();
+
+            if (reference != null)
+            {
+                return Ok(reference);
+            }
+            else
+            {
+                return NotFound("REFERENCE NOT FOUND");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest();
+        }
+    }
     
     [HttpGet("references")]
     [Authorize]
