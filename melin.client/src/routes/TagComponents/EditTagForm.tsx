@@ -9,65 +9,39 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { instance } from "@/utils/axiosInstance.ts";
-import { TextArea } from "@radix-ui/themes";
+import { TagFormSchema } from "@/routes/CustomComponents/Tag/CreateTagDropdown.tsx";
+import { tagSchema } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
+import { useToast } from "@/hooks/use-toast.ts";
 
-const TagFormSchema = z.object({
-    name: z.string().min(2, {
-        message: "Tag Name must be at least 2 characters.",
-    }),
-    description: z.string().optional(),
-});
-
-export function EditTagForm() {
-    const form = useForm<z.infer<typeof TagFormSchema>>({
+export function EditTagForm({ tagText }: { tagText: string }) {
+    const form = useForm<z.infer<typeof tagSchema>>({
         resolver: zodResolver(TagFormSchema),
         defaultValues: {
-            name: "",
-            description: "",
+            text: tagText,
         },
     });
+    const { toast } = useToast();
 
-    // const getTagData = async () => {
-    //     try {
-    //         const res = await instance.get("get-owned-tags", {
-    //             withCredentials: true,
-    //         });
-
-    //         if (res.status === 200) {
-    //         } else {
-    //             console.error("UNABLE TO RETRIEVE TAGS");
-    //             // TODO display the error
-    //         }
-    //     } catch (e) {
-    //         console.error(e);
-    //     }
-    // };
-
-    const onSubmit = async (data: z.infer<typeof TagFormSchema>) => {
+    const onSubmit = async (data: z.infer<typeof tagSchema>) => {
         try {
-            const res = await instance.post("create-group", data, {
-                withCredentials: true,
-            });
+            const res = await instance.put(
+                `update-tag?curTagName=${tagText}`,
+                data,
+                {
+                    withCredentials: true,
+                },
+            );
 
             if (res.status === 200) {
-                toast("Group Created!", {
-                    description: `Group name:: ${data.name}`,
-                    action: {
-                        label: "Undo",
-                        onClick: () => console.log("Undo"),
-                    },
+                toast("Tag Edited Successfully!", {
+                    description: `New Tag name:: ${data.text}`,
                 });
             } else {
-                toast("Group Creation Failed!", {
-                    description: `Group name:: ${data.name}`,
-                    action: {
-                        label: "Try Again",
-                        onClick: () => console.log("Try Agained"),
-                    },
+                toast("Tag Edit Failed!", {
+                    description: `Tag name:: ${data.text}`,
                 });
             }
         } catch (e) {
@@ -83,28 +57,12 @@ export function EditTagForm() {
                 >
                     <FormField
                         control={form.control}
-                        name="name"
+                        name="text"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Group Name*</FormLabel>
+                                <FormLabel>Edit Tag Name</FormLabel>
                                 <FormControl>
                                     <Input placeholder="name..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Description</FormLabel>
-                                <FormControl>
-                                    <TextArea
-                                        placeholder="description..."
-                                        {...field}
-                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -117,5 +75,3 @@ export function EditTagForm() {
         </>
     );
 }
-
-// LAST WORKING ON EDIT TAG CAPABILITIES

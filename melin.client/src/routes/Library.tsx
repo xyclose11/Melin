@@ -19,7 +19,12 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import {
+    ArrowUpDown,
+    ChevronDown,
+    MoreHorizontal,
+    SquarePlusIcon,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -46,6 +51,14 @@ import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
 import { TagTableDisplay } from "@/routes/TagComponents/TagTableDisplay.tsx";
 import { useReferenceSelection } from "@/routes/Context/ReferencesSelectedContext.tsx";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { AddTagToReference } from "@/routes/CustomComponents/Tag/AddTagToReference.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -58,8 +71,8 @@ type Creator = {
     lastName: string;
 };
 
-type ReferenceTag = {
-    id: number;
+export type ReferenceTag = {
+    id: number | string;
     text: string;
     createdBy: string;
 };
@@ -174,15 +187,41 @@ export function Library() {
             header: "Tags",
             enableHiding: true,
             cell: ({ row }) => {
-                const tags: ReferenceTag[] = row.getValue("tags");
+                const [tags, setTags] = useState<ReferenceTag[]>(
+                    row.getValue("tags"),
+                );
                 return (
-                    <div>
-                        {tags.map((tag) => (
-                            <TagTableDisplay
-                                key={tag.id}
-                                name={tag.text}
-                            />
-                        ))}
+                    <div className={"max-w-[25%]"}>
+                        <div className={"flex gap-1 flex-wrap"}>
+                            {tags.map((tag) => (
+                                <TagTableDisplay
+                                    key={tag.id}
+                                    tagId={
+                                        typeof tag.id === "number" ? tag.id : -1
+                                    }
+                                    refId={row.original.id}
+                                    name={tag.text}
+                                />
+                            ))}
+                            <div className={"justify-self-end self-end"}>
+                                <Dialog>
+                                    <DialogTrigger>
+                                        <SquarePlusIcon />
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                Add Tag(s)
+                                            </DialogTitle>
+                                        </DialogHeader>
+                                        <AddTagToReference
+                                            refId={row.original.id}
+                                            stateChanger={setTags}
+                                        />
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                        </div>
                     </div>
                 );
             },

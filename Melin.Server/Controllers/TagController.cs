@@ -1,6 +1,7 @@
 ﻿using Melin.Server.Filter;
 using Melin.Server.Models;
 using Melin.Server.Models.Context;
+using Melin.Server.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -84,20 +85,66 @@ public class TagController : ControllerBase
         }
     }
     
+    // GET: All owned tags
+    [HttpGet("get-owned-tags-for-reference")]
+    [Authorize]
+    public async Task<ActionResult<Tag>> GetOwnedTagsForReference([FromQuery] PaginationFilter paginationFilter, [FromQuery] int refId)
+    {
+        try
+        {
+            var validFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+
+            var curUser = User.Identity.Name;
+            if (curUser == null)
+            {
+                return NotFound("User not logged in or User not found");
+            }
+
+            var reference = await _referenceContext.Reference
+                .Where(r => r.OwnerEmail == curUser)
+                .Where(r => r.Id == refId)
+                .Include(t => t.Tags)
+                .FirstAsync();
+                
+
+            var t = reference.Tags
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToList();
+
+
+            if (t != null)
+            {
+                return Ok(t);
+            }
+
+            return NotFound();
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
     
     // POST: Single Tag creation
     [HttpPost("create-tag")]
     [Authorize]
-    public async Task<ActionResult<Tag>> PostTag([FromBody] Tag tag)
+    public async Task<ActionResult<Tag>> CreateTag([FromBody] Tag tag)
     {
 
         try
         {
             // check if tag already exists
-            var t = await _referenceContext.Tags.ContainsAsync(tag); // TODO test this for functionality
+            // var t = await _referenceContext.Tags.ContainsAsync(tag);
+            var t = await _referenceContext.Tags
+                .AnyAsync(t => t.Text == tag.Text);
+            
             if (t)
             {
-                return NoContent(); // TODO test this and replace with duplicate thing instead
+                return NoContent();
             }
 
             tag.CreatedBy = User.Identity.Name;
@@ -196,6 +243,134 @@ public class TagController : ControllerBase
         }
     }
     
+    [HttpPost("add-tags-to-reference")]
+    [Authorize]
+    public async Task<ActionResult<bool>> AddTagsToReference([FromBody] AddTagsRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            if (request.Tags.Count <= 0)
+            {
+                return NoContent();
+            }
+            // validate Reference
+            var r = await _referenceContext.Reference
+                .Include(t => t.Tags)
+                .Where(r => r.OwnerEmail == User.Identity.Name)
+                .Where(r => r.Id == request.RefId)
+                .FirstAsync();
+            
+            if (r == null)
+            {
+                return NotFound("Reference with ID: " + request.RefId + " not found.");
+            }
+
+            var currentTags = r.Tags.ToList();
+            
+            // add tag to reference
+            foreach (var tag in request.Tags)
+            {
+                // see if tag exists
+                var tagExist = await _referenceContext.Tags
+                    .Where(t => t.CreatedBy == User.Identity.Name)
+                    .AnyAsync(t => t.Text == tag.Text);
+                
+                tag.CreatedBy = User.Identity.Name;
+
+                if (!tagExist)
+                {
+                    // add it to the Tag DB first
+                    _referenceContext.Tags.Add(tag);
+                    r.Tags.Add(tag);
+                }
+                else
+                {
+                    var existingTag = await _referenceContext.Tags
+                        .Where(t => t.CreatedBy == User.Identity.Name)
+                        .FirstAsync(t => t.Text == tag.Text);
+
+                    if (!r.Tags.Contains(existingTag))
+                    {
+                        r.Tags.Add(existingTag);
+
+                    }
+                }
+                
+                // if not create new tag
+            }
+
+            foreach (var currentTag in currentTags)
+            {
+                if (!request.Tags.Any(t => t.Text == currentTag.Text))
+                {
+                    r.Tags.Remove(currentTag);
+                }
+            }
+
+            await _referenceContext.SaveChangesAsync();
+
+            return Ok("Tag added to reference successfully");
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    // POST: Add Tag to Reference
+    [HttpPost("remove-tag-on-reference")]
+    [Authorize]
+    public async Task<ActionResult<bool>> RemoveTagFromReference([FromQuery] int tagId, [FromQuery] int refId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            // validate Tag
+            var t = await _referenceContext.Tags
+                .Where(t => t.CreatedBy== User.Identity.Name)
+                .Where(r => r.Id == tagId)
+                .FirstAsync();
+            
+            if (t == null)
+            {
+                return NotFound("Tag with ID: " + tagId + " not found.");
+            }
+            
+            // validate Reference
+            var r = await _referenceContext.Reference
+                .Where(r => r.OwnerEmail == User.Identity.Name)
+                .Where(r => r.Id == refId)
+                .Include(t => t.Tags)
+                .FirstAsync();
+            
+            if (r == null)
+            {
+                return NotFound("Reference with ID: " + refId + " not found.");
+            }
+
+            r.Tags.Remove(t);
+
+            await _referenceContext.SaveChangesAsync();
+
+            return Ok("Tag removed from reference successfully");
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
     // DELETE: Delete single Tag
     [HttpPost("delete-tag")]
     [Authorize]
@@ -272,12 +447,14 @@ public class TagController : ControllerBase
     // UPDATE: update tag
     [HttpPut("update-tag")]
     [Authorize]
-    public async Task<ActionResult<Tag>> UpdateTag(int tagId, [FromForm] Tag updatedTag)
+    public async Task<ActionResult<Tag>> UpdateTag([FromBody] Tag updatedTag, string curTagName)
     {
         try
         {
             // find tag
-            var t = await _referenceContext.Tags.FindAsync(tagId);
+            var t = await _referenceContext.Tags
+                .Where(t => t.CreatedBy == User.Identity.Name)
+                .FirstAsync(t => t.Text == curTagName);
 
             if (t == null)
             {
@@ -287,11 +464,6 @@ public class TagController : ControllerBase
             if (!t.Text.Equals(updatedTag.Text))
             {
                 t.Text = updatedTag.Text;
-            }
-
-            if (!t.Description.Equals(updatedTag.Description))
-            {
-                t.Description = updatedTag.Description;
             }
             
             t.UpdatedAt = DateTime.UtcNow;
