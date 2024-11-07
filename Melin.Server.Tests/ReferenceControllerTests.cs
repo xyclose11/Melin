@@ -22,10 +22,10 @@ public class ReferenceControllerTests {
     private readonly IUnitOfWork _unitOfWork;
     
     [Fact]
-    public async void GetReference_Returns_OkResult()
+    public async void GetReferences_Returns_OkResult()
     {
-        var referenceRepositoryMock = new Mock<IReferenceRepository>();
-        referenceRepositoryMock.Setup(repo => repo.GetAll())
+        var referenceRepositoryMock = new Mock<IReferenceService>();
+        referenceRepositoryMock.Setup(repo => repo.GetReferencesAsync())
             .Returns(new List<Reference>());
 
         var referenceService = new ReferenceRepository(referenceRepositoryMock.Object);

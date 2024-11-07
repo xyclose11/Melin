@@ -21,6 +21,8 @@ using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<IReferenceService, ReferenceService>();
+
 // Add services to the container.
 builder.Services.AddDbContext<ReferenceContext>(options =>
 {
