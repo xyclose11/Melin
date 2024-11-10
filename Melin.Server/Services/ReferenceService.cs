@@ -544,6 +544,441 @@ public class ReferenceService : IReferenceService
         }
     }
 
+    public async Task<bool> AddAudioRecordingAsync(AudioRecording audioRecording)
+    {
+        try
+        {
+            audioRecording.Language = Language.English;
+            audioRecording.Type = ReferenceType.AudioRecording;
+            return await _referenceRepository.AddAsync(audioRecording);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddBillAsync(Bill bill)
+    {
+        try
+        {
+            bill.Language = Language.English;
+            bill.Type = ReferenceType.Bill;
+            return await _referenceRepository.AddAsync(bill);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddBlogPostAsync(BlogPost blogPost)
+    {
+        try
+        {
+            blogPost.Language = Language.English;
+            blogPost.Type = ReferenceType.BlogPost;
+            return await _referenceRepository.AddAsync(blogPost);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddBookSectionAsync(BookSection bookSection)
+    {
+        try
+        {
+            bookSection.Language = Language.English;
+            bookSection.Type = ReferenceType.BookSection;
+            return await _referenceRepository.AddAsync(bookSection);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddCaseAsync(LegalCases cases)
+    {
+        try
+        {
+            cases.Language = Language.English;
+            cases.Type = ReferenceType.Case;
+            return await _referenceRepository.AddAsync(cases);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddConferencePaperAsync(ConferencePaper conferencePaper)
+    {
+        try
+        {
+            conferencePaper.Language = Language.English;
+            conferencePaper.Type = ReferenceType.ConferencePaper;
+            return await _referenceRepository.AddAsync(conferencePaper);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddDictionaryEntryAsync(DictionaryEntry dictionaryEntry)
+    {
+        try
+        {
+            dictionaryEntry.Language = Language.English;
+            dictionaryEntry.Type = ReferenceType.DictionaryEntry;
+            return await _referenceRepository.AddAsync(dictionaryEntry);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddDocumentAsync(Document document)
+    {
+        try
+        {
+            document.Language = Language.English;
+            document.Type = ReferenceType.Document;
+            return await _referenceRepository.AddAsync(document);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddEmailAsync(Email email)
+    {
+        try
+        {
+            email.Language = Language.English;
+            email.Type = ReferenceType.Email;
+            return await _referenceRepository.AddAsync(email);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddEncyclopediaArticleAsync(EncyclopediaArticle encyclopediaArticle)
+    {
+        try
+        {
+            encyclopediaArticle.Language = Language.English;
+            encyclopediaArticle.Type = ReferenceType.EncyclopediaArticle;
+            return await _referenceRepository.AddAsync(encyclopediaArticle);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddFilmAsync(Film film)
+    {
+        try
+        {
+            film.Language = Language.English;
+            film.Type = ReferenceType.Film;
+            return await _referenceRepository.AddAsync(film);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddForumPostAsync(ForumPost forumPost)
+    {
+        try
+        {
+            forumPost.Language = Language.English;
+            forumPost.Type = ReferenceType.ForumPost;
+            return await _referenceRepository.AddAsync(forumPost);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddHearingAsync(Hearing hearing)
+    {
+        try
+        {
+            hearing.Language = Language.English;
+            hearing.Type = ReferenceType.Hearing;
+            return await _referenceRepository.AddAsync(hearing);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddInstantMessageAsync(InstantMessage instantMessage)
+    {
+        try
+        {
+            instantMessage.Language = Language.English;
+            instantMessage.Type = ReferenceType.InstantMessage;
+            return await _referenceRepository.AddAsync(instantMessage);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddInterviewAsync(Interview interview)
+    {
+        try
+        {
+            interview.Language = Language.English;
+            interview.Type = ReferenceType.Interview;
+            return await _referenceRepository.AddAsync(interview);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddJournalArticleAsync(JournalArticle journalArticle)
+    {
+        try
+        {
+            journalArticle.Language = Language.English;
+            journalArticle.Type = ReferenceType.JournalArticle;
+            return await _referenceRepository.AddAsync(journalArticle);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddLetterAsync(Letter letter)
+    {
+        try
+        {
+            letter.Language = Language.English;
+            letter.Type = ReferenceType.Letter;
+            return await _referenceRepository.AddAsync(letter);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddMagazineArticleAsync(MagazineArticle magazineArticle)
+    {
+        try
+        {
+            magazineArticle.Language = Language.English;
+            magazineArticle.Type = ReferenceType.MagazineArticle;
+            return await _referenceRepository.AddAsync(magazineArticle);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddPatentAsync(Patent patent)
+    {
+        try
+        {
+            patent.Language = Language.English;
+            patent.Type = ReferenceType.Patent;
+            return await _referenceRepository.AddAsync(patent);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddPodcastAsync(Podcast podcast)
+    {
+        try
+        {
+            podcast.Language = Language.English;
+            podcast.Type = ReferenceType.Podcast;
+            return await _referenceRepository.AddAsync(podcast);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddPresentationAsync(Presentation presentation)
+    {
+        try
+        {
+            presentation.Language = Language.English;
+            presentation.Type = ReferenceType.Presentation;
+            return await _referenceRepository.AddAsync(presentation);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddRadioBroadcastAsync(RadioBroadcast radioBroadcast)
+    {
+        try
+        {
+            radioBroadcast.Language = Language.English;
+            radioBroadcast.Type = ReferenceType.RadioBroadcast;
+            return await _referenceRepository.AddAsync(radioBroadcast);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddReportAsync(Report report)
+    {
+        try
+        {
+            report.Language = Language.English;
+            report.Type = ReferenceType.Report;
+            return await _referenceRepository.AddAsync(report);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddSoftwareAsync(Software software)
+    {
+        try
+        {
+            software.Language = Language.English;
+            software.Type = ReferenceType.Software;
+            return await _referenceRepository.AddAsync(software);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddStatuteAsync(Statute statute)
+    {
+        try
+        {
+            statute.Language = Language.English;
+            statute.Type = ReferenceType.Statute;
+            return await _referenceRepository.AddAsync(statute);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddThesisAsync(Thesis thesis)
+    {
+        try
+        {
+            thesis.Language = Language.English;
+            thesis.Type = ReferenceType.Thesis;
+            return await _referenceRepository.AddAsync(thesis);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddTVBroadcastAsync(TVBroadcast tvBroadcast)
+    {
+        try
+        {
+            tvBroadcast.Language = Language.English;
+            tvBroadcast.Type = ReferenceType.TVBroadcast;
+            return await _referenceRepository.AddAsync(tvBroadcast);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddVideoRecordingAsync(VideoRecording videoRecording)
+    {
+        try
+        {
+            videoRecording.Language = Language.English;
+            videoRecording.Type = ReferenceType.VideoRecording;
+            return await _referenceRepository.AddAsync(videoRecording);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<bool> AddWebpageAsync(Webpage webpage)
+    {
+        try
+        {
+            webpage.Language = Language.English;
+            webpage.Type = ReferenceType.Webpage;
+            return await _referenceRepository.AddAsync(webpage);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     public async Task<bool> UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
     {
         throw new NotImplementedException();

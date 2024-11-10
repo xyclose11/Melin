@@ -47,7 +47,8 @@ public class ReferenceRepositoryTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(3, result.Data.Count);
+        Assert.Equal(2, result.Data.Count);
+        Assert.True(result.Success);
         Assert.IsType<Result<List<Reference>>>(result);
     }
 
@@ -55,22 +56,27 @@ public class ReferenceRepositoryTests
     public async Task Delete_Single_Reference_Returns_True()
     {
         var userEmail = "test@example.com";
+        var referenceId = 4;
 
-        var result = await _repository.DeleteAsync(userEmail, 4);
+        var result = await _repository.DeleteAsync(userEmail, referenceId);
+        var deletedReference = await _context.Reference.FindAsync(referenceId);
 
         Assert.True(result);
+        Assert.Null(deletedReference);
     }
 
     [Fact]
     public async Task Attempt_Get_Reference_Unauthorized_Returns_Fail()
     {
         var userEmail = "test@example.com";
-
-
-        var result = await _repository.GetReferenceByIdAsync(userEmail, 3);
+        var unauthorizedReferenceId = 3;
         
-        Assert.True(!result.Success);
+        var result = await _repository.GetReferenceByIdAsync(userEmail, unauthorizedReferenceId);
+        
+        Assert.False(result.Success);
+        Assert.Equal("Reference not found.", result.ErrorMessage);
     }
+
     
 
 }

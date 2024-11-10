@@ -76,6 +76,44 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         return Result<List<Reference>>.SuccessResult(pagedReferences);
     }
 
+    public async Task<Result<T>> GetReferenceByIdAsync<T>(string userEmail, int id) where T : Reference
+    {
+        // Check cache first
+        if (!_cache.TryGetValue(id, out var cachedReference))
+        {
+            // Fetch from database
+            var reference = await _context.Reference
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            // If not found, return failure
+            if (reference == null)
+            {
+                return Result<T>.FailureResult("Reference not found.");
+            }
+
+            // Cache the reference
+            _cache.Set(id, reference, TimeSpan.FromMinutes(5));
+            // Return the reference as T, but ensure that it's cast safely
+            if (reference is T typedReference)
+            {
+                return Result<T>.SuccessResult(typedReference);
+            }
+
+            // If reference is not of the type T, return a failure result
+            return Result<T>.FailureResult($"Reference found, but it's not of the expected type {typeof(T).Name}.");
+        }
+
+        // If found in cache, safely cast to T
+        if (cachedReference is T cachedTypedReference)
+        {
+            return Result<T>.SuccessResult(cachedTypedReference);
+        }
+
+        // If cached reference is not of type T, return failure
+        return Result<T>.FailureResult($"Cached reference is not of the expected type {typeof(T).Name}.");
+    }
+
     public List<Reference> GetOwnedReferences(PaginationFilter filter, string userEmail)
     {
         var validFilter = new PaginationFilter(
@@ -696,7 +734,16 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
 
     public async Task<bool> UpdateReferenceAsync(Reference reference)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var r = await _context.Reference.FindAsync(reference);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
     }
 
     public async Task<bool> AddReferenceAsync(Reference reference)
