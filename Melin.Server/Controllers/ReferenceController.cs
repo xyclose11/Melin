@@ -61,11 +61,11 @@ public class ReferenceController : ControllerBase
     {
         try
         {
-            var reference = await _referenceService.GetOwnedReference(User.Identity.Name, refId);
+            var reference = await _referenceService.GetReferenceByIdAsync(User.Identity.Name, refId);
 
             if (reference != null)
             {
-                return Ok(reference);
+                return Ok(reference.Data);
             }
             else
             {
