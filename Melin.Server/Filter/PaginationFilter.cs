@@ -1,7 +1,10 @@
-﻿namespace Melin.Server.Filter;
+﻿using ReferenceType = Melin.Server.Models.ReferenceType;
+
+namespace Melin.Server.Filter;
 
 public class PaginationFilter
 {
+    public ReferenceType? ReferenceType { get; set; }
     public int PageNumber { get; set; }
     public int PageSize { get; set; }
     public PaginationFilter()

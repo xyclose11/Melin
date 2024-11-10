@@ -1,33 +1,32 @@
 ﻿using Melin.Server.Filter;
+using Melin.Server.Wrappers;
 
 namespace Melin.Server.Services;
 using Melin.Server.Models;
 
 public interface IReferenceService
 {
-    IEnumerable<Task<Reference[]>> GetAllReferencesAsync();
-    List<Reference> GetAllReferences();
-    
-    IEnumerable<Task<Reference[]>> GetAllOwnedReferencesAsync(int userId);
-    IEnumerable<Reference[]> GetAllOwnedReferences(int userId);
-    Task<Reference> AddReferenceAsync(Reference newReference);
-    Reference AddReference(Reference newReference);
-    Task<Reference> UpdateReferenceAsync(int referenceId, Reference updatedReference);
-    Reference UpdateReference(int referenceId, Reference updatedReference);
-    Task<bool> DeleteReferenceAsync(int referenceId);
-    bool DeleteReference(int referenceId);
+    Task<Result<Reference>> GetOwnedReference(string userEmail, int id);
+    Task<Artwork> GetArtworkAsync(string userEmail, int id);
+    Task<Book> GetBookAsync(string userEmail, int id);
+
+    Task<ICollection<Reference>> GetOwnedReferencesAsync(PaginationFilter paginationFilter, string userEmail);
+    Task<bool> AddReferenceAsync(Reference newReference);
+    Task<bool> AddArtworkAsync(Artwork newArtwork);
+    Task<bool> AddBookAsync(Book newBook);
+
+    Task<bool> UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference);
+    Task<bool> UpdateArtworkAsync(string userEmail, int referenceId, Artwork updatedArtwork);
+    Task<bool> UpdateBookAsync(string userEmail, int referenceId, Book updatedBook);
+
+    Task<bool> DeleteReferenceAsync(string userEmail, int referenceId);
+    Task<bool> DeleteReferenceRangeAsync(string userEmail, List<int> referenceIds);
 
     Task<Reference> GetReferenceByIdAsync(int referenceId);
-    Reference GetReferenceById(int referenceId);
-    Task<IEnumerable<Reference>> GetOwnedReferencesByUserIdAsync(int userId, ReferenceFilter filter = null);
-    IEnumerable<Reference> GetOwnedReferencesByUserId(int userId, ReferenceFilter filter = null);
     Task<int> GetReferencesCountAsync();
-    int GetReferencesCount();
     Task<bool> ReferenceExistsAsync(int referenceId);
-    bool ReferenceExists(int referenceId);
-    Task<IEnumerable<Reference>> GetReferencesPaginatedAsync(int page, PaginationFilter paginationFilter);
-    IEnumerable<Reference> GetReferencesPaginated(int page, PaginationFilter paginationFilter);
 
+    Task<int> GetOwnedReferenceCountAsync(string userEmail);
 
 
 }

@@ -21,19 +21,15 @@ namespace Melin.Server.Controllers;
 [Route("[controller]")]
 public class ReferenceController : ControllerBase
 {
-    private readonly ApiService _apiService;
-    private readonly ReferenceContext _referenceContext;
+    private readonly IReferenceService _referenceService;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly TagService _tagService;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public ReferenceController(ApiService apiService, ReferenceContext database, UserManager<IdentityUser> userManager, TagService tagService, IUnitOfWork unitOfWork)
+    public ReferenceController(IReferenceService referenceService, UserManager<IdentityUser> userManager, TagService tagService)
     {
-        _apiService = apiService;
-        _referenceContext = database;
+        _referenceService = referenceService;
         _userManager = userManager;
         _tagService = tagService;
-        _unitOfWork = unitOfWork;
     }
     
     
@@ -65,9 +61,7 @@ public class ReferenceController : ControllerBase
     {
         try
         {
-            var reference = await _referenceContext.Reference
-                .Where(r => r.Id == refId)
-                .FirstAsync();
+            var reference = await _referenceService.GetOwnedReference(User.Identity.Name, refId);
 
             if (reference != null)
             {
@@ -89,12 +83,12 @@ public class ReferenceController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
+        var userEmail = User.Identity.Name;
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        var pagedReferences = await _unitOfWork.References.GetOwnedReferencesAsync(filter, User.Identity.Name);
 
-        var totalRefCount = await _referenceContext.Reference
-            .Where(a => a.OwnerEmail == User.Identity.Name)
-            .CountAsync();
+        var pagedReferences = await _referenceService.GetOwnedReferencesAsync(filter, userEmail);
+
+        var totalRefCount = await _referenceService.GetOwnedReferenceCountAsync(userEmail);
         
         return Ok(new PagedResponse<ICollection<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
     }
@@ -108,8 +102,7 @@ public class ReferenceController : ControllerBase
         }
         
         try {
-            _referenceContext.Reference.Add(reference);
-            await _referenceContext.SaveChangesAsync();
+            await _referenceService.AddReferenceAsync(reference);
 
             return CreatedAtAction(nameof(PostReference), new { id = reference.Id }, reference);
         } catch (Exception ex) {
@@ -136,11 +129,9 @@ public class ReferenceController : ControllerBase
         }
 
         book.OwnerEmail = User.Identity.Name;
-        book.Language = Language.English;
-        book.Type = ReferenceType.Book;
 
-        _unitOfWork.References.Add(book);
-        _unitOfWork.Complete();
+
+        await _referenceService.AddBookAsync(book);
         
         return Ok();
     }
@@ -170,11 +161,8 @@ public class ReferenceController : ControllerBase
         }
 
         artwork.OwnerEmail = User.Identity.Name;
-        artwork.Language = Language.English;
-        artwork.Type = ReferenceType.Artwork;
-        _referenceContext.Artworks.Add(artwork);
-        
-        await _referenceContext.SaveChangesAsync();
+
+        await _referenceService.AddArtworkAsync(artwork);
 
         return Ok();
     }
@@ -215,43 +203,16 @@ public class ReferenceController : ControllerBase
     // UPDATE: update reference
     [HttpPut("update-artwork")]
     [Authorize]
-    public async Task<ActionResult<Reference>> UpdateArtwork(int refId, [FromBody] Artwork artwork)
+    public async Task<ActionResult<Reference>> UpdateArtwork(int oldRefId, [FromBody] Artwork artwork)
     {
         try
         {
-            var prevArtwork = await _referenceContext.Artworks.FindAsync(refId);
-
-            if (prevArtwork == null)
+            var prevArtwork = await _referenceService.UpdateArtworkAsync(User.Identity.Name, oldRefId, artwork);
+            if (prevArtwork == false)
             {
                 return NotFound("Reference Not Found. Cannot Update");
             }
-
-            await UpdateGeneralFields(prevArtwork, artwork);
             
-            if (!prevArtwork.Medium.Equals(artwork.Medium))
-            {
-                prevArtwork.Medium = artwork.Medium;
-            }
-            
-            if (!prevArtwork.MapType.Equals(artwork.MapType))
-            {
-                prevArtwork.MapType = artwork.MapType;
-            }
-            
-            if (!prevArtwork.Dimensions.Equals(artwork.Dimensions))
-            {
-                prevArtwork.DatePublished = artwork.DatePublished;
-            }
-            
-            if (!prevArtwork.Scale.Equals(artwork.Scale))
-            {
-                prevArtwork.Scale = artwork.Scale;
-            }
-            
-            prevArtwork.UpdatedAt = DateTime.UtcNow;
-
-            await _referenceContext.SaveChangesAsync();
-
             return Ok("Artwork updated successfully");
         }
         catch (Exception e)
@@ -261,38 +222,7 @@ public class ReferenceController : ControllerBase
         }
     }
 
-    private async Task<ActionResult> UpdateGeneralFields(Reference prevReference, Reference newReference)
-    {
-        try
-        {
-            if (!prevReference.Title.Equals(newReference.Title))
-            {
-                prevReference.Title = newReference.Title;
-            }
-            
-            if (!prevReference.Language.Equals(newReference.Language))
-            {
-                prevReference.Language = newReference.Language;
-            }
-            
-            if (!prevReference.Rights.Equals(newReference.Rights))
-            {
-                prevReference.Rights = newReference.Rights;
-            }
-            
-            if (!prevReference.DatePublished.Equals(newReference.DatePublished))
-            {
-                prevReference.DatePublished = newReference.DatePublished;
-            }
-
-            return Ok(true);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
+    
 
     // DELETE: Delete single reference
     [HttpDelete("delete-reference")]
@@ -301,19 +231,14 @@ public class ReferenceController : ControllerBase
     {
         try
         {
-            var r = await _referenceContext.Reference
-                .Where(r => r.OwnerEmail == User.Identity.Name)
-                .Where(r => r.Id == refId)
-                .FirstAsync();
 
+            var r = await _referenceService.DeleteReferenceAsync(User.Identity.Name, refId);
+            
             if (r == null)
             {
                 return NotFound("Reference with ID: " + refId + " not found.");
             }
-
-            _referenceContext.Reference.Remove(r);
-
-            await _referenceContext.SaveChangesAsync();
+            
             
             return Ok("Reference with the ID: " + refId + " has been deleted");
         }
@@ -327,36 +252,16 @@ public class ReferenceController : ControllerBase
     // DELETE: Delete list of references
     [HttpDelete("delete-multiple-references")]
     [Authorize]
-    public async Task<ActionResult<bool>> DeleteListOfReferences(int[] refIdList)
+    public async Task<ActionResult<bool>> DeleteListOfReferences(List<int> refIdList)
     {
         try
         {
-            if (refIdList.Length < 1)
+            if (refIdList.Count < 1)
             {
                 return Problem("ERROR: Ref ID List has < 1 ids");
             }
-            
-            List<Reference> references = new List<Reference>();
-            
-            var ownedRefs = await GetCurrentUserReferenceList();
-            foreach (var refId in refIdList)
-            {
 
-                var r = ownedRefs
-                    .Find(r => r.Id == refId);
-                
-                if (r == null)
-                {
-                    return NotFound("Tag not found with ID: " + refId);
-                }
-                
-                references.Add(r);
-            }
-
-            _referenceContext.Reference.RemoveRange(references);
-            
-            
-            await _referenceContext.SaveChangesAsync();
+            await _referenceService.DeleteReferenceRangeAsync(User.Identity.Name, refIdList);
             
             
             return Ok(true);
@@ -368,31 +273,4 @@ public class ReferenceController : ControllerBase
             throw;
         }
     }
-
-    [Authorize]
-    private async Task<List<Reference>> GetCurrentUserReferenceList()
-    {
-        try
-        {
-            var ownedRefs = await _referenceContext.Reference
-                .Where(r => r.OwnerEmail == User.Identity.Name)
-                .OrderBy(t => t.CreatedAt)
-                .ToListAsync();
-
-            if (ownedRefs != null)
-            {
-                return ownedRefs;
-            }
-
-            return null;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-    
-
-
 }
