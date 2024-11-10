@@ -2,6 +2,7 @@
 using Melin.Server.Filter;
 using Melin.Server.Models;
 using Melin.Server.Models.Repository;
+using Melin.Server.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
@@ -46,8 +47,8 @@ public class ReferenceRepositoryTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(3, result.Count);
-        Assert.IsType<List<Reference>>(result);
+        Assert.Equal(3, result.Data.Count);
+        Assert.IsType<Result<List<Reference>>>(result);
     }
 
     [Fact]

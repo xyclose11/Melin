@@ -8,8 +8,8 @@ public interface IReferenceRepository : IGenericRepository<Reference>
 {
     #region CRUD
 
-        Task<List<Reference>> GetAllOwnedReferencesAsync(string userEmail);
-        Task<List<Reference>> GetOwnedPaginatedReferencesAsync(PaginationFilter paginationFilter, string userEmail);
+        Task<Result<List<Reference>>> GetAllOwnedReferencesAsync(string userEmail);
+        Task<Result<List<Reference>>> GetOwnedPaginatedReferencesAsync(PaginationFilter paginationFilter, string userEmail);
 
         Task<Result<Reference>> GetReferenceByIdAsync(string userEmail, int id);
         Task<Artwork> GetArtworkByIdAsync(string userEmail, int id);

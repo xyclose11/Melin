@@ -16,7 +16,7 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         _cache = cache;
     }
 
-    public async Task<List<Reference>> GetAllOwnedReferencesAsync(string userEmail)
+    public async Task<Result<List<Reference>>> GetAllOwnedReferencesAsync(string userEmail)
     {
         try
         {
@@ -28,12 +28,11 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
 
             if (pagedReferences.Count > 0)
             {
-                return pagedReferences;
+                return Result<List<Reference>>.SuccessResult(pagedReferences);
             }
-            else
-            {
-                return new List<Reference>();
-            }
+            
+            return Result<List<Reference>>.FailureResult("User currently has no references");
+            
         }
         catch (Exception e)
         {
@@ -42,7 +41,7 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         }
     }
 
-    public async Task<List<Reference>> GetOwnedPaginatedReferencesAsync(PaginationFilter filter, string userEmail)
+    public async Task<Result<List<Reference>>> GetOwnedPaginatedReferencesAsync(PaginationFilter filter, string userEmail)
     {
         IQueryable<Reference> query = _context.Reference.AsQueryable();
         
@@ -71,10 +70,9 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
-        
 
-        return pagedReferences;
 
+        return Result<List<Reference>>.SuccessResult(pagedReferences);
     }
 
     public List<Reference> GetOwnedReferences(PaginationFilter filter, string userEmail)
@@ -223,7 +221,7 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
             foreach (var refId in refIdList)
             {
 
-                var r = ownedRefs
+                var r = ownedRefs.Data
                     .Find(r => r.Id == refId);
 
                 if (r != null)

@@ -35,7 +35,8 @@ public class ReferenceService : IReferenceService
 
     public async Task<ICollection<Reference>> GetOwnedReferencesAsync(PaginationFilter paginationFilter, string userEmail)
     {
-        return await _referenceRepository.GetOwnedPaginatedReferencesAsync(paginationFilter, userEmail);
+        var res = await _referenceRepository.GetOwnedPaginatedReferencesAsync(paginationFilter, userEmail);
+        return res.Data;
     }
     
     public async Task<bool> AddReferenceAsync(Reference newReference)
