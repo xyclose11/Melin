@@ -19,7 +19,7 @@ public interface IReferenceRepository : IGenericRepository<Reference>
         Task<BlogPost> GetBlogPostByIdAsync(string userEmail, int id);
         Task<Book> GetBookByIdAsync(string userEmail, int id);
         Task<BookSection> GetBookSectionByIdAsync(string userEmail, int id);
-        Task<Case> GetCaseByIdAsync(string userEmail, int id);
+        Task<LegalCases> GetCaseByIdAsync(string userEmail, int id);
         Task<ConferencePaper> GetConferencePaperByIdAsync(string userEmail, int id);
         Task<DictionaryEntry> GetDictionaryEntryByIdAsync(string userEmail, int id);
         Task<Document> GetDocumentByIdAsync(string userEmail, int id);
@@ -46,7 +46,7 @@ public interface IReferenceRepository : IGenericRepository<Reference>
         Task<Thesis> GetThesisByIdAsync(string userEmail, int id);
         Task<TVBroadcast> GetTVBroadcastByIdAsync(string userEmail, int id);
         Task<VideoRecording> GetVideoRecordingByIdAsync(string userEmail, int id);
-        Task<Webpage> GetWebpageByIdAsync(string userEmail, int id);
+        Task<Website> GetWebsiteByIdAsync(string userEmail, int id);
         
         /// <summary>
         /// 

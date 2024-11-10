@@ -134,54 +134,54 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
 
     public async Task<AudioRecording> GetAudioRecordingByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out AudioRecording audioRecording))
         {
-            artwork = await _context.Artworks
+            audioRecording = await _context.AudioRecordings
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (audioRecording != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, audioRecording, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return audioRecording;
         
     }
 
     public async Task<Bill> GetBillByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Bill bill))
         {
-            artwork = await _context.Artworks
+            bill = await _context.Bills
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (bill != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, bill, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return bill;
     }
 
     public async Task<BlogPost> GetBlogPostByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out BlogPost blogPost))
         {
-            artwork = await _context.Artworks
+            blogPost = await _context.BlogPosts
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (blogPost != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, blogPost, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return blogPost;
     }
 
     public async Task<Book> GetBookByIdAsync(string userEmail, int id)
@@ -203,495 +203,495 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
 
     public async Task<BookSection> GetBookSectionByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out BookSection bookSection))
         {
-            artwork = await _context.Artworks
+            bookSection = await _context.BookSections
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (bookSection != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, bookSection, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return bookSection;
     }
 
-    public async Task<Case> GetCaseByIdAsync(string userEmail, int id)
+    public async Task<LegalCases> GetCaseByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out LegalCases cCase))
         {
-            artwork = await _context.Artworks
+            cCase = await _context.LegalCases
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (cCase != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, cCase, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return cCase;
     }
 
     public async Task<ConferencePaper> GetConferencePaperByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out ConferencePaper conferencePaper))
         {
-            artwork = await _context.Artworks
+            conferencePaper = await _context.ConferencePapers
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (conferencePaper != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, conferencePaper, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return conferencePaper;
     }
 
     public async Task<DictionaryEntry> GetDictionaryEntryByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out DictionaryEntry dictionaryEntry))
         {
-            artwork = await _context.Artworks
+            dictionaryEntry = await _context.DictionaryEntries
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (dictionaryEntry != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, dictionaryEntry, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return dictionaryEntry;
     }
 
     public async Task<Document> GetDocumentByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Document document))
         {
-            artwork = await _context.Artworks
+            document = await _context.Documents
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (document != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, document, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return document;
     }
 
     public async Task<Email> GetEmailByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Email email))
         {
-            artwork = await _context.Artworks
+            email = await _context.Emails
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (email != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, email, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return email;
     }
 
     public async Task<EncyclopediaArticle> GetEncyclopediaArticleByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out EncyclopediaArticle encyclopediaArticle))
         {
-            artwork = await _context.Artworks
+            encyclopediaArticle = await _context.EncyclopediaArticles
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (encyclopediaArticle != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, encyclopediaArticle, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return encyclopediaArticle;
     }
 
     public async Task<Film> GetFilmByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Film film))
         {
-            artwork = await _context.Artworks
+            film = await _context.Films
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (film != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, film, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return film;
     }
 
     public async Task<ForumPost> GetForumPostByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out ForumPost forumPost))
         {
-            artwork = await _context.Artworks
+            forumPost = await _context.ForumPosts
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (forumPost != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, forumPost, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return forumPost;
     }
 
     public async Task<Hearing> GetHearingByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Hearing hearing))
         {
-            artwork = await _context.Artworks
+            hearing = await _context.Hearings
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (hearing != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, hearing, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return hearing;
     }
 
     public async Task<InstantMessage> GetInstantMessageByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out InstantMessage instantMessage))
         {
-            artwork = await _context.Artworks
+            instantMessage = await _context.InstantMessages
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (instantMessage != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, instantMessage, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return instantMessage;
     }
 
     public async Task<Interview> GetInterviewByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Interview interview))
         {
-            artwork = await _context.Artworks
+            interview = await _context.Interviews
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (interview != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, interview, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return interview;
     }
 
     public async Task<JournalArticle> GetJournalArticleByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out JournalArticle journalArticle))
         {
-            artwork = await _context.Artworks
+            journalArticle = await _context.JournalArticles
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (journalArticle != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, journalArticle, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return journalArticle;
     }
 
     public async Task<Letter> GetLetterByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Letter letter))
         {
-            artwork = await _context.Artworks
+            letter = await _context.Letters
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (letter != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, letter, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return letter;
     }
 
     public async Task<MagazineArticle> GetMagazineArticleByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out MagazineArticle magazineArticle))
         {
-            artwork = await _context.Artworks
+            magazineArticle = await _context.MagazineArticles
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (magazineArticle != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, magazineArticle, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return magazineArticle;
     }
 
     public async Task<Manuscript> GetManuscriptByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Manuscript manuscript))
         {
-            artwork = await _context.Artworks
+            manuscript = await _context.Manuscripts
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (manuscript != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, manuscript, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return manuscript;
     }
 
     public async Task<Map> GetMapByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Map map))
         {
-            artwork = await _context.Artworks
+            map = await _context.Maps
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (map != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, map, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return map;
     }
 
     public async Task<NewspaperArticle> GetNewspaperArticleByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out NewspaperArticle newspaperArticle))
         {
-            artwork = await _context.Artworks
+            newspaperArticle = await _context.NewspaperArticles
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (newspaperArticle != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, newspaperArticle, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return newspaperArticle;
     }
 
     public async Task<Patent> GetPatentByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Patent patent))
         {
-            artwork = await _context.Artworks
+            patent = await _context.Patents
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (patent != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, patent, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return patent;
     }
 
     public async Task<Podcast> GetPodcastByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Podcast podcast))
         {
-            artwork = await _context.Artworks
+            podcast = await _context.Podcasts
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (podcast != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, podcast, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return podcast;
     }
 
     public async Task<Presentation> GetPresentationByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Presentation presentation))
         {
-            artwork = await _context.Artworks
+            presentation = await _context.Presentations
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (presentation != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, presentation, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return presentation;
     }
 
     public async Task<RadioBroadcast> GetRadioBroadcastByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out RadioBroadcast radioBroadcast))
         {
-            artwork = await _context.Artworks
+            radioBroadcast = await _context.RadioBroadcasts
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (radioBroadcast != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, radioBroadcast, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return radioBroadcast;
     }
 
     public async Task<Report> GetReportByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Report report))
         {
-            artwork = await _context.Artworks
+            report = await _context.Reports
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (report != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, report, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return report;
     }
 
     public async Task<Software> GetSoftwareByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Software software))
         {
-            artwork = await _context.Artworks
+            software = await _context.Softwares
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (software != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, software, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return software;
     }
 
     public async Task<Statute> GetStatuteByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Statute statute))
         {
-            artwork = await _context.Artworks
+            statute = await _context.Statutes
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (statute != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, statute, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return statute;
     }
 
     public async Task<Thesis> GetThesisByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Thesis thesis))
         {
-            artwork = await _context.Artworks
+            thesis = await _context.Theses
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (thesis != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, thesis, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return thesis;
     }
 
     public async Task<TVBroadcast> GetTVBroadcastByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out TVBroadcast tvBroadcast))
         {
-            artwork = await _context.Artworks
+            tvBroadcast = await _context.TVBroadcasts
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (tvBroadcast != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, tvBroadcast, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return tvBroadcast;
     }
 
     public async Task<VideoRecording> GetVideoRecordingByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out VideoRecording videoRecording))
         {
-            artwork = await _context.Artworks
+            videoRecording = await _context.VideoRecordings
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (videoRecording != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, videoRecording, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return videoRecording;
     }
 
-    public async Task<Webpage> GetWebpageByIdAsync(string userEmail, int id)
+    public async Task<Website> GetWebsiteByIdAsync(string userEmail, int id)
     {
-        if (!_cache.TryGetValue(id, out Artwork artwork))
+        if (!_cache.TryGetValue(id, out Website website))
         {
-            artwork = await _context.Artworks
+            website = await _context.Websites
                 .Where(r => r.OwnerEmail == userEmail)
                 .FirstAsync(r => r.Id == id);
 
-            if (artwork != null)
+            if (website != null)
             {
-                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+                _cache.Set(id, website, TimeSpan.FromMinutes(5));
             }
         }
 
-        return artwork;
+        return website;
     }
 
     public async Task<bool> UpdateReferenceAsync(Reference reference)
