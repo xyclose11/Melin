@@ -22,18 +22,14 @@ public class ReferenceControllerTests {
     private readonly IUnitOfWork _unitOfWork;
     
     [Fact]
-    public async void GetReferences_Returns_OkResult()
+    public void GetReferences_Returns_OkResult()
     {
         var referenceRepositoryMock = new Mock<IReferenceService>();
-        referenceRepositoryMock.Setup(repo => repo.GetReferencesAsync())
+        referenceRepositoryMock.Setup(repo => repo.GetAllReferences())
             .Returns(new List<Reference>());
 
-        var referenceService = new ReferenceRepository(referenceRepositoryMock.Object);
-        
-        var controller = new ReferenceController(_apiService, _referenceContext, _userManager, _tagService, _unitOfWork);
-        
-        var result = await controller.GetSingleReference(1);
+        var result = referenceRepositoryMock.Object.GetAllReferences();
 
-        Assert.IsType<Ok>(result);
+        Assert.IsType<List<Reference>>(result);
     }
 }

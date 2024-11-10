@@ -90,7 +90,7 @@ public class ReferenceController : ControllerBase
     public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        var pagedReferences = await _unitOfWork.References.GetOwnedReferences(filter, User.Identity.Name);
+        var pagedReferences = await _unitOfWork.References.GetOwnedReferencesAsync(filter, User.Identity.Name);
 
         var totalRefCount = await _referenceContext.Reference
             .Where(a => a.OwnerEmail == User.Identity.Name)
