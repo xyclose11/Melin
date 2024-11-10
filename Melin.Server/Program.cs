@@ -6,7 +6,6 @@ using Melin.Server.Models;
 using Melin.Server.Models.Context;
 using Melin.Server.Models.Repository;
 using Melin.Server.Services;
-using Melin.Server.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;

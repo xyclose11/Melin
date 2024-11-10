@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using System.Text.Json;
 using Melin.Server.Filter;
+using Melin.Server.Models.References;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -131,6 +132,58 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         return artwork;
     }
 
+    public async Task<AudioRecording> GetAudioRecordingByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+        
+    }
+
+    public async Task<Bill> GetBillByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<BlogPost> GetBlogPostByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
     public async Task<Book> GetBookByIdAsync(string userEmail, int id)
     {
         if (!_cache.TryGetValue(id, out Book book))
@@ -146,6 +199,509 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         }
 
         return book;
+    }
+
+    public async Task<BookSection> GetBookSectionByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Case> GetCaseByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<ConferencePaper> GetConferencePaperByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<DictionaryEntry> GetDictionaryEntryByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Document> GetDocumentByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Email> GetEmailByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<EncyclopediaArticle> GetEncyclopediaArticleByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Film> GetFilmByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<ForumPost> GetForumPostByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Hearing> GetHearingByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<InstantMessage> GetInstantMessageByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Interview> GetInterviewByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<JournalArticle> GetJournalArticleByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Letter> GetLetterByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<MagazineArticle> GetMagazineArticleByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Manuscript> GetManuscriptByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Map> GetMapByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<NewspaperArticle> GetNewspaperArticleByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Patent> GetPatentByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Podcast> GetPodcastByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Presentation> GetPresentationByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<RadioBroadcast> GetRadioBroadcastByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Report> GetReportByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Software> GetSoftwareByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Statute> GetStatuteByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Thesis> GetThesisByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<TVBroadcast> GetTVBroadcastByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<VideoRecording> GetVideoRecordingByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<Webpage> GetWebpageByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Artwork artwork))
+        {
+            artwork = await _context.Artworks
+                .Where(r => r.OwnerEmail == userEmail)
+                .FirstAsync(r => r.Id == id);
+
+            if (artwork != null)
+            {
+                _cache.Set(id, artwork, TimeSpan.FromMinutes(5));
+            }
+        }
+
+        return artwork;
+    }
+
+    public async Task<bool> UpdateReferenceAsync(Reference reference)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> AddReferenceAsync(Reference reference)
+    {
+        throw new NotImplementedException();
     }
 
 
@@ -174,8 +730,101 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
                 case Artwork artwork:
                     _context.Artworks.Add(artwork);
                     break;
+                case AudioRecording audioRecording:
+                    _context.AudioRecordings.Add(audioRecording);
+                    break;
                 case Book book:
                     _context.Books.Add(book);
+                    break;
+                case BlogPost blogPost:
+                    _context.BlogPosts.Add(blogPost);
+                    break;
+                case BookSection bookSection:
+                    _context.BookSections.Add(bookSection);
+                    break;
+                case LegalCases cCase:
+                    _context.LegalCases.Add(cCase);
+                    break;
+                case ConferencePaper conferencePaper:
+                    _context.ConferencePapers.Add(conferencePaper);
+                    break;
+                case DictionaryEntry dictionaryEntry:
+                    _context.DictionaryEntries.Add(dictionaryEntry);
+                    break;
+                case Document document:
+                    _context.Documents.Add(document);
+                    break;
+                case Email email:
+                    _context.Emails.Add(email);
+                    break;
+                case EncyclopediaArticle encyclopediaArticle:
+                    _context.EncyclopediaArticles.Add(encyclopediaArticle);
+                    break;
+                case Film film:
+                    _context.Films.Add(film);
+                    break;
+                case ForumPost forumPost:
+                    _context.ForumPosts.Add(forumPost);
+                    break;
+                case Hearing hearing:
+                    _context.Hearings.Add(hearing);
+                    break;
+                case InstantMessage instantMessage:
+                    _context.InstantMessages.Add(instantMessage);
+                    break;
+                case Interview interview:
+                    _context.Interviews.Add(interview);
+                    break;
+                case JournalArticle journalArticle:
+                    _context.JournalArticles.Add(journalArticle);
+                    break;
+                case Letter letter:
+                    _context.Letters.Add(letter);
+                    break;
+                case MagazineArticle magazineArticle:
+                    _context.MagazineArticles.Add(magazineArticle);
+                    break;
+                case Manuscript manuscript:
+                    _context.Manuscripts.Add(manuscript);
+                    break;
+                case Map map:
+                    _context.Maps.Add(map);
+                    break;
+                case NewspaperArticle newspaperArticle:
+                    _context.NewspaperArticles.Add(newspaperArticle);
+                    break;
+                case Patent patent:
+                    _context.Patents.Add(patent);
+                    break;
+                case Podcast podcast:
+                    _context.Podcasts.Add(podcast);
+                    break;
+                case Presentation presentation:
+                    _context.Presentations.Add(presentation);
+                    break;
+                case RadioBroadcast radioBroadcast:
+                    _context.RadioBroadcasts.Add(radioBroadcast);
+                    break;
+                case Report report:
+                    _context.Reports.Add(report);
+                    break;
+                case Software software:
+                    _context.Softwares.Add(software);
+                    break;
+                case Statute statute:
+                    _context.Statutes.Add(statute);
+                    break;
+                case Thesis thesis:
+                    _context.Theses.Add(thesis);
+                    break;
+                case TVBroadcast tvBroadcast:
+                    _context.TVBroadcasts.Add(tvBroadcast);
+                    break;
+                case VideoRecording videoRecording:
+                    _context.VideoRecordings.Add(videoRecording);
+                    break;
+                case Website website:
+                    _context.Websites.Add(website);
                     break;
                 default:
                     _context.Reference.Add(reference);
