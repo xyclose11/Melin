@@ -76,10 +76,43 @@ public interface IReferenceService
     Task<bool> AddTVBroadcastAsync(TVBroadcast tvBroadcast);
     Task<bool> AddVideoRecordingAsync(VideoRecording videoRecording);
     Task<bool> AddWebpageAsync(Webpage webpage);
-    Task<bool> UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference);
-    Task<bool> UpdateArtworkAsync(string userEmail, int referenceId, Artwork updatedArtwork);
-    Task<bool> UpdateBookAsync(string userEmail, int referenceId, Book updatedBook);
+    Task<Result<bool>> UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference);
+    Task<Result<bool>> UpdateArtworkAsync(string userEmail, int referenceId, Artwork updatedArtwork);
+    Task<Result<bool>> UpdateAudioRecordingAsync(string userEmail, int referenceId, AudioRecording audioRecording);
 
+    Task<Result<bool>> UpdateBillAsync(string userEmail, int referenceId, Bill bill);
+    Task<Result<bool>> UpdateBlogPostAsync(string userEmail, int referenceId, BlogPost blogPost);
+    Task<Result<bool>> UpdateBookAsync(string userEmail, int referenceId, Book updatedBook);
+    Task<Result<bool>> UpdateBookSectionAsync(string userEmail, int referenceId, BookSection updatedReference);
+    Task<Result<bool>> UpdateCaseAsync(string userEmail, int referenceId, Case cCase);
+    Task<Result<bool>> UpdateConferencePaperAsync(string userEmail, int referenceId, ConferencePaper conferencePaper);
+    Task<Result<bool>> UpdateDictionaryEntryAsync(string userEmail, int referenceId, DictionaryEntry dictionaryEntry);
+    Task<Result<bool>> UpdateDocumentAsync(string userEmail, int referenceId, Document document);
+    Task<Result<bool>> UpdateEmailAsync(string userEmail, int referenceId, Email email);
+    Task<Result<bool>> UpdateEncyclopediaArticleAsync(string userEmail, int referenceId, EncyclopediaArticle article);
+    Task<Result<bool>> UpdateFilmAsync(string userEmail, int referenceId, Film film);
+    Task<Result<bool>> UpdateForumPostAsync(string userEmail, int referenceId, ForumPost forumPost);
+    Task<Result<bool>> UpdateHearingAsync(string userEmail, int referenceId, Hearing hearing);
+    Task<Result<bool>> UpdateInstantMessageAsync(string userEmail, int referenceId, InstantMessage instantMessage);
+    Task<Result<bool>> UpdateInterviewAsync(string userEmail, int referenceId, Interview interview);
+    Task<Result<bool>> UpdateJournalArticleAsync(string userEmail, int referenceId, JournalArticle journalArticle);
+    Task<Result<bool>> UpdateLetterAsync(string userEmail, int referenceId, Letter letter);
+    Task<Result<bool>> UpdateMagazineArticleAsync(string userEmail, int referenceId, MagazineArticle magazineArticle);
+    Task<Result<bool>> UpdateManuscriptAsync(string userEmail, int referenceId, Manuscript manuscript);
+    Task<Result<bool>> UpdateMapAsync(string userEmail, int referenceId, Map map);
+    Task<Result<bool>> UpdateNewspaperArticleAsync(string userEmail, int referenceId, NewspaperArticle newspaperArticle);
+    Task<Result<bool>> UpdatePatentAsync(string userEmail, int referenceId, Patent patent);
+    Task<Result<bool>> UpdatePodcastAsync(string userEmail, int referenceId, Podcast podcast);
+    Task<Result<bool>> UpdatePresentationAsync(string userEmail, int referenceId, Presentation presentation);
+    Task<Result<bool>> UpdateRadioBroadcastAsync(string userEmail, int referenceId, RadioBroadcast radioBroadcast);
+    Task<Result<bool>> UpdateReportAsync(string userEmail, int referenceId, Report report);
+    Task<Result<bool>> UpdateSoftwareAsync(string userEmail, int referenceId, Software software);
+    Task<Result<bool>> UpdateStatuteAsync(string userEmail, int referenceId, Statute statute);
+    Task<Result<bool>> UpdateThesisAsync(string userEmail, int referenceId, Thesis thesis);
+    Task<Result<bool>> UpdateTVBroadcastAsync(string userEmail, int referenceId, TVBroadcast tvBroadcast);
+    Task<Result<bool>> UpdateVideoRecordingAsync(string userEmail, int referenceId, VideoRecording videoRecording);
+    Task<Result<bool>> UpdateWebpageAsync(string userEmail, int referenceId, Webpage webpage);
+    
     Task<bool> DeleteReferenceAsync(string userEmail, int referenceId);
     Task<bool> DeleteReferenceRangeAsync(string userEmail, List<int> referenceIds);
 

@@ -1,4 +1,6 @@
-﻿namespace Melin.Server.Models.References;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Melin.Server.Models.References;
 
 // https://api.zotero.org/schema
 
@@ -11,6 +13,12 @@ public class AudioRecording : Reference
     public string? Place { get; set; }
     public string? Label { get; set; } = "publisher";
     public string? RunningTime { get; set; }
+
+    // public async Task Add(ReferenceContext dbContext)
+    // {
+    //     dbContext.AudioRecordings.Add(this);
+    //     await dbContext.SaveChangesAsync();
+    // }
 }
 
 public class Bill : Reference

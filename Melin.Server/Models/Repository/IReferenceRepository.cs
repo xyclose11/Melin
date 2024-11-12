@@ -54,7 +54,7 @@ public interface IReferenceRepository : IGenericRepository<Reference>
         /// </summary>
         /// <param name="reference"></param>
         /// <returns></returns>
-        Task<bool> UpdateReferenceAsync(Reference reference);
+        Task<Result<bool>> UpdateReferenceAsync(Reference reference);
         
         Task<bool> AddAsync(Reference reference);
 

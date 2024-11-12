@@ -732,17 +732,17 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         return website;
     }
 
-    public async Task<bool> UpdateReferenceAsync(Reference reference)
+    public async Task<Result<bool>> UpdateReferenceAsync(Reference reference)
     {
         try
         {
             var r = await _context.Reference.FindAsync(reference);
-            return true;
+            return Result<bool>.SuccessResult(true);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return false;
+            return Result<bool>.FailureResult("Unable to update reference");
         }
     }
 
@@ -771,7 +771,6 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
     {
         try
         {
-
             switch (reference)
             {
                 case Artwork artwork:
