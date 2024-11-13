@@ -1,144 +1,24 @@
-﻿"use client";
-import { z, ZodObject } from "zod";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, FormProvider, useForm } from "react-hook-form";
-import { format } from "date-fns";
-
-import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-    creatorFormSchema,
-    CreatorInput,
-} from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
-import React, { useEffect, useState } from "react";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover.tsx";
+﻿import { Controller, FormProvider } from "react-hook-form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { TagCreateDropdown } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import { cn } from "@/lib/utils.ts";
 import { CalendarIcon, SquareX } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { instance } from "@/utils/axiosInstance.ts";
-import {
-    TagCreateDropdown,
-    tagSchema,
-} from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
-import { useToast } from "@/hooks/use-toast.ts";
-import { useNavigate } from "react-router-dom";
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card.tsx";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar.tsx";
+import React, { useEffect } from "react";
+import { z } from "zod";
+import { CreatorInput } from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
+import { toast } from "@/hooks/use-toast.ts";
 
-const rightsSchema = z.object({
-    name: z.string().optional(),
-});
-
-const formSchema = z.object({
-    refType: z.string(),
-    title: z.string().min(2, {
-        message: "Title must be at least 2 characters.",
-    }),
-    shortTitle: z.string().optional(),
-    language: z.string().optional(),
-    datePublished: z.date().optional(),
-    rights: z.array(rightsSchema).optional(),
-    extraFields: z.string().optional(),
-    creators: z.array(creatorFormSchema).optional(),
-    tags: z.array(tagSchema).optional(),
-});
-
-let nextId = 0;
-export function BaseReferenceCreator({
-    refSchema,
-    schemaName,
-}: {
-    refSchema: ZodObject<any>;
-    schemaName: string;
-}) {
-    const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
-    const [datePublished, setDatePublished] = React.useState<Date>();
-    const navigate = useNavigate();
-    const { toast } = useToast();
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            refType: "book",
-            title: "",
-            shortTitle: "",
-            datePublished: new Date(),
-            language: "English",
-            extraFields: undefined,
-            rights: undefined,
-            creators: [{}],
-            tags: [],
-        },
-    });
-
-    function generateRandom32BitInteger() {
-        const max = 500000;
-        return Math.floor(Math.random() * (max + 1));
-    }
-
-    const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        const convertedTags = data.tags?.map((tag) => ({
-            ...tag,
-            id: generateRandom32BitInteger(),
-        }));
-
-        const newData = {
-            ...data,
-            tags: convertedTags,
-        };
-
-        try {
-            // figure out which reference type is being used
-            const response = await instance.post(
-                `Reference/create-${schemaName}`,
-                newData,
-                {
-                    withCredentials: true,
-                },
-            );
-            if (response.status === 200) {
-                toast({
-                    variant: "default",
-                    title: "Reference Successfully Created!",
-                    description: ``,
-                });
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Reference Not Created Successfully",
-                    description: ``,
-                });
-            }
-
-            navigate("/library");
-            console.log("SUCCESS");
-        } catch (error) {
-            console.error("Create reference failed:", error);
-        }
-    };
+export function BaseReferenceForm() {
 
     const {
         control,
         formState: { errors },
-        reset,
     } = form;
 
     function onClickAddCreator() {
@@ -151,13 +31,13 @@ export function BaseReferenceCreator({
 
     function onClickRemoveCreator(removeId: string | null) {
         if (removeId === null) {
-            toast({
+            toast("",{
                 variant: "destructive",
                 title: "Cannot remove creator",
                 description: `Unable to remove creator!`,
             });
         } else if (creatorArray.length <= 0) {
-            toast({
+            toast("",{
                 variant: "default",
                 title: "Creator's is empty",
                 description: ``,
@@ -171,11 +51,10 @@ export function BaseReferenceCreator({
             );
         }
     }
-    
+
     useEffect(() => {
         onClickAddCreator();
     }, []);
-
     return (
         <div>
             <FormProvider {...form}>
@@ -261,7 +140,7 @@ export function BaseReferenceCreator({
                                                             className={cn(
                                                                 "w-[280px] justify-start text-left font-normal",
                                                                 !datePublished &&
-                                                                    "text-muted-foreground",
+                                                                "text-muted-foreground",
                                                             )}
                                                         >
                                                             <CalendarIcon />
@@ -463,5 +342,5 @@ export function BaseReferenceCreator({
                 </Form>
             </FormProvider>
         </div>
-    );
+    )
 }

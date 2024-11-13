@@ -1088,12 +1088,12 @@ public class ReferenceController : ControllerBase
     // UPDATE: update reference
     [HttpPut("update-artwork")]
     [Authorize]
-    public async Task<ActionResult<Reference>> UpdateArtwork(int oldRefId, [FromBody] Artwork artwork)
+    public async Task<ActionResult<Artwork>> UpdateArtwork(int oldRefId, [FromBody] Artwork artwork)
     {
         try
         {
             var prevArtwork = await _referenceService.UpdateArtworkAsync(User.Identity.Name, oldRefId, artwork);
-            if (prevArtwork == false)
+            if (prevArtwork.Data == false)
             {
                 return NotFound("Reference Not Found. Cannot Update");
             }

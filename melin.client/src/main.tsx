@@ -15,6 +15,7 @@ import PrivateRoute from "./utils/PrivateRoute.tsx";
 import { GroupLibrary } from "@/routes/LibraryViews/GroupLibrary.tsx";
 import { TagLibrary } from "@/routes/LibraryViews/TagLibrary.tsx";
 import { HomePage } from "@/routes/HomePage.tsx";
+import { EditReferencePage } from "@/routes/CustomComponents/Reference/EditReferencePage.tsx";
 
 const router: any = createBrowserRouter([
     {
@@ -83,6 +84,10 @@ const router: any = createBrowserRouter([
             {
                 path: "create-reference",
                 element: <PrivateRoute element={<CreateReferencePage />} />,
+            },
+            {
+                path: "edit-reference/:refId",
+                element: <PrivateRoute element={<EditReferencePage />} />,
             },
         ],
     },
