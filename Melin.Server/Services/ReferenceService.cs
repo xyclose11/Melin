@@ -979,6 +979,316 @@ public class ReferenceService : IReferenceService
         }
     }
 
+    async Task<Result<bool>> IReferenceService.UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
+    {
+        throw new NotImplementedException();
+    }
+
+    async Task<Result<bool>> IReferenceService.UpdateArtworkAsync(string userEmail, int referenceId, Artwork updatedArtwork)
+    {
+        try
+        {
+            var res = await GetArtworkByIdAsync(userEmail, referenceId);
+            Artwork artwork;
+            
+            if (res.Success)
+            {
+                artwork = res.Data;
+            }
+            else
+            {
+                return Result<bool>.FailureResult("Failed to update artwork");
+            }
+            
+            await UpdateGeneralFields( artwork,updatedArtwork);
+            
+            if (!updatedArtwork.Medium.Equals(artwork.Medium))
+            {
+                updatedArtwork.Medium = artwork.Medium;
+            }
+
+            if (updatedArtwork.MapType != null)
+            {
+                if (!updatedArtwork.MapType.Equals(artwork.MapType))
+                {
+                    updatedArtwork.MapType = artwork.MapType;
+                }
+            }
+            
+            if (!updatedArtwork.Dimensions.Equals(artwork.Dimensions))
+            {
+                updatedArtwork.DatePublished = artwork.DatePublished;
+            }
+
+            if (updatedArtwork.Scale != null)
+            {
+                if (!updatedArtwork.Scale.Equals(artwork.Scale))
+                {
+                    updatedArtwork.Scale = artwork.Scale;
+                }
+            }
+            
+            updatedArtwork.UpdatedAt = DateTime.UtcNow;
+
+            await _referenceRepository.UpdateReferenceAsync(updatedArtwork);
+
+            return Result<bool>.SuccessResult(true);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<Result<bool>> UpdateAudioRecordingAsync(string userEmail, int referenceId, AudioRecording audioRecording)
+    {
+        try
+        {
+            var res = await GetAudioRecordingByIdAsync(userEmail, referenceId);
+            AudioRecording originalAudio;
+            
+            if (res.Success)
+            {
+                originalAudio = res.Data;
+            }
+            else
+            {
+                return Result<bool>.FailureResult("Failed to update artwork");
+            }
+            
+            await UpdateGeneralFields( originalAudio,audioRecording);
+
+            if (audioRecording.AudioRecordingFormat != null)
+            {
+                if (!audioRecording.AudioRecordingFormat.Equals(originalAudio.AudioRecordingFormat))
+                {
+                    audioRecording.AudioRecordingFormat = originalAudio.AudioRecordingFormat;
+                }
+            }
+
+            if (audioRecording.SeriesTitle != null)
+            {
+                if (!audioRecording.SeriesTitle.Equals(originalAudio.SeriesTitle))
+                {
+                    audioRecording.SeriesTitle = originalAudio.SeriesTitle;
+                }
+            }
+
+            if (audioRecording.Volume != null)
+            {
+                if (!audioRecording.Volume.Equals(originalAudio.Volume))
+                {
+                    audioRecording.Volume = originalAudio.Volume;
+                }
+            }
+            
+            if (audioRecording.NumberOfVolumes != null)
+            {
+                if (!audioRecording.NumberOfVolumes.Equals(originalAudio.NumberOfVolumes))
+                {
+                    audioRecording.NumberOfVolumes = originalAudio.NumberOfVolumes;
+                }
+            }
+            
+            if (audioRecording.Place != null)
+            {
+                if (!audioRecording.Place.Equals(originalAudio.Place))
+                {
+                    audioRecording.Place = originalAudio.Place;
+                }
+            }
+            
+            if (audioRecording.Label != null)
+            {
+                if (!audioRecording.Label.Equals(originalAudio.Label))
+                {
+                    audioRecording.Label = originalAudio.Label;
+                }
+            }
+            
+            if (audioRecording.RunningTime != null)
+            {
+                if (!audioRecording.RunningTime.Equals(originalAudio.RunningTime))
+                {
+                    audioRecording.RunningTime = originalAudio.RunningTime;
+                }
+            }
+            
+            
+            audioRecording.UpdatedAt = DateTime.UtcNow;
+
+            await _referenceRepository.UpdateReferenceAsync(audioRecording);
+
+            return Result<bool>.SuccessResult(true);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<Result<bool>> UpdateBillAsync(string userEmail, int referenceId, Bill bill)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateBlogPostAsync(string userEmail, int referenceId, BlogPost blogPost)
+    {
+        throw new NotImplementedException();
+    }
+
+    async Task<Result<bool>> IReferenceService.UpdateBookAsync(string userEmail, int referenceId, Book updatedBook)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateBookSectionAsync(string userEmail, int referenceId, BookSection updatedReference)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateCaseAsync(string userEmail, int referenceId, Case cCase)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateConferencePaperAsync(string userEmail, int referenceId, ConferencePaper conferencePaper)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateDictionaryEntryAsync(string userEmail, int referenceId, DictionaryEntry dictionaryEntry)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateDocumentAsync(string userEmail, int referenceId, Document document)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateEmailAsync(string userEmail, int referenceId, Email email)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateEncyclopediaArticleAsync(string userEmail, int referenceId, EncyclopediaArticle article)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateFilmAsync(string userEmail, int referenceId, Film film)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateForumPostAsync(string userEmail, int referenceId, ForumPost forumPost)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateHearingAsync(string userEmail, int referenceId, Hearing hearing)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateInstantMessageAsync(string userEmail, int referenceId, InstantMessage instantMessage)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateInterviewAsync(string userEmail, int referenceId, Interview interview)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateJournalArticleAsync(string userEmail, int referenceId, JournalArticle journalArticle)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateLetterAsync(string userEmail, int referenceId, Letter letter)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateMagazineArticleAsync(string userEmail, int referenceId, MagazineArticle magazineArticle)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateManuscriptAsync(string userEmail, int referenceId, Manuscript manuscript)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateMapAsync(string userEmail, int referenceId, Map map)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateNewspaperArticleAsync(string userEmail, int referenceId, NewspaperArticle newspaperArticle)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdatePatentAsync(string userEmail, int referenceId, Patent patent)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdatePodcastAsync(string userEmail, int referenceId, Podcast podcast)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdatePresentationAsync(string userEmail, int referenceId, Presentation presentation)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateRadioBroadcastAsync(string userEmail, int referenceId, RadioBroadcast radioBroadcast)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateReportAsync(string userEmail, int referenceId, Report report)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateSoftwareAsync(string userEmail, int referenceId, Software software)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateStatuteAsync(string userEmail, int referenceId, Statute statute)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateThesisAsync(string userEmail, int referenceId, Thesis thesis)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateTVBroadcastAsync(string userEmail, int referenceId, TVBroadcast tvBroadcast)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateVideoRecordingAsync(string userEmail, int referenceId, VideoRecording videoRecording)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Result<bool>> UpdateWebpageAsync(string userEmail, int referenceId, Webpage webpage)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<bool> UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
     {
         throw new NotImplementedException();

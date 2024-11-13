@@ -59,6 +59,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { AddTagToReference } from "@/routes/CustomComponents/Tag/AddTagToReference.tsx";
+import { Link } from "react-router-dom";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -141,7 +142,12 @@ export function Library() {
             accessorKey: "title",
             header: "Title",
             cell: ({ row }) => (
-                <div className="capitalize">{row.getValue("title")}</div>
+                <Link
+                    className="capitalize"
+                    to={`/edit-reference/${row.original.id}`}
+                >
+                    {row.getValue("title")}
+                </Link>
             ),
         },
         {
@@ -280,7 +286,7 @@ export function Library() {
             setData(response.data.data);
             setTotalRef(response.data.TotalPages);
         } catch (error) {
-            toast({
+            toast("", {
                 variant: "destructive",
                 title: "Unable to get References",
                 description: "Please try again later",
@@ -310,7 +316,7 @@ export function Library() {
 
                 // show success alert & offer undo
 
-                toast({
+                toast("", {
                     variant: "destructive",
                     title: "Reference Successfully Deleted",
                     description: `Reference with ID: ${referenceId} has been deleted.`,
