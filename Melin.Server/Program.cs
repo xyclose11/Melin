@@ -137,28 +137,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite = SameSiteMode.None;
 });
 
-
-// builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-//     .AddEntityFrameworkStores<DataContext>();
-
-// builder.Services.Configure<IdentityOptions> (options => {
-//
-// });
-
-// builder.Services.ConfigureApplicationCookie(options => {
-//     options.Cookie.HttpOnly = true;
-//     options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
-//
-//     options.LoginPath = "/login";
-//     options.AccessDeniedPath = "/accessdenied";
-//     options.SlidingExpiration = true;
-//     options.Cookie.Name = "MELIN_AUTH_COOKIE";
-//     options.Cookie.Domain = "slider.valpo.edu";
-//     options.Cookie.SameSite = SameSiteMode.Strict;
-//     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-// });
-
-
 builder.Services.AddHttpClient<ApiService>();
 
 var app = builder.Build();

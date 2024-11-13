@@ -115,13 +115,13 @@ export function BaseReferenceCreator({
                 },
             );
             if (response.status === 200) {
-                toast({
+                toast("", {
                     variant: "default",
                     title: "Reference Successfully Created!",
                     description: ``,
                 });
             } else {
-                toast({
+                toast("", {
                     variant: "destructive",
                     title: "Reference Not Created Successfully",
                     description: ``,
@@ -138,7 +138,6 @@ export function BaseReferenceCreator({
     const {
         control,
         formState: { errors },
-        reset,
     } = form;
 
     function onClickAddCreator() {
@@ -151,13 +150,13 @@ export function BaseReferenceCreator({
 
     function onClickRemoveCreator(removeId: string | null) {
         if (removeId === null) {
-            toast({
+            toast("", {
                 variant: "destructive",
                 title: "Cannot remove creator",
                 description: `Unable to remove creator!`,
             });
         } else if (creatorArray.length <= 0) {
-            toast({
+            toast("", {
                 variant: "default",
                 title: "Creator's is empty",
                 description: ``,
@@ -171,7 +170,7 @@ export function BaseReferenceCreator({
             );
         }
     }
-    
+
     useEffect(() => {
         onClickAddCreator();
     }, []);
