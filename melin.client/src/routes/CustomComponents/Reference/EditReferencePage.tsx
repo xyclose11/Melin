@@ -1,5 +1,4 @@
 ﻿import React, { Suspense, useEffect, useState } from "react";
-import { BaseReferenceCreator } from "@/routes/CustomComponents/CreateRefComponents/BaseReferenceCreator.tsx";
 import { instance } from "@/utils/axiosInstance.ts";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -47,10 +46,12 @@ export function EditReferencePage() {
     const navigate = useNavigate();
     const { toast } = useToast();
     const { refId } = useParams();
-    let refSchema: ZodObject<any> = baseReferenceSchema;
+    const [refSchema, setRefSchema] =
+        useState<ZodObject<any>>(baseReferenceSchema);
+    const [formLoading, setFormLoading] = useState(true);
 
     const form = useForm<z.infer<typeof refSchema>>({
-        resolver: zodResolver(refSchema),
+        resolver: refSchema ? zodResolver(refSchema) : undefined,
         defaultValues: async () => {
             return await getReferenceData();
         },
@@ -72,12 +73,19 @@ export function EditReferencePage() {
             if (res.status == 200) {
                 console.log(res.data);
                 // refName = res.data.type;
-
+                let newSchema: ZodObject<any>;
                 switch (res.data.type) {
                     case "Artwork":
-                        refSchema = artworkSchema;
-                        return res.data;
+                        newSchema = artworkSchema;
+                        console.log("SCHEMA");
+                        break;
+                    default:
+                        newSchema = baseReferenceSchema;
+                        break;
                 }
+
+                setRefSchema(newSchema);
+                return res.data;
             } else {
                 console.error(res);
             }
@@ -134,20 +142,20 @@ export function EditReferencePage() {
         try {
             // figure out which reference type is being used
             const response = await instance.post(
-                `Reference/create-${refSchema}`,
+                `Reference/update-artwork${refSchema}`,
                 newData,
                 {
                     withCredentials: true,
                 },
             );
             if (response.status === 200) {
-                toast({
+                toast("", {
                     variant: "default",
-                    title: "Reference Successfully Created!",
+                    title: "Reference Successfully Updated!",
                     description: ``,
                 });
             } else {
-                toast({
+                toast("", {
                     variant: "destructive",
                     title: "Reference Not Created Successfully",
                     description: ``,
@@ -160,9 +168,16 @@ export function EditReferencePage() {
             console.error("Create reference failed:", error);
         }
     };
-    // useEffect(() => {
-    //     getReferenceData();
-    // }, []);
+    useEffect(() => {
+        getReferenceData().then(() => {
+            setFormLoading(false);
+        });
+        onClickAddCreator();
+    }, []);
+
+    if (formLoading || !refSchema) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <>
@@ -403,9 +418,9 @@ export function EditReferencePage() {
                                             key={key}
                                             control={control}
                                             name={
-                                                `bookSchema.${key}` as keyof z.infer<
+                                                (`bookSchema.${key}` as keyof z.infer<
                                                     typeof refSchema
-                                                >
+                                                >) || ""
                                             }
                                             render={({ field }) => (
                                                 <FormItem>
@@ -432,29 +447,6 @@ export function EditReferencePage() {
                                     ))}
                                 </CardContent>
                             </Card>
-
-                            {errors.creators && (
-                                <div>{errors.creators.message}</div>
-                            )}
-                            {errors.title && <div>{errors.title.message}</div>}
-                            {errors.shortTitle && (
-                                <div>{errors.shortTitle.message}</div>
-                            )}
-                            {errors.rights && (
-                                <div>{errors.rights.message}</div>
-                            )}
-                            {errors.datePublished && (
-                                <div>{errors.datePublished.message}</div>
-                            )}
-                            {errors.extraFields && (
-                                <div>{errors.extraFields.message}</div>
-                            )}
-                            {errors.language && (
-                                <div>{errors.language.message}</div>
-                            )}
-                            {errors.tags && <div> {errors.tags.message}</div>}
-
-                            {errors.root && <div> {errors.root.message}</div>}
 
                             <Button className="col-end-2 m-2" type="submit">
                                 Submit
