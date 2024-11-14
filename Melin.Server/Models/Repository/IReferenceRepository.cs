@@ -55,7 +55,6 @@ public interface IReferenceRepository : IGenericRepository<Reference>
         /// <param name="reference"></param>
         /// <returns></returns>
         Task<Result<bool>> UpdateReferenceAsync(Reference reference);
-        
         Task<bool> AddAsync(Reference reference);
 
         Task<bool> DeleteAsync(string userEmail, int id);

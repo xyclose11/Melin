@@ -5,11 +5,11 @@ export const baseReferenceSchema = z.object({
     title: z.string().min(2, {
         message: "Title must be at least 2 characters.",
     }),
-    shortTitle: z.string().min(2).optional(),
-    language: z.string().min(2).optional(),
+    shortTitle: z.string().optional(),
+    language: z.string().optional(),
     datePublished: z.date().optional(),
-    rights: z.string().array().optional(),
-    extraFields: z.string().array().optional(),
+    // rights: z.string().array().optional(),
+    // extraFields: z.string().array().optional(),
     creators: z.array(creatorFormSchema).optional(),
 });
 
@@ -33,9 +33,9 @@ export const bookSchema = z.object({
     ISSN: z.string().min(2).optional(),
 });
 
-export const artworkSchema = z.object({
-    Medium: z.string().min(2).max(128).default(""),
-    Dimensions: z.string().min(2).max(128).default(""),
+export const artworkSchema = baseReferenceSchema.extend({
+    Medium: z.string().min(2).max(128).default("").optional(),
+    Dimensions: z.string().min(2).max(128).default("").optional(),
     Scale: z.string().min(2).max(128).optional(),
     MapType: z.string().min(2).max(128).optional(),
 });

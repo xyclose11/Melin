@@ -74,7 +74,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         policy => {
-            policy.WithOrigins("https://localhost:5173", "http://localhost:5173", "https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
+            policy.WithOrigins("https://localhost:7120","https://localhost:5173", "http://localhost:5173", "https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
             policy.AllowAnyHeader();
             policy.AllowAnyMethod();
             policy.AllowCredentials();
@@ -131,10 +131,11 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(3);
     options.SlidingExpiration = true;
-    options.LoginPath = "/api/auth/login";
-    options.LogoutPath = "/api/auth/logout";
+    options.LoginPath = "/api/Auth/login";
+    options.LogoutPath = "/api/Auth/logout";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.IsEssential = true;
 });
 
 builder.Services.AddHttpClient<ApiService>();
@@ -161,6 +162,7 @@ app.UseSpa(spa => {});
 app.MapIdentityApi<IdentityUser>();
 
 app.UseCors();
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 

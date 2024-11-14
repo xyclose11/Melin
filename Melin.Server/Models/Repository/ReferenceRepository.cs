@@ -736,7 +736,8 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
     {
         try
         {
-            var r = await _context.Reference.FindAsync(reference);
+            _context.Reference.Update(reference);
+            await _context.SaveChangesAsync();
             return Result<bool>.SuccessResult(true);
         }
         catch (Exception e)

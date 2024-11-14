@@ -1004,39 +1004,40 @@ public class ReferenceService : IReferenceService
             
             if (!updatedArtwork.Medium.Equals(artwork.Medium))
             {
-                updatedArtwork.Medium = artwork.Medium;
+                artwork.Medium = updatedArtwork.Medium;
             }
 
             if (updatedArtwork.MapType != null)
             {
                 if (!updatedArtwork.MapType.Equals(artwork.MapType))
                 {
-                    updatedArtwork.MapType = artwork.MapType;
+                    artwork.MapType = updatedArtwork.MapType;
                 }
             }
             
             if (!updatedArtwork.Dimensions.Equals(artwork.Dimensions))
             {
-                updatedArtwork.DatePublished = artwork.DatePublished;
+                artwork.Dimensions = updatedArtwork.Dimensions;
             }
 
             if (updatedArtwork.Scale != null)
             {
                 if (!updatedArtwork.Scale.Equals(artwork.Scale))
                 {
-                    updatedArtwork.Scale = artwork.Scale;
+                    artwork.Scale = updatedArtwork.Scale;
                 }
             }
             
-            updatedArtwork.UpdatedAt = DateTime.UtcNow;
+            artwork.UpdatedAt = DateTime.UtcNow;
 
-            await _referenceRepository.UpdateReferenceAsync(updatedArtwork);
+            await _referenceRepository.UpdateReferenceAsync(artwork);
 
             return Result<bool>.SuccessResult(true);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
+            return Result<bool>.FailureResult("Failed to update artwork");
             throw;
         }
     }
@@ -1302,21 +1303,34 @@ public class ReferenceService : IReferenceService
             {
                 prevReference.Title = newReference.Title;
             }
+
+            if (prevReference.ShortTitle != null)
+            {
+                if (!prevReference.ShortTitle.Equals(newReference.ShortTitle))
+                {
+                    prevReference.ShortTitle = newReference.ShortTitle;
+                }
+            }
             
             if (!prevReference.Language.Equals(newReference.Language))
             {
                 prevReference.Language = newReference.Language;
             }
-            
-            if (!prevReference.Rights.Equals(newReference.Rights))
+
+            if (prevReference.Rights != null)
             {
-                prevReference.Rights = newReference.Rights;
+                if (!prevReference.Rights.Equals(newReference.Rights))
+                {
+                    prevReference.Rights = newReference.Rights;
+                }
             }
             
             if (!prevReference.DatePublished.Equals(newReference.DatePublished))
             {
                 prevReference.DatePublished = newReference.DatePublished;
             }
+
+            await _referenceRepository.UpdateReferenceAsync(prevReference);
 
             return true;
         }
