@@ -42,9 +42,9 @@ public class ReferenceController : ControllerBase
     {
         try
         {
-            var reference = await _referenceService.GetReferenceByIdAsync(User.Identity.Name, refId);
+            var reference = await _referenceService.GetReferenceWithAllDetailsById(User.Identity.Name, refId);
 
-            if (reference != null)
+            if (reference.Success)
             {
                 return Ok(reference.Data);
             }

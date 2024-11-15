@@ -14,6 +14,8 @@ public interface IReferenceRepository : IGenericRepository<Reference>
         Task<Result<T>> GetReferenceByIdAsync<T>(string userEmail, int id) where T : Reference;
 
         Task<Result<Reference>> GetReferenceByIdAsync(string userEmail, int id);
+        Task<Result<Reference>> GetReferenceAllDetailsByIdAsync(string userEmail, int id);
+
         Task<Artwork> GetArtworkByIdAsync(string userEmail, int id);
         Task<AudioRecording> GetAudioRecordingByIdAsync(string userEmail, int id);
         Task<Bill> GetBillByIdAsync(string userEmail, int id);

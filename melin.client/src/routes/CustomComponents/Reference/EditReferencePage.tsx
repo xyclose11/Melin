@@ -104,6 +104,7 @@ export function EditReferencePage() {
 
                 setRefSchema(newSchema);
                 setSchemaName(name);
+                console.log(res.data);
                 return res.data;
             } else {
                 console.error(res);
@@ -430,7 +431,7 @@ export function EditReferencePage() {
                                     <Controller
                                         key={key}
                                         control={control}
-                                        name={`bookSchema.${key}` || ""}
+                                        name={`${key}` || ""}
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>
@@ -441,7 +442,6 @@ export function EditReferencePage() {
                                                     :
                                                 </FormLabel>
                                                 <FormControl className={""}>
-                                                    {/*@ts-ignore*/}
                                                     <Input
                                                         placeholder={key.replace(
                                                             /([A-Z])/g,

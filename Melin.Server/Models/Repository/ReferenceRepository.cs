@@ -153,6 +153,31 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         return Result<Reference>.SuccessResult(reference);
     }
 
+    public async Task<Result<Reference>> GetReferenceAllDetailsByIdAsync(string userEmail, int id)
+    {
+        if (!_cache.TryGetValue(id, out Reference? reference))
+        {
+            reference = await _context.Reference
+                .Where(r => r.OwnerEmail == userEmail)
+                .Include(r => r.Creators)
+                .Include(r => r.Tags)
+                .Include(r => r.Groups)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (reference != null)
+            {
+                _cache.Set(id, reference, TimeSpan.FromMinutes(5));
+                return Result<Reference>.SuccessResult(reference);
+            }
+            
+            return Result<Reference>.FailureResult("Reference not found.");
+            
+        }
+
+        return Result<Reference>.SuccessResult(reference);
+        
+    }
+
     public async Task<Artwork> GetArtworkByIdAsync(string userEmail, int id)
     {
         if (!_cache.TryGetValue(id, out Artwork artwork))

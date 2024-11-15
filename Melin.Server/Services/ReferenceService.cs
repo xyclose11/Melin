@@ -36,6 +36,50 @@ public class ReferenceService : IReferenceService
         }
     }
 
+    public async Task<Result<Reference>> GetReferenceWithTagsById(string userEmail, int id)
+    {
+        try
+        {
+            var res = await _referenceRepository.GetReferenceByIdAsync(userEmail, id);
+            return res;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return Result<Reference>.FailureResult("Unable to get reference by ID");
+        }
+        
+    }
+
+    public async Task<Result<Reference>> GetReferenceWithGroupsById(string userEmail, int id)
+    {
+        try
+        {
+            var res = await _referenceRepository.GetReferenceByIdAsync(userEmail, id);
+            return res;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return Result<Reference>.FailureResult("Unable to get reference by ID");
+        }
+    }
+
+    public async Task<Result<Reference>> GetReferenceWithAllDetailsById(string userEmail, int id)
+    {
+        try
+        {
+            var res = await _referenceRepository.GetReferenceAllDetailsByIdAsync(userEmail, id);
+            return res;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return Result<Reference>.FailureResult("Unable to get reference by ID");
+        }
+        
+    }
+
     public async Task<Result<Artwork>> GetArtworkByIdAsync(string userEmail, int id)
     {
         try

@@ -8,6 +8,10 @@ using Melin.Server.Models;
 public interface IReferenceService
 {
     Task<Result<Reference>> GetReferenceByIdAsync(string userEmail, int id);
+    Task<Result<Reference>> GetReferenceWithTagsById(string userEmail, int id);
+    Task<Result<Reference>> GetReferenceWithGroupsById(string userEmail, int id);
+    Task<Result<Reference>> GetReferenceWithAllDetailsById(string userEmail, int id);
+
     Task<Result<Artwork>> GetArtworkByIdAsync(string userEmail, int id);
     Task<Result<AudioRecording>> GetAudioRecordingByIdAsync(string userEmail, int id);
     Task<Result<Bill>> GetBillByIdAsync(string userEmail, int id);
