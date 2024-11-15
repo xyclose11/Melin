@@ -1,18 +1,15 @@
-﻿import React, { Suspense, useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { useNavigate, useParams } from "react-router-dom";
 import {
     artworkSchema,
     baseReferenceSchema,
     bookSchema,
+    reportSchema,
+    websiteSchema,
 } from "@/routes/ReferenceCreationPages/BaseReferenceSchema.ts";
 import { z, ZodObject } from "zod";
-import {
-    Controller,
-    FormProvider,
-    useFieldArray,
-    useForm,
-} from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Form,
@@ -43,6 +40,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar.tsx";
 import { CreatorInput } from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
+import { Tag } from "emblor";
 
 let nextId = 0;
 
@@ -55,7 +53,6 @@ export function EditReferencePage() {
     const [refSchema, setRefSchema] =
         useState<ZodObject<any>>(baseReferenceSchema);
     const [schemaName, setSchemaName] = useState("");
-    const [formLoading, setFormLoading] = useState(true);
 
     const form = useForm<z.infer<typeof refSchema>>({
         resolver: refSchema ? zodResolver(refSchema) : undefined,
@@ -92,12 +89,19 @@ export function EditReferencePage() {
                         newSchema = bookSchema;
                         name = "book";
                         break;
+                    case "Report":
+                        newSchema = reportSchema;
+                        name = "report";
+                        break;
+                    case "Website":
+                        newSchema = websiteSchema;
+                        name = "website";
+                        break;
                     default:
                         newSchema = baseReferenceSchema;
                         break;
                 }
 
-                console.log(res.data);
                 setRefSchema(newSchema);
                 setSchemaName(name);
                 return res.data;
@@ -146,7 +150,7 @@ export function EditReferencePage() {
     }
     const onSubmit = async (data: any) => {
         console.log(data);
-        const convertedTags = data.tags?.map((tag) => ({
+        const convertedTags = data.tags?.map((tag: Tag) => ({
             ...tag,
             id: generateRandom32BitInteger(),
         }));
@@ -187,11 +191,8 @@ export function EditReferencePage() {
         }
     };
     useEffect(() => {
-        getReferenceData().then(() => {
-            setFormLoading(false);
-        });
+        getReferenceData();
 
-        // console.log(form.getValues());
         onClickAddCreator();
     }, []);
 
@@ -429,11 +430,7 @@ export function EditReferencePage() {
                                     <Controller
                                         key={key}
                                         control={control}
-                                        name={
-                                            (`bookSchema.${key}` as keyof z.infer<
-                                                typeof refSchema
-                                            >) || ""
-                                        }
+                                        name={`bookSchema.${key}` || ""}
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>
