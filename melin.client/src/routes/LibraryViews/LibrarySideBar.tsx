@@ -16,6 +16,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
+import { EllipsisVertical } from "lucide-react";
 
 export function LibrarySideBar(props: any) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -30,10 +31,12 @@ export function LibrarySideBar(props: any) {
     return (
         <>
             <Card ref={setNodeRef} style={style} {...listeners} {...attributes}>
-                <CardHeader className={"flex-auto"}>
+                <CardHeader className={"flex"}>
                     <CardTitle>Groups</CardTitle>
                     <DropdownMenu>
-                        <DropdownMenuTrigger>...</DropdownMenuTrigger>
+                        <DropdownMenuTrigger>
+                            <EllipsisVertical size={14} />
+                        </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuSub>
                                 <DropdownMenuSubTrigger>
