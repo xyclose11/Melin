@@ -144,7 +144,21 @@ export function Library() {
         },
         {
             accessorKey: "title",
-            header: "Title",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Title
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
             cell: ({ row }) => (
                 <Link
                     className="capitalize"
@@ -234,7 +248,21 @@ export function Library() {
         },
         {
             accessorKey: "datePublished",
-            header: "Date Published",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Date Published
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
             cell: ({ row }) => (
                 <div className="capitalize">
                     {formatRowDate(row.getValue("datePublished"))}
@@ -244,7 +272,21 @@ export function Library() {
         },
         {
             accessorKey: "updatedAt",
-            header: "Last Updated",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Last Updated At
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
             cell: ({ row }) => (
                 <div className="capitalize">
                     {formatRowDate(row.getValue("updatedAt"))}
@@ -254,7 +296,21 @@ export function Library() {
         },
         {
             accessorKey: "createdAt",
-            header: "Created On",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Created On
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
             cell: ({ row }) => (
                 <div className="capitalize">
                     {formatRowDate(row.getValue(`createdAt`))}
