@@ -461,43 +461,34 @@ export function EditReferencePage() {
                                         (key) => !key.includes("datePublished"),
                                     )
                                     .filter((key) => !key.includes("creators"))
-                                    .map(
-                                        (key) => (
-                                            console.log(
-                                                key.charAt(0).toLowerCase(),
-                                            ),
-                                            (
-                                                <Controller
-                                                    key={key}
-                                                    control={control}
-                                                    name={`${key}` || ""}
-                                                    defaultValue={""}
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>
-                                                                {key.replace(
-                                                                    /([A-Z])/g,
-                                                                    " $1",
-                                                                )}
-                                                                :
-                                                            </FormLabel>
-                                                            <FormControl
-                                                                className={""}
-                                                            >
-                                                                <Input
-                                                                    placeholder={key.replace(
-                                                                        /([A-Z])/g,
-                                                                        " $1",
-                                                                    )}
-                                                                    {...field}
-                                                                />
-                                                            </FormControl>
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                            )
-                                        ),
-                                    )}
+                                    .map((key) => (
+                                        <Controller
+                                            key={key}
+                                            control={control}
+                                            name={`${key}` || ""}
+                                            defaultValue={""}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        {key.replace(
+                                                            /([A-Z])/g,
+                                                            " $1",
+                                                        )}
+                                                        :
+                                                    </FormLabel>
+                                                    <FormControl className={""}>
+                                                        <Input
+                                                            placeholder={key.replace(
+                                                                /([A-Z])/g,
+                                                                " $1",
+                                                            )}
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    ))}
                             </CardContent>
                         </Card>
 

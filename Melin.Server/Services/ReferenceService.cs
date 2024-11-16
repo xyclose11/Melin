@@ -1374,6 +1374,23 @@ public class ReferenceService : IReferenceService
                 prevReference.DatePublished = newReference.DatePublished;
             }
 
+            if (prevReference.Creators != null)
+            {
+                if (!prevReference.Creators.Equals(newReference.Creators))
+                {
+                    prevReference.Creators = newReference.Creators;
+                }
+            }
+
+            if (prevReference.Tags != null)
+            {
+                if (!prevReference.Tags.Equals(newReference.Tags))
+                {
+                    prevReference.Tags = newReference.Tags;
+                }
+            }
+
+
             await _referenceRepository.UpdateReferenceAsync(prevReference);
 
             return true;

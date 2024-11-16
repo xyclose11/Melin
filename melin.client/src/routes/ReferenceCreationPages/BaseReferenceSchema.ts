@@ -14,30 +14,36 @@ export const baseReferenceSchema = z.object({
 });
 
 export const bookSchema = z.object({
-    Publication: z.string().min(2).optional(),
-    BookTitle: z.string().min(2).optional(),
-    Volume: z.string().min(2).optional(),
-    Issue: z.string().min(2).optional(),
-    Pages: z.number().min(0).optional(),
-    Edition: z.string().min(2).optional(),
-    Series: z.string().min(2).optional(),
-    SeriesNumber: z.number().min(0).optional(),
-    SeriesTitle: z.number().min(0).optional(),
-    VolumeAmount: z.number().min(0).optional(),
-    PageAmount: z.number().min(0).optional(),
-    Section: z.string().min(2).optional(),
-    Place: z.string().min(2).optional(),
-    Publisher: z.string().min(2).optional(),
-    JournalAbbreviation: z.string().min(2).optional(),
+    publication: z.string().min(2).optional(),
+    bookTitle: z.string().min(2).optional(),
+    volume: z.string().min(2).optional(),
+    issue: z.string().min(2).optional(),
+    pages: z.number().min(0).optional(),
+    edition: z.string().min(2).optional(),
+    series: z.string().min(2).optional(),
+    seriesNumber: z.number().min(0).optional(),
+    seriesTitle: z.number().min(0).optional(),
+    volumeAmount: z.number().min(0).optional(),
+    pageAmount: z.number().min(0).optional(),
+    section: z.string().min(2).optional(),
+    place: z.string().min(2).optional(),
+    publisher: z.string().min(2).optional(),
+    journalAbbreviation: z.string().min(2).optional(),
     ISBN: z.string().min(2).optional(),
     ISSN: z.string().min(2).optional(),
 });
 
 export const artworkSchema = baseReferenceSchema.extend({
-    medium: z.string().min(2).max(128).default("").optional(),
-    dimensions: z.string().min(2).max(128).default("").optional(),
-    scale: z.string().min(2).max(128).optional(),
-    mapType: z.string().min(2).max(128).optional(),
+    medium: z.string().min(2).max(128).default("").optional().or(z.literal("")),
+    dimensions: z
+        .string()
+        .min(2)
+        .max(128)
+        .default("")
+        .optional()
+        .or(z.literal("")),
+    scale: z.string().min(2).max(128).optional().or(z.literal("")),
+    mapType: z.string().min(2).max(128).optional().or(z.literal("")),
 });
 
 export const legislationSchema = z.object({
