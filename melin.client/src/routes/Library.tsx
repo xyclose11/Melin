@@ -101,7 +101,7 @@ export function Library() {
         useReferenceSelection();
 
     const [pagination, setPagination] = useState({
-        pageSize: 10,
+        pageSize: 15,
         pageIndex: 0,
     });
 
@@ -137,6 +137,8 @@ export function Library() {
             ),
             enableSorting: false,
             enableHiding: false,
+            size: 250,
+            enableResizing: true,
         },
         {
             accessorKey: "title",
@@ -149,6 +151,8 @@ export function Library() {
                     {row.getValue("title")}
                 </Link>
             ),
+            enableSorting: true,
+            enableHiding: true,
         },
         {
             accessorKey: "type",
@@ -156,6 +160,7 @@ export function Library() {
             cell: ({ row }) => (
                 <div className="capitalize">{row.getValue("type")}</div>
             ),
+            enableSorting: true,
         },
         {
             accessorKey: "creators",
@@ -347,6 +352,8 @@ export function Library() {
         onRowSelectionChange: setRowSelection,
         manualPagination: true,
         onPaginationChange: setPagination,
+        columnResizeMode: "onEnd",
+        columnResizeDirection: "rtl",
         rowCount: totalRef,
         state: {
             sorting,
@@ -392,7 +399,7 @@ export function Library() {
                                             className="capitalize"
                                             checked={column.getIsVisible()}
                                             onCheckedChange={(value) =>
-                                                column.toggleVisibility(!!value)
+                                                column.toggleVisibility(value)
                                             }
                                         >
                                             {column.id}
@@ -487,10 +494,4 @@ export function Library() {
             </div>
         </div>
     );
-
-    // function handleDragEnd(event: any) {
-    //     if (event.over && event.over.id === "droppable") {
-    //         setIsDropped(true);
-    //     }
-    // }
 }
