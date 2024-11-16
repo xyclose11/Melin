@@ -128,11 +128,6 @@ public class GroupController : ControllerBase
             var group = await _referenceContext.Group
                 .Where(g => g.Name == prevGroupName)
                 .FirstAsync();
-
-            if (group == null)
-            {
-                return NotFound("Group Not Found. Cannot update");
-            }
             
             // update Group details
             group.Name = updatedGroup.Name;
@@ -146,7 +141,7 @@ public class GroupController : ControllerBase
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            return NotFound("Group Not Found. Cannot update");
         }
     }
     
