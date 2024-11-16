@@ -5,7 +5,7 @@ import {
     CardTitle,
 } from "@/components/ui/card.tsx";
 import { z } from "zod";
-import { EllipsisVertical } from "lucide-react";
+import { ChevronRight, EllipsisVertical } from "lucide-react";
 import { EditGroupForm } from "@/routes/GroupComponents/EditGroupForm.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
@@ -31,6 +31,12 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
 import { ToastAction } from "@/components/ui/toast.tsx";
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible.tsx";
+import { SidebarMenuButton } from "@/components/ui/sidebar.tsx";
 
 const GroupNodeSchema = z.object({
     id: z.number(),
@@ -139,13 +145,22 @@ export function DraggableGroup({
                     </Dialog>
                 </CardHeader>
                 <CardContent className={"p-2"}>
-                    {groupNodes.map((gn: GroupNodeType) => (
-                        <div key={gn.id}>
-                            {" "}
-                            {/* TODO make these draggable and collapsible */}
-                            <div>{gn.title}</div>
-                        </div>
-                    ))}
+                    <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90">
+                        <SidebarMenuButton disabled={groupNodes.length <= 0}>
+                            <CollapsibleTrigger asChild>
+                                <ChevronRight className="transition-transform" />
+                            </CollapsibleTrigger>
+                        </SidebarMenuButton>
+
+                        {groupNodes.map((gn: GroupNodeType) => (
+                            <CollapsibleContent>
+                                <div key={gn.id}>
+                                    {" "}
+                                    <div>{gn.title}</div>
+                                </div>
+                            </CollapsibleContent>
+                        ))}
+                    </Collapsible>
                 </CardContent>
             </Card>
         </>
