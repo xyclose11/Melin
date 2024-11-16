@@ -1,23 +1,23 @@
 ﻿"use client";
 
 import * as React from "react";
+import { useEffect, useState } from "react";
 // import { DndContext } from "@dnd-kit/core";
 // import { useState } from "react";
 // import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
 // import { DroppableWorkspace } from "@/routes/LibraryViews/DragNDrop/DroppableWorkspace.tsx";
-
 import { ToastAction } from "@/components/ui/toast";
 import {
     ColumnDef,
     ColumnFiltersState,
-    SortingState,
-    VisibilityState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    SortingState,
     useReactTable,
+    VisibilityState,
 } from "@tanstack/react-table";
 import {
     ArrowUpDown,
@@ -46,7 +46,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
 import { TagTableDisplay } from "@/routes/TagComponents/TagTableDisplay.tsx";
@@ -82,6 +81,9 @@ export type Reference = {
     id: number;
     type: string;
     title: string;
+    datePublished: string;
+    updatedAt: string;
+    createdAt: string;
     creators: Creator[];
     language: string;
 };
@@ -154,14 +156,7 @@ export function Library() {
             enableSorting: true,
             enableHiding: true,
         },
-        {
-            accessorKey: "type",
-            header: "Type",
-            cell: ({ row }) => (
-                <div className="capitalize">{row.getValue("type")}</div>
-            ),
-            enableSorting: true,
-        },
+
         {
             accessorKey: "creators",
             header: ({ column }) => {
@@ -238,6 +233,36 @@ export function Library() {
             },
         },
         {
+            accessorKey: "datePublished",
+            header: "Date Published",
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {formatRowDate(row.getValue("datePublished"))}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
+            accessorKey: "updatedAt",
+            header: "Last Updated",
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {formatRowDate(row.getValue("updatedAt"))}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
+            accessorKey: "createdAt",
+            header: "Created On",
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {formatRowDate(row.getValue(`createdAt`))}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
@@ -280,6 +305,11 @@ export function Library() {
             },
         },
     ];
+
+    function formatRowDate(val: string): string {
+        const date: Date = new Date(val);
+        return date.toUTCString();
+    }
     const fetchData = async () => {
         try {
             const response = await instance.get(
