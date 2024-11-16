@@ -7,7 +7,7 @@ export const baseReferenceSchema = z.object({
     }),
     shortTitle: z.string().optional(),
     language: z.string().optional(),
-    datePublished: z.date().optional(),
+    datePublished: z.date().optional().nullable(),
     // rights: z.string().array().optional(),
     // extraFields: z.string().array().optional(),
     creators: z.array(creatorFormSchema).optional(),
@@ -34,10 +34,10 @@ export const bookSchema = z.object({
 });
 
 export const artworkSchema = baseReferenceSchema.extend({
-    Medium: z.string().min(2).max(128).default("").optional(),
-    Dimensions: z.string().min(2).max(128).default("").optional(),
-    Scale: z.string().min(2).max(128).optional(),
-    MapType: z.string().min(2).max(128).optional(),
+    medium: z.string().min(2).max(128).default("").optional(),
+    dimensions: z.string().min(2).max(128).default("").optional(),
+    scale: z.string().min(2).max(128).optional(),
+    mapType: z.string().min(2).max(128).optional(),
 });
 
 export const legislationSchema = z.object({

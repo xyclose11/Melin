@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+﻿import React, { useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -102,9 +102,33 @@ export function EditReferencePage() {
                         break;
                 }
 
+                if (res.data.creators.length !== null) {
+                    console.log(res.data.creators);
+                    console.log(creatorArray);
+                    res.data.creators.map(
+                        (creator: {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            types: string;
+                        }) => {
+                            console.log(creator);
+                            creatorArray.push(
+                                <CreatorInput
+                                    firstName={creator.firstName}
+                                    lastName={creator.lastName}
+                                    types={creator.types}
+                                    name={`creators.${nextId}`}
+                                    key={creator.id}
+                                />,
+                            );
+                        },
+                    );
+                    nextId++;
+                }
+
                 setRefSchema(newSchema);
                 setSchemaName(name);
-                console.log(res.data);
                 return res.data;
             } else {
                 console.error(res);
@@ -116,10 +140,15 @@ export function EditReferencePage() {
     function onClickAddCreator() {
         setCreatorArray([
             ...creatorArray,
-            <CreatorInput name={`creators.${nextId}`} key={nextId} />,
+            <CreatorInput
+                firstName={""}
+                lastName={""}
+                types={""}
+                name={`creators.${nextId}`}
+                key={nextId}
+            />,
         ]);
         nextId++;
-        console.log(form.getValues());
     }
 
     function onClickRemoveCreator(removeId: string | null) {
@@ -191,11 +220,6 @@ export function EditReferencePage() {
             console.error("Update reference failed:", error);
         }
     };
-    useEffect(() => {
-        getReferenceData();
-
-        onClickAddCreator();
-    }, []);
 
     if (isLoading || !refSchema) {
         return <div>Loading...</div>;
@@ -427,33 +451,53 @@ export function EditReferencePage() {
                             </CardHeader>
 
                             <CardContent className={"grid grid-cols-2 gap-4"}>
-                                {Object.keys(refSchema.shape).map((key) => (
-                                    <Controller
-                                        key={key}
-                                        control={control}
-                                        name={`${key}` || ""}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    {key.replace(
-                                                        /([A-Z])/g,
-                                                        " $1",
+                                {Object.keys(refSchema.shape)
+                                    .filter((key) => !key.includes("title"))
+                                    .filter(
+                                        (key) => !key.includes("shortTitle"),
+                                    )
+                                    .filter((key) => !key.includes("language"))
+                                    .filter(
+                                        (key) => !key.includes("datePublished"),
+                                    )
+                                    .filter((key) => !key.includes("creators"))
+                                    .map(
+                                        (key) => (
+                                            console.log(
+                                                key.charAt(0).toLowerCase(),
+                                            ),
+                                            (
+                                                <Controller
+                                                    key={key}
+                                                    control={control}
+                                                    name={`${key}` || ""}
+                                                    defaultValue={""}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>
+                                                                {key.replace(
+                                                                    /([A-Z])/g,
+                                                                    " $1",
+                                                                )}
+                                                                :
+                                                            </FormLabel>
+                                                            <FormControl
+                                                                className={""}
+                                                            >
+                                                                <Input
+                                                                    placeholder={key.replace(
+                                                                        /([A-Z])/g,
+                                                                        " $1",
+                                                                    )}
+                                                                    {...field}
+                                                                />
+                                                            </FormControl>
+                                                        </FormItem>
                                                     )}
-                                                    :
-                                                </FormLabel>
-                                                <FormControl className={""}>
-                                                    <Input
-                                                        placeholder={key.replace(
-                                                            /([A-Z])/g,
-                                                            " $1",
-                                                        )}
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                ))}
+                                                />
+                                            )
+                                        ),
+                                    )}
                             </CardContent>
                         </Card>
 
