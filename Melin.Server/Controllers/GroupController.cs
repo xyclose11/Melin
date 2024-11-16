@@ -69,6 +69,7 @@ public class GroupController : ControllerBase
                 .Where(g => g.CreatedBy == userName)
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Include(g => g.References)
+                .Include(g => g.Groups)
                 .Take(validFilter.PageSize)
                 .OrderBy(g => g.UpdatedAt)
                 .ToListAsync();
@@ -181,6 +182,59 @@ public class GroupController : ControllerBase
             
             group.References.AddRange(references);
 
+            await _referenceContext.SaveChangesAsync();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    // POST: add references to group
+    [HttpPost("add-group-to-group")]
+    [Authorize]
+    public async Task<ActionResult<Group>> AddGroupToGroup(string groupName, [FromBody] List<int> groupIds)
+    {
+        try
+        {
+            // find group
+            var group = await _referenceContext.Group
+                .Where(g => g.Name == groupName)
+                .FirstAsync();
+
+            if (group == null)
+            {
+                return NotFound("Group Not Found");
+            }
+
+
+
+            List<Group> groups = new List<Group>();
+
+            foreach (var groupId in groupIds)
+            {
+                var r = await _referenceContext.Group.FindAsync(groupId);
+                if (r != null)
+                {
+                    // see if group is already in the group
+                    if (group.Groups != null)
+                    {
+                        if (!group.Groups.Contains(r))
+                        {
+                            groups.Add(r);
+                        }
+                    }
+
+                }
+            }
+
+            if (group.Groups != null)
+            {
+                group.Groups.AddRange(groups);
+            }
+            
             await _referenceContext.SaveChangesAsync();
             return Ok();
         }

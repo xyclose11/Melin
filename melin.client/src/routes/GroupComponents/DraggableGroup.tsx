@@ -38,9 +38,20 @@ import {
 } from "@/components/ui/collapsible.tsx";
 import { SidebarMenuButton } from "@/components/ui/sidebar.tsx";
 
+const GroupContentSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    type: z.string(),
+    content: z.string().optional(),
+});
+
 const GroupNodeSchema = z.object({
     id: z.number(),
     title: z.string(),
+    groupNode: z.union([
+        z.array(z.lazy(() => GroupNodeSchema)),
+        z.array(GroupContentSchema),
+    ]),
 });
 
 type GroupNodeType = z.infer<typeof GroupNodeSchema>;
@@ -117,7 +128,7 @@ export function DraggableGroup({
                                 <DropdownMenuSeparator />
                                 <DialogTrigger>
                                     <DropdownMenuItem>
-                                        Add References
+                                        Add Selected References
                                     </DropdownMenuItem>
                                 </DialogTrigger>
                             </DropdownMenuContent>
@@ -157,6 +168,7 @@ export function DraggableGroup({
                                 <div key={gn.id}>
                                     {" "}
                                     <div>{gn.title}</div>
+                                    <div>{gn.groupNode}</div>
                                 </div>
                             </CollapsibleContent>
                         ))}

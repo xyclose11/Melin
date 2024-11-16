@@ -21,6 +21,8 @@ public class Group {
     public List<Reference>? References { get; } = [];
     // TODO add field to track usage
 
+    public List<Group>? Groups { get; } = [];
+
     [MaxLength(256)]
     [BindNever]
     public string CreatedBy {get; set;}
