@@ -66,7 +66,7 @@ public class ReferenceController : ControllerBase
     {
         var userEmail = User.Identity.Name;
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-
+        validFilter.PageSize = 1000;
         var pagedReferences = await _referenceService.GetOwnedReferencesAsync(filter, userEmail);
 
         var totalRefCount = await _referenceService.GetOwnedReferenceCountAsync(userEmail);

@@ -1,23 +1,23 @@
 ﻿"use client";
 
 import * as React from "react";
+import { useEffect, useState } from "react";
 // import { DndContext } from "@dnd-kit/core";
 // import { useState } from "react";
 // import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
 // import { DroppableWorkspace } from "@/routes/LibraryViews/DragNDrop/DroppableWorkspace.tsx";
-
 import { ToastAction } from "@/components/ui/toast";
 import {
     ColumnDef,
     ColumnFiltersState,
-    SortingState,
-    VisibilityState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    SortingState,
     useReactTable,
+    VisibilityState,
 } from "@tanstack/react-table";
 import {
     ArrowUpDown,
@@ -46,7 +46,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
 import { TagTableDisplay } from "@/routes/TagComponents/TagTableDisplay.tsx";
@@ -82,6 +81,9 @@ export type Reference = {
     id: number;
     type: string;
     title: string;
+    datePublished: string;
+    updatedAt: string;
+    createdAt: string;
     creators: Creator[];
     language: string;
 };
@@ -101,7 +103,7 @@ export function Library() {
         useReferenceSelection();
 
     const [pagination, setPagination] = useState({
-        pageSize: 10,
+        pageSize: 15,
         pageIndex: 0,
     });
 
@@ -137,10 +139,26 @@ export function Library() {
             ),
             enableSorting: false,
             enableHiding: false,
+            size: 250,
+            enableResizing: true,
         },
         {
             accessorKey: "title",
-            header: "Title",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Title
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
             cell: ({ row }) => (
                 <Link
                     className="capitalize"
@@ -149,14 +167,10 @@ export function Library() {
                     {row.getValue("title")}
                 </Link>
             ),
+            enableSorting: true,
+            enableHiding: true,
         },
-        {
-            accessorKey: "type",
-            header: "Type",
-            cell: ({ row }) => (
-                <div className="capitalize">{row.getValue("type")}</div>
-            ),
-        },
+
         {
             accessorKey: "creators",
             header: ({ column }) => {
@@ -233,6 +247,78 @@ export function Library() {
             },
         },
         {
+            accessorKey: "datePublished",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Date Published
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {formatRowDate(row.getValue("datePublished"))}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
+            accessorKey: "updatedAt",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Last Updated At
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {formatRowDate(row.getValue("updatedAt"))}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
+            accessorKey: "createdAt",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Created On
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {formatRowDate(row.getValue(`createdAt`))}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
@@ -275,6 +361,11 @@ export function Library() {
             },
         },
     ];
+
+    function formatRowDate(val: string): string {
+        const date: Date = new Date(val);
+        return date.toUTCString();
+    }
     const fetchData = async () => {
         try {
             const response = await instance.get(
@@ -347,6 +438,8 @@ export function Library() {
         onRowSelectionChange: setRowSelection,
         manualPagination: true,
         onPaginationChange: setPagination,
+        columnResizeMode: "onEnd",
+        columnResizeDirection: "rtl",
         rowCount: totalRef,
         state: {
             sorting,
@@ -392,7 +485,7 @@ export function Library() {
                                             className="capitalize"
                                             checked={column.getIsVisible()}
                                             onCheckedChange={(value) =>
-                                                column.toggleVisibility(!!value)
+                                                column.toggleVisibility(value)
                                             }
                                         >
                                             {column.id}
@@ -487,10 +580,4 @@ export function Library() {
             </div>
         </div>
     );
-
-    // function handleDragEnd(event: any) {
-    //     if (event.over && event.over.id === "droppable") {
-    //         setIsDropped(true);
-    //     }
-    // }
 }

@@ -6,9 +6,14 @@ import { NavBar } from "@/routes/Layout.tsx";
 import { Toaster } from "@/components/ui/toaster";
 import { useAuth } from "@/utils/AuthProvider.tsx";
 import { Outlet } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export default function Root({ children }: { children: React.ReactNode }) {
     const { isAuthenticated } = useAuth();
+
+    const [cookies, setCookie] = useCookies(["sidebar:state"]);
+    const defaultOpen = cookies !== null ? cookies["sidebar:state"] : true;
+
     return (
         <>
             <NavBar />
@@ -20,7 +25,12 @@ export default function Root({ children }: { children: React.ReactNode }) {
                         <Outlet />
                     </main>
                 ) : (
-                    <SidebarProvider>
+                    <SidebarProvider
+                        onClick={() => {
+                            setCookie("sidebar:state", !defaultOpen);
+                        }}
+                        defaultOpen={defaultOpen}
+                    >
                         <WorkspaceToolBar />
                         <main className={"w-screen mt-16 flex p-2"}>
                             <SidebarTrigger>{children}</SidebarTrigger>

@@ -16,11 +16,16 @@ import { GroupLibrary } from "@/routes/LibraryViews/GroupLibrary.tsx";
 import { TagLibrary } from "@/routes/LibraryViews/TagLibrary.tsx";
 import { HomePage } from "@/routes/HomePage.tsx";
 import { EditReferencePage } from "@/routes/CustomComponents/Reference/EditReferencePage.tsx";
+import { CookiesProvider } from "react-cookie";
 
 const router: any = createBrowserRouter([
     {
         path: "/",
-        element: <Root children />,
+        element: (
+            <CookiesProvider>
+                <Root children />
+            </CookiesProvider>
+        ),
         errorElement: <ErrorPage />,
         children: [
             {
