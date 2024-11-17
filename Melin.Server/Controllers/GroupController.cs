@@ -2,19 +2,24 @@
 using Melin.Server.Filter;
 using Melin.Server.Models;
 using Melin.Server.Models.DTO;
+using Melin.Server.Services;
+using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Task = Melin.Server.Models.Task;
 
 namespace Melin.Server.Controllers;
 
 public class GroupController : ControllerBase
 {
     private readonly ReferenceContext _referenceContext;
+    private readonly IReferenceService _referenceService;
 
-    public GroupController(ReferenceContext referenceContext)
+    public GroupController(ReferenceContext referenceContext, IReferenceService referenceService)
     {
         _referenceContext = referenceContext;
+        _referenceService = referenceService;
     }
 
     // GET: gets a specifc groups references
@@ -86,6 +91,41 @@ public class GroupController : ControllerBase
         {
             Console.WriteLine(e);
             throw;
+        }
+    }
+
+    [HttpGet("get-references-from-group")]
+    [Authorize]
+    public async Task<ActionResult<List<Reference>>> GetReferencesFromGroup(string groupName)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var group = await _referenceContext.Group
+                .Where(g => g.CreatedBy == User.Identity.Name)
+                .Where(g => g.Name == groupName)
+                .Include(r => r.References)
+                .FirstAsync();
+
+            if (group.References == null)
+            {
+                return StatusCode(204, "Group" + groupName + " does not exist.");
+            }
+            
+            if (group.References.Count <= 0)
+            {
+                return StatusCode(204, "Group" + groupName + " has no references.");
+            }
+            
+            return Ok(new Response<ICollection<Reference>>(group.References));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e);
         }
     }
 
@@ -206,6 +246,10 @@ public class GroupController : ControllerBase
         {
             var parent = addGroupToGroup.parent;
             var child = addGroupToGroup.child;
+            if (parent == child)
+            {
+                return BadRequest("Duplicate groups detected");
+            }
             // find group
             var group = await _referenceContext.Group
                 .Where(g => g.Name == parent)
