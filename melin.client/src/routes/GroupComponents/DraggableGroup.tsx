@@ -38,7 +38,6 @@ import {
 } from "@/components/ui/collapsible.tsx";
 import { SidebarMenuButton } from "@/components/ui/sidebar.tsx";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
-import { useEffect, useState } from "react";
 
 const GroupReferenceSchema = z.object({
     id: z.number(),

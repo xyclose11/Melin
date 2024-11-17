@@ -19,6 +19,7 @@ type GroupType = {
     name: string;
     references: [];
     groups: [];
+    isRoot: boolean;
 };
 
 type Creator = {
@@ -75,12 +76,7 @@ export function LibraryPage() {
         getGroups();
     }, []);
 
-    const [parent, setParent] = useState(null);
     function handleDragEnd(event: DragEndEvent) {
-        const { over } = event;
-
-        setParent(over ? over.id : null);
-
         // add drag group to drop group
         const drag = event.active.id.valueOf();
         const parent = event.over?.id.valueOf();
@@ -124,18 +120,16 @@ export function LibraryPage() {
             <ReferenceSelectionProvider>
                 <LibrarySideBar>
                     <DndContext onDragEnd={handleDragEnd}>
-                        {userGroups.map((g: GroupType) => (
-                            <DraggableGroup
-                                key={g.id}
-                                groupName={g.name}
-                                groups={g.groups}
-                                references={g.references}
-                            ></DraggableGroup>
-                        ))}
-                        <div>
-                            parent
-                            {parent === null ? <div>Drag Me</div> : null}
-                        </div>
+                        {userGroups
+                            .filter((g) => g.isRoot)
+                            .map((g: GroupType) => (
+                                <DraggableGroup
+                                    key={g.id}
+                                    groupName={g.name}
+                                    groups={g.groups}
+                                    references={g.references}
+                                ></DraggableGroup>
+                            ))}
                     </DndContext>
                 </LibrarySideBar>{" "}
                 <Library />
