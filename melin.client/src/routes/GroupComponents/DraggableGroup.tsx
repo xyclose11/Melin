@@ -37,6 +37,15 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible.tsx";
 import { SidebarMenuButton } from "@/components/ui/sidebar.tsx";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { useEffect, useState } from "react";
+
+const GroupReferenceSchema = z.object({
+    id: z.number(),
+    title: z.string(),
+});
+
+type GroupReferenceSchema = z.infer<typeof GroupReferenceSchema>;
 
 const GroupContentSchema = z.object({
     id: z.number(),
@@ -47,7 +56,7 @@ const GroupContentSchema = z.object({
 
 const GroupNodeSchema = z.object({
     id: z.number(),
-    title: z.string(),
+    name: z.string(),
     groupNode: z.union([
         z.array(z.lazy(() => GroupNodeSchema)),
         z.array(GroupContentSchema),
@@ -58,13 +67,38 @@ type GroupNodeType = z.infer<typeof GroupNodeSchema>;
 
 export function DraggableGroup({
     groupName,
-    groupNodes,
+    references,
+    groups,
 }: {
     groupName: string;
-    groupNodes: [];
+    groups: [];
+    references: [];
 }) {
     const { selectedReferences } = useReferenceSelection();
     const { toast } = useToast();
+
+    const { isOver, setNodeRef: setDropNodeRef } = useDroppable({
+        id: groupName.concat(".drop"),
+    });
+
+    const {
+        attributes,
+        listeners,
+        setNodeRef: setDragNodeRef,
+        transform,
+    } = useDraggable({
+        id: groupName.concat(".drag"),
+    });
+
+    const dragStyle = transform
+        ? {
+              transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+          }
+        : undefined;
+
+    const dropStyle = {
+        color: isOver ? "green" : undefined,
+    };
 
     const handleAddReferences = async () => {
         try {
@@ -108,7 +142,13 @@ export function DraggableGroup({
     };
     return (
         <>
-            <Card className={"mb-2"}>
+            <Card
+                ref={setDragNodeRef}
+                style={dragStyle}
+                {...listeners}
+                {...attributes}
+                className={"mb-2"}
+            >
                 <CardHeader className={"flex"}>
                     <CardTitle>{groupName}</CardTitle>
                     <Dialog>
@@ -155,23 +195,39 @@ export function DraggableGroup({
                         </DialogContent>
                     </Dialog>
                 </CardHeader>
-                <CardContent className={"p-2"}>
+                <CardContent
+                    ref={setDropNodeRef}
+                    style={dropStyle}
+                    className={"p-2"}
+                >
                     <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90">
-                        <SidebarMenuButton disabled={groupNodes.length <= 0}>
+                        <SidebarMenuButton
+                            disabled={
+                                references.length <= 0 && groups.length <= 0
+                            }
+                        >
                             <CollapsibleTrigger asChild>
                                 <ChevronRight className="transition-transform" />
                             </CollapsibleTrigger>
                         </SidebarMenuButton>
 
-                        {groupNodes.map((gn: GroupNodeType) => (
+                        {references.map((gn: GroupReferenceSchema) => (
                             <CollapsibleContent>
                                 <div key={gn.id}>
                                     {" "}
                                     <div>{gn.title}</div>
-                                    <div>{gn.groupNode}</div>
                                 </div>
                             </CollapsibleContent>
                         ))}
+                        {groups
+                            .filter((g) => g)
+                            .map((g: GroupNodeType) => (
+                                <CollapsibleContent>
+                                    <div key={g.id}>
+                                        <div>{g.name}</div>
+                                    </div>
+                                </CollapsibleContent>
+                            ))}
                     </Collapsible>
                 </CardContent>
             </Card>

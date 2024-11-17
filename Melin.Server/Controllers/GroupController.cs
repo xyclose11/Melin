@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Melin.Server.Filter;
 using Melin.Server.Models;
+using Melin.Server.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -195,44 +196,39 @@ public class GroupController : ControllerBase
     // POST: add references to group
     [HttpPost("add-group-to-group")]
     [Authorize]
-    public async Task<ActionResult<Group>> AddGroupToGroup(string groupName, [FromBody] List<int> groupIds)
+    public async Task<ActionResult<Group>> AddGroupToGroup([FromBody] AddGroupToGroup addGroupToGroup)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         try
         {
+            var parent = addGroupToGroup.parent;
+            var child = addGroupToGroup.child;
             // find group
             var group = await _referenceContext.Group
-                .Where(g => g.Name == groupName)
+                .Where(g => g.Name == parent)
                 .FirstAsync();
 
             if (group == null)
             {
                 return NotFound("Group Not Found");
             }
-
-
-
-            List<Group> groups = new List<Group>();
-
-            foreach (var groupId in groupIds)
+            
+     
+            var r = await _referenceContext.Group.Where(g => g.Name == child).FirstAsync();
+            if (r != null)
             {
-                var r = await _referenceContext.Group.FindAsync(groupId);
-                if (r != null)
+                // see if group is already in the group
+                if (group.Groups != null)
                 {
-                    // see if group is already in the group
-                    if (group.Groups != null)
+                    if (!group.Groups.Contains(r))
                     {
-                        if (!group.Groups.Contains(r))
-                        {
-                            groups.Add(r);
-                        }
+                        group.Groups.Add(r);
                     }
-
                 }
-            }
 
-            if (group.Groups != null)
-            {
-                group.Groups.AddRange(groups);
             }
             
             await _referenceContext.SaveChangesAsync();
