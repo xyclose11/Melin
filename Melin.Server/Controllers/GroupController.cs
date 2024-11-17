@@ -220,6 +220,7 @@ public class GroupController : ControllerBase
             var r = await _referenceContext.Group.Where(g => g.Name == child).FirstAsync();
             if (r != null)
             {
+                r.IsRoot = false;
                 // see if group is already in the group
                 if (group.Groups != null)
                 {
@@ -251,6 +252,7 @@ public class GroupController : ControllerBase
         {
             await _referenceContext.Group
                 .Where(g => g.Name == groupName)
+                .Where(g => g.CreatedBy == User.Identity.Name)
                 .ExecuteDeleteAsync();
 
             return Ok();

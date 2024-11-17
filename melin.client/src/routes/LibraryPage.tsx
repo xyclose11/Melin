@@ -100,7 +100,6 @@ export function LibraryPage() {
 
     const addGroupToGroup = async (data: GroupDTO) => {
         try {
-            console.log(data);
             const res = await instance.post("add-group-to-group", data, {
                 withCredentials: true,
             });

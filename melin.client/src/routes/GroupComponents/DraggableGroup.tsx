@@ -38,6 +38,17 @@ import {
 } from "@/components/ui/collapsible.tsx";
 import { SidebarMenuButton } from "@/components/ui/sidebar.tsx";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog.tsx";
 
 const GroupReferenceSchema = z.object({
     id: z.number(),
@@ -140,6 +151,26 @@ export function DraggableGroup({
             console.error(e);
         }
     };
+
+    const handleDeleteGroup = async () => {
+        try {
+            const res = await instance.delete(
+                `delete-group?groupName=${groupName}`,
+                {
+                    withCredentials: true,
+                },
+            );
+
+            if (res.status === 200) {
+                console.log("success");
+            } else {
+                console.log(res);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     return (
         <>
             <Card
@@ -148,12 +179,10 @@ export function DraggableGroup({
                 {...attributes}
                 className={"mb-2"}
             >
-                <CardHeader
-                    {...listeners}
-                    ref={setActivatorNodeRef}
-                    className={"flex"}
-                >
-                    <CardTitle>{groupName}</CardTitle>
+                <CardHeader className={"flex"}>
+                    <CardTitle {...listeners} ref={setActivatorNodeRef}>
+                        {groupName}
+                    </CardTitle>
                     <Dialog>
                         <DropdownMenu>
                             <DropdownMenuTrigger>
@@ -168,6 +197,37 @@ export function DraggableGroup({
                                         <EditGroupForm groupName={groupName} />a
                                     </DropdownMenuSubContent>
                                 </DropdownMenuSub>
+                                <DropdownMenuSub>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger>
+                                            Delete
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>
+                                                    Are you absolutely sure?
+                                                </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action cannot be
+                                                    undone. This will
+                                                    permanently delete the
+                                                    group: {groupName}
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>
+                                                    Cancel
+                                                </AlertDialogCancel>
+                                                <AlertDialogAction
+                                                    onClick={handleDeleteGroup}
+                                                >
+                                                    Continue
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </DropdownMenuSub>
+
                                 <DropdownMenuSeparator />
                                 <DialogTrigger>
                                     <DropdownMenuItem>
