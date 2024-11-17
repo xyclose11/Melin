@@ -49,6 +49,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
+import { GroupType } from "@/routes/LibraryPage.tsx";
 
 const GroupReferenceSchema = z.object({
     id: z.number(),
@@ -63,17 +64,6 @@ const GroupContentSchema = z.object({
     type: z.string(),
     content: z.string().optional(),
 });
-
-const GroupNodeSchema = z.object({
-    id: z.number(),
-    name: z.string(),
-    groupNode: z.union([
-        z.array(z.lazy(() => GroupNodeSchema)),
-        z.array(GroupContentSchema),
-    ]),
-});
-
-type GroupNodeType = z.infer<typeof GroupNodeSchema>;
 
 export function DraggableGroup({
     groupName,
@@ -284,11 +274,16 @@ export function DraggableGroup({
                         ))}
                         {groups
                             .filter((g) => g)
-                            .map((g: GroupNodeType) => (
+                            .map((g: GroupType) => (
                                 <CollapsibleContent>
-                                    <div key={g.id}>
-                                        <div>{g.name}</div>
-                                    </div>
+                                    {/*<div key={g.id}>*/}
+                                    {/*    <div>{g.name}</div>*/}
+                                    {/*</div>*/}
+                                    <DraggableGroup
+                                        groupName={g.name}
+                                        groups={g.groups}
+                                        references={g.references}
+                                    />
                                 </CollapsibleContent>
                             ))}
                     </Collapsible>

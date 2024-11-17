@@ -14,7 +14,7 @@ export enum CREATOR_TYPES {
     Author = "Author",
 }
 
-type GroupType = {
+export type GroupType = {
     id: number;
     name: string;
     references: [];
