@@ -84,6 +84,7 @@ export function DraggableGroup({
         attributes,
         listeners,
         setNodeRef: setDragNodeRef,
+        setActivatorNodeRef,
         transform,
     } = useDraggable({
         id: groupName.concat(".drag"),
@@ -144,11 +145,14 @@ export function DraggableGroup({
             <Card
                 ref={setDragNodeRef}
                 style={dragStyle}
-                {...listeners}
                 {...attributes}
                 className={"mb-2"}
             >
-                <CardHeader className={"flex"}>
+                <CardHeader
+                    {...listeners}
+                    ref={setActivatorNodeRef}
+                    className={"flex"}
+                >
                     <CardTitle>{groupName}</CardTitle>
                     <Dialog>
                         <DropdownMenu>
