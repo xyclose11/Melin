@@ -13,7 +13,6 @@ export const GroupSelectedProvider: React.FC<{
     children: React.ReactNode;
 }> = ({ children }) => {
     const [selectedGroup, setSelectedGroups] = useState<string[]>([]);
-
     const clearSelection = () => {
         setSelectedGroups([]);
     };

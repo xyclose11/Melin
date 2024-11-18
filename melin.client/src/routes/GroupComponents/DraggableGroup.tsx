@@ -149,11 +149,31 @@ export function DraggableGroup({
             );
 
             if (res.status === 200) {
-                console.log("success");
+                toast("", {
+                    variant: "default",
+                    title: `Group: ${groupName} successfully deleted`,
+                    description: "NOTE: Undo feature is currently in progress",
+                    action: <ToastAction altText={"Undo"}>Undo</ToastAction>,
+                });
             } else {
-                console.log(res);
+                toast("", {
+                    variant: "destructive",
+                    title: `Unable to Delete Group: ${groupName}`,
+                    description:
+                        "NOTE: Try Again feature is currently in progress",
+                    action: (
+                        <ToastAction altText={"Try Again"}>
+                            Try Again
+                        </ToastAction>
+                    ),
+                });
             }
         } catch (e) {
+            toast("", {
+                variant: "destructive",
+                title: `CRITICAL ERROR ATTEMPTING TO DELETE GROUP: ${groupName}`,
+                description: `ERROR: ${e}`,
+            });
             console.error(e);
         }
     };

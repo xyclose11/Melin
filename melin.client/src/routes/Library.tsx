@@ -363,6 +363,8 @@ export function Library() {
         },
     ];
 
+    const URLLimt = 1600;
+
     function formatRowDate(val: string): string {
         const date: Date = new Date(val);
         return date.toUTCString();
@@ -375,7 +377,6 @@ export function Library() {
                 selectedGroup !== undefined &&
                 selectedGroup.length > 0
             ) {
-                console.log(selectedGroup);
                 if (selectedGroup.length === 1) {
                     fetchUrl = `get-references-from-group?groupName=${selectedGroup[0]}`;
                 } else {
@@ -383,8 +384,16 @@ export function Library() {
                     selectedGroup.slice(1).map((g) => {
                         requestURI += "&groupNames=" + g;
                     });
-                    console.log(requestURI);
-                    fetchUrl = `get-references-from-multiple-groups${requestURI}`;
+                    if (requestURI.length > URLLimt) {
+                        // Limit URL to 1600 characters for performance
+                        toast("", {
+                            title: "Request too long",
+                            variant: "destructive",
+                            description: `The request for group specific references is ${requestURI.length} characters long. Currently the application has a max URL character limit of 2,000`,
+                        });
+                    } else {
+                        fetchUrl = `get-references-from-multiple-groups${requestURI}`;
+                    }
                 }
             }
 
@@ -392,11 +401,21 @@ export function Library() {
                 withCredentials: true,
             });
 
-            console.log(response);
-
-            setData(response.data.data);
-
-            setTotalRef(response.data.TotalPages);
+            if (response.status === 200) {
+                setData(response.data.data);
+                setTotalRef(response.data.TotalPages);
+            } else {
+                toast("", {
+                    variant: "destructive",
+                    title: "Unable to get References",
+                    description: "Please try again later",
+                    action: (
+                        <ToastAction altText={"Try Again"}>
+                            Try Again
+                        </ToastAction>
+                    ),
+                });
+            }
         } catch (error) {
             toast("", {
                 variant: "destructive",
