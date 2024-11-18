@@ -52,13 +52,14 @@ import {
 import { GroupType } from "@/routes/LibraryPage.tsx";
 import { useGroupSelection } from "@/routes/Context/SelectedGroupContext.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
+import { GroupReferenceDisplay } from "@/routes/GroupComponents/GroupReferenceDisplay.tsx";
 
 const GroupReferenceSchema = z.object({
     id: z.number(),
     title: z.string(),
 });
 
-type GroupReferenceSchema = z.infer<typeof GroupReferenceSchema>;
+export type GroupReferenceSchema = z.infer<typeof GroupReferenceSchema>;
 
 export function DraggableGroup({
     groupName,
@@ -290,8 +291,10 @@ export function DraggableGroup({
                         {references.map((gn: GroupReferenceSchema) => (
                             <CollapsibleContent>
                                 <div key={gn.id}>
-                                    {" "}
-                                    <div>{gn.title}</div>
+                                    <GroupReferenceDisplay
+                                        gn={gn}
+                                        groupName={groupName}
+                                    />
                                 </div>
                             </CollapsibleContent>
                         ))}

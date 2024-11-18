@@ -330,6 +330,48 @@ public class GroupController : ControllerBase
         }
     }
     
+    // POST: add references to group
+    [HttpPut("remove-refs-from-group")]
+    [Authorize]
+    public async Task<ActionResult<bool>> RemoveReferencesFromGroup(string groupName, int referenceId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            // find group
+            var group = await _referenceContext.Group
+                .Where(g => g.CreatedBy == User.Identity.Name)
+                .Where(g => g.Name == groupName)
+                .Include(g => g.References)
+                .FirstAsync();
+
+            if (group == null)
+            {
+                return NotFound("Group Not Found");
+            }
+            
+
+            var r = await _referenceContext.Reference.FindAsync(referenceId);
+            if (r != null)
+            {
+                if (group.References != null)
+                {
+                    group.References.Remove(r);
+                }
+            }
+            
+            await _referenceContext.SaveChangesAsync();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
     
     // DELETE
     [HttpDelete("delete-group")]

@@ -106,6 +106,7 @@ export function LibraryPage() {
             });
 
             if (res.status === 200) {
+                // TODO ADD ALERTS
                 console.log(res);
             } else {
                 console.log(res);
@@ -114,6 +115,8 @@ export function LibraryPage() {
             console.error(event);
         }
     };
+
+    // TODO MAKE REMOVING REFERENCES FROM GROUP STATEFUL
 
     return (
         <div className={"flex gap-3"}>
