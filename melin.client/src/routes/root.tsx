@@ -14,6 +14,9 @@ export default function Root({ children }: { children: React.ReactNode }) {
     const [cookies, setCookie] = useCookies(["sidebar:state"]);
     const defaultOpen = cookies !== null ? cookies["sidebar:state"] : true;
 
+    function onSidebarChange() {
+        setCookie("sidebar:state", !defaultOpen);
+    }
     return (
         <>
             <NavBar />
@@ -26,9 +29,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
                     </main>
                 ) : (
                     <SidebarProvider
-                        onClick={() => {
-                            setCookie("sidebar:state", !defaultOpen);
-                        }}
+                        onChange={onSidebarChange}
                         defaultOpen={defaultOpen}
                     >
                         <WorkspaceToolBar />
