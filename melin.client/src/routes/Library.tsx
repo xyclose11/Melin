@@ -2,10 +2,7 @@
 
 import * as React from "react";
 import { useEffect, useState } from "react";
-// import { DndContext } from "@dnd-kit/core";
-// import { useState } from "react";
-// import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
-// import { DroppableWorkspace } from "@/routes/LibraryViews/DragNDrop/DroppableWorkspace.tsx";
+
 import { ToastAction } from "@/components/ui/toast";
 import {
     ColumnDef,
@@ -59,6 +56,7 @@ import {
 } from "@/components/ui/dialog";
 import { AddTagToReference } from "@/routes/CustomComponents/Tag/AddTagToReference.tsx";
 import { Link } from "react-router-dom";
+import { useGroupSelection } from "@/routes/Context/SelectedGroupContext.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -96,11 +94,14 @@ export function Library() {
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const [totalRef, setTotalRef] = useState(0);
-    const [data, setData] = React.useState<Reference[]>([]);
     const { toast } = useToast();
 
     const { selectedReferences, toggleReference, clearSelection } =
         useReferenceSelection();
+
+    const { selectedGroup } = useGroupSelection();
+
+    const [data, setData] = React.useState<Reference[]>([]);
 
     const [pagination, setPagination] = useState({
         pageSize: 15,
@@ -368,13 +369,24 @@ export function Library() {
     }
     const fetchData = async () => {
         try {
-            const response = await instance.get(
-                `Reference/references?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
-                {
-                    withCredentials: true,
-                },
-            );
+            let fetchUrl = `Reference/references?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`;
+            console.log(selectedGroup);
+            if (
+                selectedGroup !== null &&
+                selectedGroup !== undefined &&
+                selectedGroup.length > 0
+            ) {
+                console.log(selectedGroup);
+                // TODO MAKE THIS ITERATE THROUGH EACH GROUP AND RETRIEVE REFERENCES
+                fetchUrl = `get-references-from-group?groupName=${selectedGroup[0]}`;
+            }
+
+            const response = await instance.get(fetchUrl, {
+                withCredentials: true,
+            });
+
             setData(response.data.data);
+
             setTotalRef(response.data.TotalPages);
         } catch (error) {
             toast("", {
@@ -423,7 +435,7 @@ export function Library() {
 
     useEffect(() => {
         fetchData();
-    }, [pagination]);
+    }, [pagination, selectedGroup]);
 
     const table = useReactTable({
         data,

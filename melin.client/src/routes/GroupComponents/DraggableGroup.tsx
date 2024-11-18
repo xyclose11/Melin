@@ -50,6 +50,8 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog.tsx";
 import { GroupType } from "@/routes/LibraryPage.tsx";
+import { useGroupSelection } from "@/routes/Context/SelectedGroupContext.tsx";
+import { Checkbox } from "@/components/ui/checkbox.tsx";
 
 const GroupReferenceSchema = z.object({
     id: z.number(),
@@ -57,13 +59,6 @@ const GroupReferenceSchema = z.object({
 });
 
 type GroupReferenceSchema = z.infer<typeof GroupReferenceSchema>;
-
-const GroupContentSchema = z.object({
-    id: z.number(),
-    name: z.string(),
-    type: z.string(),
-    content: z.string().optional(),
-});
 
 export function DraggableGroup({
     groupName,
@@ -75,6 +70,8 @@ export function DraggableGroup({
     references: [];
 }) {
     const { selectedReferences } = useReferenceSelection();
+    const { toggleGroup } = useGroupSelection();
+
     const { toast } = useToast();
 
     const { isOver, setNodeRef: setDropNodeRef } = useDroppable({
@@ -173,6 +170,12 @@ export function DraggableGroup({
                     <CardTitle {...listeners} ref={setActivatorNodeRef}>
                         {groupName}
                     </CardTitle>
+                    <Checkbox
+                        disabled={references.length <= 0}
+                        onCheckedChange={() => {
+                            toggleGroup(groupName);
+                        }}
+                    />
                     <Dialog>
                         <DropdownMenu>
                             <DropdownMenuTrigger>
@@ -184,7 +187,7 @@ export function DraggableGroup({
                                         Edit Details
                                     </DropdownMenuSubTrigger>
                                     <DropdownMenuSubContent>
-                                        <EditGroupForm groupName={groupName} />a
+                                        <EditGroupForm groupName={groupName} />
                                     </DropdownMenuSubContent>
                                 </DropdownMenuSub>
                                 <DropdownMenuSub>
@@ -276,9 +279,6 @@ export function DraggableGroup({
                             .filter((g) => g)
                             .map((g: GroupType) => (
                                 <CollapsibleContent>
-                                    {/*<div key={g.id}>*/}
-                                    {/*    <div>{g.name}</div>*/}
-                                    {/*</div>*/}
                                     <DraggableGroup
                                         groupName={g.name}
                                         groups={g.groups}

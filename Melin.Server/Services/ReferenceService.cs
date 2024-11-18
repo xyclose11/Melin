@@ -545,6 +545,12 @@ public class ReferenceService : IReferenceService
         return res.Data;
     }
     
+    public async Task<ICollection<Reference>> GetReferencesFromGroupAsync(PaginationFilter paginationFilter, string userEmail, string groupName)
+    {
+        var res = await _referenceRepository.GetOwnedPaginatedReferencesAsync(paginationFilter, userEmail);
+        return res.Data;
+    }
+    
     public async Task<bool> AddReferenceAsync(Reference newReference)
     {
         try

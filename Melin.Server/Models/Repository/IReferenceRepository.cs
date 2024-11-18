@@ -11,6 +11,7 @@ public interface IReferenceRepository : IGenericRepository<Reference>
 
         Task<Result<List<Reference>>> GetAllOwnedReferencesAsync(string userEmail);
         Task<Result<List<Reference>>> GetOwnedPaginatedReferencesAsync(PaginationFilter paginationFilter, string userEmail);
+
         Task<Result<T>> GetReferenceByIdAsync<T>(string userEmail, int id) where T : Reference;
 
         Task<Result<Reference>> GetReferenceByIdAsync(string userEmail, int id);

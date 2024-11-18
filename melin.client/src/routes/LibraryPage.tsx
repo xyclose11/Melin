@@ -9,6 +9,7 @@ import { ReferenceSelectionProvider } from "@/routes/Context/ReferencesSelectedC
 import { ToastAction } from "@/components/ui/toast.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { GroupSelectedProvider } from "@/routes/Context/SelectedGroupContext.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -117,21 +118,23 @@ export function LibraryPage() {
     return (
         <div className={"flex gap-3"}>
             <ReferenceSelectionProvider>
-                <LibrarySideBar>
-                    <DndContext onDragEnd={handleDragEnd}>
-                        {userGroups
-                            .filter((g) => g.isRoot)
-                            .map((g: GroupType) => (
-                                <DraggableGroup
-                                    key={g.id}
-                                    groupName={g.name}
-                                    groups={g.groups}
-                                    references={g.references}
-                                ></DraggableGroup>
-                            ))}
-                    </DndContext>
-                </LibrarySideBar>{" "}
-                <Library />
+                <GroupSelectedProvider>
+                    <LibrarySideBar>
+                        <DndContext onDragEnd={handleDragEnd}>
+                            {userGroups
+                                .filter((g) => g.isRoot)
+                                .map((g: GroupType) => (
+                                    <DraggableGroup
+                                        key={g.id}
+                                        groupName={g.name}
+                                        groups={g.groups}
+                                        references={g.references}
+                                    ></DraggableGroup>
+                                ))}
+                        </DndContext>
+                    </LibrarySideBar>{" "}
+                    <Library />
+                </GroupSelectedProvider>
             </ReferenceSelectionProvider>
         </div>
     );

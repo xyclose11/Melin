@@ -48,6 +48,8 @@ public interface IReferenceService
     Task<Result<Website>> GetWebsiteByIdAsync(string userEmail, int id);
 
     Task<ICollection<Reference>> GetOwnedReferencesAsync(PaginationFilter paginationFilter, string userEmail);
+    Task<ICollection<Reference>> GetReferencesFromGroupAsync(PaginationFilter paginationFilter, string userEmail, string groupName);
+
     Task<bool> AddReferenceAsync(Reference newReference);
     Task<bool> AddArtworkAsync(Artwork newArtwork);
     Task<bool> AddBookAsync(Book newBook);
