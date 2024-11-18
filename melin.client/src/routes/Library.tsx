@@ -370,20 +370,29 @@ export function Library() {
     const fetchData = async () => {
         try {
             let fetchUrl = `Reference/references?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`;
-            console.log(selectedGroup);
             if (
                 selectedGroup !== null &&
                 selectedGroup !== undefined &&
                 selectedGroup.length > 0
             ) {
                 console.log(selectedGroup);
-                // TODO MAKE THIS ITERATE THROUGH EACH GROUP AND RETRIEVE REFERENCES
-                fetchUrl = `get-references-from-group?groupName=${selectedGroup[0]}`;
+                if (selectedGroup.length === 1) {
+                    fetchUrl = `get-references-from-group?groupName=${selectedGroup[0]}`;
+                } else {
+                    let requestURI = `?groupNames=${selectedGroup[0]}`;
+                    selectedGroup.slice(1).map((g) => {
+                        requestURI += "&groupNames=" + g;
+                    });
+                    console.log(requestURI);
+                    fetchUrl = `get-references-from-multiple-groups${requestURI}`;
+                }
             }
 
             const response = await instance.get(fetchUrl, {
                 withCredentials: true,
             });
+
+            console.log(response);
 
             setData(response.data.data);
 

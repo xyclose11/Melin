@@ -128,6 +128,50 @@ public class GroupController : ControllerBase
             return BadRequest(e);
         }
     }
+    
+    [HttpGet("get-references-from-multiple-groups")]
+    [Authorize]
+    public async Task<ActionResult<List<Reference>>> GetReferencesFromMultipleGroups([FromQuery(Name = "groupNames")]string[] groupNames)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            if (groupNames.Length <= 0)
+            {
+                return BadRequest("GroupNames length is: " + groupNames.Length + " and it must by >= 1");
+            }
+
+            var userOwnedGroups = await _referenceContext.Group
+                .Where(g => g.CreatedBy == User.Identity.Name)
+                .Include(g => g.References)
+                .ToListAsync();
+
+            List<Reference> references = new List<Reference>();
+
+            foreach (var groupName in groupNames)
+            {
+                var g = userOwnedGroups
+                    .Where(g => g.Name == groupName)
+                    .First();
+
+                if (g.References != null)
+                {
+                    references.AddRange(g.References);
+                }
+                
+            }
+            
+            return Ok(new Response<ICollection<Reference>>(references));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e);
+        }
+    }
 
     [HttpPost("create-group")]
     [Authorize]
