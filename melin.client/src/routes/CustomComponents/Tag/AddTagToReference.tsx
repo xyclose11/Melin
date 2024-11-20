@@ -133,9 +133,13 @@ export function AddTagToReference({
 
     const handleTagChange = (newTags: Tag[]) => {
         setCurrentTags(newTags);
-        stateChanger(newTags);
 
-        console.log(newTags);
+        const convertedReferenceTags: ReferenceTag[] = newTags.map((tag) => ({
+            ...tag,
+            createdBy: ""
+        }))
+
+        stateChanger(convertedReferenceTags);
 
         form.setValue("tags", newTags as [Tag, ...Tag[]]);
     };

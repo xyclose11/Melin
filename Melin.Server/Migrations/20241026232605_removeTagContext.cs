@@ -11,23 +11,23 @@ namespace Melin.Server.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "Tags",
-                type: "integer",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256)
-                .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+            // migrationBuilder.AlterColumn<int>(
+            //     name: "Id",
+            //     table: "Tags",
+            //     type: "integer",
+            //     nullable: false,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256)
+            //     .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "TagsId",
-                table: "ReferenceTag",
-                type: "integer",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)");
+            // migrationBuilder.AlterColumn<int>(
+            //     name: "TagsId",
+            //     table: "ReferenceTag",
+            //     type: "integer",
+            //     nullable: false,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)");
         }
 
         /// <inheritdoc />
