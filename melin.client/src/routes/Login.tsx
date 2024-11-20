@@ -37,7 +37,7 @@ export function LoginForm() {
                 .then(function (response) {
                     if (response.status === 200) {
                         // show Toast
-                        toast("", {
+                        toast({
                             title: "Successfully Logged In",
                             description: `Reference with ID: has been deleted.`,
                             action: (
@@ -49,7 +49,7 @@ export function LoginForm() {
                         // route user
                         navigate("/library");
                     } else {
-                        toast("", {
+                        toast({
                             title: "Login Failed",
                             description: "Please try again later",
                             action: (

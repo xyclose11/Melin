@@ -26,18 +26,18 @@ export function GroupReferenceDisplay({
             );
 
             if (res.status === 200) {
-                toast("", {
+                toast({
                     variant: "default",
                     title: "Successfully removed reference from group",
                 });
             } else {
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: "Unable to removed reference from group",
                 });
             }
         } catch (e) {
-            toast("", {
+            toast({
                 variant: "destructive",
                 title: `Unable to remove reference: ${gn.title} from group`,
             });

@@ -36,11 +36,11 @@ export function EditTagForm({ tagText }: { tagText: string }) {
             );
 
             if (res.status === 200) {
-                toast("Tag Edited Successfully!", {
+                toast({
                     description: `New Tag name:: ${data.text}`,
                 });
             } else {
-                toast("Tag Edit Failed!", {
+                toast({
                     description: `Tag name:: ${data.text}`,
                 });
             }

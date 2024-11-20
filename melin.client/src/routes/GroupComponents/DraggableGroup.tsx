@@ -110,13 +110,13 @@ export function DraggableGroup({
             );
 
             if (res.status === 200) {
-                toast("", {
+                toast({
                     variant: "default",
                     title: "Reference Added to Group",
                     description: `Reference(s) Successfully Added to Group: ${groupName}`,
                 });
             } else {
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: "Reference Unable to be added to Group",
                     description: `This reference is already in the group`,
@@ -128,7 +128,7 @@ export function DraggableGroup({
                 });
             }
         } catch (e) {
-            toast("", {
+            toast({
                 variant: "destructive",
                 title: "Reference Unable to be added to Group",
                 description: `Reference(s) Failed to be Added to Group: ${groupName}`,
@@ -150,14 +150,14 @@ export function DraggableGroup({
             );
 
             if (res.status === 200) {
-                toast("", {
+                toast({
                     variant: "default",
                     title: `Group: ${groupName} successfully deleted`,
                     description: "NOTE: Undo feature is currently in progress",
                     action: <ToastAction altText={"Undo"}>Undo</ToastAction>,
                 });
             } else {
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: `Unable to Delete Group: ${groupName}`,
                     description:
@@ -170,7 +170,7 @@ export function DraggableGroup({
                 });
             }
         } catch (e) {
-            toast("", {
+            toast({
                 variant: "destructive",
                 title: `CRITICAL ERROR ATTEMPTING TO DELETE GROUP: ${groupName}`,
                 description: `ERROR: ${e}`,

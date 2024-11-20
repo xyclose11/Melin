@@ -51,7 +51,7 @@ export function LibraryPage() {
             if (res.status === 200) {
                 setUserGroups(res.data);
             } else {
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: "Unable to Populate Groups",
                     action: (
@@ -62,7 +62,7 @@ export function LibraryPage() {
                 });
             }
         } catch (e) {
-            toast("", {
+            toast({
                 variant: "destructive",
                 title: "Unable to Populate Groups",
                 action: (

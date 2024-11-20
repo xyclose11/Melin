@@ -386,7 +386,7 @@ export function Library() {
                     });
                     if (requestURI.length > URLLimt) {
                         // Limit URL to 1600 characters for performance
-                        toast("", {
+                        toast({
                             title: "Request too long",
                             variant: "destructive",
                             description: `The request for group specific references is ${requestURI.length} characters long. Currently the application has a max URL character limit of 2,000`,
@@ -405,7 +405,7 @@ export function Library() {
                 setData(response.data.data);
                 setTotalRef(response.data.TotalPages);
             } else {
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: "Unable to get References",
                     description: "Please try again later",
@@ -417,7 +417,7 @@ export function Library() {
                 });
             }
         } catch (error) {
-            toast("", {
+            toast({
                 variant: "destructive",
                 title: "Unable to get References",
                 description: "Please try again later",
@@ -447,7 +447,7 @@ export function Library() {
 
                 // show success alert & offer undo
 
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: "Reference Successfully Deleted",
                     description: `Reference with ID: ${referenceId} has been deleted.`,

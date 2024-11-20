@@ -153,13 +153,13 @@ export function EditReferencePage() {
 
     function onClickRemoveCreator(removeId: string | null) {
         if (removeId === null) {
-            toast("", {
+            toast({
                 variant: "destructive",
                 title: "Cannot remove creator",
                 description: `Unable to remove creator!`,
             });
         } else if (creatorArray.length <= 0) {
-            toast("", {
+            toast({
                 variant: "default",
                 title: "Creator's is empty",
                 description: ``,
@@ -201,13 +201,13 @@ export function EditReferencePage() {
                 },
             );
             if (response.status === 200) {
-                toast("", {
+                toast({
                     variant: "default",
                     title: "Reference Successfully Updated!",
                     description: ``,
                 });
             } else {
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: "Reference Not Created Successfully",
                     description: ``,
