@@ -10,6 +10,7 @@ namespace Melin.Server.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            
             migrationBuilder.AlterColumn<string>(
                 name: "WebsiteType",
                 table: "Reference",
@@ -50,1036 +51,1036 @@ namespace Melin.Server.Migrations
                 oldType: "character varying(13)",
                 oldMaxLength: 13);
 
-            // migrationBuilder.AddColumn<string>(
-            //     name: "AbstractNote",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Accessed",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Archive",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ArchiveLocation",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-
-            // migrationBuilder.AddColumn<string>(
-            //     name: "AudioFileType",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-
-            // migrationBuilder.AddColumn<string>(
-            //     name: "AudioRecordingFormat",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "AudioRecording_Label",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "AudioRecording_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "AudioRecording_RunningTime",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "AudioRecording_SeriesTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "AudioRecording_Volume",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BillNumber1",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Bill_Code",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Bill_CodePages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Bill_CodeVolume",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Bill_History",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Bill_LegislativeBody",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Bill_Section",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Bill_Session",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BlogTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BookSection_BookTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BookSection_Edition",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BookSection_ISBN",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<int>(
-            //     name: "BookSection_NumberOfVolumes",
-            //     table: "Reference",
-            //     type: "integer",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BookSection_Pages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BookSection_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BookSection_Publisher",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BookSection_Series",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<int>(
-            //     name: "BookSection_SeriesNumber",
-            //     table: "Reference",
-            //     type: "integer",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "BookSection_Volume",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-
-            // migrationBuilder.AddColumn<string>(
-            //     name: "CallNumber",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ConferencePaper_ConferenceName",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ConferencePaper_ISBN",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ConferencePaper_Pages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ConferencePaper_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ConferencePaper_Publisher",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ConferencePaper_Series",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ConferencePaper_Volume",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DOI",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryEntry_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryEntry_Edition",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryEntry_ISBN",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryEntry_NumberOfVolumes",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryEntry_Pages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryEntry_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryEntry_Publisher",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryEntry_Series",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<int>(
-            //     name: "DictionaryEntry_SeriesNumber",
-            //     table: "Reference",
-            //     type: "integer",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryEntry_Volume",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "DictionaryTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Document_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Document_Publisher",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Email_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Email_Subject",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_Edition",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_ISBN",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_NumberOfVolumes",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_Pages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_Publisher",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_Series",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_SeriesNumber",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaArticle_Volume",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "EncyclopediaTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Film_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Film_Distributor",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Film_Genre",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Film_RunningTime",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Hearing_Committee",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Hearing_DocumentNumber",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Hearing_History",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Hearing_LegislativeBody",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Hearing_NumberOfVolumes",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Hearing_Pages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Hearing_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Hearing_Publisher",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Hearing_Session",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "InterviewMedium",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "JournalAbbreviation",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "JournalArticle_DOI",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "JournalArticle_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "JournalArticle_ISSN",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "JournalArticle_Issue",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "JournalArticle_Pages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "JournalArticle_Series",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "JournalArticle_SeriesTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "JournalArticle_Volume",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "LetterType",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Letter_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "LibraryCatalog",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "LocationStored",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "MagazineArticle_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "MagazineArticle_ISSN",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "MagazineArticle_Issue",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "MagazineArticle_Pages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "MagazineArticle_PublicationTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "MagazineArticle_Volume",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ManuscriptType",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Manuscript_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Manuscript_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "MapType1",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Map_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Map_Edition",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Map_ISBN",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Map_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Map_Publisher",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Map_Scale",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Map_SeriesTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "NewspaperArticle_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "NewspaperArticle_Edition",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "NewspaperArticle_ISSN",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "NewspaperArticle_Pages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "NewspaperArticle_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "NewspaperArticle_PublicationTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "NewspaperArticle_Section",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "NumberOfPages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<int>(
-            //     name: "NumberOfVolumes",
-            //     table: "Reference",
-            //     type: "integer",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Podcast_EpisodeNumber",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Podcast_RunningTime",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Podcast_SeriesTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ProceedingsTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "PublicationTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "RadioBroadcast_AudioRecordingFormat",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "RadioBroadcast_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "RadioBroadcast_EpisodeNumber",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "RadioBroadcast_Network",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "RadioBroadcast_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "RadioBroadcast_ProgramTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "RadioBroadcast_RunningTime",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "SeriesText",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Statute_Code",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Statute_CodeNumber",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Statute_DateEnacted",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Statute_History",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Statute_NameOfAct",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Statute_Pages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Statute_PublicLawNumber",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Statute_Section",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Statute_Session",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "TVBroadcast_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "TVBroadcast_EpisodeNumber",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "TVBroadcast_Network",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "TVBroadcast_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "TVBroadcast_ProgramTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "TVBroadcast_RunningTime",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "TVBroadcast_VideoRecordingFormat",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "ThesisType",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Thesis_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Thesis_NumberOfPages",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Thesis_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "URL",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "University",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecordingFormat",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecordingFormat1",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecording_Date",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecording_ISBN",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecording_NumberOfVolumes",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecording_Place",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecording_RunningTime",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecording_SeriesTitle",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecording_Studio",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "VideoRecording_Volume",
-            //     table: "Reference",
-            //     type: "text",
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "WebsiteType1",
-            //     table: "Reference",
-            //     type: "character varying(256)",
-            //     maxLength: 256,
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Website_ForumTitle",
-            //     table: "Reference",
-            //     type: "character varying(256)",
-            //     maxLength: 256,
-            //     nullable: true);
-            //
-            // migrationBuilder.AddColumn<string>(
-            //     name: "Website_PostType",
-            //     table: "Reference",
-            //     type: "character varying(256)",
-            //     maxLength: 256,
-            //     nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "GroupId",
-                table: "Group",
-                type: "integer",
+            migrationBuilder.AddColumn<string>(
+                name: "AbstractNote",
+                table: "Reference",
+                type: "text",
                 nullable: true);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "ReferenceId",
-                table: "Creators",
+            migrationBuilder.AddColumn<string>(
+                name: "Accessed",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Archive",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ArchiveLocation",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "AudioFileType",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "AudioRecordingFormat",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "AudioRecording_Label",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "AudioRecording_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "AudioRecording_RunningTime",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "AudioRecording_SeriesTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "AudioRecording_Volume",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BillNumber1",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Bill_Code",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Bill_CodePages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Bill_CodeVolume",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Bill_History",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Bill_LegislativeBody",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Bill_Section",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Bill_Session",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BlogTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BookSection_BookTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BookSection_Edition",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BookSection_ISBN",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<int>(
+                name: "BookSection_NumberOfVolumes",
+                table: "Reference",
                 type: "integer",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "integer");
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BookSection_Pages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BookSection_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BookSection_Publisher",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BookSection_Series",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<int>(
+                name: "BookSection_SeriesNumber",
+                table: "Reference",
+                type: "integer",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "BookSection_Volume",
+                table: "Reference",
+                type: "text",
+                nullable: true);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Group_GroupId",
-                table: "Group",
-                column: "GroupId");
+            migrationBuilder.AddColumn<string>(
+                name: "CallNumber",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ConferencePaper_ConferenceName",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ConferencePaper_ISBN",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ConferencePaper_Pages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ConferencePaper_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ConferencePaper_Publisher",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ConferencePaper_Series",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ConferencePaper_Volume",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DOI",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryEntry_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryEntry_Edition",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryEntry_ISBN",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryEntry_NumberOfVolumes",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryEntry_Pages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryEntry_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryEntry_Publisher",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryEntry_Series",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<int>(
+                name: "DictionaryEntry_SeriesNumber",
+                table: "Reference",
+                type: "integer",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryEntry_Volume",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "DictionaryTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Document_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Document_Publisher",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Email_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Email_Subject",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_Edition",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_ISBN",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_NumberOfVolumes",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_Pages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_Publisher",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_Series",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_SeriesNumber",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaArticle_Volume",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "EncyclopediaTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Film_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Film_Distributor",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Film_Genre",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Film_RunningTime",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Hearing_Committee",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Hearing_DocumentNumber",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Hearing_History",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Hearing_LegislativeBody",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Hearing_NumberOfVolumes",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Hearing_Pages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Hearing_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Hearing_Publisher",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Hearing_Session",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "InterviewMedium",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "JournalAbbreviation",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "JournalArticle_DOI",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "JournalArticle_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "JournalArticle_ISSN",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "JournalArticle_Issue",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "JournalArticle_Pages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "JournalArticle_Series",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "JournalArticle_SeriesTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "JournalArticle_Volume",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "LetterType",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Letter_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "LibraryCatalog",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "LocationStored",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "MagazineArticle_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "MagazineArticle_ISSN",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "MagazineArticle_Issue",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "MagazineArticle_Pages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "MagazineArticle_PublicationTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "MagazineArticle_Volume",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ManuscriptType",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Manuscript_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Manuscript_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "MapType1",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Map_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Map_Edition",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Map_ISBN",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Map_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Map_Publisher",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Map_Scale",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Map_SeriesTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "NewspaperArticle_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "NewspaperArticle_Edition",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "NewspaperArticle_ISSN",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "NewspaperArticle_Pages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "NewspaperArticle_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "NewspaperArticle_PublicationTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "NewspaperArticle_Section",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "NumberOfPages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<int>(
+                name: "NumberOfVolumes",
+                table: "Reference",
+                type: "integer",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Podcast_EpisodeNumber",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Podcast_RunningTime",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Podcast_SeriesTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ProceedingsTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "PublicationTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "RadioBroadcast_AudioRecordingFormat",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "RadioBroadcast_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "RadioBroadcast_EpisodeNumber",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "RadioBroadcast_Network",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "RadioBroadcast_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "RadioBroadcast_ProgramTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "RadioBroadcast_RunningTime",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "SeriesText",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Statute_Code",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Statute_CodeNumber",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Statute_DateEnacted",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Statute_History",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Statute_NameOfAct",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Statute_Pages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Statute_PublicLawNumber",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Statute_Section",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Statute_Session",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "TVBroadcast_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "TVBroadcast_EpisodeNumber",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "TVBroadcast_Network",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "TVBroadcast_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "TVBroadcast_ProgramTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "TVBroadcast_RunningTime",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "TVBroadcast_VideoRecordingFormat",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "ThesisType",
+                table: "Reference",
+                type: "text",
+                nullable: true);
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Group_Group_GroupId",
-                table: "Group",
-                column: "GroupId",
-                principalTable: "Group",
-                principalColumn: "Id");
+            migrationBuilder.AddColumn<string>(
+                name: "Thesis_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Thesis_NumberOfPages",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Thesis_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "URL",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "University",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecordingFormat",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecordingFormat1",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecording_Date",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecording_ISBN",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecording_NumberOfVolumes",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecording_Place",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecording_RunningTime",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecording_SeriesTitle",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecording_Studio",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "VideoRecording_Volume",
+                table: "Reference",
+                type: "text",
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "WebsiteType1",
+                table: "Reference",
+                type: "character varying(256)",
+                maxLength: 256,
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Website_ForumTitle",
+                table: "Reference",
+                type: "character varying(256)",
+                maxLength: 256,
+                nullable: true);
+            
+            migrationBuilder.AddColumn<string>(
+                name: "Website_PostType",
+                table: "Reference",
+                type: "character varying(256)",
+                maxLength: 256,
+                nullable: true);
+
+            // migrationBuilder.AddColumn<int>(
+            //     name: "GroupId",
+            //     table: "Group",
+            //     type: "integer",
+            //     nullable: true);
+
+            // migrationBuilder.AlterColumn<int>(
+            //     name: "ReferenceId",
+            //     table: "Creators",
+            //     type: "integer",
+            //     nullable: true,
+            //     oldClrType: typeof(int),
+            //     oldType: "integer");
+
+            // migrationBuilder.CreateIndex(
+            //     name: "IX_Group_GroupId",
+            //     table: "Group",
+            //     column: "GroupId");
+
+            // migrationBuilder.AddForeignKey(
+            //     name: "FK_Group_Group_GroupId",
+            //     table: "Group",
+            //     column: "GroupId",
+            //     principalTable: "Group",
+            //     principalColumn: "Id");
         }
 
         /// <inheritdoc />

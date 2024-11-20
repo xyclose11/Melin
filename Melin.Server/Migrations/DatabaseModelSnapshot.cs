@@ -34,7 +34,7 @@ namespace Melin.Server.Migrations
 
                     b.HasIndex("ReferencesId");
 
-                    b.ToTable("GroupReference");
+                    b.ToTable("GroupReference", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Creator", b =>
@@ -65,7 +65,7 @@ namespace Melin.Server.Migrations
 
                     b.HasIndex("ReferenceId");
 
-                    b.ToTable("Creators");
+                    b.ToTable("Creators", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Group", b =>
@@ -106,7 +106,7 @@ namespace Melin.Server.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Group");
+                    b.ToTable("Group", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Reference", b =>
@@ -180,7 +180,7 @@ namespace Melin.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reference");
+                    b.ToTable("Reference", (string)null);
 
                     b.HasDiscriminator().HasValue("Reference");
 
@@ -216,7 +216,7 @@ namespace Melin.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("ReferenceTag", b =>
@@ -231,7 +231,7 @@ namespace Melin.Server.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("ReferenceTag");
+                    b.ToTable("ReferenceTag", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Artwork", b =>
@@ -256,7 +256,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Medium")
                                 .HasColumnName("Artwork_Medium");
@@ -346,7 +346,7 @@ namespace Melin.Server.Migrations
                     b.Property<int>("VolumeAmount")
                         .HasColumnType("integer");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Place")
                                 .HasColumnName("Book_Place");
@@ -393,7 +393,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("History")
                                 .HasColumnName("LegalCases_History");
@@ -639,7 +639,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Volume")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Label")
                                 .HasColumnName("AudioRecording_Label");
@@ -688,7 +688,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Session")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("BillNumber")
                                 .HasColumnName("BillNumber1");
@@ -768,7 +768,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Volume")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("BookTitle")
                                 .HasColumnName("BookSection_BookTitle");
@@ -835,7 +835,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Volume")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("ConferenceName")
                                 .HasColumnName("ConferencePaper_ConferenceName");
@@ -899,7 +899,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Volume")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("DictionaryEntry_Date");
@@ -945,7 +945,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Publisher")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Document_Date");
@@ -967,7 +967,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Subject")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Email_Date");
@@ -1016,7 +1016,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Volume")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("EncyclopediaArticle_Date");
@@ -1071,7 +1071,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("VideoRecordingFormat")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Film_Date");
@@ -1133,7 +1133,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Session")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Committee")
                                 .HasColumnName("Hearing_Committee");
@@ -1220,7 +1220,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Volume")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("DOI")
                                 .HasColumnName("JournalArticle_DOI");
@@ -1260,7 +1260,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("LetterType")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Letter_Date");
@@ -1291,7 +1291,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Volume")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("MagazineArticle_Date");
@@ -1331,7 +1331,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Place")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Manuscript_Date");
@@ -1371,7 +1371,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("SeriesTitle")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Map_Date");
@@ -1426,7 +1426,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Section")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("NewspaperArticle_Date");
@@ -1469,7 +1469,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("SeriesTitle")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("EpisodeNumber")
                                 .HasColumnName("Podcast_EpisodeNumber");
@@ -1509,7 +1509,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("RunningTime")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("AudioRecordingFormat")
                                 .HasColumnName("RadioBroadcast_AudioRecordingFormat");
@@ -1567,7 +1567,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Session")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Code")
                                 .HasColumnName("Statute_Code");
@@ -1625,7 +1625,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("VideoRecordingFormat")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("TVBroadcast_Date");
@@ -1671,7 +1671,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("University")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Thesis_Date");
@@ -1717,7 +1717,7 @@ namespace Melin.Server.Migrations
                     b.Property<string>("Volume")
                         .HasColumnType("text");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("VideoRecording_Date");
@@ -1816,7 +1816,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("ForumTitle")
                                 .HasColumnName("Website_ForumTitle");
