@@ -1,11 +1,16 @@
-﻿"use client";
+﻿import React, { useState } from "react";
+import { instance } from "@/utils/axiosInstance.ts";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+    artworkSchema,
+    baseReferenceSchema,
+    bookSchema,
+    reportSchema,
+    websiteSchema,
+} from "@/routes/ReferenceCreationPages/BaseReferenceSchema.ts";
 import { z, ZodObject } from "zod";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useForm } from "react-hook-form";
-import { format } from "date-fns";
-
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Form,
     FormControl,
@@ -13,28 +18,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-    creatorFormSchema,
-    CreatorInput,
-} from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
-import React, { useEffect, useState } from "react";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover.tsx";
-import { cn } from "@/lib/utils.ts";
-import { CalendarIcon, SquareX } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { instance } from "@/utils/axiosInstance.ts";
-import {
-    TagCreateDropdown,
-    tagSchema,
-} from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
-import { useToast } from "@/hooks/use-toast.ts";
-import { useNavigate } from "react-router-dom";
+} from "@/components/ui/form.tsx";
 import {
     Card,
     CardContent,
@@ -42,111 +26,124 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card.tsx";
-
-const rightsSchema = z.object({
-    name: z.string().optional(),
-});
-
-const formSchema = z.object({
-    refType: z.string(),
-    title: z.string().min(2, {
-        message: "Title must be at least 2 characters.",
-    }),
-    shortTitle: z.string().optional(),
-    language: z.string().optional(),
-    datePublished: z.date().optional(),
-    rights: z.array(rightsSchema).optional(),
-    extraFields: z.string().optional(),
-    creators: z.array(creatorFormSchema).optional(),
-    tags: z.array(tagSchema).optional(),
-});
+import { TagCreateDropdown } from "@/routes/CustomComponents/Tag/TagCreateDropdown.tsx";
+import { Input } from "@/components/ui/input.tsx";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { cn } from "@/lib/utils.ts";
+import { CalendarIcon, SquareX } from "lucide-react";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar.tsx";
+import { CreatorInput } from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
+import { useToast } from "@/hooks/use-toast.ts";
+import { Tag } from "emblor";
 
 let nextId = 0;
-export function BaseReferenceCreator({
-    refSchema,
-    schemaName,
-}: {
-    refSchema: ZodObject<any>;
-    schemaName: string;
-}) {
+
+export function EditReferencePage() {
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
     const { toast } = useToast();
+    const { refId } = useParams();
+    const [refSchema, setRefSchema] =
+        useState<ZodObject<any>>(baseReferenceSchema);
+    const [schemaName, setSchemaName] = useState("");
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            refType: "book",
-            title: "",
-            shortTitle: "",
-            datePublished: new Date(),
-            language: "English",
-            extraFields: undefined,
-            rights: undefined,
-            creators: [{}],
-            tags: [],
+    const form = useForm<z.infer<typeof refSchema>>({
+        resolver: refSchema ? zodResolver(refSchema) : undefined,
+        defaultValues: async () => {
+            return await getReferenceData();
         },
     });
 
-    function generateRandom32BitInteger() {
-        const max = 500000;
-        return Math.floor(Math.random() * (max + 1));
-    }
-
-    const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        const convertedTags = data.tags?.map((tag) => ({
-            ...tag,
-            id: generateRandom32BitInteger(),
-        }));
-
-        const newData = {
-            ...data,
-            tags: convertedTags,
-        };
-
+    const {
+        control,
+        formState: { errors, isLoading },
+        handleSubmit,
+    } = form;
+    const getReferenceData = async () => {
         try {
-            // figure out which reference type is being used
-            const response = await instance.post(
-                `Reference/create-${schemaName}`,
-                newData,
+            const res = await instance.get(
+                `Reference/get-single-reference?refId=${refId}`,
                 {
                     withCredentials: true,
                 },
             );
-            if (response.status === 200) {
-                toast({
-                    variant: "default",
-                    title: "Reference Successfully Created!",
-                    description: ``,
-                });
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Reference Not Created Successfully",
-                    description: ``,
-                });
-            }
 
-            navigate("/library");
-            console.log("SUCCESS");
-        } catch (error) {
-            console.error("Create reference failed:", error);
+            if (res.status == 200) {
+                let newSchema: ZodObject<any>;
+                let name = "";
+
+                setDatePublished(new Date(res.data.datePublished));
+                switch (res.data.type) {
+                    case "Artwork":
+                        newSchema = artworkSchema;
+                        name = "artwork";
+                        break;
+                    case "Book":
+                        newSchema = bookSchema;
+                        name = "book";
+                        break;
+                    case "Report":
+                        newSchema = reportSchema;
+                        name = "report";
+                        break;
+                    case "Website":
+                        newSchema = websiteSchema;
+                        name = "website";
+                        break;
+                    default:
+                        newSchema = baseReferenceSchema;
+                        break;
+                }
+
+                if (res.data.creators.length !== null) {
+                    console.log(res.data.creators);
+                    console.log(creatorArray);
+                    res.data.creators.map(
+                        (creator: {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            types: string;
+                        }) => {
+                            console.log(creator);
+                            creatorArray.push(
+                                <CreatorInput
+                                    firstName={creator.firstName}
+                                    lastName={creator.lastName}
+                                    types={creator.types}
+                                    name={`creators.${nextId}`}
+                                    key={creator.id}
+                                />,
+                            );
+                        },
+                    );
+                    nextId++;
+                }
+
+                setRefSchema(newSchema);
+                setSchemaName(name);
+                return res.data;
+            } else {
+                console.error(res);
+            }
+        } catch (e) {
+            console.error(e);
         }
     };
-
-    const {
-        control,
-        formState: { errors },
-    } = form;
-
     function onClickAddCreator() {
         setCreatorArray([
             ...creatorArray,
             <CreatorInput
-                types={""}
-                lastName={""}
                 firstName={""}
+                lastName={""}
+                types={""}
                 name={`creators.${nextId}`}
                 key={nextId}
             />,
@@ -177,16 +174,65 @@ export function BaseReferenceCreator({
         }
     }
 
-    useEffect(() => {
-        onClickAddCreator();
-    }, []);
+    function generateRandom32BitInteger() {
+        const max = 500000;
+        return Math.floor(Math.random() * (max + 1));
+    }
+    const onSubmit = async (data: any) => {
+        console.log(data);
+        const convertedTags = data.tags?.map((tag: Tag) => ({
+            ...tag,
+            id: generateRandom32BitInteger(),
+        }));
+
+        const newData = {
+            ...data,
+            tags: convertedTags,
+        };
+
+        try {
+            // figure out which reference type is being used
+            console.log(newData);
+            const response = await instance.put(
+                `Reference/update-${schemaName}?oldRefId=${refId}`,
+                newData,
+                {
+                    withCredentials: true,
+                },
+            );
+            if (response.status === 200) {
+                toast({
+                    variant: "default",
+                    title: "Reference Successfully Updated!",
+                    description: ``,
+                });
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Reference Not Created Successfully",
+                    description: ``,
+                });
+            }
+
+            navigate("/library");
+            console.log("SUCCESS");
+        } catch (error) {
+            console.error("Update reference failed:", error);
+        }
+    };
+
+    if (isLoading || !refSchema) {
+        return <div>Loading...</div>;
+    }
+
+    console.log(errors);
 
     return (
-        <div>
+        <>
             <FormProvider {...form}>
                 <Form {...form}>
                     <form
-                        onSubmit={form.handleSubmit(onSubmit)}
+                        onSubmit={handleSubmit(onSubmit)}
                         className="space-y-2 gap-2 justify-items-start grid grid-cols-3"
                     >
                         <Card>
@@ -309,37 +355,37 @@ export function BaseReferenceCreator({
                                         </FormItem>
                                     )}
                                 />
-                                <FormField
-                                    control={form.control}
-                                    name="rights"
-                                    render={() => (
-                                        <FormItem>
-                                            <FormLabel>Rights</FormLabel>
-                                            <FormControl>
-                                                {/*<Input placeholder="Rights" {...field} />*/}
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="extraFields"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Extra Information
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="Extra Fields"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                {/*<FormField*/}
+                                {/*    control={form.control}*/}
+                                {/*    name="rights"*/}
+                                {/*    render={() => (*/}
+                                {/*        <FormItem>*/}
+                                {/*            <FormLabel>Rights</FormLabel>*/}
+                                {/*            <FormControl>*/}
+                                {/*                /!*<Input placeholder="Rights" {...field} />*!/*/}
+                                {/*            </FormControl>*/}
+                                {/*            <FormMessage />*/}
+                                {/*        </FormItem>*/}
+                                {/*    )}*/}
+                                {/*/>*/}
+                                {/*<FormField*/}
+                                {/*    control={form.control}*/}
+                                {/*    name="extraFields"*/}
+                                {/*    render={({ field }) => (*/}
+                                {/*        <FormItem>*/}
+                                {/*            <FormLabel>*/}
+                                {/*                Extra Information*/}
+                                {/*            </FormLabel>*/}
+                                {/*            <FormControl>*/}
+                                {/*                <Input*/}
+                                {/*                    placeholder="Extra Fields"*/}
+                                {/*                    {...(field ?? "")}*/}
+                                {/*                />*/}
+                                {/*            </FormControl>*/}
+                                {/*            <FormMessage />*/}
+                                {/*        </FormItem>*/}
+                                {/*    )}*/}
+                                {/*/>*/}
                             </CardContent>
 
                             <CardFooter>
@@ -405,61 +451,48 @@ export function BaseReferenceCreator({
                             </CardHeader>
 
                             <CardContent className={"grid grid-cols-2 gap-4"}>
-                                {Object.keys(refSchema.shape).map((key) => (
-                                    <Controller
-                                        key={key}
-                                        control={control}
-                                        name={
-                                            `bookSchema.${key}` as keyof z.infer<
-                                                typeof formSchema
-                                            >
-                                        }
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    {key.replace(
-                                                        /([A-Z])/g,
-                                                        " $1",
-                                                    )}
-                                                    :
-                                                </FormLabel>
-                                                <FormControl className={""}>
-                                                    {/*@ts-ignore*/}
-                                                    <Input
-                                                        placeholder={key.replace(
+                                {Object.keys(refSchema.shape)
+                                    .filter((key) => !key.includes("title"))
+                                    .filter(
+                                        (key) => !key.includes("shortTitle"),
+                                    )
+                                    .filter((key) => !key.includes("language"))
+                                    .filter(
+                                        (key) => !key.includes("datePublished"),
+                                    )
+                                    .filter((key) => !key.includes("creators"))
+                                    .map((key) => (
+                                        <Controller
+                                            key={key}
+                                            control={control}
+                                            name={`${key}` || ""}
+                                            defaultValue={""}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        {key.replace(
                                                             /([A-Z])/g,
                                                             " $1",
                                                         )}
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                ))}
+                                                        :
+                                                    </FormLabel>
+                                                    <FormControl className={""}>
+                                                        <Input
+                                                            placeholder={key.replace(
+                                                                /([A-Z])/g,
+                                                                " $1",
+                                                            )}
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    ))}
                             </CardContent>
                         </Card>
 
-                        {errors.creators && (
-                            <div>{errors.creators.message}</div>
-                        )}
-                        {errors.title && <div>{errors.title.message}</div>}
-                        {errors.shortTitle && (
-                            <div>{errors.shortTitle.message}</div>
-                        )}
-                        {errors.rights && <div>{errors.rights.message}</div>}
-                        {errors.datePublished && (
-                            <div>{errors.datePublished.message}</div>
-                        )}
-                        {errors.extraFields && (
-                            <div>{errors.extraFields.message}</div>
-                        )}
-                        {errors.language && (
-                            <div>{errors.language.message}</div>
-                        )}
-                        {errors.tags && <div> {errors.tags.message}</div>}
-
-                        {errors.root && <div> {errors.root.message}</div>}
+                        {errors.root && <p>{errors.root?.message}</p>}
 
                         <Button className="col-end-2 m-2" type="submit">
                             Submit
@@ -467,6 +500,6 @@ export function BaseReferenceCreator({
                     </form>
                 </Form>
             </FormProvider>
-        </div>
+        </>
     );
 }

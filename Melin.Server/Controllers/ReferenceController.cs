@@ -9,10 +9,14 @@ using Melin.Server.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
 using Melin.Server.Models.Context;
+using Melin.Server.Models.References;
 using Melin.Server.Services;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Presentation = Melin.Server.Models.Presentation;
+using Report = Melin.Server.Models.Report;
+using Software = Melin.Server.Models.Software;
 using Task = System.Threading.Tasks.Task;
 
 namespace Melin.Server.Controllers;
@@ -21,43 +25,16 @@ namespace Melin.Server.Controllers;
 [Route("[controller]")]
 public class ReferenceController : ControllerBase
 {
-    private readonly ApiService _apiService;
-    private readonly ReferenceContext _referenceContext;
+    private readonly IReferenceService _referenceService;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly TagService _tagService;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public ReferenceController(ApiService apiService, ReferenceContext database, UserManager<IdentityUser> userManager, TagService tagService, IUnitOfWork unitOfWork)
+    public ReferenceController(IReferenceService referenceService, UserManager<IdentityUser> userManager, TagService tagService)
     {
-        _apiService = apiService;
-        _referenceContext = database;
+        _referenceService = referenceService;
         _userManager = userManager;
         _tagService = tagService;
-        _unitOfWork = unitOfWork;
     }
-    
-    
-    // GET: Get All User Owned References
-    // [HttpGet("references")]
-    // [Authorize]
-    // public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
-    // {
-    //     
-    //     var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-    //     var pagedReferences = await _referenceContext.Reference
-    //         .Include(t => t.Tags)
-    //         .Include(r => r.Creators)
-    //         .Where(a => a.OwnerEmail == User.Identity.Name)
-    //         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-    //         .Take(validFilter.PageSize)
-    //         .ToListAsync();
-    //
-    //     var totalRefCount = await _referenceContext.Reference
-    //         .Where(a => a.OwnerEmail == User.Identity.Name)
-    //         .CountAsync();
-    //     
-    //     return Ok(new PagedResponse<List<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
-    // }
 
     [HttpGet("get-single-reference")]
     [Authorize]
@@ -65,13 +42,11 @@ public class ReferenceController : ControllerBase
     {
         try
         {
-            var reference = await _referenceContext.Reference
-                .Where(r => r.Id == refId)
-                .FirstAsync();
+            var reference = await _referenceService.GetReferenceWithAllDetailsById(User.Identity.Name, refId);
 
-            if (reference != null)
+            if (reference.Success)
             {
-                return Ok(reference);
+                return Ok(reference.Data);
             }
             else
             {
@@ -89,12 +64,12 @@ public class ReferenceController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
+        var userEmail = User.Identity.Name;
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        var pagedReferences = await _unitOfWork.References.GetOwnedReferences(filter, User.Identity.Name);
+        validFilter.PageSize = 1000;
+        var pagedReferences = await _referenceService.GetOwnedReferencesAsync(filter, userEmail);
 
-        var totalRefCount = await _referenceContext.Reference
-            .Where(a => a.OwnerEmail == User.Identity.Name)
-            .CountAsync();
+        var totalRefCount = await _referenceService.GetOwnedReferenceCountAsync(userEmail);
         
         return Ok(new PagedResponse<ICollection<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
     }
@@ -108,41 +83,12 @@ public class ReferenceController : ControllerBase
         }
         
         try {
-            _referenceContext.Reference.Add(reference);
-            await _referenceContext.SaveChangesAsync();
+            await _referenceService.AddReferenceAsync(reference);
 
             return CreatedAtAction(nameof(PostReference), new { id = reference.Id }, reference);
         } catch (Exception ex) {
             return StatusCode(500, "An error occurred while creating the reference.");
         }
-    }
-
-    [HttpPost("create-book")]
-    [Authorize]
-    public async Task<ActionResult<Book>> PostReferenceBook([FromBody] Book book) {
-        if (!User.Identity.IsAuthenticated)
-        {
-            return Unauthorized("User is not authenticated.");
-        }
-
-        // check for tags
-        if (book.Tags != null)
-        {
-            bool res = await HandleTagsWithReferencePost(book.Tags);
-            if (!res)
-            {
-                return NoContent();
-            }
-        }
-
-        book.OwnerEmail = User.Identity.Name;
-        book.Language = Language.English;
-        book.Type = ReferenceType.Book;
-
-        _unitOfWork.References.Add(book);
-        _unitOfWork.Complete();
-        
-        return Ok();
     }
     
     [HttpPost("create-artwork")]
@@ -170,14 +116,941 @@ public class ReferenceController : ControllerBase
         }
 
         artwork.OwnerEmail = User.Identity.Name;
-        artwork.Language = Language.English;
-        artwork.Type = ReferenceType.Artwork;
-        _referenceContext.Artworks.Add(artwork);
-        
-        await _referenceContext.SaveChangesAsync();
+
+        await _referenceService.AddArtworkAsync(artwork);
 
         return Ok();
     }
+    
+    [HttpPost("create-audio-recording")]
+    [Authorize]
+    public async Task<ActionResult<AudioRecording>> PostReferenceAudioRecording([FromBody] AudioRecording audioRecording)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (audioRecording.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(audioRecording.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        audioRecording.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddReferenceAsync(audioRecording);
+
+        return Ok();
+    }
+    
+    
+
+    [HttpPost("create-bill")]
+    [Authorize]
+    public async Task<ActionResult<Artwork>> PostReferenceBill([FromBody] Bill bill)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (bill.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(bill.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        bill.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddBillAsync(bill);
+
+        return Ok();
+    }
+
+    [HttpPost("create-blog-post")]
+    [Authorize]
+    public async Task<ActionResult<BlogPost>> PostReferenceBlogPost([FromBody] BlogPost blogPost)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (blogPost.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(blogPost.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        blogPost.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddBlogPostAsync(blogPost);
+
+        return Ok();
+    }
+
+    [HttpPost("create-book-section")]
+    [Authorize]
+    public async Task<ActionResult<BookSection>> PostReferenceBookSection([FromBody] BookSection bookSection)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (bookSection.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(bookSection.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        bookSection.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddBookSectionAsync(bookSection);
+
+        return Ok();
+    }
+
+    [HttpPost("create-case")]
+    [Authorize]
+    public async Task<ActionResult<LegalCases>> PostReferenceCase([FromBody] LegalCases cCase)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (cCase.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(cCase.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        cCase.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddCaseAsync(cCase);
+
+        return Ok();
+    }
+
+    [HttpPost("create-conference-paper")]
+    [Authorize]
+    public async Task<ActionResult<ConferencePaper>> PostReferenceConferencePaper([FromBody] ConferencePaper conferencePaper)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (conferencePaper.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(conferencePaper.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        conferencePaper.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddConferencePaperAsync(conferencePaper);
+
+        return Ok();
+    }
+
+    [HttpPost("create-dictionary-entry")]
+    [Authorize]
+    public async Task<ActionResult<DictionaryEntry>> PostReferenceArtwork([FromBody] DictionaryEntry dictionaryEntry)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (dictionaryEntry.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(dictionaryEntry.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        dictionaryEntry.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddDictionaryEntryAsync(dictionaryEntry);
+
+        return Ok();
+    }
+
+    [HttpPost("create-document")]
+    [Authorize]
+    public async Task<ActionResult<Document>> PostReferenceArtwork([FromBody] Document document)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (document.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(document.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        document.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddDocumentAsync(document);
+
+        return Ok();
+    }
+
+    [HttpPost("create-email")]
+    [Authorize]
+    public async Task<ActionResult<Email>> PostReferenceEmail([FromBody] Email email)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (email.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(email.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        email.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddEmailAsync(email);
+
+        return Ok();
+    }
+
+    [HttpPost("create-encyclopedia-article")]
+    [Authorize]
+    public async Task<ActionResult<EncyclopediaArticle>> PostReferenceArtwork([FromBody] EncyclopediaArticle encyclopediaArticle)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (encyclopediaArticle.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(encyclopediaArticle.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        encyclopediaArticle.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddEncyclopediaArticleAsync(encyclopediaArticle);
+
+        return Ok();
+    }
+
+    [HttpPost("create-film")]
+    [Authorize]
+    public async Task<ActionResult<Film>> PostReferenceArtwork([FromBody] Film film)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (film.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(film.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        film.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddFilmAsync(film);
+
+        return Ok();
+    }
+
+    [HttpPost("create-forum-post")]
+    [Authorize]
+    public async Task<ActionResult<ForumPost>> PostReferenceArtwork([FromBody] ForumPost forumPost)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (forumPost.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(forumPost.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        forumPost.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddForumPostAsync(forumPost);
+
+        return Ok();
+    }
+
+    [HttpPost("create-hearing")]
+    [Authorize]
+    public async Task<ActionResult<Hearing>> PostReferenceArtwork([FromBody] Hearing hearing)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (hearing.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(hearing.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        hearing.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddHearingAsync(hearing);
+
+        return Ok();
+    }
+
+    [HttpPost("create-instant-message")]
+    [Authorize]
+    public async Task<ActionResult<InstantMessage>> PostReferenceInstantMessage([FromBody] InstantMessage instantMessage)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (instantMessage.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(instantMessage.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        instantMessage.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddInstantMessageAsync(instantMessage);
+
+        return Ok();
+    }
+
+    [HttpPost("create-interview")]
+    [Authorize]
+    public async Task<ActionResult<Interview>> PostReferenceArtwork([FromBody] Interview interview)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (interview.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(interview.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        interview.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddInterviewAsync(interview);
+
+        return Ok();
+    }
+
+    [HttpPost("create-journal-article")]
+    [Authorize]
+    public async Task<ActionResult<JournalArticle>> PostReferenceArtwork([FromBody] JournalArticle journalArticle)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (journalArticle.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(journalArticle.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        journalArticle.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddJournalArticleAsync(journalArticle);
+
+        return Ok();
+    }
+
+    [HttpPost("create-letter")]
+    [Authorize]
+    public async Task<ActionResult<Letter>> PostReferenceArtwork([FromBody] Letter letter)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (letter.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(letter.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        letter.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddLetterAsync(letter);
+
+        return Ok();
+    }
+
+    [HttpPost("create-magazine-article")]
+    [Authorize]
+    public async Task<ActionResult<MagazineArticle>> PostReferenceMagazineArticle([FromBody] MagazineArticle magazineArticle)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (magazineArticle.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(magazineArticle.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        magazineArticle.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddMagazineArticleAsync(magazineArticle);
+
+        return Ok();
+    }
+
+    [HttpPost("create-patent")]
+    [Authorize]
+    public async Task<ActionResult<Patent>> PostReferencePatent([FromBody] Patent patent)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (patent.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(patent.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        patent.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddPatentAsync(patent);
+
+        return Ok();
+    }
+    
+    [HttpPost("create-podcast")]
+    [Authorize]
+    public async Task<ActionResult<Podcast>> PostReferencePodcast([FromBody] Podcast podcast)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (podcast.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(podcast.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        podcast.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddPodcastAsync(podcast);
+
+        return Ok();
+    }
+
+    [HttpPost("create-presentation")]
+    [Authorize]
+    public async Task<ActionResult<Presentation>> PostReferencePresentation([FromBody] Presentation presentation)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (presentation.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(presentation.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        presentation.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddPresentationAsync(presentation);
+
+        return Ok();
+    }
+
+    [HttpPost("create-radio-broadcast")]
+    [Authorize]
+    public async Task<ActionResult<RadioBroadcast>> PostReferenceRadioBroadcast([FromBody] RadioBroadcast radioBroadcast)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (radioBroadcast.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(radioBroadcast.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        radioBroadcast.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddRadioBroadcastAsync(radioBroadcast);
+
+        return Ok();
+    }
+
+    [HttpPost("create-report")]
+    [Authorize]
+    public async Task<ActionResult<Report>> PostReferencePatent([FromBody] Report report)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (report.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(report.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        report.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddReportAsync(report);
+
+        return Ok();
+    }
+
+    [HttpPost("create-software")]
+    [Authorize]
+    public async Task<ActionResult<Software>> PostReferenceSoftware([FromBody] Software software)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (software.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(software.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        software.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddSoftwareAsync(software);
+
+        return Ok();
+    }
+
+    [HttpPost("create-statute")]
+    [Authorize]
+    public async Task<ActionResult<Statute>> PostReferenceStatute([FromBody] Statute statute)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (statute.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(statute.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        statute.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddStatuteAsync(statute);
+
+        return Ok();
+    }
+
+    [HttpPost("create-thesis")]
+    [Authorize]
+    public async Task<ActionResult<Thesis>> PostReferenceThesis([FromBody] Thesis thesis)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (thesis.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(thesis.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        thesis.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddThesisAsync(thesis);
+
+        return Ok();
+    }
+
+    [HttpPost("create-tv-broadcast")]
+    [Authorize]
+    public async Task<ActionResult<TVBroadcast>> PostReferenceTVBroadcast([FromBody] TVBroadcast tvBroadcast)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (tvBroadcast.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(tvBroadcast.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        tvBroadcast.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddTVBroadcastAsync(tvBroadcast);
+
+        return Ok();
+    }
+
+    [HttpPost("create-video-recording")]
+    [Authorize]
+    public async Task<ActionResult<VideoRecording>> PostReferenceVideoRecording([FromBody] VideoRecording videoRecording)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (videoRecording.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(videoRecording.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        videoRecording.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddVideoRecordingAsync(videoRecording);
+
+        return Ok();
+    }
+
+    [HttpPost("create-website")]
+    [Authorize]
+    public async Task<ActionResult<Webpage>> PostReferenceWebpage([FromBody] Webpage website)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (website.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(website.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        website.OwnerEmail = User.Identity.Name;
+
+        await _referenceService.AddWebpageAsync(website);
+
+        return Ok();
+    }
+
+
+    [HttpPost("create-book")]
+    [Authorize]
+    public async Task<ActionResult<Book>> PostReferenceBook([FromBody] Book book) {
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        // check for tags
+        if (book.Tags != null)
+        {
+            bool res = await HandleTagsWithReferencePost(book.Tags);
+            if (!res)
+            {
+                return NoContent();
+            }
+        }
+
+        book.OwnerEmail = User.Identity.Name;
+
+
+        await _referenceService.AddBookAsync(book);
+        
+        return Ok();
+    }
+    
+
 
     private async Task<bool> HandleTagsWithReferencePost(ICollection<Tag> tags)
     {
@@ -215,43 +1088,16 @@ public class ReferenceController : ControllerBase
     // UPDATE: update reference
     [HttpPut("update-artwork")]
     [Authorize]
-    public async Task<ActionResult<Reference>> UpdateArtwork(int refId, [FromBody] Artwork artwork)
+    public async Task<ActionResult<Artwork>> UpdateArtwork(int oldRefId, [FromBody] Artwork artwork)
     {
         try
         {
-            var prevArtwork = await _referenceContext.Artworks.FindAsync(refId);
-
-            if (prevArtwork == null)
+            var prevArtwork = await _referenceService.UpdateArtworkAsync(User.Identity.Name, oldRefId, artwork);
+            if (prevArtwork.Data == false)
             {
                 return NotFound("Reference Not Found. Cannot Update");
             }
-
-            await UpdateGeneralFields(prevArtwork, artwork);
             
-            if (!prevArtwork.Medium.Equals(artwork.Medium))
-            {
-                prevArtwork.Medium = artwork.Medium;
-            }
-            
-            if (!prevArtwork.MapType.Equals(artwork.MapType))
-            {
-                prevArtwork.MapType = artwork.MapType;
-            }
-            
-            if (!prevArtwork.Dimensions.Equals(artwork.Dimensions))
-            {
-                prevArtwork.DatePublished = artwork.DatePublished;
-            }
-            
-            if (!prevArtwork.Scale.Equals(artwork.Scale))
-            {
-                prevArtwork.Scale = artwork.Scale;
-            }
-            
-            prevArtwork.UpdatedAt = DateTime.UtcNow;
-
-            await _referenceContext.SaveChangesAsync();
-
             return Ok("Artwork updated successfully");
         }
         catch (Exception e)
@@ -261,38 +1107,7 @@ public class ReferenceController : ControllerBase
         }
     }
 
-    private async Task<ActionResult> UpdateGeneralFields(Reference prevReference, Reference newReference)
-    {
-        try
-        {
-            if (!prevReference.Title.Equals(newReference.Title))
-            {
-                prevReference.Title = newReference.Title;
-            }
-            
-            if (!prevReference.Language.Equals(newReference.Language))
-            {
-                prevReference.Language = newReference.Language;
-            }
-            
-            if (!prevReference.Rights.Equals(newReference.Rights))
-            {
-                prevReference.Rights = newReference.Rights;
-            }
-            
-            if (!prevReference.DatePublished.Equals(newReference.DatePublished))
-            {
-                prevReference.DatePublished = newReference.DatePublished;
-            }
-
-            return Ok(true);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
+    
 
     // DELETE: Delete single reference
     [HttpDelete("delete-reference")]
@@ -301,19 +1116,14 @@ public class ReferenceController : ControllerBase
     {
         try
         {
-            var r = await _referenceContext.Reference
-                .Where(r => r.OwnerEmail == User.Identity.Name)
-                .Where(r => r.Id == refId)
-                .FirstAsync();
 
+            var r = await _referenceService.DeleteReferenceAsync(User.Identity.Name, refId);
+            
             if (r == null)
             {
                 return NotFound("Reference with ID: " + refId + " not found.");
             }
-
-            _referenceContext.Reference.Remove(r);
-
-            await _referenceContext.SaveChangesAsync();
+            
             
             return Ok("Reference with the ID: " + refId + " has been deleted");
         }
@@ -327,36 +1137,16 @@ public class ReferenceController : ControllerBase
     // DELETE: Delete list of references
     [HttpDelete("delete-multiple-references")]
     [Authorize]
-    public async Task<ActionResult<bool>> DeleteListOfReferences(int[] refIdList)
+    public async Task<ActionResult<bool>> DeleteListOfReferences(List<int> refIdList)
     {
         try
         {
-            if (refIdList.Length < 1)
+            if (refIdList.Count < 1)
             {
                 return Problem("ERROR: Ref ID List has < 1 ids");
             }
-            
-            List<Reference> references = new List<Reference>();
-            
-            var ownedRefs = await GetCurrentUserReferenceList();
-            foreach (var refId in refIdList)
-            {
 
-                var r = ownedRefs
-                    .Find(r => r.Id == refId);
-                
-                if (r == null)
-                {
-                    return NotFound("Tag not found with ID: " + refId);
-                }
-                
-                references.Add(r);
-            }
-
-            _referenceContext.Reference.RemoveRange(references);
-            
-            
-            await _referenceContext.SaveChangesAsync();
+            await _referenceService.DeleteReferenceRangeAsync(User.Identity.Name, refIdList);
             
             
             return Ok(true);
@@ -368,31 +1158,4 @@ public class ReferenceController : ControllerBase
             throw;
         }
     }
-
-    [Authorize]
-    private async Task<List<Reference>> GetCurrentUserReferenceList()
-    {
-        try
-        {
-            var ownedRefs = await _referenceContext.Reference
-                .Where(r => r.OwnerEmail == User.Identity.Name)
-                .OrderBy(t => t.CreatedAt)
-                .ToListAsync();
-
-            if (ownedRefs != null)
-            {
-                return ownedRefs;
-            }
-
-            return null;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-    
-
-
 }

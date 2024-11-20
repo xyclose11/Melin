@@ -1,23 +1,20 @@
 ﻿"use client";
 
 import * as React from "react";
-// import { DndContext } from "@dnd-kit/core";
-// import { useState } from "react";
-// import { LibrarySideBar } from "@/routes/LibraryViews/LibrarySideBar.tsx";
-// import { DroppableWorkspace } from "@/routes/LibraryViews/DragNDrop/DroppableWorkspace.tsx";
+import { useEffect, useState } from "react";
 
 import { ToastAction } from "@/components/ui/toast";
 import {
     ColumnDef,
     ColumnFiltersState,
-    SortingState,
-    VisibilityState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    SortingState,
     useReactTable,
+    VisibilityState,
 } from "@tanstack/react-table";
 import {
     ArrowUpDown,
@@ -46,7 +43,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { useToast } from "@/hooks/use-toast.ts";
 import { TagTableDisplay } from "@/routes/TagComponents/TagTableDisplay.tsx";
@@ -59,6 +55,8 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { AddTagToReference } from "@/routes/CustomComponents/Tag/AddTagToReference.tsx";
+import { Link } from "react-router-dom";
+import { useGroupSelection } from "@/routes/Context/SelectedGroupContext.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -81,6 +79,9 @@ export type Reference = {
     id: number;
     type: string;
     title: string;
+    datePublished: string;
+    updatedAt: string;
+    createdAt: string;
     creators: Creator[];
     language: string;
 };
@@ -93,14 +94,17 @@ export function Library() {
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
     const [totalRef, setTotalRef] = useState(0);
-    const [data, setData] = React.useState<Reference[]>([]);
     const { toast } = useToast();
 
     const { selectedReferences, toggleReference, clearSelection } =
         useReferenceSelection();
 
+    const { selectedGroup } = useGroupSelection();
+
+    const [data, setData] = React.useState<Reference[]>([]);
+
     const [pagination, setPagination] = useState({
-        pageSize: 10,
+        pageSize: 15,
         pageIndex: 0,
     });
 
@@ -136,21 +140,38 @@ export function Library() {
             ),
             enableSorting: false,
             enableHiding: false,
+            size: 250,
+            enableResizing: true,
         },
         {
             accessorKey: "title",
-            header: "Title",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Title
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
             cell: ({ row }) => (
-                <div className="capitalize">{row.getValue("title")}</div>
+                <Link
+                    className="capitalize"
+                    to={`/edit-reference/${row.original.id}`}
+                >
+                    {row.getValue("title")}
+                </Link>
             ),
+            enableSorting: true,
+            enableHiding: true,
         },
-        {
-            accessorKey: "type",
-            header: "Type",
-            cell: ({ row }) => (
-                <div className="capitalize">{row.getValue("type")}</div>
-            ),
-        },
+
         {
             accessorKey: "creators",
             header: ({ column }) => {
@@ -227,6 +248,78 @@ export function Library() {
             },
         },
         {
+            accessorKey: "datePublished",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Date Published
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {formatRowDate(row.getValue("datePublished"))}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
+            accessorKey: "updatedAt",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Last Updated At
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {formatRowDate(row.getValue("updatedAt"))}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
+            accessorKey: "createdAt",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Created On
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {formatRowDate(row.getValue(`createdAt`))}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
             id: "actions",
             enableHiding: false,
             cell: ({ row }) => {
@@ -269,16 +362,60 @@ export function Library() {
             },
         },
     ];
+
+    const URLLimt = 1600;
+
+    function formatRowDate(val: string): string {
+        const date: Date = new Date(val);
+        return date.toUTCString();
+    }
     const fetchData = async () => {
         try {
-            const response = await instance.get(
-                `Reference/references?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
-                {
-                    withCredentials: true,
-                },
-            );
-            setData(response.data.data);
-            setTotalRef(response.data.TotalPages);
+            let fetchUrl = `Reference/references?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`;
+            if (
+                selectedGroup !== null &&
+                selectedGroup !== undefined &&
+                selectedGroup.length > 0
+            ) {
+                if (selectedGroup.length === 1) {
+                    fetchUrl = `get-references-from-group?groupName=${selectedGroup[0]}`;
+                } else {
+                    let requestURI = `?groupNames=${selectedGroup[0]}`;
+                    selectedGroup.slice(1).map((g) => {
+                        requestURI += "&groupNames=" + g;
+                    });
+                    if (requestURI.length > URLLimt) {
+                        // Limit URL to 1600 characters for performance
+                        toast({
+                            title: "Request too long",
+                            variant: "destructive",
+                            description: `The request for group specific references is ${requestURI.length} characters long. Currently the application has a max URL character limit of 2,000`,
+                        });
+                    } else {
+                        fetchUrl = `get-references-from-multiple-groups${requestURI}`;
+                    }
+                }
+            }
+
+            const response = await instance.get(fetchUrl, {
+                withCredentials: true,
+            });
+
+            if (response.status === 200) {
+                setData(response.data.data);
+                setTotalRef(response.data.TotalPages);
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Unable to get References",
+                    description: "Please try again later",
+                    action: (
+                        <ToastAction altText={"Try Again"}>
+                            Try Again
+                        </ToastAction>
+                    ),
+                });
+            }
         } catch (error) {
             toast({
                 variant: "destructive",
@@ -326,7 +463,7 @@ export function Library() {
 
     useEffect(() => {
         fetchData();
-    }, [pagination]);
+    }, [pagination, selectedGroup]);
 
     const table = useReactTable({
         data,
@@ -341,6 +478,8 @@ export function Library() {
         onRowSelectionChange: setRowSelection,
         manualPagination: true,
         onPaginationChange: setPagination,
+        columnResizeMode: "onEnd",
+        columnResizeDirection: "rtl",
         rowCount: totalRef,
         state: {
             sorting,
@@ -386,7 +525,7 @@ export function Library() {
                                             className="capitalize"
                                             checked={column.getIsVisible()}
                                             onCheckedChange={(value) =>
-                                                column.toggleVisibility(!!value)
+                                                column.toggleVisibility(value)
                                             }
                                         >
                                             {column.id}
@@ -397,7 +536,11 @@ export function Library() {
                     </DropdownMenu>
                 </div>
                 <div className="rounded-md border">
-                    <Table>
+                    <Table
+                        className={
+                            "w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+                        }
+                    >
                         <TableHeader>
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
@@ -481,10 +624,4 @@ export function Library() {
             </div>
         </div>
     );
-
-    // function handleDragEnd(event: any) {
-    //     if (event.over && event.over.id === "droppable") {
-    //         setIsDropped(true);
-    //     }
-    // }
 }

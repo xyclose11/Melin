@@ -70,14 +70,14 @@ export function AddTagToReference({
             if (response.status === 200) {
                 setTagAutoFill(response.data);
             } else {
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: "Tag Retrieval Not Successful",
                     description: ``,
                 });
             }
         } catch (error) {
-            toast("", {
+            toast({
                 variant: "destructive",
                 title: "Tag Retrieval Not Successful",
                 description: ``,
@@ -110,14 +110,14 @@ export function AddTagToReference({
             if (response.status === 200) {
                 setCurrentTags(response.data);
             } else {
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: "Tag Retrieval Not Successful",
                     description: ``,
                 });
             }
         } catch (error) {
-            toast("", {
+            toast({
                 variant: "destructive",
                 title: "Tag Retrieval Not Successful",
                 description: ``,
@@ -163,12 +163,12 @@ export function AddTagToReference({
             });
 
             if (res.status === 200) {
-                toast("", {
+                toast({
                     variant: "default",
                     title: "Tag Successfully Added!",
                 });
             } else {
-                toast("", {
+                toast({
                     variant: "destructive",
                     title: "Tag Unable to be Added!",
                     description: `Please Try Again`,

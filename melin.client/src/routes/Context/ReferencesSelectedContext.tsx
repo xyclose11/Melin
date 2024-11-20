@@ -14,7 +14,6 @@ export const ReferenceSelectionProvider: React.FC<{
     children: React.ReactNode;
 }> = ({ children }) => {
     const [selectedReferences, setSelectedReferences] = useState<number[]>([]);
-
     const toggleReference = (id: number) => {
         setSelectedReferences((prev) =>
             prev.includes(id)

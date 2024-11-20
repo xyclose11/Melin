@@ -15,11 +15,17 @@ import PrivateRoute from "./utils/PrivateRoute.tsx";
 import { GroupLibrary } from "@/routes/LibraryViews/GroupLibrary.tsx";
 import { TagLibrary } from "@/routes/LibraryViews/TagLibrary.tsx";
 import { HomePage } from "@/routes/HomePage.tsx";
+import { EditReferencePage } from "@/routes/CustomComponents/Reference/EditReferencePage.tsx";
+import { CookiesProvider } from "react-cookie";
 
 const router: any = createBrowserRouter([
     {
         path: "/",
-        element: <Root children />,
+        element: (
+            <CookiesProvider>
+                <Root children />
+            </CookiesProvider>
+        ),
         errorElement: <ErrorPage />,
         children: [
             {
@@ -83,6 +89,10 @@ const router: any = createBrowserRouter([
             {
                 path: "create-reference",
                 element: <PrivateRoute element={<CreateReferencePage />} />,
+            },
+            {
+                path: "edit-reference/:refId",
+                element: <PrivateRoute element={<EditReferencePage />} />,
             },
         ],
     },

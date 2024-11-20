@@ -57,7 +57,17 @@ export const creatorFormSchema = z.object({
     lastName: z.string().optional(),
 });
 
-export function CreatorInput({ name }: { name: string }) {
+export function CreatorInput({
+    name,
+    firstName,
+    lastName,
+    types,
+}: {
+    name: string;
+    firstName: string;
+    lastName: string;
+    types: string;
+}) {
     const {
         control,
         setValue,
@@ -69,7 +79,7 @@ export function CreatorInput({ name }: { name: string }) {
         <span className={"grid grid-cols-3"}>
             <FormField
                 control={control}
-                name={`${name}.creatorType`}
+                name={`${name}.types`}
                 render={({ field }) => (
                     <FormItem className="flex flex-col">
                         <Popover>
@@ -84,11 +94,17 @@ export function CreatorInput({ name }: { name: string }) {
                                                 "text-muted-foreground",
                                         )}
                                     >
-                                        {field.value
+                                        {(
+                                            field.value === undefined
+                                                ? types
+                                                : field.value
+                                        )
                                             ? CREATOR_TYPES.find(
                                                   (creatorType) =>
-                                                      creatorType.value ===
-                                                      field.value,
+                                                      creatorType.label ===
+                                                      (field.value === undefined
+                                                          ? types
+                                                          : field.value),
                                               )?.label
                                             : "Type"}
                                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-100" />
@@ -148,7 +164,7 @@ export function CreatorInput({ name }: { name: string }) {
                             <Input
                                 className={"h-8"}
                                 placeholder="First Name"
-                                defaultValue=""
+                                defaultValue={`${firstName}`}
                                 {...register(`${name}.firstName`)}
                                 onChange={(e) => {
                                     setValue(
@@ -171,7 +187,7 @@ export function CreatorInput({ name }: { name: string }) {
                             <Input
                                 className={"h-8"}
                                 placeholder="Last Name"
-                                defaultValue={""}
+                                defaultValue={`${lastName}`}
                                 {...register(`${name}.lastName`)}
                                 onChange={(e) => {
                                     setValue(

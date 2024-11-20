@@ -1,19 +1,25 @@
 ﻿using System.Data;
 using Melin.Server.Filter;
 using Melin.Server.Models;
+using Melin.Server.Models.DTO;
+using Melin.Server.Services;
+using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Task = Melin.Server.Models.Task;
 
 namespace Melin.Server.Controllers;
 
 public class GroupController : ControllerBase
 {
     private readonly ReferenceContext _referenceContext;
+    private readonly IReferenceService _referenceService;
 
-    public GroupController(ReferenceContext referenceContext)
+    public GroupController(ReferenceContext referenceContext, IReferenceService referenceService)
     {
         _referenceContext = referenceContext;
+        _referenceService = referenceService;
     }
 
     // GET: gets a specifc groups references
@@ -69,6 +75,7 @@ public class GroupController : ControllerBase
                 .Where(g => g.CreatedBy == userName)
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Include(g => g.References)
+                .Include(g => g.Groups)
                 .Take(validFilter.PageSize)
                 .OrderBy(g => g.UpdatedAt)
                 .ToListAsync();
@@ -84,6 +91,85 @@ public class GroupController : ControllerBase
         {
             Console.WriteLine(e);
             throw;
+        }
+    }
+
+    [HttpGet("get-references-from-group")]
+    [Authorize]
+    public async Task<ActionResult<List<Reference>>> GetReferencesFromGroup(string groupName)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var group = await _referenceContext.Group
+                .Where(g => g.CreatedBy == User.Identity.Name)
+                .Where(g => g.Name == groupName)
+                .Include(r => r.References)
+                .FirstAsync();
+
+            if (group.References == null)
+            {
+                return StatusCode(204, "Group" + groupName + " does not exist.");
+            }
+            
+            if (group.References.Count <= 0)
+            {
+                return StatusCode(204, "Group" + groupName + " has no references.");
+            }
+            
+            return Ok(new Response<ICollection<Reference>>(group.References));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e);
+        }
+    }
+    
+    [HttpGet("get-references-from-multiple-groups")]
+    [Authorize]
+    public async Task<ActionResult<List<Reference>>> GetReferencesFromMultipleGroups([FromQuery(Name = "groupNames")]string[] groupNames)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            if (groupNames.Length <= 0)
+            {
+                return BadRequest("GroupNames length is: " + groupNames.Length + " and it must by >= 1");
+            }
+
+            var userOwnedGroups = await _referenceContext.Group
+                .Where(g => g.CreatedBy == User.Identity.Name)
+                .Include(g => g.References)
+                .ToListAsync();
+
+            List<Reference> references = new List<Reference>();
+
+            foreach (var groupName in groupNames)
+            {
+                var g = userOwnedGroups
+                    .Where(g => g.Name == groupName)
+                    .First();
+
+                if (g.References != null)
+                {
+                    references.AddRange(g.References);
+                }
+                
+            }
+            
+            return Ok(new Response<ICollection<Reference>>(references));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e);
         }
     }
 
@@ -128,11 +214,6 @@ public class GroupController : ControllerBase
             var group = await _referenceContext.Group
                 .Where(g => g.Name == prevGroupName)
                 .FirstAsync();
-
-            if (group == null)
-            {
-                return NotFound("Group Not Found. Cannot update");
-            }
             
             // update Group details
             group.Name = updatedGroup.Name;
@@ -146,7 +227,7 @@ public class GroupController : ControllerBase
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            return NotFound("Group Not Found. Cannot update");
         }
     }
     
@@ -196,6 +277,101 @@ public class GroupController : ControllerBase
         }
     }
     
+    // POST: add references to group
+    [HttpPost("add-group-to-group")]
+    [Authorize]
+    public async Task<ActionResult<Group>> AddGroupToGroup([FromBody] AddGroupToGroup addGroupToGroup)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            var parent = addGroupToGroup.parent;
+            var child = addGroupToGroup.child;
+            if (parent == child)
+            {
+                return BadRequest("Duplicate groups detected");
+            }
+            // find group
+            var group = await _referenceContext.Group
+                .Where(g => g.Name == parent)
+                .FirstAsync();
+
+            if (group == null)
+            {
+                return NotFound("Group Not Found");
+            }
+            
+     
+            var r = await _referenceContext.Group.Where(g => g.Name == child).FirstAsync();
+            if (r != null)
+            {
+                r.IsRoot = false;
+                // see if group is already in the group
+                if (group.Groups != null)
+                {
+                    if (!group.Groups.Contains(r))
+                    {
+                        group.Groups.Add(r);
+                    }
+                }
+
+            }
+            
+            await _referenceContext.SaveChangesAsync();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    // POST: add references to group
+    [HttpPut("remove-refs-from-group")]
+    [Authorize]
+    public async Task<ActionResult<bool>> RemoveReferencesFromGroup(string groupName, int referenceId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        try
+        {
+            // find group
+            var group = await _referenceContext.Group
+                .Where(g => g.CreatedBy == User.Identity.Name)
+                .Where(g => g.Name == groupName)
+                .Include(g => g.References)
+                .FirstAsync();
+
+            if (group == null)
+            {
+                return NotFound("Group Not Found");
+            }
+            
+
+            var r = await _referenceContext.Reference.FindAsync(referenceId);
+            if (r != null)
+            {
+                if (group.References != null)
+                {
+                    group.References.Remove(r);
+                }
+            }
+            
+            await _referenceContext.SaveChangesAsync();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
     
     // DELETE
     [HttpDelete("delete-group")]
@@ -206,6 +382,7 @@ public class GroupController : ControllerBase
         {
             await _referenceContext.Group
                 .Where(g => g.Name == groupName)
+                .Where(g => g.CreatedBy == User.Identity.Name)
                 .ExecuteDeleteAsync();
 
             return Ok();

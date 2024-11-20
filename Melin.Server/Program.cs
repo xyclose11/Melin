@@ -6,7 +6,6 @@ using Melin.Server.Models;
 using Melin.Server.Models.Context;
 using Melin.Server.Models.Repository;
 using Melin.Server.Services;
-using Melin.Server.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -20,6 +19,8 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IReferenceService, ReferenceService>();
 
 // Add services to the container.
 builder.Services.AddDbContext<ReferenceContext>(options =>
@@ -64,17 +65,16 @@ if (builder.Environment.IsProduction()) {
 }
 
 
-
+builder.Services.AddMemoryCache();
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddTransient<IReferenceService, ReferenceService>();
 builder.Services.AddTransient<IReferenceRepository, ReferenceRepository>();
-
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         policy => {
-            policy.WithOrigins("https://localhost:5173", "http://localhost:5173", "https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
+            policy.WithOrigins("https://localhost:7120","https://localhost:5173", "http://localhost:5173", "https://localhost:5000", "http://localhost:5000", "https://slider.valpo.edu", "http://localhost");
             policy.AllowAnyHeader();
             policy.AllowAnyMethod();
             policy.AllowCredentials();
@@ -131,33 +131,12 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(3);
     options.SlidingExpiration = true;
-    options.LoginPath = "/api/auth/login";
-    options.LogoutPath = "/api/auth/logout";
+    options.LoginPath = "/api/Auth/login";
+    options.LogoutPath = "/api/Auth/logout";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.IsEssential = true;
 });
-
-
-// builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-//     .AddEntityFrameworkStores<DataContext>();
-
-// builder.Services.Configure<IdentityOptions> (options => {
-//
-// });
-
-// builder.Services.ConfigureApplicationCookie(options => {
-//     options.Cookie.HttpOnly = true;
-//     options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
-//
-//     options.LoginPath = "/login";
-//     options.AccessDeniedPath = "/accessdenied";
-//     options.SlidingExpiration = true;
-//     options.Cookie.Name = "MELIN_AUTH_COOKIE";
-//     options.Cookie.Domain = "slider.valpo.edu";
-//     options.Cookie.SameSite = SameSiteMode.Strict;
-//     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-// });
-
 
 builder.Services.AddHttpClient<ApiService>();
 
@@ -183,6 +162,7 @@ app.UseSpa(spa => {});
 app.MapIdentityApi<IdentityUser>();
 
 app.UseCors();
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -135,11 +135,11 @@ export const columns: ColumnDef<Group>[] = [
                             withCredentials: true,
                         },
                     );
-                    console.log(response)
+                    console.log(response);
                 } catch (error) {
                     console.error("Unable to delete group:", error);
                 }
-            }
+            };
 
             return (
                 <DropdownMenu>
@@ -160,7 +160,9 @@ export const columns: ColumnDef<Group>[] = [
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleGroupDelete}>Delete</DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleGroupDelete}>
+                            Delete
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
@@ -191,7 +193,7 @@ export function GroupLibrary() {
                     withCredentials: true,
                 },
             );
-            console.log(response)
+            console.log(response);
             setData(response.data);
             setTotalGroup(response.data.TotalPages);
         } catch (error) {
@@ -232,9 +234,8 @@ export function GroupLibrary() {
                 <Input
                     placeholder="Filter references..."
                     value={
-                        (table
-                            .getColumn("name")
-                            ?.getFilterValue() as string) ?? ""
+                        (table.getColumn("name")?.getFilterValue() as string) ??
+                        ""
                     }
                     onChange={(event) =>
                         table
@@ -260,7 +261,7 @@ export function GroupLibrary() {
                                         className="capitalize"
                                         checked={column.getIsVisible()}
                                         onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
+                                            column.toggleVisibility(value)
                                         }
                                     >
                                         {column.id}
@@ -281,10 +282,10 @@ export function GroupLibrary() {
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
-                                                    header.column.columnDef
-                                                        .header,
-                                                    header.getContext(),
-                                                )}
+                                                      header.column.columnDef
+                                                          .header,
+                                                      header.getContext(),
+                                                  )}
                                         </TableHead>
                                     );
                                 })}

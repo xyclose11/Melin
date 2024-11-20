@@ -5,39 +5,45 @@ export const baseReferenceSchema = z.object({
     title: z.string().min(2, {
         message: "Title must be at least 2 characters.",
     }),
-    shortTitle: z.string().min(2).optional(),
-    language: z.string().min(2).optional(),
-    datePublished: z.date().optional(),
-    rights: z.string().array().optional(),
-    extraFields: z.string().array().optional(),
+    shortTitle: z.string().optional(),
+    language: z.string().optional(),
+    datePublished: z.date().optional().nullable(),
+    // rights: z.string().array().optional(),
+    // extraFields: z.string().array().optional(),
     creators: z.array(creatorFormSchema).optional(),
 });
 
 export const bookSchema = z.object({
-    Publication: z.string().min(2).optional(),
-    BookTitle: z.string().min(2).optional(),
-    Volume: z.string().min(2).optional(),
-    Issue: z.string().min(2).optional(),
-    Pages: z.number().min(0).optional(),
-    Edition: z.string().min(2).optional(),
-    Series: z.string().min(2).optional(),
-    SeriesNumber: z.number().min(0).optional(),
-    SeriesTitle: z.number().min(0).optional(),
-    VolumeAmount: z.number().min(0).optional(),
-    PageAmount: z.number().min(0).optional(),
-    Section: z.string().min(2).optional(),
-    Place: z.string().min(2).optional(),
-    Publisher: z.string().min(2).optional(),
-    JournalAbbreviation: z.string().min(2).optional(),
+    publication: z.string().min(2).optional(),
+    bookTitle: z.string().min(2).optional(),
+    volume: z.string().min(2).optional(),
+    issue: z.string().min(2).optional(),
+    pages: z.number().min(0).optional(),
+    edition: z.string().min(2).optional(),
+    series: z.string().min(2).optional(),
+    seriesNumber: z.number().min(0).optional(),
+    seriesTitle: z.number().min(0).optional(),
+    volumeAmount: z.number().min(0).optional(),
+    pageAmount: z.number().min(0).optional(),
+    section: z.string().min(2).optional(),
+    place: z.string().min(2).optional(),
+    publisher: z.string().min(2).optional(),
+    journalAbbreviation: z.string().min(2).optional(),
     ISBN: z.string().min(2).optional(),
     ISSN: z.string().min(2).optional(),
 });
 
-export const artworkSchema = z.object({
-    Medium: z.string().min(2).max(128).default(""),
-    Dimensions: z.string().min(2).max(128).default(""),
-    Scale: z.string().min(2).max(128).optional(),
-    MapType: z.string().min(2).max(128).optional(),
+export const artworkSchema = baseReferenceSchema.extend({
+    medium: z.string().min(2).max(128).default("").optional().or(z.literal("")),
+    dimensions: z
+        .string()
+        .min(2)
+        .max(128)
+        .default("")
+        .optional()
+        .or(z.literal("")),
+    scale: z.string().min(2).max(128).optional().or(z.literal("")),
+    mapType: z.string().min(2).max(128).optional().or(z.literal("")),
 });
 
 export const legislationSchema = z.object({

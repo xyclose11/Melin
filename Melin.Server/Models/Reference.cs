@@ -24,6 +24,8 @@ public class Reference
     public ICollection<Creator>? Creators { get; set; } = new List<Creator>();
     public string Title { get; set; } = "";
     public string? ShortTitle { get; set; } = "";
+
+    public string? AbstractNote { get; set; } = "";
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Language? Language { get; set; }
@@ -37,6 +39,15 @@ public class Reference
     public ICollection<Tag>? Tags { get; set; } = new List<Tag>();
     public ICollection<Group>? Groups { get; set; } = new List<Group>();
     
+    // When and How items were accessed
+    public string? Accessed { get; set; } = "";
+    public string? LocationStored { get; set; } = "";
+    
+    public string? Archive { get; set; }
+    public string? ArchiveLocation { get; set; }
+    public string? LibraryCatalog { get; set; }
+    public string? CallNumber { get; set; }
+    public string? URL { get; set; }
     // Logging things
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
