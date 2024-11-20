@@ -10,45 +10,45 @@ namespace Melin.Server.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Creator_Reference_ReferenceId",
-                table: "Creator");
+            // migrationBuilder.DropForeignKey(
+            //     name: "FK_Creator_Reference_ReferenceId",
+            //     table: "Creator");
 
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Creator",
-                table: "Creator");
+            // migrationBuilder.DropPrimaryKey(
+            //     name: "PK_Creator",
+            //     table: "Creator");
 
-            migrationBuilder.RenameTable(
-                name: "Creator",
-                newName: "Creators");
+            // migrationBuilder.RenameTable(
+            //     name: "Creator",
+            //     newName: "Creators");
 
-            migrationBuilder.RenameIndex(
-                name: "IX_Creator_ReferenceId",
-                table: "Creators",
-                newName: "IX_Creators_ReferenceId");
+            // migrationBuilder.RenameIndex(
+            //     name: "IX_Creator_ReferenceId",
+            //     table: "Creators",
+            //     newName: "IX_Creators_ReferenceId");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "ReferenceId",
-                table: "Creators",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0,
-                oldClrType: typeof(int),
-                oldType: "integer",
-                oldNullable: true);
+            // migrationBuilder.AlterColumn<int>(
+            //     name: "ReferenceId",
+            //     table: "Creators",
+            //     type: "integer",
+            //     nullable: false,
+            //     defaultValue: 0,
+            //     oldClrType: typeof(int),
+            //     oldType: "integer",
+            //     oldNullable: true);
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Creators",
-                table: "Creators",
-                column: "Id");
+            // migrationBuilder.AddPrimaryKey(
+            //     name: "PK_Creators",
+            //     table: "Creators",
+            //     column: "Id");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Creators_Reference_ReferenceId",
-                table: "Creators",
-                column: "ReferenceId",
-                principalTable: "Reference",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            // migrationBuilder.AddForeignKey(
+            //     name: "FK_Creators_Reference_ReferenceId",
+            //     table: "Creators",
+            //     column: "ReferenceId",
+            //     principalTable: "Reference",
+            //     principalColumn: "Id",
+            //     onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />

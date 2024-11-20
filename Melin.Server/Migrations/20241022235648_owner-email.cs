@@ -710,11 +710,11 @@ namespace Melin.Server.Migrations
                 oldType: "text",
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<string>(
-                name: "OwnerEmail",
-                table: "Reference",
-                type: "text",
-                nullable: true);
+            // migrationBuilder.AddColumn<string>(
+            //     name: "OwnerEmail",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
         }
 
         /// <inheritdoc />
