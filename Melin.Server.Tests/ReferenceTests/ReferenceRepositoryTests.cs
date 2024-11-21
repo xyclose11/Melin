@@ -22,11 +22,32 @@ public class ReferenceRepositoryTests
             .Options;
         
         _context = new ReferenceContext(options);
-
+        
         _context.Reference.Add(new Reference { Id = 1, OwnerEmail = "test@example.com", Title = "Reference 1" });
         _context.Reference.Add(new Reference { Id = 2, OwnerEmail = "test@example.com", Title = "Reference 2" });
         _context.Reference.Add(new Reference { Id = 3, OwnerEmail = "otheruser@example.com", Title = "Reference 3" });
         _context.Reference.Add(new Reference { Id = 4, OwnerEmail = "test@example.com", Title = "DELETE ME!" });
+        _context.Reference.Add(new Reference { Id = 5, OwnerEmail = "test@example.com", Title = "I Have Creators", Creators = new List<Creator>
+        {
+            new Creator
+            {
+                FirstName = "John",
+                LastName = "Snow",
+                ReferenceId = 5
+            },
+            new Creator
+            {
+                FirstName = "Ned",
+                LastName = "Stark",
+                ReferenceId = 5
+            },
+            new Creator
+            {
+                FirstName = "Jamie",
+                LastName = "Lannister",
+                ReferenceId = 5
+            }
+        }});
 
         _context.SaveChanges();
 
@@ -47,7 +68,7 @@ public class ReferenceRepositoryTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(2, result.Data.Count);
+        Assert.Equal(3, result.Data.Count);
         Assert.True(result.Success);
         Assert.IsType<Result<List<Reference>>>(result);
     }
@@ -75,6 +96,34 @@ public class ReferenceRepositoryTests
         
         Assert.False(result.Success);
         Assert.Equal("Reference not found.", result.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task Get_Reference_All_Details_Includes_Tags_Groups()
+    {
+        var userEmail = "test@example.com";
+        var referenceId = 5;
+    }
+    
+    [Fact]
+    public async Task Get_Reference__Includes_Creators()
+    {
+        var userEmail = "test@example.com";
+        var referenceId = 5;
+
+        var creatorToBeContained = new Creator
+        {
+            FirstName = "Ned",
+            LastName = "Stark",
+            ReferenceId = 5            
+        };
+
+        var res = await _repository.GetReferenceByIdAsync(userEmail, referenceId);
+        
+        Assert.True(res.Success);
+        Assert.NotNull(res.Data);
+        Assert.Distinct(res.Data.Creators);
+        Assert.Contains(res.Data.Creators, c => c.FirstName == creatorToBeContained.FirstName);
     }
 
     
