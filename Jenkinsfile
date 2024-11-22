@@ -3,6 +3,7 @@ pipeline {
 	environment {
 		DOTNET_BUILD_PATH = "/bin/Release/net8.0/"
 		MELIN_SERVER_PATH = "Melin.Server"
+		QODANA_TOKEN=credentials('jenkins-qodana-token')
 	}
 	options {
 		skipDefaultCheckout(true)
@@ -36,6 +37,14 @@ pipeline {
 			steps {
 				sh "dotnet publish ${MELIN_SERVER_PATH} --configuration Release --no-restore"
 			}
+		}
+		
+		stage('Qodana') {
+		    steps {
+		        sh '''
+		        qodana
+		        '''
+		    }
 		}
 
 		// stage('Deploy') {
