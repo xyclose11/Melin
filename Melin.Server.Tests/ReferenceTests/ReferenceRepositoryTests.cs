@@ -6,6 +6,7 @@ using Melin.Server.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
+using Xunit.Abstractions;
 using Task = System.Threading.Tasks.Task;
 
 namespace Melin.Server.Tests.ReferenceTests;
@@ -15,8 +16,12 @@ public class ReferenceRepositoryTests
     private readonly ReferenceRepository _repository;
     private readonly ReferenceContext _context;
     private readonly IMemoryCache _cache;
-    public ReferenceRepositoryTests()
+    private readonly ITestOutputHelper _output;
+    public ReferenceRepositoryTests(ITestOutputHelper output)
     {
+        _output = output;
+        
+        
         var options = new DbContextOptionsBuilder<ReferenceContext>()
             .UseInMemoryDatabase(databaseName: "MelinTestDatabase")
             .Options;
@@ -76,7 +81,43 @@ public class ReferenceRepositoryTests
         Assert.False(result.Success);
         Assert.Equal("Reference not found.", result.ErrorMessage);
     }
+    
+    [Fact]
+    public async Task Attempt_Get_References_Generic_Repository()
+    {
+        var userEmail = "test@example.com";
+        var unauthorizedReferenceId = 3;
 
+        var result = _repository.GetAll();
+
+        foreach (var v in result)
+        {
+            _output.WriteLine(v.Title);
+        }
+        
+        Assert.NotEmpty(result);
+    }
+
+    // [Fact]
+    // public async Task Attempt_Update_Reference_Succeeds()
+    // {
+    //     var userEmail = "test@example.com";
+    //     var referenceId = 1;
+    //
+    //     var reference = await _repository.GetReferenceByIdAsync(userEmail, referenceId);
+    //
+    //     if (reference.Success)
+    //     {
+    //         _repository.Update(reference.Data);
+    //     }
+    //     
+    //     _repository.Save();
+    //     
+    //     
+    //     // fetch updated reference
+    //     
+    //     Assert.Equal();
+    // }
     
 
 }

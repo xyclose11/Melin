@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Melin.Server.Models.Repository;
 
@@ -18,6 +19,17 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public void AddRange(IEnumerable<T> entities)
     {
         _context.Set<T>().AddRange(entities);
+    }
+
+    public void Update(T entity)
+    {
+        _context.Attach(entity);
+        _context.Entry(entity).State = EntityState.Modified;
+    }
+
+    public void Save()
+    {
+        _context.SaveChanges();
     }
 
     public IEnumerable<T> Find(Expression<Func<T, bool>> expression)
