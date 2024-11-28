@@ -64,7 +64,6 @@ public interface IReferenceRepository : IGenericRepository<Reference>
         Task<bool> DeleteRangeAsync(string userEmail, List<int> ids);
 
         #endregion
-
         Task<int> GetOwnedReferenceCount(string userEmail);
 
         Task<bool> DoesReferenceExist(int id);

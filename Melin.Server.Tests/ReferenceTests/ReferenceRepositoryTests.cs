@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using Melin.Server.Filter;
 using Melin.Server.Models;
 using Melin.Server.Models.Repository;
 using Melin.Server.Wrappers;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
@@ -11,14 +13,16 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Melin.Server.Tests.ReferenceTests;
 
-public class ReferenceRepositoryTests
+public class ReferenceRepositoryTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly ReferenceRepository _repository;
     private readonly ReferenceContext _context;
     private readonly IMemoryCache _cache;
     private readonly ITestOutputHelper _output;
-    public ReferenceRepositoryTests(ITestOutputHelper output)
+    private readonly WebApplicationFactory<Program> _factory;
+    public ReferenceRepositoryTests(ITestOutputHelper output, WebApplicationFactory<Program> factory)
     {
+        _factory = factory;
         _output = output;
         
         
@@ -96,6 +100,18 @@ public class ReferenceRepositoryTests
         }
         
         Assert.NotEmpty(result);
+    }
+
+    [Fact]
+    public async Task GetAllOwnedReferences_Returns_Ok()
+    {
+        HttpClient client = _factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", "string@string.com:String1!");
+        
+
+        var res = await client.GetAsync("Reference/references?pageNumber=0&pageSize=25");
+
+        Assert.True(res.IsSuccessStatusCode);
     }
 
     // [Fact]

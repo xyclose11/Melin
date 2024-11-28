@@ -46,19 +46,6 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
     {
         IQueryable<Reference> query = _context.Reference.AsQueryable();
         
-        switch (filter.ReferenceType)
-        {
-            case ReferenceType.Artwork:
-                query = query.OfType<Artwork>();
-                break;
-            case ReferenceType.Book:
-                query = query.OfType<Book>();
-                break;
-            default:
-                query = query.OfType<Reference>();
-                break;
-        }
-        
         var validFilter = new PaginationFilter(
             filter.PageNumber > 0 ? filter.PageNumber : 1, 
             filter.PageSize > 0 ? filter.PageSize : 10
