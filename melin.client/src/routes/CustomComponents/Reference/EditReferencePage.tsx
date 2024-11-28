@@ -41,6 +41,8 @@ import { Calendar } from "@/components/ui/calendar.tsx";
 import { CreatorInput } from "@/routes/CustomComponents/CreateRefComponents/CreatorInput.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
 import { Tag } from "emblor";
+import { CREATOR_TYPES } from "@/routes/CustomComponents/CreateRefComponents/CreatorInput";
+import { ReferenceTypeSelector } from "@/routes/CustomComponents/CreateRefComponents/ReferenceTypeSelector.tsx";
 
 let nextId = 0;
 
@@ -103,8 +105,6 @@ export function EditReferencePage() {
                 }
 
                 if (res.data.creators.length !== null) {
-                    console.log(res.data.creators);
-                    console.log(creatorArray);
                     res.data.creators.map(
                         (creator: {
                             id: number;
@@ -112,7 +112,6 @@ export function EditReferencePage() {
                             lastName: string;
                             types: string;
                         }) => {
-                            console.log(creator);
                             creatorArray.push(
                                 <CreatorInput
                                     firstName={creator.firstName}
@@ -143,7 +142,7 @@ export function EditReferencePage() {
             <CreatorInput
                 firstName={""}
                 lastName={""}
-                types={""}
+                types={CREATOR_TYPES[0].label}
                 name={`creators.${nextId}`}
                 key={nextId}
             />,
@@ -178,8 +177,7 @@ export function EditReferencePage() {
         const max = 500000;
         return Math.floor(Math.random() * (max + 1));
     }
-    const onSubmit = async (data: any) => {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof refSchema>) => {
         const convertedTags = data.tags?.map((tag: Tag) => ({
             ...tag,
             id: generateRandom32BitInteger(),
@@ -192,6 +190,7 @@ export function EditReferencePage() {
 
         try {
             // figure out which reference type is being used
+            console.log("DATA HERE:");
             console.log(newData);
             const response = await instance.put(
                 `Reference/update-${schemaName}?oldRefId=${refId}`,

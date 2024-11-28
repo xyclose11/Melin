@@ -12,7 +12,9 @@ using Melin.Server.Models.Context;
 using Melin.Server.Models.References;
 using Melin.Server.Services;
 using Melin.Server.Wrappers;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Presentation = Melin.Server.Models.Presentation;
 using Report = Melin.Server.Models.Report;
@@ -1083,7 +1085,7 @@ public class ReferenceController : ControllerBase
         }
 
     }
-
+    
     
     // UPDATE: update reference
     [HttpPut("update-artwork")]
