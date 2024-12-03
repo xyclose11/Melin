@@ -51,6 +51,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddProblemDetails();
+
 if (!builder.Environment.IsDevelopment()) {
     builder.Services.AddHttpsRedirection(options => {
         options.HttpsPort = 443;

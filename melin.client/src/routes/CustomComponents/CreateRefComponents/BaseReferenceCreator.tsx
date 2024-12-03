@@ -48,7 +48,7 @@ const rightsSchema = z.object({
 });
 
 const formSchema = z.object({
-    refType: z.string(),
+    type: z.string(),
     title: z.string().min(2, {
         message: "Title must be at least 2 characters.",
     }),
@@ -77,7 +77,7 @@ export function BaseReferenceCreator({
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            refType: "book",
+            type: "0",
             title: "",
             shortTitle: "",
             datePublished: new Date(),
@@ -105,10 +105,11 @@ export function BaseReferenceCreator({
             tags: convertedTags,
         };
 
+        console.log(data);
         try {
             // figure out which reference type is being used
             const response = await instance.post(
-                `Reference/create-${schemaName}`,
+                `Reference/create-reference`,
                 newData,
                 {
                     withCredentials: true,
@@ -129,7 +130,6 @@ export function BaseReferenceCreator({
             }
 
             navigate("/library");
-            console.log("SUCCESS");
         } catch (error) {
             console.error("Create reference failed:", error);
         }

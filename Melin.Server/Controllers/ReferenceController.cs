@@ -84,9 +84,22 @@ public class ReferenceController : ControllerBase
         }
         
         try {
-            await _referenceService.AddReferenceAsync(reference);
+            if (reference.Type == ReferenceType.Artwork)
+            {
+                var artwork = reference as Artwork;
+                if (artwork == null)
+                {
+                    return BadRequest("Invalid Artwork.");
+                }
+                
+                await _referenceService.AddReferenceAsync(reference);
+                return Ok("Artwork created successfully");
+            }
+            else
+            {
+                return BadRequest("Unsupported reference type");
+            }
 
-            return Ok("Reference created successfully");
         } catch (Exception ex) {
             return StatusCode(500, "An error occurred while creating the reference.");
         }
@@ -126,6 +139,7 @@ public class ReferenceController : ControllerBase
     
     // UPDATE
     [HttpPut("update/{id}")]
+    [Authorize]
     public async Task<IActionResult> UpdateItem(int id, [FromBody] Reference updatedItem)
     {
         // Validate model
@@ -150,16 +164,25 @@ public class ReferenceController : ControllerBase
         existingItem.DatePublished = updatedItem.DatePublished;
     
         // Handle specific fields for types like journalArticle or book
-        if (updatedItem.Type == ReferenceType.Artwork)
+        if (updatedItem.Type == ReferenceType.JournalArticle)
         {
             var journalArticle = existingItem as JournalArticle;
             var updatedJournalArticle = updatedItem as JournalArticle;
-            journalArticle. = updatedJournalArticle?.JournalTitle;
+            journalArticle.PublicationTitle = updatedJournalArticle?.PublicationTitle;
             journalArticle.Volume = updatedJournalArticle?.Volume;
             journalArticle.Issue = updatedJournalArticle?.Issue;
             journalArticle.Pages = updatedJournalArticle?.Pages;
         }
-        else if (updatedItem.Type == "book")
+        else if (updatedItem.Type == ReferenceType.Artwork)
+        {
+            var artwork = existingItem as Artwork;
+            var updatedArtwork = updatedItem as Artwork;
+            artwork.Dimensions = updatedArtwork?.Dimensions;
+            artwork.Medium = updatedArtwork?.Medium;
+            artwork.MapType = updatedArtwork?.MapType;
+            artwork.Scale = updatedArtwork?.Scale;
+        }
+        else if (updatedItem.Type == ReferenceType.Book)
         {
             var book = existingItem as Book;
             var updatedBook = updatedItem as Book;
