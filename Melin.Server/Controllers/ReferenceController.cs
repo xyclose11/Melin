@@ -100,6 +100,7 @@ public class ReferenceController : ControllerBase
                 return BadRequest("Unsupported reference type");
             }
 
+            return Ok("Reference created successfully");
         } catch (Exception ex) {
             return StatusCode(500, "An error occurred while creating the reference.");
         }
@@ -139,8 +140,7 @@ public class ReferenceController : ControllerBase
     
     // UPDATE
     [HttpPut("update/{id}")]
-    [Authorize]
-    public async Task<IActionResult> UpdateItem(int id, [FromBody] Reference updatedItem)
+    public IActionResult UpdateItem(string id, [FromBody] Reference updatedItem)
     {
         // Validate model
         if (!ModelState.IsValid)
