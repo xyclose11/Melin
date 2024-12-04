@@ -95,12 +95,20 @@ public class ReferenceController : ControllerBase
                 await _referenceService.AddReferenceAsync(reference);
                 return Ok("Artwork created successfully");
             }
-            else
+            if (reference.Type == ReferenceType.Book)
             {
-                return BadRequest("Unsupported reference type");
+                var book = reference as Book;
+                if (book == null)
+                {
+                    return BadRequest("Invalid Book.");
+                }
+                
+                await _referenceService.AddReferenceAsync(reference);
+                return Ok("Artwork created successfully");
             }
+    
+            return BadRequest("Unsupported reference type");
 
-            return Ok("Reference created successfully");
         } catch (Exception ex) {
             return StatusCode(500, "An error occurred while creating the reference.");
         }
@@ -140,7 +148,8 @@ public class ReferenceController : ControllerBase
     
     // UPDATE
     [HttpPut("update/{id}")]
-    public IActionResult UpdateItem(string id, [FromBody] Reference updatedItem)
+    [Authorize]
+    public async Task<IActionResult> UpdateItem(int id, [FromBody] Reference updatedItem)
     {
         // Validate model
         if (!ModelState.IsValid)
