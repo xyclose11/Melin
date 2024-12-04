@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Melin.Server", "Melin.Serve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Melin.Server.Tests", "..\Melin.Server.Tests\Melin.Server.Tests.csproj", "{4F438E39-E9D2-4357-BBF1-2158C6D09399}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "melin.client", "..\melin.client\melin.client.esproj", "{9E9EA55F-FF2E-426A-8C78-6C9DD9327DC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4F438E39-E9D2-4357-BBF1-2158C6D09399}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F438E39-E9D2-4357-BBF1-2158C6D09399}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F438E39-E9D2-4357-BBF1-2158C6D09399}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E9EA55F-FF2E-426A-8C78-6C9DD9327DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E9EA55F-FF2E-426A-8C78-6C9DD9327DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E9EA55F-FF2E-426A-8C78-6C9DD9327DC7}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E9EA55F-FF2E-426A-8C78-6C9DD9327DC7}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
