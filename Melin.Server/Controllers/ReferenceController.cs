@@ -86,8 +86,7 @@ public class ReferenceController : ControllerBase
         try {
             if (reference.Type == ReferenceType.Artwork)
             {
-                var artwork = reference as Artwork;
-                if (artwork == null)
+                if (reference is not Artwork)
                 {
                     return BadRequest("Invalid Artwork.");
                 }
