@@ -3,6 +3,7 @@ using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Interfaces;
 using Melin.Server.Models;
+using Melin.Server.Models.Binders;
 using Melin.Server.Models.Context;
 using Melin.Server.Models.Repository;
 using Melin.Server.Services;
@@ -110,6 +111,12 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Converters.Add(new ReferenceConverter());
     });
 
 builder.Services.Configure<IdentityOptions>(options =>
