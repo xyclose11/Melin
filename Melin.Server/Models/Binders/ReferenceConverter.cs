@@ -307,9 +307,17 @@ public class ReferenceConverter : JsonConverter<Reference>
         throw new JsonSerializationException($"Unknown reference type: {referenceType}");
     }
 
-    public override void WriteJson(JsonWriter writer, Reference value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, Reference? value, JsonSerializer serializer)
     {
-        JObject jo = JObject.FromObject(value, serializer);
+        if (value == null || serializer == null)
+        {
+            return;
+        }
+
+        // JObject jObject = new();
+        // jObject[nameof(value.)]
+        var jo = JObject.FromObject(value);
+        // var jo = JObject.FromObject(value, serializer);
         jo.WriteTo(writer);
     }
 }

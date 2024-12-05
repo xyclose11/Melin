@@ -54,10 +54,10 @@ public class ReferenceContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Reference>()
-            .HasMany(r => r.Creators)
-            .WithOne(c => c.Reference)
-            .HasForeignKey(c => c.ReferenceId)
-            .OnDelete(DeleteBehavior.Cascade);
+        // modelBuilder.Entity<Reference>()
+            // .HasMany(r => r.Creators)
+            // .WithOne(c => c.Reference)
+            // .HasForeignKey(c => c.ReferenceId)
+            // .OnDelete(DeleteBehavior.Cascade);
     }}
 

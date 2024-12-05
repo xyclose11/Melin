@@ -80,6 +80,31 @@ public class ReferenceService : IReferenceService
         
     }
 
+
+
+    public Result<bool> ApplyPatch(Reference v)
+    {
+        try
+        {
+            _referenceRepository.Update(v);
+            _referenceRepository.SaveChanges();
+            var r = new Result<bool>
+            {
+                Success = true
+            };
+            return r;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            var r = new Result<bool>
+            {
+                Success = false
+            };
+            return r;
+        }
+    }
+
     public async Task<ICollection<Reference>> GetOwnedReferencesAsync(PaginationFilter paginationFilter, string userEmail)
     {
         var res = await _referenceRepository.GetOwnedPaginatedReferencesAsync(paginationFilter, userEmail);

@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Melin.Server.Models.Repository;
 
@@ -43,5 +44,33 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public void RemoveRange(IEnumerable<T> entities)
     {
         _context.Set<T>().RemoveRange(entities);
+    }
+
+    public void Update(T entity)
+    {
+        try
+        {
+            _context.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public bool SaveChanges()
+    {
+        try
+        {
+            _context.SaveChanges();
+            return true;
+        }
+        catch (DbUpdateException e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
     }
 }

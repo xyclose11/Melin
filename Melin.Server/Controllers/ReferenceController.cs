@@ -13,6 +13,7 @@ using Melin.Server.Models.References;
 using Melin.Server.Services;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Presentation = Melin.Server.Models.Presentation;
 using Report = Melin.Server.Models.Report;
@@ -124,14 +125,29 @@ public class ReferenceController : ControllerBase
     }
     
     // UPDATE
-    [HttpPut("update/{id}")]
+    [HttpPatch("update/{id}")]
     [Authorize]
-    public async Task<IActionResult> UpdateItem(int id, [FromBody] Reference updatedItem)
+    public async Task<IActionResult> UpdateItem(int id, [FromBody] JsonPatchDocument<Reference> updatedItem)
     {
         // Validate model
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
+        }
+
+        if (updatedItem == null)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (User.Identity == null)
+        {
+            return Unauthorized("User Currently Not Authorized to Update Item");
+        }
+
+        if (User.Identity.Name == null)
+        {
+            return Unauthorized("User Has Incorrect Auth Details. Attempt to Login Again: Please Advise.");
         }
 
         // Find the item to update
@@ -142,41 +158,18 @@ public class ReferenceController : ControllerBase
         }
 
         var existingItem = existingItemResult.Data;
+        
+        updatedItem.ApplyTo(existingItem, ModelState);
 
-        // Replace the existing item with the updated data
-        existingItem.Title = updatedItem.Title;
-        existingItem.Type = updatedItem.Type;
-        existingItem.Creators = updatedItem.Creators;
-        existingItem.DatePublished = updatedItem.DatePublished;
-    
-        // Handle specific fields for types like journalArticle or book
-        if (updatedItem.Type == ReferenceType.JournalArticle)
+        if (!ModelState.IsValid)
         {
-            var journalArticle = existingItem as JournalArticle;
-            var updatedJournalArticle = updatedItem as JournalArticle;
-            journalArticle.PublicationTitle = updatedJournalArticle?.PublicationTitle;
-            journalArticle.Volume = updatedJournalArticle?.Volume;
-            journalArticle.Issue = updatedJournalArticle?.Issue;
-            journalArticle.Pages = updatedJournalArticle?.Pages;
+            return BadRequest("ERROR");
         }
-        else if (updatedItem.Type == ReferenceType.Artwork)
-        {
-            var artwork = existingItem as Artwork;
-            var updatedArtwork = updatedItem as Artwork;
-            artwork.Dimensions = updatedArtwork?.Dimensions;
-            artwork.Medium = updatedArtwork?.Medium;
-            artwork.MapType = updatedArtwork?.MapType;
-            artwork.Scale = updatedArtwork?.Scale;
-        }
-        else if (updatedItem.Type == ReferenceType.Book)
-        {
-            var book = existingItem as Book;
-            var updatedBook = updatedItem as Book;
-            book.Publisher = updatedBook?.Publisher;
-            book.Edition = updatedBook?.Edition;
-        }
-
-        return Ok(existingItem); // Return the updated item
+        
+        // apply patch to DB
+        _referenceService.ApplyPatch(existingItem);
+        return new ObjectResult(existingItem);
+        
     }
 
 

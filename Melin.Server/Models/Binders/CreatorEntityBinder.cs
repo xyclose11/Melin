@@ -29,7 +29,7 @@ public class CreatorEntityBinder : IModelBinder
 
         // Ignore `Reference` - Don't attempt to set it in the binder
         // Optionally, you could set it to null to avoid binding
-        creator.Reference = null;
+        // creator.Reference = null;
 
         bindingContext.Result = ModelBindingResult.Success(creator);
         return System.Threading.Tasks.Task.CompletedTask;

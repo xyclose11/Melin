@@ -23,7 +23,6 @@ public enum CreatorTypes {
     Sponsor,
     Inventor
 }
-
 public class Creator
 {
     public int Id { get; set; }
@@ -38,7 +37,7 @@ public class Creator
     public string LastName { get; set; } = "";
     
     public int? ReferenceId { get; set; }
-    public Reference? Reference { get; set; }
+    // public Reference? Reference { get; set; }
 }
 
 public class Author

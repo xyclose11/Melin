@@ -11,6 +11,7 @@ public interface IReferenceService
     Task<Result<Reference>> GetReferenceWithTagsById(string userEmail, int id);
     Task<Result<Reference>> GetReferenceWithGroupsById(string userEmail, int id);
     Task<Result<Reference>> GetReferenceWithAllDetailsById(string userEmail, int id);
+    Result<bool> ApplyPatch(Reference v);
 
     Task<ICollection<Reference>> GetOwnedReferencesAsync(PaginationFilter paginationFilter, string userEmail);
     Task<ICollection<Reference>> GetReferencesFromGroupAsync(PaginationFilter paginationFilter, string userEmail, string groupName);
