@@ -17,10 +17,10 @@ public class ReferenceConverter : JsonConverter<Reference>
         // Based on the Type field, deserialize into the appropriate subclass
         if (referenceType == ReferenceType.Book.ToString())
         {
-            var o = obj.ToObject<Book>(serializer);
+            var o = obj.ToObject(typeof(Book));
             if (o != null)
             {
-                return o;
+                return o as Book;
             }
         }
         else if (referenceType == ReferenceType.Artwork.ToString())
