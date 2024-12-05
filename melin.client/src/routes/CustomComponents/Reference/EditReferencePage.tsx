@@ -194,7 +194,7 @@ export function EditReferencePage() {
             // figure out which reference type is being used
             console.log(newData);
             const response = await instance.put(
-                `Reference/update-${schemaName}?oldRefId=${refId}`,
+                `Reference/update-${refId}`,
                 newData,
                 {
                     withCredentials: true,
@@ -316,17 +316,17 @@ export function EditReferencePage() {
                                                             )}
                                                         >
                                                             <CalendarIcon />
-                                                            {datePublished ? (
-                                                                format(
-                                                                    datePublished,
-                                                                    "PPP",
-                                                                )
-                                                            ) : (
-                                                                <span>
-                                                                    {" "}
-                                                                    Click Here!{" "}
-                                                                </span>
-                                                            )}
+                                                            {/*{datePublished ? (*/}
+                                                            {/*    format(*/}
+                                                            {/*        // datePublished,*/}
+                                                            {/*        "PPP",*/}
+                                                            {/*    )*/}
+                                                            {/*) : (*/}
+                                                            {/*    <span>*/}
+                                                            {/*        {" "}*/}
+                                                            {/*        Click Here!{" "}*/}
+                                                            {/*    </span>*/}
+                                                            {/*)}*/}
                                                         </Button>
                                                     </PopoverTrigger>
                                                     <PopoverContent className="w-auto p-0">

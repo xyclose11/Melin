@@ -44,9 +44,9 @@ export function LibraryPage() {
 
     const getGroups = async () => {
         try {
-            const res = await instance.get("get-owned-groups", {
-                withCredentials: true,
-            });
+            // const res = await instance.get("get-owned-groups", {
+            //     withCredentials: true,
+            // });
 
             if (res.status === 200) {
                 setUserGroups(res.data);

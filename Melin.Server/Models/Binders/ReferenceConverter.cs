@@ -15,7 +15,7 @@ public class ReferenceConverter : JsonConverter<Reference>
         JObject obj = JObject.Load(reader);
         string referenceType = obj["type"]?.ToString();  // Get the Type field (e.g., Book or Artwork)
 
-        if (referenceType == ReferenceType.Artwork.ToString())
+        if (referenceType == ReferenceType.Artwork.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Artwork));
             if (o != null)
@@ -23,7 +23,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Artwork;
             }
         }
-        if (referenceType == ReferenceType.AudioRecording.ToString())
+        if (referenceType == ReferenceType.AudioRecording.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(AudioRecording));
             if (o != null)
@@ -31,7 +31,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as AudioRecording;
             }
         }
-        if (referenceType == ReferenceType.Bill.ToString())
+        if (referenceType == ReferenceType.Bill.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Bill));
             if (o != null)
@@ -39,7 +39,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Bill;
             }
         }
-        if (referenceType == ReferenceType.BlogPost.ToString())
+        if (referenceType == ReferenceType.BlogPost.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(BlogPost));
             if (o != null)
@@ -47,7 +47,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as BlogPost;
             }
         }
-        if (referenceType == ReferenceType.Book.ToString())
+        if (referenceType == ReferenceType.Book.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Book));
             if (o != null)
@@ -55,7 +55,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Book;
             }
         }
-        if (referenceType == ReferenceType.BookSection.ToString())
+        if (referenceType == ReferenceType.BookSection.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(BookSection));
             if (o != null)
@@ -63,7 +63,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as BookSection;
             }
         }
-        if (referenceType == ReferenceType.Case.ToString())
+        if (referenceType == ReferenceType.Case.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Case));
             if (o != null)
@@ -71,7 +71,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Case;
             }
         }
-        if (referenceType == ReferenceType.ConferencePaper.ToString())
+        if (referenceType == ReferenceType.ConferencePaper.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(ConferencePaper));
             if (o != null)
@@ -79,7 +79,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as ConferencePaper;
             }
         }
-        if (referenceType == ReferenceType.DictionaryEntry.ToString())
+        if (referenceType == ReferenceType.DictionaryEntry.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(DictionaryEntry));
             if (o != null)
@@ -87,7 +87,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as DictionaryEntry;
             }
         }
-        if (referenceType == ReferenceType.Document.ToString())
+        if (referenceType == ReferenceType.Document.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Document));
             if (o != null)
@@ -95,7 +95,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Document;
             }
         }
-        if (referenceType == ReferenceType.Email.ToString())
+        if (referenceType == ReferenceType.Email.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Email));
             if (o != null)
@@ -103,7 +103,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Email;
             }
         }
-        if (referenceType == ReferenceType.EncyclopediaArticle.ToString())
+        if (referenceType == ReferenceType.EncyclopediaArticle.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(EncyclopediaArticle));
             if (o != null)
@@ -111,7 +111,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as EncyclopediaArticle;
             }
         }
-        if (referenceType == ReferenceType.Film.ToString())
+        if (referenceType == ReferenceType.Film.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Film));
             if (o != null)
@@ -119,7 +119,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Film;
             }
         }
-        if (referenceType == ReferenceType.ForumPost.ToString())
+        if (referenceType == ReferenceType.ForumPost.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(ForumPost));
             if (o != null)
@@ -127,7 +127,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as ForumPost;
             }
         }
-        if (referenceType == ReferenceType.Hearing.ToString())
+        if (referenceType == ReferenceType.Hearing.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Hearing));
             if (o != null)
@@ -135,7 +135,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Hearing;
             }
         }
-        if (referenceType == ReferenceType.InstantMessage.ToString())
+        if (referenceType == ReferenceType.InstantMessage.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(InstantMessage));
             if (o != null)
@@ -143,7 +143,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as InstantMessage;
             }
         }
-        if (referenceType == ReferenceType.Interview.ToString())
+        if (referenceType == ReferenceType.Interview.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Interview));
             if (o != null)
@@ -151,7 +151,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Interview;
             }
         }
-        if (referenceType == ReferenceType.JournalArticle.ToString())
+        if (referenceType == ReferenceType.JournalArticle.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(JournalArticle));
             if (o != null)
@@ -159,7 +159,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as JournalArticle;
             }
         }
-        if (referenceType == ReferenceType.Letter.ToString())
+        if (referenceType == ReferenceType.Letter.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Letter));
             if (o != null)
@@ -167,7 +167,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Letter;
             }
         }
-        if (referenceType == ReferenceType.MagazineArticle.ToString())
+        if (referenceType == ReferenceType.MagazineArticle.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(MagazineArticle));
             if (o != null)
@@ -175,7 +175,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as MagazineArticle;
             }
         }
-        if (referenceType == ReferenceType.Manuscript.ToString())
+        if (referenceType == ReferenceType.Manuscript.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Manuscript));
             if (o != null)
@@ -183,7 +183,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Manuscript;
             }
         }
-        if (referenceType == ReferenceType.Map.ToString())
+        if (referenceType == ReferenceType.Map.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Map));
             if (o != null)
@@ -191,7 +191,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Map;
             }
         }
-        if (referenceType == ReferenceType.NewspaperArticle.ToString())
+        if (referenceType == ReferenceType.NewspaperArticle.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(NewspaperArticle));
             if (o != null)
@@ -199,7 +199,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as NewspaperArticle;
             }
         }
-        if (referenceType == ReferenceType.Patent.ToString())
+        if (referenceType == ReferenceType.Patent.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Patent));
             if (o != null)
@@ -207,7 +207,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Patent;
             }
         }
-        if (referenceType == ReferenceType.Podcast.ToString())
+        if (referenceType == ReferenceType.Podcast.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Podcast));
             if (o != null)
@@ -215,7 +215,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Podcast;
             }
         }
-        if (referenceType == ReferenceType.Presentation.ToString())
+        if (referenceType == ReferenceType.Presentation.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Presentation));
             if (o != null)
@@ -223,7 +223,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Presentation;
             }
         }
-        if (referenceType == ReferenceType.RadioBroadcast.ToString())
+        if (referenceType == ReferenceType.RadioBroadcast.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(RadioBroadcast));
             if (o != null)
@@ -231,7 +231,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as RadioBroadcast;
             }
         }
-        if (referenceType == ReferenceType.Report.ToString())
+        if (referenceType == ReferenceType.Report.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Report));
             if (o != null)
@@ -239,7 +239,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Report;
             }
         }
-        if (referenceType == ReferenceType.Software.ToString())
+        if (referenceType == ReferenceType.Software.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Software));
             if (o != null)
@@ -247,7 +247,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Software;
             }
         }
-        if (referenceType == ReferenceType.Statute.ToString())
+        if (referenceType == ReferenceType.Statute.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Statute));
             if (o != null)
@@ -255,7 +255,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Statute;
             }
         }
-        if (referenceType == ReferenceType.Thesis.ToString())
+        if (referenceType == ReferenceType.Thesis.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Thesis));
             if (o != null)
@@ -263,7 +263,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Thesis;
             }
         }
-        if (referenceType == ReferenceType.TVBroadcast.ToString())
+        if (referenceType == ReferenceType.TVBroadcast.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(TVBroadcast));
             if (o != null)
@@ -271,7 +271,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as TVBroadcast;
             }
         }
-        if (referenceType == ReferenceType.VideoRecording.ToString())
+        if (referenceType == ReferenceType.VideoRecording.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(VideoRecording));
             if (o != null)
@@ -279,7 +279,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as VideoRecording;
             }
         }
-        if (referenceType == ReferenceType.Webpage.ToString())
+        if (referenceType == ReferenceType.Webpage.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Webpage));
             if (o != null)
@@ -287,7 +287,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Webpage;
             }
         }
-        if (referenceType == ReferenceType.Attachment.ToString())
+        if (referenceType == ReferenceType.Attachment.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Attachment));
             if (o != null)
@@ -295,7 +295,7 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as Attachment;
             }
         }
-        if (referenceType == ReferenceType.Note.ToString())
+        if (referenceType == ReferenceType.Note.ToString().ToLower())
         {
             var o = obj.ToObject(typeof(Note));
             if (o != null)

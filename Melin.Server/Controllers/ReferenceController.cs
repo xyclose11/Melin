@@ -84,7 +84,14 @@ public class ReferenceController : ControllerBase
             return BadRequest(ModelState);
         }
         
-        try {
+        try
+        {
+            if (User.Identity.Name == null)
+            {
+                return Unauthorized("User not authorized to create References");
+            }
+            reference.OwnerEmail = User.Identity.Name;
+
             await _referenceService.AddReferenceAsync(reference);
             return Ok("Artwork created successfully");
         } catch (Exception ex) {
