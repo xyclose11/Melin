@@ -84,30 +84,8 @@ public class ReferenceController : ControllerBase
         }
         
         try {
-            if (reference.Type == ReferenceType.Artwork)
-            {
-                if (reference is not Artwork)
-                {
-                    return BadRequest("Invalid Artwork.");
-                }
-                
-                await _referenceService.AddReferenceAsync(reference);
-                return Ok("Artwork created successfully");
-            }
-            if (reference.Type == ReferenceType.Book)
-            {
-                var book = reference as Book;
-                if (book == null)
-                {
-                    return BadRequest("Invalid Book.");
-                }
-                
-                await _referenceService.AddReferenceAsync(reference);
-                return Ok("Artwork created successfully");
-            }
-    
-            return BadRequest("Unsupported reference type");
-
+            await _referenceService.AddReferenceAsync(reference);
+            return Ok("Artwork created successfully");
         } catch (Exception ex) {
             return StatusCode(500, "An error occurred while creating the reference.");
         }
