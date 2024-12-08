@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
             
             if (result.Succeeded)
             {
-                return Ok();
+                return Ok(claims);
             }
         } catch(Exception e) {
             return BadRequest(e);
@@ -57,8 +57,12 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("sign-up")]
-    public async Task<IResult> SignUp(UserManager<IdentityUser> userManager, [FromBody] UserCreationModel userCreationModel)
+    public async Task<IActionResult> SignUp(UserManager<IdentityUser> userManager, [FromBody] UserCreationModel userCreationModel)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
 
         IdentityUser user = new IdentityUser()
         {
@@ -67,14 +71,16 @@ public class AuthController : ControllerBase
         };
         
         var result = await userManager.CreateAsync(user, userCreationModel.Password);
-        await userManager.AddToRoleAsync(user, userCreationModel.Role);
+        
+        // Default Role is "User" for new users
+        await userManager.AddToRoleAsync(user, "User");
 
         if (!result.Succeeded)
         {
-            return Results.BadRequest(result);
+            return BadRequest(result);
         }
 
-        return Results.Ok(result);
+        return Ok(result);
     }
 
     
@@ -94,9 +100,21 @@ public class AuthController : ControllerBase
 
     [HttpGet("user-role")]
     [Authorize]
-    private string GetUserRole(ClaimsPrincipal user)
+    public async Task<IActionResult> GetUserRole(UserManager<IdentityUser> userManager, string userEmail)
     {
-        return "";
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("UNABLE TO RETRIEVE USER ROLE");
+        }
+
+        var user = await userManager.FindByEmailAsync(userEmail);
+
+        if (user == null)
+        {
+            return BadRequest("UNABLE TO RETRIEVE USER OBJECT");
+        }
+        var role = await userManager.GetRolesAsync(user);
+        return Ok(role);
     }
 
 }
