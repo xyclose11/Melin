@@ -50,6 +50,6 @@ public static class IdentityUserEndpoints
         }
 
         var roles = await userManager.GetRolesAsync(user);
-         
+        return null;
     }
 }

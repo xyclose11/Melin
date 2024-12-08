@@ -56,6 +56,7 @@ public class AuthController : ControllerBase
     }
 
     [AllowAnonymous]
+    [HttpPost("sign-up")]
     public async Task<IResult> SignUp(UserManager<IdentityUser> userManager, [FromBody] UserCreationModel userCreationModel)
     {
 
@@ -95,7 +96,7 @@ public class AuthController : ControllerBase
     [Authorize]
     private string GetUserRole(ClaimsPrincipal user)
     {
-        
+        return "";
     }
 
 }
