@@ -2,7 +2,9 @@ using System.Text;
 using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Interfaces;
+using Melin.Server.JSONInputFormatter;
 using Melin.Server.Models;
+using Melin.Server.Models.Binders;
 using Melin.Server.Models.Context;
 using Melin.Server.Models.Repository;
 using Melin.Server.Services;
@@ -17,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +54,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddProblemDetails();
 
 if (!builder.Environment.IsDevelopment()) {
     builder.Services.AddHttpsRedirection(options => {
@@ -110,6 +115,20 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Converters.Add(new ReferenceConverter());
+        // Is this the best way to handle loops?
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    });
+
+
+builder.Services.AddControllers(options =>
+{
+    options.InputFormatters.Insert(0, MelinJPIF.GetJsonPatchInputFormatter());
+});
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

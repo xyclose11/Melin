@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 namespace Melin.Server.Models;
 
 // Base class for all references
+[JsonConverter(typeof(ReferenceConverter))]
 public class Reference
 {
     [Required]
@@ -16,11 +17,11 @@ public class Reference
     
     public string? OwnerEmail { get; set; }
     
-    [MaxLength(256)]
     // Base fields
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public ReferenceType? Type { get; set; }
+    public ReferenceType Type { get; set; }
     [ModelBinder(BinderType = typeof(CreatorEntityBinder))]
+    [JsonIgnore]
     public ICollection<Creator>? Creators { get; set; } = new List<Creator>();
     public string Title { get; set; } = "";
     public string? ShortTitle { get; set; } = "";
