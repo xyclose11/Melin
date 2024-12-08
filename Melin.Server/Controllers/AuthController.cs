@@ -99,21 +99,19 @@ public class AuthController : ControllerBase
 
     [HttpGet("user-role")]
     [Authorize]
-    public async Task<IActionResult> GetUserRole(UserManager<IdentityUser> userManager, string userEmail)
+    public IActionResult GetUserRole()
     {
         if (!ModelState.IsValid)
         {
             return BadRequest("UNABLE TO RETRIEVE USER ROLE");
         }
 
-        var user = await userManager.FindByEmailAsync(userEmail);
-
-        if (user == null)
-        {
-            return BadRequest("UNABLE TO RETRIEVE USER OBJECT");
-        }
-        var role = await userManager.GetRolesAsync(user);
-        return Ok(role);
+        var roles = User.Claims
+            .Where(c => c.Type == ClaimTypes.Role)
+            .Select(c => c.Value)
+            .ToList();
+        
+        return Ok(roles);
     }
 
 }
