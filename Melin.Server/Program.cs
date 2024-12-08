@@ -180,10 +180,10 @@ app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
 
+
+// Seeding Roles
 using (var scope = app.Services.CreateScope())
 {
-    // Seeding Roles
-    // Creates Admin account and Roles
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
     var roles = new[] { "Admin", "Moderator", "User", "Guest" };
@@ -194,6 +194,32 @@ using (var scope = app.Services.CreateScope())
         {
             await roleManager.CreateAsync(new IdentityRole(role));
         }
+    }
+}
+
+// Create default Admin account *** IF CREATING NEW PROJECT ENSURE CREDENTIALS ARE CHANGED ***
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    const string email = "melinAdmin@admin.com";
+    
+    // ENSURE THAT YOU CHANGE THIS PASSWORD ON NEW PROJECT CREATION
+    const string password = "Admin11!";
+    
+    // Checking if Admin account already exists to not create duplicate/overwrite account
+    if (await userManager.FindByEmailAsync(email) == null)
+    {
+        var user = new IdentityUser
+        {
+            UserName = email,
+            Email = email,
+        };
+
+        await userManager.CreateAsync(user, password);
+
+        // Only add user to Admin role if the user does not exist
+        await userManager.AddToRoleAsync(user, "Admin");
     }
 }
 
