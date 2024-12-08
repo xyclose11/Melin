@@ -17,6 +17,7 @@ import { TagLibrary } from "@/routes/LibraryViews/TagLibrary.tsx";
 import { HomePage } from "@/routes/HomePage.tsx";
 import { EditReferencePage } from "@/routes/CustomComponents/Reference/EditReferencePage.tsx";
 import { CookiesProvider } from "react-cookie";
+import { AdminDashboard } from "@/routes/Admin/AdminDashboard.tsx";
 
 const router: any = createBrowserRouter([
     {
@@ -93,6 +94,10 @@ const router: any = createBrowserRouter([
             {
                 path: "edit-reference/:refId",
                 element: <PrivateRoute element={<EditReferencePage />} />,
+            },
+            {
+                path: "admin-dashboard",
+                element: <PrivateRoute element={<AdminDashboard />} />,
             },
         ],
     },
