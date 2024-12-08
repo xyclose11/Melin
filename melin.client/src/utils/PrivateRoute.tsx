@@ -1,9 +1,14 @@
 ﻿import { Navigate } from "react-router-dom";
-import { useAuth } from "./AuthProvider"; // Adjust the import path based on your structure
+import { useAuth } from "./AuthProvider";
 
 const PrivateRoute = ({ element }: { element: JSX.Element }) => {
-    const { isAuthenticated } = useAuth(); // Assuming you have an AuthContext
+    const { isAuthenticated } = useAuth();
     return isAuthenticated ? element : <Navigate to="/login" />;
+};
+
+export const AdminRoute = ({ element }: { element: JSX.Element }) => {
+    const { userRole } = useAuth();
+    return userRole.toUpperCase() === "ADMIN" ? element : <Navigate to={"/"} />;
 };
 
 export default PrivateRoute;

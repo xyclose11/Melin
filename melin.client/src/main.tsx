@@ -11,7 +11,7 @@ import UserSettings from "@/routes/UserSettingsPage.tsx";
 import { AuthProvider } from "@/utils/AuthProvider.tsx";
 import { CreateReferencePage } from "@/routes/CreateReferencePage.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
-import PrivateRoute from "./utils/PrivateRoute.tsx";
+import PrivateRoute, { AdminRoute } from "./utils/PrivateRoute.tsx";
 import { GroupLibrary } from "@/routes/LibraryViews/GroupLibrary.tsx";
 import { TagLibrary } from "@/routes/LibraryViews/TagLibrary.tsx";
 import { HomePage } from "@/routes/HomePage.tsx";
@@ -97,7 +97,7 @@ const router: any = createBrowserRouter([
             },
             {
                 path: "admin-dashboard",
-                element: <PrivateRoute element={<AdminDashboard />} />,
+                element: <AdminRoute element={<AdminDashboard />} />,
             },
         ],
     },
