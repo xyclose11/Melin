@@ -1,4 +1,5 @@
 ﻿using Melin.Server.Filter;
+using Melin.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Melin.Server.Controllers.Admin;
 public class AdminDashboardController : ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager;
-
-    public AdminDashboardController(UserManager<IdentityUser> userManager)
+    private readonly RoleManager<IdentityRole> _roleManager;
+    
+    public AdminDashboardController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
+        _roleManager = roleManager;
     }
     
     [HttpGet("all-users")]
@@ -53,10 +56,46 @@ public class AdminDashboardController : ControllerBase
         }
     }
 
-    // [HttpPut("change-user-role")]
-    // [Authorize(Roles = "Admin")]
-    // public async Task<IActionResult> ChangeUserRole()
-    // {
-    //     RoleManager<IdentityRole>
-    // }
+    [HttpPut("update-user-role")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateUserRole([FromQuery] string userEmail, [FromBody] string newRole)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            // Validate new Role
+            var roleResult = Enum.IsDefined(typeof(Roles), newRole);
+            if (!roleResult)
+            {
+                return BadRequest("Invalid Role");
+            }
+            
+            // Retrieve user
+            var user = await _userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                return BadRequest($"USER WITH EMAIL: {userEmail} DOES NOT EXIST");
+            }
+
+            var res = await _userManager.AddToRoleAsync(user, newRole);
+
+            if (res.Succeeded)
+            {
+                return Ok(user);
+            }
+
+            return BadRequest(res.Errors);
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return BadRequest(e);
+        }
+    }
 }

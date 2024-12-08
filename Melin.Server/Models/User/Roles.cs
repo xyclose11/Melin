@@ -2,5 +2,8 @@
 
 public enum Roles
 {
-    
+    Admin,
+    User,
+    Moderator,
+    Guest
 }
