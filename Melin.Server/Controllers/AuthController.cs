@@ -38,7 +38,6 @@ public class AuthController : ControllerBase
             
             var roles = await userManager.GetRolesAsync(user);
             
-            
             ClaimsIdentity claims = new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Role, roles.First())
