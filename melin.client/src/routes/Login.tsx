@@ -32,7 +32,7 @@ export function LoginForm() {
                 .post(
                     "api/Auth/login",
                     { email, password },
-                    { withCredentials: false },
+                    { withCredentials: true },
                 )
                 .then(function (response) {
                     if (response.status === 200) {
