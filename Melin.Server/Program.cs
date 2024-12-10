@@ -48,8 +48,8 @@ builder.Host.ConfigureLogging(logging =>
 // Serilog
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File(new JsonFormatter(), "/logs/warningLog.json", restrictedToMinimumLevel: LogEventLevel.Warning)
-    .WriteTo.File("/logs/all-.logs",
+    .WriteTo.File(new JsonFormatter(), "Logs/warningLog.json", restrictedToMinimumLevel: LogEventLevel.Warning)
+    .WriteTo.File("Logs/all-.logs",
         rollingInterval: RollingInterval.Day)
     .MinimumLevel.Debug()
     .CreateLogger();
