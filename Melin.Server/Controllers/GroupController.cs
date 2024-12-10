@@ -7,6 +7,7 @@ using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Task = Melin.Server.Models.Task;
 
 namespace Melin.Server.Controllers;
@@ -25,16 +26,18 @@ public class GroupController : ControllerBase
     // GET: gets a specifc groups references
     [HttpGet("get-group-references")]
     [Authorize]
-    public async Task<ActionResult<ICollection<Reference>>> GetGroup(string groupName)
+    public async Task<ActionResult<ICollection<Reference>>> GetGroupReferences(string groupName)
     {
         try
         {
-            var userName = User.Identity.Name;
-            if (userName == null)
+            if (User.Identity == null)
             {
-                return Unauthorized("user ");
+                Log.Information("[GroupController][GetGroup()] Unauthorized User Attempted to get {Group}", groupName);
+                return Unauthorized();
             }
-
+            
+            var userName = User.Identity.Name;
+            
             // GET owned groups
             var group = await _referenceContext.Group
                 .Where(g => g.CreatedBy == userName)
@@ -43,16 +46,17 @@ public class GroupController : ControllerBase
 
             if (group is { References.Count: >= 1 })
             {
-                return group.References;
+                Log.Information("[GroupController][GetGroup()] {UserEmail} retrieved {Group}", userName, groupName);
+                return Ok(group.References);
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Log.Warning("[GroupController][GetGroup()] Exception {Exception} thrown", e.GetBaseException());
+            return BadRequest();
         }
 
-        return null;
+        return NoContent();
     }
     
     // GET: All owned groups
@@ -62,14 +66,15 @@ public class GroupController : ControllerBase
     {
         try
         {
+            if (User.Identity == null)
+            {
+                Log.Information("[GroupController][GetOwnedGroups()] Unauthorized User");
+                return Unauthorized();
+            }
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             
             var userName = User.Identity.Name;
-            if (userName == null)
-            {
-                return Unauthorized("user ");
-            }
-
+            
             // GET owned groups
             var groups = await _referenceContext.Group
                 .Where(g => g.CreatedBy == userName)
@@ -82,15 +87,18 @@ public class GroupController : ControllerBase
 
             if (groups == null)
             {
+                Log.Information("[GroupController][GetOwnedGroups()] No Groups found for {UserEmail}", userName);
                 return NotFound("No Groups Found");
             }
 
-            return groups;
+            Log.Information("[GroupController][GetOwnedGroups()] {GroupAmount} found for {UserEmail}", groups.Count,userName);
+
+            return Ok(groups);
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Log.Warning("[GroupController][GetOwnedGroups()] Exception {Exception} Thrown. Returning 500 BadRequest", e.GetBaseException());
+            return BadRequest();
         }
     }
 
@@ -149,13 +157,12 @@ public class GroupController : ControllerBase
                 .Include(g => g.References)
                 .ToListAsync();
 
-            List<Reference> references = new List<Reference>();
+            List<Reference> references = [];
 
             foreach (var groupName in groupNames)
             {
                 var g = userOwnedGroups
-                    .Where(g => g.Name == groupName)
-                    .First();
+                    .First(g => g.Name == groupName);
 
                 if (g.References != null)
                 {
