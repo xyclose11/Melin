@@ -29,12 +29,14 @@ public class ReferenceController : ControllerBase
     private readonly IReferenceService _referenceService;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly TagService _tagService;
+    private readonly ILogger<ReferenceController> _logger;
 
-    public ReferenceController(IReferenceService referenceService, UserManager<IdentityUser> userManager, TagService tagService)
+    public ReferenceController(IReferenceService referenceService, UserManager<IdentityUser> userManager, TagService tagService, ILogger<ReferenceController> logger)
     {
         _referenceService = referenceService;
         _userManager = userManager;
         _tagService = tagService;
+        _logger = logger;
     }
 
     [HttpGet("get-single-reference")]
@@ -43,20 +45,19 @@ public class ReferenceController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("GET: SingleReference of ID: {refId}", refId);
             var reference = await _referenceService.GetReferenceWithAllDetailsById(User.Identity.Name, refId);
 
             if (reference.Success)
             {
                 return Ok(reference.Data);
             }
-            else
-            {
-                return NotFound("REFERENCE NOT FOUND");
-            }
+
+            return NotFound("REFERENCE NOT FOUND");
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogError("GET: Unable to retrieve single reference of id: {refId}", refId);
             return BadRequest();
         }
     }
@@ -66,8 +67,11 @@ public class ReferenceController : ControllerBase
     public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
         var userEmail = User.Identity.Name;
-        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        validFilter.PageSize = 1000;
+        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize)
+        {
+            PageSize = 1000
+        };
+        
         var pagedReferences = await _referenceService.GetOwnedReferencesAsync(filter, userEmail);
 
         var totalRefCount = await _referenceService.GetOwnedReferenceCountAsync(userEmail);

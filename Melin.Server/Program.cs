@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,23 @@ using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// HTTP Logging
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = HttpLoggingFields.All;
+    logging.RequestBodyLogLimit = 4096;
+    logging.ResponseBodyLogLimit = 4096;
+    logging.CombineLogs = true;
+});
+
+// Logging
+builder.Host.ConfigureLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConsole();
+    logging.AddDebug();
+});
 
 builder.Services.AddScoped<IReferenceService, ReferenceService>();
 
@@ -164,6 +182,7 @@ builder.Services.AddHttpClient<ApiService>();
 
 var app = builder.Build();
 
+app.UseHttpLogging();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
