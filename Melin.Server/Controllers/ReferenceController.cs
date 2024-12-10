@@ -49,9 +49,11 @@ public class ReferenceController : ControllerBase
             
             if (reference.Success)
             {
+                Log.Information("GET: Reference ID: {refId} Successfully retrieved by User: {userEmail}", refId, User.Identity.Name);
                 return Ok(reference.Data);
             }
 
+            Log.Information("GET: Reference Not Found ID: {refId}", refId);
             return NotFound("REFERENCE NOT FOUND");
         }
         catch (Exception e)
@@ -65,17 +67,33 @@ public class ReferenceController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
-        var userEmail = User.Identity.Name;
-        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize)
+        try
         {
-            PageSize = 1000
-        };
+            var userEmail = User.Identity.Name;
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize)
+            {
+                PageSize = 1000
+            };
         
-        var pagedReferences = await _referenceService.GetOwnedReferencesAsync(filter, userEmail);
+            var pagedReferences = await _referenceService.GetOwnedReferencesAsync(filter, userEmail);
 
-        var totalRefCount = await _referenceService.GetOwnedReferenceCountAsync(userEmail);
-        
-        return Ok(new PagedResponse<ICollection<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
+            var totalRefCount = await _referenceService.GetOwnedReferenceCountAsync(userEmail);
+
+            if (totalRefCount == 0)
+            {
+                Log.Information("GET: {userEmail}, attempted GetReferences, -> currently has 0",  User.Identity.Name);
+                return NotFound("User currently has 0 references");
+            }
+            Log.Information("{userEmail}, retrieved {referenceAmount} References", User.Identity.Name, totalRefCount);
+
+            return Ok(new PagedResponse<ICollection<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
+        }
+        catch (Exception e)
+        {
+            Log.Error("GET: GetReferences Failed. PaginationFilter: {filter}. By User: {userEmail}", filter, User.Identity.Name);
+            return BadRequest();
+        }
+
     }
 
     // POST: Create new reference
@@ -91,13 +109,17 @@ public class ReferenceController : ControllerBase
         {
             if (User.Identity.Name == null)
             {
+                Log.Warning("Unauthorized access attempted");
                 return Unauthorized("User not authorized to create References");
             }
             reference.OwnerEmail = User.Identity.Name;
 
             await _referenceService.AddReferenceAsync(reference);
-            return Ok("Artwork created successfully");
+            Log.Information("{userEmail} Created a Reference with ID: {refId}",  User.Identity.Name, reference.Id);
+
+            return Ok("Reference created successfully");
         } catch (Exception ex) {
+            Log.Error("Unable to create reference");
             return StatusCode(500, "An error occurred while creating the reference.");
         }
     }
@@ -144,6 +166,8 @@ public class ReferenceController : ControllerBase
         {
             return BadRequest(ModelState);
         }
+        
+        Log.Information("PATCH: {userEmail}, updating reference", User.Identity.Name);
 
         if (updatedItem == null)
         {
