@@ -21,6 +21,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Json;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +44,15 @@ builder.Host.ConfigureLogging(logging =>
     logging.AddConsole();
     logging.AddDebug();
 });
+
+// Serilog
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File(new JsonFormatter(), "/logs/warningLog.json", restrictedToMinimumLevel: LogEventLevel.Warning)
+    .WriteTo.File("/logs/all-.logs",
+        rollingInterval: RollingInterval.Day)
+    .MinimumLevel.Debug()
+    .CreateLogger();
 
 builder.Services.AddScoped<IReferenceService, ReferenceService>();
 
