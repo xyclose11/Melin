@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "MelinDatabase": "Host=;Username=;Password=;Database=;"
+  }
+}
