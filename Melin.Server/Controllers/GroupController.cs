@@ -68,9 +68,17 @@ public class GroupController : ControllerBase
         return NoContent();
     }
     
-    // GET: All owned groups
+    /// <summary>
+    /// Get all owned groups for a user. With Pagination.
+    /// </summary>
+    /// <param name="filter"> A PaginationFilter: { pageNumber: int, pageSize: int }</param>
+    /// <returns>A List of Groups</returns>
     [HttpGet("get-owned-groups")]
     [Authorize]
+    [ProducesResponseType(typeof(List<Group>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<Group>>> GetOwnedGroups([FromQuery] PaginationFilter filter)
     {
         try
@@ -111,8 +119,18 @@ public class GroupController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Retrieves References from a specific Group
+    /// </summary>
+    /// <param name="groupName">A string specifying groupName</param>
+    /// <returns>A List of References</returns>
     [HttpGet("get-references-from-group")]
     [Authorize]
+    [ProducesResponseType(typeof(List<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    // TODO see why this method is duplicated
     public async Task<ActionResult<List<Reference>>> GetReferencesFromGroup(string groupName)
     {
         if (!ModelState.IsValid)
@@ -121,33 +139,46 @@ public class GroupController : ControllerBase
         }
         try
         {
+            if (User.Identity == null)
+            {
+                Log.Information("User Identity is null");
+                return Unauthorized();
+            }
+            
+            Log.Information("Getting References from Group {GroupName}", groupName);
             var group = await _referenceContext.Group
                 .Where(g => g.CreatedBy == User.Identity.Name)
                 .Where(g => g.Name == groupName)
                 .Include(r => r.References)
                 .FirstAsync();
 
-            if (group.References == null)
+            if (group.References is not { Count: > 0 })
             {
-                return StatusCode(204, "Group" + groupName + " does not exist.");
+                Log.Information("Group: {GroupName} has no References", groupName);
+                return NoContent();
             }
             
-            if (group.References.Count <= 0)
-            {
-                return StatusCode(204, "Group" + groupName + " has no references.");
-            }
-            
+            Log.Information("User: {UserName} Retrieved {ReferenceCount} References from group: {GroupName}", User.Identity.Name, group.References.Count(), groupName);
             return Ok(new Response<ICollection<Reference>>(group.References));
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            return BadRequest(e);
+            Log.Warning("Exception caught when attempting to Retrieve References from Group: {GroupName}", groupName);
+            return BadRequest();
         }
     }
     
+    /// <summary>
+    /// Retrieves References from a List of Groups
+    /// </summary>
+    /// <param name="groupNames">A String Array of groupNames</param>
+    /// <returns>A List of References</returns>
     [HttpGet("get-references-from-multiple-groups")]
     [Authorize]
+    [ProducesResponseType(typeof(List<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<Reference>>> GetReferencesFromMultipleGroups([FromQuery(Name = "groupNames")]string[] groupNames)
     {
         if (!ModelState.IsValid)

@@ -1,6 +1,7 @@
 using System.Text;
 using Melin.Server;
 using Melin.Server.Data;
+using Melin.Server.Filter;
 using Melin.Server.Interfaces;
 using Melin.Server.JSONInputFormatter;
 using Melin.Server.Models;
@@ -160,6 +161,11 @@ builder.Services.AddControllers()
 builder.Services.AddControllers(options =>
 {
     options.InputFormatters.Insert(0, MelinJPIF.GetJsonPatchInputFormatter());
+});
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<AuthorizationFilter>();
 });
 
 builder.Services.Configure<IdentityOptions>(options =>
