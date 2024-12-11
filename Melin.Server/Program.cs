@@ -4,6 +4,7 @@ using Melin.Server.Data;
 using Melin.Server.Filter;
 using Melin.Server.Interfaces;
 using Melin.Server.JSONInputFormatter;
+using Melin.Server.Middleware;
 using Melin.Server.Models;
 using Melin.Server.Models.Binders;
 using Melin.Server.Models.Context;
@@ -48,6 +49,7 @@ builder.Host.ConfigureLogging(logging =>
 
 // Serilog
 Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.File(new JsonFormatter(), "Logs/warningLog.json", restrictedToMinimumLevel: LogEventLevel.Warning)
     .WriteTo.File("Logs/all-.logs",
@@ -226,6 +228,9 @@ app.UseCors();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Map Serilog config middleware after UseAuthentication to ensure User.Identity is initialized
+app.UseMiddleware<SerilogConfigurationMiddleware>();
 
 if (builder.Environment.IsDevelopment())
 {
