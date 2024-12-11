@@ -2,6 +2,7 @@
 using Melin.Server.Filter;
 using Melin.Server.Models;
 using Melin.Server.Models.DTO;
+using Melin.Server.Models.Repository;
 using Melin.Server.Services;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Authorization;
@@ -16,11 +17,12 @@ public class GroupController : ControllerBase
 {
     private readonly ReferenceContext _referenceContext;
     private readonly IReferenceService _referenceService;
-
-    public GroupController(ReferenceContext referenceContext, IReferenceService referenceService)
+    private readonly IGroupService _groupService;
+    public GroupController(ReferenceContext referenceContext, IReferenceService referenceService, IGroupService groupService)
     {
         _referenceContext = referenceContext;
         _referenceService = referenceService;
+        _groupService = groupService;
     }
 
     /// <summary>
@@ -44,7 +46,6 @@ public class GroupController : ControllerBase
                 Log.Information("[GroupController][GetGroup()] Unauthorized User Attempted to get {Group}", groupName);
                 return Unauthorized();
             }
-            
             var userName = User.Identity.Name;
             
             // GET owned groups
@@ -217,6 +218,34 @@ public class GroupController : ControllerBase
         {
             Console.WriteLine(e);
             return BadRequest(e);
+        }
+    }
+
+    /// <summary>
+    /// Retrieves a single group, with References
+    /// </summary>
+    /// <param name="groupId">String value for group name</param>
+    /// <returns>A Group with any related References</returns>
+    [HttpGet("single-group")]
+    [Authorize]
+    public ActionResult RetrieveSingleGroup([FromQuery] int groupId)
+    {
+        try
+        {
+            var g = _groupService.GetGroupById(User.Identity.Name, groupId);
+
+            if (!g.Success)
+            {
+                Log.Information("NotFound request sent when trying to retrieve group ID: {GroupID}", groupId);
+                return NotFound();
+            }
+
+            return Ok(g.Data);
+        }
+        catch (Exception e)
+        {
+            Log.Warning("Attempted to retrieve single group: {GroupName}", groupId);
+            return BadRequest();
         }
     }
 

@@ -58,6 +58,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Services.AddScoped<IReferenceService, ReferenceService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 
 // Add services to the container.
 builder.Services.AddDbContext<ReferenceContext>(options =>
