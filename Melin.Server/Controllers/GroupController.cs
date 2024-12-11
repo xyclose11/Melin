@@ -23,9 +23,18 @@ public class GroupController : ControllerBase
         _referenceService = referenceService;
     }
 
-    // GET: gets a specifc groups references
+    /// <summary>
+    /// Gets a specific groups References.
+    /// User must be authorized to access.
+    /// </summary>
+    /// <param name="groupName">The name of the specific group</param>
+    /// <returns> A collection of References </returns>
     [HttpGet("get-group-references")]
     [Authorize]
+    [ProducesResponseType(typeof(ICollection<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult<ICollection<Reference>>> GetGroupReferences(string groupName)
     {
         try

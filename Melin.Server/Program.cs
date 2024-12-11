@@ -83,7 +83,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    options.IncludeXmlComments(Path.Combine("obj/Debug/net8.0/Melin.Server.xml"));
+});
 
 builder.Services.AddProblemDetails();
 
