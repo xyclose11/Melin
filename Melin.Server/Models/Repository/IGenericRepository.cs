@@ -15,6 +15,8 @@ public interface IGenericRepository<T> where T : class
     IEnumerable<T> Find(Expression<Func<T, bool>> expression);
     IQueryable<T>? FindQueryable(Expression<Func<T, bool>> expression);
     void Add(T entity);
+    Task<bool> AddAsync(T entity);
+
     void AddRangeAsync(IEnumerable<T> entities);
     void Remove(T entity);
     void RemoveRange(IEnumerable<T> entities);

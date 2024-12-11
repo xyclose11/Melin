@@ -34,6 +34,22 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _context.Set<T>().Add(entity);
     }
 
+    public async Task<bool> AddAsync(T entity)
+    {
+        try
+        {
+            await _context.Set<T>().AddAsync(entity);
+            // TODO ensure that this method is implemented correctly and checks for the correct response type
+            return true;
+        }
+        catch (Exception e)
+        {
+            Log.Warning("Exception Caught Attempting to AddAsync");
+            Console.WriteLine(e);
+            return false;
+        }
+    }
+
     public async void AddRangeAsync(IEnumerable<T> entities)
     {
         await _context.Set<T>().AddRangeAsync(entities);
