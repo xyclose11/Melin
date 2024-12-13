@@ -309,15 +309,11 @@ public class ReferenceConverter : JsonConverter<Reference>
 
     public override void WriteJson(JsonWriter writer, Reference? value, JsonSerializer serializer)
     {
-        if (value == null || serializer == null)
+        if (value == null)
         {
             return;
         }
-
-        // JObject jObject = new();
-        // jObject[nameof(value.)]
-        var jo = JObject.FromObject(value);
-        // var jo = JObject.FromObject(value, serializer);
-        jo.WriteTo(writer);
+        
+        serializer.Serialize(writer, value);
     }
 }

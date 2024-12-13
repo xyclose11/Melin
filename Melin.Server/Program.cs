@@ -152,15 +152,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(options =>
-    {
-        options.SerializerSettings.Converters.Add(new ReferenceConverter());
-        // Is this the best way to handle loops?
-        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-    });
-
-
 builder.Services.AddControllers(options =>
 {
     options.InputFormatters.Insert(0, MelinJPIF.GetJsonPatchInputFormatter());
@@ -170,6 +161,15 @@ builder.Services.AddControllers(options =>
 {
     options.Filters.Add<AuthorizationFilter>();
 });
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+        options.SerializerSettings.Converters.Add(new ReferenceConverter());
+    });
+
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
