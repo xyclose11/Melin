@@ -192,13 +192,17 @@ export function Library() {
                 const creators: Creator[] = row.getValue("creators");
                 return (
                     <div>
-                        {creators.map((creator) => (
-                            <div key={creator.id}>
-                                <div>{creator.type}</div>
-                                <div>{creator.firstName}</div>
-                                <div>{creator.lastName}</div>
-                            </div>
-                        ))}
+                        {creators === undefined ? (
+                            <div> </div>
+                        ) : (
+                            creators.map((creator) => (
+                                <div key={creator.id}>
+                                    <div>{creator.type}</div>
+                                    <div>{creator.firstName}</div>
+                                    <div>{creator.lastName}</div>
+                                </div>
+                            ))
+                        )}
                     </div>
                 );
             },
@@ -214,16 +218,22 @@ export function Library() {
                 return (
                     <div className={"max-w-[25%]"}>
                         <div className={"flex gap-1 flex-wrap"}>
-                            {tags.map((tag) => (
-                                <TagTableDisplay
-                                    key={tag.id}
-                                    tagId={
-                                        typeof tag.id === "number" ? tag.id : -1
-                                    }
-                                    refId={row.original.id}
-                                    name={tag.text}
-                                />
-                            ))}
+                            {tags === undefined ? (
+                                <div> </div>
+                            ) : (
+                                tags.map((tag) => (
+                                    <TagTableDisplay
+                                        key={tag.id}
+                                        tagId={
+                                            typeof tag.id === "number"
+                                                ? tag.id
+                                                : -1
+                                        }
+                                        refId={row.original.id}
+                                        name={tag.text}
+                                    />
+                                ))
+                            )}
                             <div className={"justify-self-end self-end"}>
                                 <Dialog>
                                     <DialogTrigger>
@@ -403,6 +413,7 @@ export function Library() {
 
             if (response.status === 200) {
                 setData(response.data.data);
+                console.log(response.data.data);
                 setTotalRef(response.data.TotalPages);
             } else {
                 toast({

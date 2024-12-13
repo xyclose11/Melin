@@ -1,7 +1,9 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Melin.Server.Filter;
@@ -9,6 +11,7 @@ using Melin.Server.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
 using Melin.Server.Models.Context;
+using Melin.Server.Models.DTO;
 using Melin.Server.Models.References;
 using Melin.Server.Services;
 using Melin.Server.Wrappers;
@@ -85,8 +88,26 @@ public class ReferenceController : ControllerBase
                 return NotFound("User currently has 0 references");
             }
             Log.Information("{userEmail}, retrieved {referenceAmount} References", User.Identity.Name, totalRefCount);
+            
+            // TEMP CONVERSION
+            List<ReferenceToLibraryRequest> output = new List<ReferenceToLibraryRequest>();
+            foreach (var reference in pagedReferences)
+            {
+                var res = new ReferenceToLibraryRequest
+                {
+                    Id = reference.Id,
+                    Type = reference.Type.ToString(),
+                    Title = reference.Title,
+                    CreatedAt = reference.CreatedAt.ToString(CultureInfo.CurrentCulture),
+                    UpdatedAt = reference.UpdatedAt.ToString(CultureInfo.CurrentCulture),
+                    Creators = reference.Creators?.ToList(),
+                    Language = reference.Language.ToString(),
+                    DatePublished = reference.DatePublished.ToString()
+                };
+                output.Add(res);
+            }
 
-            return Ok(new PagedResponse<ICollection<Reference>>(pagedReferences, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
+            return Ok(new PagedResponse<ICollection<ReferenceToLibraryRequest>>(output, validFilter.PageNumber, validFilter.PageSize, totalRefCount));
         }
         catch (Exception e)
         {
