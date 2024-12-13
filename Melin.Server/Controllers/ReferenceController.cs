@@ -101,6 +101,7 @@ public class ReferenceController : ControllerBase
                     CreatedAt = reference.CreatedAt.ToString(CultureInfo.CurrentCulture),
                     UpdatedAt = reference.UpdatedAt.ToString(CultureInfo.CurrentCulture),
                     Creators = reference.Creators?.ToList(),
+                    Tags = reference.Tags?.ToList(),
                     Language = reference.Language.ToString(),
                     DatePublished = reference.DatePublished.ToString()
                 };

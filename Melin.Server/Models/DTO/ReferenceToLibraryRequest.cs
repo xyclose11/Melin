@@ -9,5 +9,6 @@ public class ReferenceToLibraryRequest
     public required string UpdatedAt;
     public required string CreatedAt;
     public List<Creator>? Creators;
+    public List<Tag>? Tags;
     public string? Language;
 }
