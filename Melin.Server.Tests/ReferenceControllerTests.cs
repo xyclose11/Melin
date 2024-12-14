@@ -116,19 +116,18 @@ public class ReferenceControllerTests : IClassFixture<WebApplicationFactory<Prog
 
         res.EnsureSuccessStatusCode();
     }
-
+    
     [Fact]
-    public async void Get_SecurePageRedirectsUnauthenticatedUserToLoginPage()
+    public async void Get_SecurePage_ReturnsStatusUnauthorized()
     {
         var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false
         });
 
-        var response = await client.GetAsync("/library");
+        var response = await client.GetAsync("/get-owned-tags");
         
-        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-        Assert.StartsWith("http://localhost/login", response.Headers.Location.OriginalString);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
