@@ -5,7 +5,7 @@ namespace Melin.Server.Models.Binders;
 
 public class ReferenceModelBinder : IModelBinder
 {
-    public System.Threading.Tasks.Task BindModelAsync(ModelBindingContext bindingContext)
+    public Task BindModelAsync(ModelBindingContext bindingContext)
     {
         var value = bindingContext.ValueProvider.GetValue("type").FirstValue;
 

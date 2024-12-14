@@ -5,19 +5,21 @@ namespace Melin.Server.Models.References;
 
 // https://api.zotero.org/schema
 
-// Covers Image, Artwork, and Maps
+/// <summary>
+/// Covers Image, Artwork, and Maps
+/// </summary>
 public class Artwork : Reference
 {
     [MaxLength(128)]
     public string Medium { get; set; } = "";
+    
     [MaxLength(128)]
-
     public string Dimensions { get; set; } = "";
+    
     [MaxLength(128)]
-
     public string? Scale { get; set; } = "";
+    
     [MaxLength(128)]
-
     public string? MapType { get; set; } = "";
 }
 
@@ -31,11 +33,6 @@ public class AudioRecording : Reference
     public string? Label { get; set; } = "publisher";
     public string? RunningTime { get; set; }
 
-    // public async Task Add(ReferenceContext dbContext)
-    // {
-    //     dbContext.AudioRecordings.Add(this);
-    //     await dbContext.SaveChangesAsync();
-    // }
 }
 
 public class Bill : Reference

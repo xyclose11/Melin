@@ -8,6 +8,7 @@ using Melin.Server.Services;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Serilog;
 
 namespace Melin.Server.Controllers;
@@ -180,29 +181,25 @@ public class ReferenceController : ControllerBase
     // UPDATE
     [HttpPatch("update/{id}")]
     [Authorize]
-    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateItem(int id, [FromBody] JsonPatchDocument<Reference> updatedItem)
+    public async Task<IActionResult> UpdateItem([FromQuery] int id, [FromBody] JsonPatchDocument<Reference> updatedItem)
     {
-        // Validate model
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        if (User.Identity == null)
+        if (User.Identity?.Name == null)
         {
+            Log.Information("Unauthorized attempt to update Reference: {RefID}", id);
             return Unauthorized("User Currently Not Authorized to Update Item");
         }
         
         Log.Information("PATCH: {userEmail}, updating reference", User.Identity.Name);
-
-        if (User.Identity.Name == null)
-        {
-            return Unauthorized("User Has Incorrect Auth Details. Attempt to Login Again: Please Advise.");
-        }
+        
 
         // Find the item to update
         var existingItemResult = await _referenceService.GetReferenceWithAllDetailsById(User.Identity.Name, id);
