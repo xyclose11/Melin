@@ -39,12 +39,3 @@ public class Creator
     public int? ReferenceId { get; set; }
     // public Reference? Reference { get; set; }
 }
-
-public class Author
-{
-    [MaxLength(512)]
-    public string FirstName { get; set; } = "";
-    
-    [MaxLength(512)]
-    public string LastName { get; set; } = "";
-}

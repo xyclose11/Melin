@@ -6,7 +6,6 @@ namespace Melin.Server.Tests;
 
 
 public class ReferenceControllerTests {
-    private readonly ApiService _apiService;
     private readonly ReferenceContext _referenceContext;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly TagService _tagService;

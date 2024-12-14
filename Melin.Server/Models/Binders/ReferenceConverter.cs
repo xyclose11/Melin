@@ -279,12 +279,12 @@ public class ReferenceConverter : JsonConverter<Reference>
                 return o as VideoRecording;
             }
         }
-        if (referenceType == ReferenceType.Webpage.ToString().ToLower())
+        if (referenceType == ReferenceType.Website.ToString().ToLower())
         {
-            var o = obj.ToObject(typeof(Webpage));
+            var o = obj.ToObject(typeof(Website));
             if (o != null)
             {
-                return o as Webpage;
+                return o as Website;
             }
         }
         if (referenceType == ReferenceType.Attachment.ToString().ToLower())

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Melin.Server.Models.References;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Melin.Server.Models.Binders;
 

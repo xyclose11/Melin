@@ -188,8 +188,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddHttpClient<ApiService>();
-
 var app = builder.Build();
 
 app.UseHttpLogging();
