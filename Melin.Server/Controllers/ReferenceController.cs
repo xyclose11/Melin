@@ -41,12 +41,26 @@ public class ReferenceController : ControllerBase
         _tagService = tagService;
     }
 
+    /// <summary>
+    /// Retrieves a single Reference from the currently logged-in user
+    /// </summary>
+    /// <param name="refId">Integer Query Parameter referring to the ID of the Reference</param>
+    /// <returns>A Single Reference</returns>
     [HttpGet("get-single-reference")]
     [Authorize]
-    public async Task<IActionResult> GetSingleReference(int refId)
+    [ProducesResponseType(typeof(ICollection<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetSingleReference([FromQuery] int refId)
     {
         try
         {
+            if (User.Identity == null)
+            {
+                Log.Information("Unauthorized Attempt to Retrieve Reference: {ReferenceID}", refId);
+                return Unauthorized();
+            }
             Log.Information("GET: SingleReference of ID: {refId}", refId);
             var reference = await _referenceService.GetReferenceWithAllDetailsById(User.Identity.Name, refId);
             
@@ -66,12 +80,27 @@ public class ReferenceController : ControllerBase
         }
     }
     
+    
+    /// <summary>
+    /// Retrieves a list of References from the currently logged-in user
+    /// </summary>
+    /// <param name="filter">A <see cref="PaginationFilter"/> object. Determines page number and quantity of References</param>
+    /// <returns>A 'filtered' <see cref="PagedResponse{T}"/></returns>
     [HttpGet("references")]
     [Authorize]
+    [ProducesResponseType(typeof(ICollection<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetReferences([FromQuery] PaginationFilter filter)
     {
         try
         {
+            if (User.Identity == null)
+            {
+                Log.Information("Unauthorized Attempt to Retrieve Multiple References");
+                return Unauthorized();
+            }
             var userEmail = User.Identity.Name;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize)
             {
@@ -89,7 +118,7 @@ public class ReferenceController : ControllerBase
             }
             Log.Information("{userEmail}, retrieved {referenceAmount} References", User.Identity.Name, totalRefCount);
             
-            // TEMP CONVERSION
+            // TEMP CONVERSION TESTING OUT DTO METHOD
             List<ReferenceToLibraryRequest> output = new List<ReferenceToLibraryRequest>();
             foreach (var reference in pagedReferences)
             {
@@ -118,9 +147,19 @@ public class ReferenceController : ControllerBase
 
     }
 
+    /// <summary>
+    /// Creates a new Reference and sets the initial owner to the current User.
+    /// Uses a custom JSON converter to handle the 30+ types of References on a single
+    /// endpoint
+    /// </summary>
+    /// <param name="reference">A <see cref="Reference"/></param>
+    /// <returns><see cref="StatusCodeResult"/></returns>
     // POST: Create new reference
     [HttpPost("create-reference")]
     [Authorize]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> PostReference([FromBody] Reference reference) {
         if (!ModelState.IsValid)
         {
@@ -129,7 +168,7 @@ public class ReferenceController : ControllerBase
         
         try
         {
-            if (User.Identity.Name == null)
+            if (User.Identity == null)
             {
                 Log.Warning("Unauthorized access attempted");
                 return Unauthorized("User not authorized to create References");
@@ -141,57 +180,28 @@ public class ReferenceController : ControllerBase
 
             return Ok("Reference created successfully");
         } catch (Exception ex) {
-            Log.Error("Unable to create reference");
-            return StatusCode(500, "An error occurred while creating the reference.");
+            Log.Warning("Unable to create reference");
+            return BadRequest();
         }
     }
     
-    private async Task<bool> HandleTagsWithReferencePost(ICollection<Tag> tags)
-    {
-        try
-        {
-            if (tags.Count > 1)
-            {
-                string createdBy = User.Identity.Name;
-                await _tagService.CreateTagsAsync(tags, createdBy);
-            }
-            else
-            {
-                foreach (var tag in tags)
-                {
-                    tag.CreatedBy = User.Identity.Name;
-                    var existingTag = await _tagService.GetTagAsync(tag.Id);
-                    if (existingTag == null)
-                    {
-                        await _tagService.CreateTagAsync(tag);
-                    }
-                }
-            }
-
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return false;
-        }
-
-    }
-    
+    /// <summary>
+    /// Updates a User owned Reference, via HTTP PATCH.
+    /// </summary>
+    /// <param name="id">Integer value depicting the Reference to be updated</param>
+    /// <param name="updatedItem"><see cref="JsonPatchDocument"/></param>
+    /// <returns><see cref="IActionResult"/></returns>
     // UPDATE
     [HttpPatch("update/{id}")]
     [Authorize]
+    [ProducesResponseType(typeof(ObjectResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateItem(int id, [FromBody] JsonPatchDocument<Reference> updatedItem)
     {
         // Validate model
         if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        
-        Log.Information("PATCH: {userEmail}, updating reference", User.Identity.Name);
-
-        if (updatedItem == null)
         {
             return BadRequest(ModelState);
         }
@@ -200,6 +210,8 @@ public class ReferenceController : ControllerBase
         {
             return Unauthorized("User Currently Not Authorized to Update Item");
         }
+        
+        Log.Information("PATCH: {userEmail}, updating reference", User.Identity.Name);
 
         if (User.Identity.Name == null)
         {
@@ -214,6 +226,11 @@ public class ReferenceController : ControllerBase
         }
 
         var existingItem = existingItemResult.Data;
+
+        if (existingItem == null)
+        {
+            return BadRequest();
+        }
         
         updatedItem.ApplyTo(existingItem, ModelState);
 
@@ -225,21 +242,39 @@ public class ReferenceController : ControllerBase
         // apply patch to DB
         _referenceService.ApplyPatch(existingItem);
         return new ObjectResult(existingItem);
-        
     }
 
-
+    /// <summary>
+    /// Deletes a single Reference
+    /// </summary>
+    /// <param name="refId">Integer Query Parameter for Reference ID</param>
+    /// <returns><see cref="ActionResult"/></returns>
     // DELETE: Delete single reference
     [HttpDelete("delete-reference")]
     [Authorize]
-    public async Task<ActionResult<bool>> DeleteSpecificReference(int refId)
+    [ProducesResponseType(typeof(ActionResult<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<bool>> DeleteSpecificReference([FromQuery] int refId)
     {
         try
         {
+            if (User.Identity == null)
+            {
+                Log.Information("Unauthorized Attempt to delete Reference ID: {ReferenceID}", refId);
+                return Unauthorized();
+            }
+            
+            if (User.Identity.Name == null)
+            {
+                Log.Information("Email is Null when attempting to delete Reference ID: {ReferenceID}", refId);
+                return Unauthorized();
+            }
 
             var r = await _referenceService.DeleteReferenceAsync(User.Identity.Name, refId);
             
-            if (r == null)
+            if (!r)
             {
                 return NotFound("Reference with ID: " + refId + " not found.");
             }
@@ -249,21 +284,42 @@ public class ReferenceController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Log.Warning("Unable to Delete Reference with ID: {ReferenceID}", refId);
+            return BadRequest();
         }
     }
     
+    /// <summary>
+    /// Deletes a List of References
+    /// </summary>
+    /// <param name="refIdList">A List of Integer's depicting Reference ID's</param>
+    /// <returns></returns>
     // DELETE: Delete list of references
     [HttpDelete("delete-multiple-references")]
     [Authorize]
+    [ProducesResponseType(typeof(ActionResult<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<bool>> DeleteListOfReferences(List<int> refIdList)
     {
         try
         {
             if (refIdList.Count < 1)
             {
+                Log.Warning("Attempted to Delete from a List that has no References");
                 return Problem("ERROR: Ref ID List has < 1 ids");
+            }
+
+            if (User.Identity == null)
+            {
+                Log.Information("Unauthorized Attempt to delete Reference ID: {ReferenceID}", refIdList);
+                return Unauthorized();
+            }
+            
+            if (User.Identity.Name == null)
+            {
+                Log.Information("Email is Null when attempting to delete Reference ID: {ReferenceID}", refIdList);
+                return Unauthorized();
             }
 
             await _referenceService.DeleteReferenceRangeAsync(User.Identity.Name, refIdList);
@@ -274,8 +330,8 @@ public class ReferenceController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Log.Warning("Attempt to Delete list of References failed. ReferenceIDs: {ReferenceIDList}", refIdList);
+            return BadRequest();
         }
     }
 }
