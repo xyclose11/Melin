@@ -1,8 +1,6 @@
-using System.Text;
 using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Filter;
-using Melin.Server.Interfaces;
 using Melin.Server.JSONInputFormatter;
 using Melin.Server.Middleware;
 using Melin.Server.Models;
@@ -11,23 +9,14 @@ using Melin.Server.Models.Context;
 using Melin.Server.Models.Repository;
 using Melin.Server.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Formatting.Json;
-using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 

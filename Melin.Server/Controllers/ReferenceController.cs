@@ -1,28 +1,14 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
-using System.IO;
-using System.Threading.Tasks;
 using Melin.Server.Filter;
-using Melin.Server.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
-using Melin.Server.Models.Context;
 using Melin.Server.Models.DTO;
-using Melin.Server.Models.References;
 using Melin.Server.Services;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Presentation = Melin.Server.Models.Presentation;
-using Report = Melin.Server.Models.Report;
-using Software = Melin.Server.Models.Software;
-using Task = System.Threading.Tasks.Task;
 
 namespace Melin.Server.Controllers;
 
