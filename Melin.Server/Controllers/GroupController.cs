@@ -228,10 +228,20 @@ public class GroupController : ControllerBase
     /// <returns>A Group with any related References</returns>
     [HttpGet("single-group")]
     [Authorize]
+    [ProducesResponseType(typeof(List<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult RetrieveSingleGroup([FromQuery] int groupId)
     {
         try
         {
+            if (User.Identity?.Name == null)
+            {
+                Log.Information("Unauthorized attempt to Retrieve Single Group of ID: {GroupID}", groupId);
+                return Unauthorized();
+            }
+            
             var g = _groupService.GetGroupById(User.Identity.Name, groupId);
 
             if (!g.Success)
@@ -249,23 +259,34 @@ public class GroupController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Creates a Group with the current logged-in User as its Owner
+    /// </summary>
+    /// <param name="group">A <see cref="Group"/> Object</param>
+    /// <returns><see cref="ActionResult{TValue}"/></returns>
     [HttpPost("create-group")]
     [Authorize]
+    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> CreateGroup([FromBody] Group group)
     {
         try
         {
-            // updated createdBy
-            if (group.CreatedBy == null)
+            if (User.Identity?.Name == null)
             {
-                group.CreatedBy = User.Identity.Name;
+                Log.Information("Unauthorized attempt to create a new group");
+                return Unauthorized();
             }
             
+            group.CreatedBy = User.Identity.Name;
+            
             // check if group already exists
-            var g = await _referenceContext.Group.ContainsAsync(group); // TODO test this
+            var g = await _referenceContext.Group.ContainsAsync(group);
             if (g)
             {
-                return NoContent(); // TODO put duplicate reply here
+                return NoContent();
             }
             _referenceContext.Group.Add(group);
 
@@ -274,21 +295,36 @@ public class GroupController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Log.Warning("Attempt to create Group failed");
+            return BadRequest();
         }
     }
     
+    /// <summary>
+    /// Updates a Groups details via HTTP PUT
+    /// </summary>
+    /// <param name="prevGroupName">String Query value for the Group ID</param>
+    /// <param name="updatedGroup">A <see cref="Group"/> Object</param>
+    /// <returns><see cref="ActionResult{Group}"/></returns>
     // UPDATE: group related details, not contents
-    [HttpPost("update-group-details")]
+    [HttpPut("update-group-details")]
     [Authorize]
-    public async Task<ActionResult<Group>> UpdateGroupDetails(string prevGroupName, [FromBody] Group updatedGroup)
+    [ProducesResponseType(typeof(List<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<Group>> UpdateGroupDetails([FromQuery] string prevGroupName, [FromBody] Group updatedGroup)
     {
         try
         {
+            if (User.Identity?.Name == null)
+            {
+                Log.Information("Unauthorized attempt to update Group with ID: {GroupID}", prevGroupName);
+                return Unauthorized();
+            }
+            
             // find group
             var group = await _referenceContext.Group
-                .Where(g => g.Name == prevGroupName)
+                .Where(g => g.Name == prevGroupName && g.CreatedBy == User.Identity.Name)
                 .FirstAsync();
             
             // update Group details
@@ -302,42 +338,57 @@ public class GroupController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Log.Warning("Update Group failed");
             return NotFound("Group Not Found. Cannot update");
         }
     }
     
+    /// <summary>
+    /// Adds a list of Reference ID's to a specified Group owned by the current user
+    /// </summary>
+    /// <param name="groupName">String value for the group name</param>
+    /// <param name="referenceIds">A <see cref="List{T}"/> of reference ID's</param>
+    /// <returns>A <see cref="ActionResult{TValue}"/></returns>
     // POST: add references to group
     [HttpPost("add-refs-to-group")]
     [Authorize]
-    public async Task<ActionResult<Group>> AddReferenceToGroup(string groupName, [FromBody] List<int> referenceIds)
+    [ProducesResponseType(typeof(ActionResult<Group>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Group>> AddReferenceToGroup([FromQuery] string groupName, [FromBody] List<int> referenceIds)
     {
         try
         {
+            if (User.Identity?.Name == null)
+            {
+                Log.Information("Unauthorized Attempt to Add Reference(s) to a Group: {GroupName}", groupName);
+                return Unauthorized();
+            }
+            
             // find group
             var group = await _referenceContext.Group
-                .Where(g => g.Name == groupName)
+                .Where(g => g.Name == groupName && g.CreatedBy == User.Identity.Name)
                 .FirstAsync();
 
-            if (group == null)
+            if (group.References == null)
             {
-                return NotFound("Group Not Found");
+                Log.Information("Group with Name: {GroupName} has no References", groupName);
+                return NotFound("Group has no References");
             }
 
-
-
-            List<Reference> references = new List<Reference>();
+            List<Reference> references = [];
 
             foreach (var referenceId in referenceIds)
             {
                 var r = await _referenceContext.Reference.FindAsync(referenceId);
-                if (r != null)
+                
+                if (r == null) continue;
+                
+                // see if reference is already in the group
+                if (!group.References.Contains(r))
                 {
-                    // see if reference is already in the group
-                    if (!group.References.Contains(r))
-                    {
-                        references.Add(r);
-                    }
+                    references.Add(r);
                 }
             }
             
@@ -348,14 +399,23 @@ public class GroupController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Log.Warning("Unable to Add References to Group");
+            return BadRequest();
         }
     }
     
+    /// <summary>
+    /// Add a Group to a Group
+    /// </summary>
+    /// <param name="addGroupToGroup">A <see cref="AddGroupToGroup"/> Data Transfer Object (DTO)</param>
+    /// <returns><see cref="ActionResult{TValue}"/></returns>
     // POST: add references to group
     [HttpPost("add-group-to-group")]
     [Authorize]
+    [ProducesResponseType(typeof(List<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Group>> AddGroupToGroup([FromBody] AddGroupToGroup addGroupToGroup)
     {
         if (!ModelState.IsValid)
@@ -364,36 +424,34 @@ public class GroupController : ControllerBase
         }
         try
         {
-            var parent = addGroupToGroup.parent;
-            var child = addGroupToGroup.child;
-            if (parent == child)
+            if (User.Identity?.Name == null)
             {
-                return BadRequest("Duplicate groups detected");
-            }
-            // find group
-            var group = await _referenceContext.Group
-                .Where(g => g.Name == parent)
-                .FirstAsync();
-
-            if (group == null)
-            {
-                return NotFound("Group Not Found");
+                Log.Information("Unauthorized Attempt to Add a Group to a Group");
+                return Unauthorized();
             }
             
-     
-            var r = await _referenceContext.Group.Where(g => g.Name == child).FirstAsync();
-            if (r != null)
+            var parent = addGroupToGroup.Parent;
+            var child = addGroupToGroup.Child;
+            if (parent == child)
             {
-                r.IsRoot = false;
-                // see if group is already in the group
-                if (group.Groups != null)
-                {
-                    if (!group.Groups.Contains(r))
-                    {
-                        group.Groups.Add(r);
-                    }
-                }
+                Log.Warning("Duplicate Group Detected when attempting to add group to a group");
+                return BadRequest("Duplicate groups detected");
+            }
+            
+            var group = await _referenceContext.Group
+                .Where(g => g.Name == parent && g.CreatedBy == User.Identity.Name)
+                .FirstAsync();
+     
+            var r = await _referenceContext.Group.Where(g => g.Name == child && g.CreatedBy == User.Identity.Name).FirstAsync();
 
+            r.IsRoot = false;
+            // see if group is already in the group
+            if (group.Groups != null)
+            {
+                if (!group.Groups.Contains(r))
+                {
+                    group.Groups.Add(r);
+                }
             }
             
             await _referenceContext.SaveChangesAsync();
@@ -401,15 +459,25 @@ public class GroupController : ControllerBase
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Log.Information("Caught Exception when attempting to add a Group to another Group");
+            return BadRequest();
         }
     }
     
+    /// <summary>
+    /// Removes References from a Group
+    /// </summary>
+    /// <param name="groupName">String Group-Name</param>
+    /// <param name="referenceId">Integer for the Reference ID</param>
+    /// <returns><see cref="ActionResult{TValue}"/></returns>
     // POST: add references to group
     [HttpPut("remove-refs-from-group")]
     [Authorize]
-    public async Task<ActionResult<bool>> RemoveReferencesFromGroup(string groupName, int referenceId)
+    [ProducesResponseType(typeof(List<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<bool>> RemoveReferencesFromGroup([FromQuery] string groupName, [FromQuery] int referenceId)
     {
         if (!ModelState.IsValid)
         {
@@ -417,56 +485,67 @@ public class GroupController : ControllerBase
         }
         try
         {
-            // find group
+            if (User.Identity?.Name == null)
+            {
+                Log.Information("Unauthorized Attempt to Remove References from Group");
+                return Unauthorized();
+            }
+            
             var group = await _referenceContext.Group
                 .Where(g => g.CreatedBy == User.Identity.Name)
                 .Where(g => g.Name == groupName)
                 .Include(g => g.References)
                 .FirstAsync();
 
-            if (group == null)
-            {
-                return NotFound("Group Not Found");
-            }
-            
-
             var r = await _referenceContext.Reference.FindAsync(referenceId);
             if (r != null)
             {
-                if (group.References != null)
-                {
-                    group.References.Remove(r);
-                }
+                group.References?.Remove(r);
             }
             
+            Log.Information("Successfully Removed Reference: {ReferenceID} from Group: {GroupName}", referenceId, groupName);
             await _referenceContext.SaveChangesAsync();
             return Ok();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Log.Warning("Unable to Remove References from Group {GroupName}", groupName);
+            return BadRequest();
         }
     }
     
+    /// <summary>
+    /// Delete a User's Group
+    /// </summary>
+    /// <param name="groupName">String Query Parameter for the Group-Name</param>
+    /// <returns><see cref="ActionResult"/></returns>
     // DELETE
     [HttpDelete("delete-group")]
     [Authorize]
-    public async Task<ActionResult> DeleteGroup(string groupName)
+    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> DeleteGroup([FromQuery] string groupName)
     {
         try
         {
+            if (User.Identity?.Name == null)
+            {
+                Log.Information("Unauthorized Attempt to Delete Group: {GroupName}", groupName);
+                return Unauthorized();
+            }
+            
             await _referenceContext.Group
-                .Where(g => g.Name == groupName)
-                .Where(g => g.CreatedBy == User.Identity.Name)
+                .Where(g => g.CreatedBy == User.Identity.Name && g.Name == groupName)
                 .ExecuteDeleteAsync();
 
+            Log.Information("User: {UserEmail}, Successfully Deleted Group: {GroupName}", User.Identity.Name, groupName);
             return Ok();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            Log.Warning("Unable to Delete Group: {GroupName}", groupName);
+            return BadRequest();
         }
     }
     
