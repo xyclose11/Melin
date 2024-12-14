@@ -3,5 +3,5 @@
 public class AddTagsRequest
 {
     public int RefId { get; set; }
-    public List<Tag> Tags { get; set; }
+    public required List<Tag> Tags { get; set; }
 }

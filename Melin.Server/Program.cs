@@ -25,6 +25,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
+using Serilog.Exceptions;
 using Serilog.Formatting.Json;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -40,19 +41,16 @@ builder.Services.AddHttpLogging(logging =>
 });
 
 // Logging
-builder.Host.ConfigureLogging(logging =>
-{
-    logging.ClearProviders();
-    logging.AddConsole();
-    logging.AddDebug();
-});
+builder.Logging.ClearProviders().AddConsole().AddDebug();
 
 // Serilog
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
+    .Enrich.WithExceptionDetails()
     .WriteTo.Console()
     .WriteTo.File(new JsonFormatter(), "Logs/warningLog.json", restrictedToMinimumLevel: LogEventLevel.Warning)
     .WriteTo.File("Logs/all-.logs",
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}}",
         rollingInterval: RollingInterval.Day)
     .MinimumLevel.Debug()
     .CreateLogger();
