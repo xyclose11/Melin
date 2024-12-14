@@ -75,7 +75,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
-    options.IncludeXmlComments(Path.Combine("obj/Debug/net8.0/Melin.Server.xml"));
+    // options.IncludeXmlComments(Path.Combine("obj/Debug/net8.0/Melin.Server.xml"));
 });
 
 builder.Services.AddProblemDetails();
@@ -273,3 +273,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+
+public partial class Program { }

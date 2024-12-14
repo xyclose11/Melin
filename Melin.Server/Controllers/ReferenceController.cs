@@ -43,7 +43,7 @@ public class ReferenceController : ControllerBase
     {
         try
         {
-            if (User.Identity == null)
+            if (User.Identity?.Name == null)
             {
                 Log.Information("Unauthorized Attempt to Retrieve Reference: {ReferenceID}", refId);
                 return Unauthorized();
@@ -128,6 +128,7 @@ public class ReferenceController : ControllerBase
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             Log.Error("GET: GetReferences Failed. PaginationFilter: {filter}. By User: {userEmail}", filter, User.Identity.Name);
             return BadRequest();
         }
