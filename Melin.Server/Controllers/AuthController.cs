@@ -19,7 +19,15 @@ public class AuthController : ControllerBase
         _signInManager = signInManager;
     }
     
+    /// <summary>
+    /// Handles custom Login logic for ASP.NET Core Identity
+    /// </summary>
+    /// <param name="userManager">A <see cref="UserManager{TUser}"/></param>
+    /// <param name="model"><see cref="LoginModel"/></param>
+    /// <returns><see cref="IActionResult"/></returns>
     [HttpPost("login")]
+    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Login(UserManager<IdentityUser> userManager, [FromBody] LoginModel model)
     {
         if (!ModelState.IsValid)
@@ -60,8 +68,16 @@ public class AuthController : ControllerBase
         return Unauthorized();
     }
 
+    /// <summary>
+    /// Handles Custom Implementation of ASP.NET Core Account Creation
+    /// </summary>
+    /// <param name="userManager"><see cref="UserManager{TUser}"/></param>
+    /// <param name="userCreationModel"><see cref="UserCreationModel"/></param>
+    /// <returns><see cref="IActionResult"/></returns>
     [AllowAnonymous]
     [HttpPost("sign-up")]
+    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> SignUp(UserManager<IdentityUser> userManager, [FromBody] UserCreationModel userCreationModel)
     {
         Log.Information("Sign Up Started... With Email: {NewUserEmail}", userCreationModel.Email);
@@ -91,8 +107,12 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
-    
+    /// <summary>
+    /// Handles the logout logic
+    /// </summary>
+    /// <returns><see cref="IActionResult"/></returns>
     [HttpPost("logout")]
+    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> Logout()
     {
         if (User.Identity != null)
@@ -109,22 +129,37 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Used to check the status of the Users Authentication status
+    /// </summary>
+    /// <returns><see cref="IActionResult"/></returns>
     [HttpGet("check")]
     [Authorize]
+    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult Check()
     {
         if (User.Identity == null)
         {
             Log.Information("Unauthorized Party Attempted to check authorization");
-            return StatusCode(403);
+            return Forbid();
         }
         
         Log.Information("{UserEmail} checked the User.Identity Session: Success", User.Identity.Name);
         return Ok(User.Identity.IsAuthenticated);
     }
 
+    /// <summary>
+    /// Retrieves the current Users role(s)
+    /// </summary>
+    /// <param name="userManager"><see cref="UserManager{TUser}"/></param>
+    /// <param name="userEmail">String Value for UserEmail</param>
+    /// <returns><see cref="IActionResult"/></returns>
     [HttpGet("user-role")]
     [Authorize]
+    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetUserRole(UserManager<IdentityUser> userManager, string userEmail)
     {
         Log.Information("Initiated Check-User-Role... for {UserEmail}", userEmail);
@@ -138,7 +173,7 @@ public class AuthController : ControllerBase
         if (user == null)
         {
             Log.Information("Unable to find user with {UserEmail}", userEmail);
-            return BadRequest("UNABLE TO RETRIEVE USER OBJECT");
+            return Unauthorized("UNABLE TO RETRIEVE USER OBJECT");
         }
         
         var role = await userManager.GetRolesAsync(user);
