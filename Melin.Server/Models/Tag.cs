@@ -16,7 +16,7 @@ public class Tag
     [MaxLength(256)]
     public string? Description {get; set;}
 
-    public ICollection<Reference>? References { get; } = new List<Reference>();
+    public ICollection<Reference>? References { get; set; } = new List<Reference>();
 
     [MaxLength(256)]
     public string? CreatedBy {get; set;}

@@ -5,9 +5,6 @@ using Melin.Server.Models.Repository;
 using Melin.Server.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Presentation = Melin.Server.Models.Presentation;
-using Report = Melin.Server.Models.Report;
-using Software = Melin.Server.Models.Software;
 
 namespace Melin.Server.Services;
 

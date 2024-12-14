@@ -136,8 +136,8 @@ export function AddTagToReference({
 
         const convertedReferenceTags: ReferenceTag[] = newTags.map((tag) => ({
             ...tag,
-            createdBy: ""
-        }))
+            createdBy: "",
+        }));
 
         stateChanger(convertedReferenceTags);
 
