@@ -152,21 +152,27 @@ public class AuthController : ControllerBase
     /// Retrieves the current Users role(s)
     /// </summary>
     /// <param name="userManager"><see cref="UserManager{TUser}"/></param>
-    /// <param name="userEmail">String Value for UserEmail</param>
     /// <returns><see cref="IActionResult"/></returns>
     [HttpGet("user-role")]
     [Authorize]
     [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetUserRole(UserManager<IdentityUser> userManager, string userEmail)
+    public async Task<IActionResult> GetUserRole(UserManager<IdentityUser> userManager)
     {
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+
+        var userEmail = User.Identity.Name;
+        
         Log.Information("Initiated Check-User-Role... for {UserEmail}", userEmail);
         if (!ModelState.IsValid)
         {
             return BadRequest("UNABLE TO RETRIEVE USER ROLE");
         }
-
+        
         var user = await userManager.FindByEmailAsync(userEmail);
 
         if (user == null)
@@ -178,12 +184,6 @@ public class AuthController : ControllerBase
         var role = await userManager.GetRolesAsync(user);
         Log.Information("Successfully retrieved {UserEmail} roles:: {Roles}", userEmail, role);
         return Ok(role);
-        // var roles = User.Claims
-        //     .Where(c => c.Type == ClaimTypes.Role)
-        //     .Select(c => c.Value)
-        //     .ToList();
-        //
-        // return Ok(roles);
     }
 
 }
