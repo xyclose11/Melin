@@ -31,7 +31,7 @@ public class AdminDashboardController : ControllerBase
     [ProducesResponseType(typeof(ActionResult<List<IdentityUser>>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<List<IdentityUser>>> GetUsers([FromBody] UserPaginationFilter paginationFilter)
+    public async Task<ActionResult<List<IdentityUser>>> GetUsers([FromQuery] UserPaginationFilter paginationFilter)
     {
         if (!ModelState.IsValid)
         {
@@ -56,10 +56,15 @@ public class AdminDashboardController : ControllerBase
             {
                 return BadRequest("Page Size cannot be negative");
             }
+            
+            var validFilter = new PaginationFilter(
+                paginationFilter.PageNumber > 0 ? paginationFilter.PageNumber : 1, 
+                paginationFilter.PageSize > 0 ? paginationFilter.PageSize : 10
+            );
 
             var users = await _userManager.Users
-                .Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize)
-                .Take(paginationFilter.PageSize)
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
                 .ToListAsync();
             
             Log.Information("Admin User: {AdminUser} Retrieved {UserCount} Users", User.Identity.Name, users.Count);
