@@ -125,4 +125,53 @@ public class AdminDashboardController : ControllerBase
             return BadRequest(e);
         }
     }
+
+    /// <summary>
+    /// Deletes a user from the database
+    /// Caller must contain the "Admin" role
+    /// </summary>
+    /// <param name="userEmail">String query parameter for the desired user to delete</param>
+    /// <returns>A Status Code for the result of the action</returns>
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> DeleteUser([FromQuery] string userEmail)
+    {
+        try
+        {
+            if (User.Identity?.Name == null)
+            {
+                Log.Information("Unauthorized attempt to delete user: {UserEmail}", userEmail);
+                return Unauthorized();
+            }
+
+            var user = await _userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                Log.Information("User not found when attempting to delete User: {UserEmail}", userEmail);
+                return NotFound();
+            }
+            
+            var response = await _userManager.DeleteAsync(user);
+
+            if (!response.Succeeded)
+            {
+                Log.Information("User: {UserEmail} Unsuccessfully deleted", userEmail);
+                return BadRequest();
+            }
+            
+            Log.Information("User: {UserEmail} deleted, by Admin: {AdminUser}", userEmail, User.Identity.Name);
+            return Ok($"User {userEmail} Successfully Deleted");
+        }
+        catch (Exception e)
+        {
+            Log.Warning("Exception Caught when attempting to delete user: {UserEmail}", userEmail);
+            Console.WriteLine(e);
+            return BadRequest();
+        }
+    }
 }
