@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Melin.Server.Controllers.Admin;
 
@@ -20,8 +21,16 @@ public class AdminDashboardController : ControllerBase
         _roleManager = roleManager;
     }
     
+    /// <summary>
+    /// Retrieves a Paginated List of all users in the current instance of the application
+    /// </summary>
+    /// <param name="paginationFilter">A PaginationFilter Object <see cref="PaginationFilter"/></param>
+    /// <returns>A List of IdentityUser <see cref="IdentityUser{TKey}"/></returns>
     [HttpGet("all-users")]
     [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(ActionResult<List<IdentityUser>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<IdentityUser>>> GetUsers([FromBody] UserPaginationFilter paginationFilter)
     {
         if (!ModelState.IsValid)
@@ -31,6 +40,12 @@ public class AdminDashboardController : ControllerBase
         
         try
         {
+            if (User.Identity?.Name == null)
+            {
+               Log.Information("Unauthenticated Attempt to GetUsers for Admin Dashboard");
+               return Unauthorized();
+            }
+            
             // Validate filter to ensure non-negative values
             if (paginationFilter.PageNumber < 0)
             {
@@ -47,17 +62,28 @@ public class AdminDashboardController : ControllerBase
                 .Take(paginationFilter.PageSize)
                 .ToListAsync();
             
+            Log.Information("Admin User: {AdminUser} Retrieved {UserCount} Users", User.Identity.Name, users.Count);
             return Ok(users);
         }
         catch (Exception e)
         {
+            Log.Information("Exception Caught when retrieving Users for Admin Dashboard");
             Console.WriteLine(e);
-            throw;
+            return BadRequest();
         }
     }
 
+    /// <summary>
+    /// Updates a Users Role via HTTP PUT
+    /// NOTE: Calling User must have the Role of "Admin"
+    /// </summary>
+    /// <param name="userEmail">A string value for the desired user to be updated</param>
+    /// <param name="newRole">A string value for the new role</param>
+    /// <returns>A Status Code</returns>
     [HttpPut("update-user-role")]
     [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateUserRole([FromQuery] string userEmail, [FromBody] string newRole)
     {
         if (!ModelState.IsValid)
@@ -94,6 +120,7 @@ public class AdminDashboardController : ControllerBase
         }
         catch (Exception e)
         {
+            Log.Information("Exception Caught when updating a users role");
             Console.WriteLine(e);
             return BadRequest(e);
         }

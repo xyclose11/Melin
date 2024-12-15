@@ -178,12 +178,12 @@ public class AuthController : ControllerBase
         var role = await userManager.GetRolesAsync(user);
         Log.Information("Successfully retrieved {UserEmail} roles:: {Roles}", userEmail, role);
         return Ok(role);
-        var roles = User.Claims
-            .Where(c => c.Type == ClaimTypes.Role)
-            .Select(c => c.Value)
-            .ToList();
-        
-        return Ok(roles);
+        // var roles = User.Claims
+        //     .Where(c => c.Type == ClaimTypes.Role)
+        //     .Select(c => c.Value)
+        //     .ToList();
+        //
+        // return Ok(roles);
     }
 
 }
