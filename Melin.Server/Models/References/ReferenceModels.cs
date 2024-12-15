@@ -1,8 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Melin.Server.Models.References;
 
 // https://api.zotero.org/schema
+
+/// <summary>
+/// Covers Image, Artwork, and Maps
+/// </summary>
+public class Artwork : Reference
+{
+    [MaxLength(128)]
+    public string Medium { get; set; } = "";
+    
+    [MaxLength(128)]
+    public string Dimensions { get; set; } = "";
+    
+    [MaxLength(128)]
+    public string? Scale { get; set; } = "";
+    
+    [MaxLength(128)]
+    public string? MapType { get; set; } = "";
+}
 
 public class AudioRecording : Reference
 {
@@ -14,11 +33,6 @@ public class AudioRecording : Reference
     public string? Label { get; set; } = "publisher";
     public string? RunningTime { get; set; }
 
-    // public async Task Add(ReferenceContext dbContext)
-    // {
-    //     dbContext.AudioRecordings.Add(this);
-    //     await dbContext.SaveChangesAsync();
-    // }
 }
 
 public class Bill : Reference
@@ -39,6 +53,47 @@ public class BlogPost : Reference
 {
     public string? BlogTitle { get; set; } = "publicationTitle";
     public string? WebsiteType { get; set; } = "type";
+}
+
+// Covers Books & Periodicals
+public class Book : Reference
+{
+    [MaxLength(256)]
+    public string? Publication { get; set; } = "";
+    [MaxLength(256)]
+    public string? BookTitle { get; set; } = "";
+    [MaxLength(256)]
+    public string? Volume { get; set; } = "";
+    [MaxLength(256)]
+    public string? Issue { get; set; } = "";
+    public int? Pages { get; set; } = 0;
+    [MaxLength(256)]
+
+    public string? Edition { get; set; } = "";
+    [MaxLength(256)]
+
+    public string? Series { get; set; } = "";
+    public int? SeriesNumber { get; set; } = 0;
+    [MaxLength(256)]
+
+    public string? SeriesTitle { get; set; } = "";
+    public int? VolumeAmount { get; set; } = 0;
+    public int? PageAmount { get; set; } = 0;
+    [MaxLength(256)]
+
+    public string? Section { get; set; } = "";
+    [MaxLength(256)]
+
+    public string? Place { get; set; } = "";
+    [MaxLength(256)]
+
+    public string? Publisher { get; set; } = "";
+    [MaxLength(256)]
+    public string? JournalAbbr { get; set; } = "";
+    [MaxLength(256)]
+    public string? ISBN { get; set; } = "";
+    [MaxLength(256)]
+    public string? ISSN { get; set; } = "";
 }
 
 public class BookSection : Reference
@@ -188,6 +243,79 @@ public class Letter : Reference
     public string? Date { get; set; }
 }
 
+// Covers Legislation & Hearings
+public class Legislation : Reference
+{
+    [MaxLength(256)]
+    public string NameOfAct { get; set; } = "";
+    [MaxLength(256)]
+    public string BillNumber { get; set; } = "";
+    [MaxLength(256)]
+    public string Code { get; set; } = "";
+    [MaxLength(256)]
+    public string CodeVolume { get; set; } = "";
+    [MaxLength(256)]
+    public string CodeNumber { get; set; } = "";
+    [MaxLength(256)]
+    public string PublicLawNumber { get; set; } = "";
+    public DateTime? DateEnacted { get; set; }
+    [MaxLength(256)]
+    public string? Section { get; set; } = "";
+    [MaxLength(256)]
+    public string? Committee { get; set; } = "";
+    [MaxLength(256)]
+    public string? DocumentNumber { get; set; } = "";
+    [MaxLength(256)]
+    public string? CodePages { get; set; } = "";
+    [MaxLength(256)]
+    public string? LegislativeBody { get; set; } = "";
+    [MaxLength(256)]
+    public string? Session { get; set; } = "";
+    [MaxLength(256)]
+    public string? History { get; set; } = "";
+}
+
+public class LegalCases : Reference
+{
+    [MaxLength(256)]
+    public string? History { get; set; } = "";
+    [MaxLength(256)]
+    public string? CaseName { get; set; } = "";
+    [MaxLength(256)]
+    public string? Court { get; set; } = "";
+    public DateTime? DateDecided { get; set; }
+    [MaxLength(256)]
+    public string? DocketNumber { get; set; } = "";
+    [MaxLength(256)]
+    public string? Reporter { get; set; } = "";
+    [MaxLength(256)]
+    public string? ReporterVolume { get; set; } = "";
+    [MaxLength(256)]
+    public string? FirstPage { get; set; } = "";
+}
+
+public class Patent : Reference
+{
+    [MaxLength(256)]
+    public string Country { get; set; } = "United States of America";
+    [MaxLength(256)]
+    public string? Assignee { get; set; } = "";
+    [MaxLength(256)]
+    public string? IssuingAuthority { get; set; } = "";
+    [MaxLength(256)]
+    public string? PatentNumber { get; set; } = "";
+    public DateTime? FilingDate { get; set; }
+    public DateTime? IssueDate { get; set; }
+    [MaxLength(256)]
+    public string? ApplicationNumber { get; set; } = "";
+    [MaxLength(256)]
+    public string? PriorityNumber { get; set; } = "";
+    public string[]? References { get; set; }
+    [MaxLength(256)]
+    public string? LegalStatus { get; set; } = "";
+
+}
+
 public class MagazineArticle : Reference
 {
     public string? PublicationTitle { get; set; }
@@ -247,6 +375,17 @@ public class Presentation : Reference
     public string? MeetingName { get; set; }
 }
 
+// Covers Primary Sources & Personal Communications
+public class PrimarySource : Reference
+{
+    [MaxLength(256)]
+    public string Medium { get; set; } = "";
+    [MaxLength(256)]
+    public string PrimarySourceType { get; set; } = "";
+    [MaxLength(256)]
+    public string Subject { get; set; } = "";
+}
+
 public class RadioBroadcast : Reference
 {
     public string? ProgramTitle { get; set; } = "publicationTitle";
@@ -267,6 +406,27 @@ public class Software : Reference
     public string? Place { get; set; }
     public string? Company { get; set; } = "publisher";
     public string? ProgrammingLanguage { get; set; }
+}
+
+public class Recording : Reference
+{
+    [MaxLength(256)]
+    public string FileFormat { get; set; } = ""; // DVD, CD, MP3
+    [MaxLength(256)]
+    public string RunningTime { get; set; } = ""; // 120 mins
+    [MaxLength(256)]
+    public string ProgramTitle { get; set; } = "";
+    public int? EpisodeNumber { get; set; } = 0;
+    [MaxLength(256)]
+    public string Network { get; set; } = "";
+    [MaxLength(256)]
+    public string Label { get; set; } = "";
+    [MaxLength(256)]
+    public string Distributor { get; set; } = "";
+    [MaxLength(256)]
+    public string Genre { get; set; } = "";
+    [MaxLength(256)]
+    public string Studio { get; set; } = "";
 }
 
 public class Report : Reference
@@ -342,9 +502,12 @@ public class VideoRecording : Reference
     public string? ISBN { get; set; }
 }
 
-public class Webpage : Reference
+public class Website : Reference
 {
     public string? WebsiteTitle { get; set; } = "publicationTitle";
+    public string? ForumTitle { get; set; } = "forumTitle";
+    [MaxLength(256)]
+    public string? PostType { get; set; } = "";
     public string? WebsiteType { get; set; } = "type";
     public string? Date { get; set; }
 }

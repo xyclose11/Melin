@@ -1,30 +1,51 @@
-using System.Text;
 using Melin.Server;
 using Melin.Server.Data;
-using Melin.Server.Interfaces;
+using Melin.Server.Filter;
 using Melin.Server.JSONInputFormatter;
+using Melin.Server.Middleware;
 using Melin.Server.Models;
 using Melin.Server.Models.Binders;
 using Melin.Server.Models.Context;
 using Melin.Server.Models.Repository;
 using Melin.Server.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Filters;
+using Serilog;
+using Serilog.Events;
+using Serilog.Exceptions;
+using Serilog.Formatting.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// HTTP Logging
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = HttpLoggingFields.All;
+    logging.RequestBodyLogLimit = 4096;
+    logging.ResponseBodyLogLimit = 4096;
+    logging.CombineLogs = true;
+});
+
+// Logging
+builder.Logging.ClearProviders().AddConsole().AddDebug();
+
+// Serilog
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithExceptionDetails()
+    .WriteTo.Console()
+    .WriteTo.File(new JsonFormatter(), "Logs/warningLog.json", restrictedToMinimumLevel: LogEventLevel.Warning)
+    .WriteTo.File("Logs/all-.logs",
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}}",
+        rollingInterval: RollingInterval.Day)
+    .MinimumLevel.Debug()
+    .CreateLogger();
+
 builder.Services.AddScoped<IReferenceService, ReferenceService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 
 // Add services to the container.
 builder.Services.AddDbContext<ReferenceContext>(options =>
@@ -53,7 +74,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    options.IncludeXmlComments(Path.Combine("obj/Debug/net8.0/Melin.Server.xml"));
+});
 
 builder.Services.AddProblemDetails();
 
@@ -116,19 +139,24 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(options =>
-    {
-        options.SerializerSettings.Converters.Add(new ReferenceConverter());
-        // Is this the best way to handle loops?
-        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-    });
-
-
 builder.Services.AddControllers(options =>
 {
     options.InputFormatters.Insert(0, MelinJPIF.GetJsonPatchInputFormatter());
 });
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<AuthorizationFilter>();
+});
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+        options.SerializerSettings.Converters.Add(new ReferenceConverter());
+    });
+
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -160,10 +188,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddHttpClient<ApiService>();
-
 var app = builder.Build();
 
+app.UseHttpLogging();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -187,6 +214,9 @@ app.UseCors();
 app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Map Serilog config middleware after UseAuthentication to ensure User.Identity is initialized
+app.UseMiddleware<SerilogConfigurationMiddleware>();
 
 if (builder.Environment.IsDevelopment())
 {

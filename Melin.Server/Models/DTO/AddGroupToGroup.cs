@@ -2,6 +2,6 @@
 
 public class AddGroupToGroup
 {
-    public string parent { get; set; }
-    public string child { get; set; }
+    public required string Parent { get; set; }
+    public string? Child { get; set; }
 }

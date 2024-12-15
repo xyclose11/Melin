@@ -35,7 +35,7 @@ public enum ReferenceType
     Thesis,
     TVBroadcast,
     VideoRecording,
-    Webpage,
+    Website,
     Attachment,
     Note
 }
