@@ -416,7 +416,7 @@ public class Recording : Reference
     public string RunningTime { get; set; } = ""; // 120 mins
     [MaxLength(256)]
     public string ProgramTitle { get; set; } = "";
-    public int? EpisodeNumber { get; set; } = 0;
+    public string? EpisodeNumber { get; set; } = "episodeNumber";
     [MaxLength(256)]
     public string Network { get; set; } = "";
     [MaxLength(256)]

@@ -43,7 +43,7 @@ public class ReferenceController : ControllerBase
     {
         try
         {
-            if (User.Identity == null)
+            if (User.Identity?.Name == null)
             {
                 Log.Information("Unauthorized Attempt to Retrieve Reference: {ReferenceID}", refId);
                 return Unauthorized();
