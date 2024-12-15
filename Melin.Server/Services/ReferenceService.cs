@@ -76,9 +76,7 @@ public class ReferenceService : IReferenceService
         }
         
     }
-
-
-
+    
     public Result<bool> ApplyPatch(Reference v)
     {
         try
