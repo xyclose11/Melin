@@ -1,5 +1,4 @@
 ﻿import { instance } from "@/utils/axiosInstance.ts";
-import { Form } from "react-router-dom";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
@@ -36,11 +35,11 @@ export default function LogoutLink() {
     };
 
     return (
-        <Form
+        <form
             onSubmit={logout}
             className="text-muted-foreground transition-colors hover:text-foreground"
         >
             <Button type="submit">Logout</Button>
-        </Form>
+        </form>
     );
 }

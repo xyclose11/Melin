@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Form } from "react-router-dom";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 import { useState } from "react";
@@ -49,7 +48,7 @@ export function LoginForm() {
                         setIsAuthenticated(true);
 
                         // route user
-                        navigate("/library");
+                        navigate({ to: "/library" });
                     } else {
                         toast({
                             title: "Login Failed",
@@ -77,7 +76,7 @@ export function LoginForm() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <Form onSubmit={handleLogin}>
+                <form onSubmit={handleLogin}>
                     <div className="grid gap-4">
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
@@ -118,11 +117,11 @@ export function LoginForm() {
                             Login with Google
                         </Button>
                     </div>
-                </Form>
+                </form>
 
                 <div className="mt-4 text-center text-sm">
                     Don&apos;t have an account?{" "}
-                    <Link to={"/sign-up"} className="underline">
+                    <Link to={"/signup"} className="underline">
                         Sign up
                     </Link>
                 </div>
