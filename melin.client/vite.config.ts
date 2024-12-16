@@ -6,6 +6,8 @@ import fs from "fs";
 import path from "path";
 import child_process from "child_process";
 import { env } from "process";
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import tailwindcss from "tailwindcss";
 
 const baseFolder =
     env.APPDATA !== undefined && env.APPDATA !== ""
@@ -50,7 +52,12 @@ export default defineConfig({
         outDir: "../Melin.Server/wwwroot",
         emptyOutDir: false,
     },
-    plugins: [plugin()],
+    plugins: [plugin(), TanStackRouterVite()],
+    css: {
+        postcss: {
+            plugins: [tailwindcss()],
+        },
+    },
     resolve: {
         alias: {
             "@": fileURLToPath(new URL("./src", import.meta.url)),
