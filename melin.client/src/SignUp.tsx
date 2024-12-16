@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Form } from "react-router-dom";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
@@ -39,7 +38,7 @@ export function SignUpForm() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <Form onSubmit={handleRegistration}>
+                <form onSubmit={handleRegistration}>
                     <div className="grid gap-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="grid gap-2">
@@ -94,7 +93,7 @@ export function SignUpForm() {
                             Sign in
                         </Link>
                     </div>
-                </Form>
+                </form>
             </CardContent>
         </Card>
     );

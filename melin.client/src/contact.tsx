@@ -1,4 +1,3 @@
-import { Form } from "react-router-dom";
 
 export default function Contact() {
     const contact = {
@@ -49,10 +48,10 @@ export default function Contact() {
                 {contact.notes && <p>{contact.notes}</p>}
 
                 <div>
-                    <Form action="edit">
+                    <form action="edit">
                         <button type="submit">Edit</button>
-                    </Form>
-                    <Form
+                    </form>
+                    <form
                         method="post"
                         action="destroy"
                         onSubmit={(event: { preventDefault: () => void }) => {
@@ -66,7 +65,7 @@ export default function Contact() {
                         }}
                     >
                         <button type="submit">Delete</button>
-                    </Form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -77,7 +76,7 @@ export default function Contact() {
 function Favorite({ contact }) {
     const favorite = contact.favorite;
     return (
-        <Form method="post">
+        <form method="post">
             <button
                 name="favorite"
                 value={favorite ? "false" : "true"}
@@ -87,6 +86,6 @@ function Favorite({ contact }) {
             >
                 {favorite ? "★" : "☆"}
             </button>
-        </Form>
+        </form>
     );
 }
