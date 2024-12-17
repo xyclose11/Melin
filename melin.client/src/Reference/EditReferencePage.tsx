@@ -1,6 +1,6 @@
 ﻿import React, { useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
 import {
     artworkSchema,
     baseReferenceSchema,
@@ -43,12 +43,14 @@ import { Tag } from "emblor";
 
 let nextId = 0;
 
+const route = getRouteApi("/(reference)/edit-reference");
+
 export function EditReferencePage() {
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
     const { toast } = useToast();
-    const { refId } = useParams();
+    const { refId } = route.useParams();
     const [refSchema, setRefSchema] =
         useState<ZodObject<any>>(baseReferenceSchema);
     const [schemaName, setSchemaName] = useState("");
@@ -213,7 +215,7 @@ export function EditReferencePage() {
                 });
             }
 
-            navigate("/library");
+            await navigate({ to: "/library" });
             console.log("SUCCESS");
         } catch (error) {
             console.error("Update reference failed:", error);

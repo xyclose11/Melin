@@ -13,55 +13,34 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AuthImport } from './routes/_auth'
-import { Route as AuthAdminDashboardImport } from './routes/_auth.admin-dashboard'
+import { Route as ReferencesRefIdImport } from './routes/references.$refId'
+import { Route as authAuthImport } from './routes/(auth)/_auth'
+import { Route as authAuthAdminDashboardImport } from './routes/(auth)/_auth.admin-dashboard'
 
 // Create Virtual Routes
 
-const UsersettingsLazyImport = createFileRoute('/usersettings')()
-const SignupLazyImport = createFileRoute('/signup')()
-const ResetPasswordLazyImport = createFileRoute('/reset-password')()
-const LogoutLazyImport = createFileRoute('/logout')()
-const LoginLazyImport = createFileRoute('/login')()
+const authImport = createFileRoute('/(auth)')()
 const LibraryLazyImport = createFileRoute('/library')()
-const EditReferenceLazyImport = createFileRoute('/edit-reference')()
-const CreateReferenceLazyImport = createFileRoute('/create-reference')()
 const ContactLazyImport = createFileRoute('/contact')()
 const IndexLazyImport = createFileRoute('/')()
+const referenceEditReferenceLazyImport = createFileRoute(
+  '/(reference)/edit-reference',
+)()
+const referenceCreateReferenceLazyImport = createFileRoute(
+  '/(reference)/create-reference',
+)()
+const authUsersettingsLazyImport = createFileRoute('/(auth)/usersettings')()
+const authSignupLazyImport = createFileRoute('/(auth)/signup')()
+const authResetPasswordLazyImport = createFileRoute('/(auth)/reset-password')()
+const authLogoutLazyImport = createFileRoute('/(auth)/logout')()
+const authLoginLazyImport = createFileRoute('/(auth)/login')()
 
 // Create/Update Routes
 
-const UsersettingsLazyRoute = UsersettingsLazyImport.update({
-  id: '/usersettings',
-  path: '/usersettings',
+const authRoute = authImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/usersettings.lazy').then((d) => d.Route))
-
-const SignupLazyRoute = SignupLazyImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
-
-const ResetPasswordLazyRoute = ResetPasswordLazyImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/reset-password.lazy').then((d) => d.Route),
-)
-
-const LogoutLazyRoute = LogoutLazyImport.update({
-  id: '/logout',
-  path: '/logout',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/logout.lazy').then((d) => d.Route))
-
-const LoginLazyRoute = LoginLazyImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+} as any)
 
 const LibraryLazyRoute = LibraryLazyImport.update({
   id: '/library',
@@ -69,32 +48,11 @@ const LibraryLazyRoute = LibraryLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/library.lazy').then((d) => d.Route))
 
-const EditReferenceLazyRoute = EditReferenceLazyImport.update({
-  id: '/edit-reference',
-  path: '/edit-reference',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/edit-reference.lazy').then((d) => d.Route),
-)
-
-const CreateReferenceLazyRoute = CreateReferenceLazyImport.update({
-  id: '/create-reference',
-  path: '/create-reference',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/create-reference.lazy').then((d) => d.Route),
-)
-
 const ContactLazyRoute = ContactLazyImport.update({
   id: '/contact',
   path: '/contact',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/contact.lazy').then((d) => d.Route))
-
-const AuthRoute = AuthImport.update({
-  id: '/_auth',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
@@ -102,10 +60,83 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const AuthAdminDashboardRoute = AuthAdminDashboardImport.update({
+const referenceEditReferenceLazyRoute = referenceEditReferenceLazyImport
+  .update({
+    id: '/(reference)/edit-reference',
+    path: '/edit-reference',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() =>
+    import('./routes/(reference)/edit-reference.lazy').then((d) => d.Route),
+  )
+
+const referenceCreateReferenceLazyRoute = referenceCreateReferenceLazyImport
+  .update({
+    id: '/(reference)/create-reference',
+    path: '/create-reference',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() =>
+    import('./routes/(reference)/create-reference.lazy').then((d) => d.Route),
+  )
+
+const authUsersettingsLazyRoute = authUsersettingsLazyImport
+  .update({
+    id: '/usersettings',
+    path: '/usersettings',
+    getParentRoute: () => authRoute,
+  } as any)
+  .lazy(() => import('./routes/(auth)/usersettings.lazy').then((d) => d.Route))
+
+const authSignupLazyRoute = authSignupLazyImport
+  .update({
+    id: '/signup',
+    path: '/signup',
+    getParentRoute: () => authRoute,
+  } as any)
+  .lazy(() => import('./routes/(auth)/signup.lazy').then((d) => d.Route))
+
+const authResetPasswordLazyRoute = authResetPasswordLazyImport
+  .update({
+    id: '/reset-password',
+    path: '/reset-password',
+    getParentRoute: () => authRoute,
+  } as any)
+  .lazy(() =>
+    import('./routes/(auth)/reset-password.lazy').then((d) => d.Route),
+  )
+
+const authLogoutLazyRoute = authLogoutLazyImport
+  .update({
+    id: '/logout',
+    path: '/logout',
+    getParentRoute: () => authRoute,
+  } as any)
+  .lazy(() => import('./routes/(auth)/logout.lazy').then((d) => d.Route))
+
+const authLoginLazyRoute = authLoginLazyImport
+  .update({
+    id: '/login',
+    path: '/login',
+    getParentRoute: () => authRoute,
+  } as any)
+  .lazy(() => import('./routes/(auth)/login.lazy').then((d) => d.Route))
+
+const ReferencesRefIdRoute = ReferencesRefIdImport.update({
+  id: '/references/$refId',
+  path: '/references/$refId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authAuthRoute = authAuthImport.update({
+  id: '/_auth',
+  getParentRoute: () => authRoute,
+} as any)
+
+const authAuthAdminDashboardRoute = authAuthAdminDashboardImport.update({
   id: '/admin-dashboard',
   path: '/admin-dashboard',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => authAuthRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -119,32 +150,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/create-reference': {
-      id: '/create-reference'
-      path: '/create-reference'
-      fullPath: '/create-reference'
-      preLoaderRoute: typeof CreateReferenceLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/edit-reference': {
-      id: '/edit-reference'
-      path: '/edit-reference'
-      fullPath: '/edit-reference'
-      preLoaderRoute: typeof EditReferenceLazyImport
       parentRoute: typeof rootRoute
     }
     '/library': {
@@ -154,181 +164,234 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryLazyImport
       parentRoute: typeof rootRoute
     }
-    '/login': {
-      id: '/login'
+    '/(auth)': {
+      id: '/(auth)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/_auth': {
+      id: '/(auth)/_auth'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authAuthImport
+      parentRoute: typeof authRoute
+    }
+    '/references/$refId': {
+      id: '/references/$refId'
+      path: '/references/$refId'
+      fullPath: '/references/$refId'
+      preLoaderRoute: typeof ReferencesRefIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/login': {
+      id: '/(auth)/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof authLoginLazyImport
+      parentRoute: typeof authImport
     }
-    '/logout': {
-      id: '/logout'
+    '/(auth)/logout': {
+      id: '/(auth)/logout'
       path: '/logout'
       fullPath: '/logout'
-      preLoaderRoute: typeof LogoutLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof authLogoutLazyImport
+      parentRoute: typeof authImport
     }
-    '/reset-password': {
-      id: '/reset-password'
+    '/(auth)/reset-password': {
+      id: '/(auth)/reset-password'
       path: '/reset-password'
       fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof authResetPasswordLazyImport
+      parentRoute: typeof authImport
     }
-    '/signup': {
-      id: '/signup'
+    '/(auth)/signup': {
+      id: '/(auth)/signup'
       path: '/signup'
       fullPath: '/signup'
-      preLoaderRoute: typeof SignupLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof authSignupLazyImport
+      parentRoute: typeof authImport
     }
-    '/usersettings': {
-      id: '/usersettings'
+    '/(auth)/usersettings': {
+      id: '/(auth)/usersettings'
       path: '/usersettings'
       fullPath: '/usersettings'
-      preLoaderRoute: typeof UsersettingsLazyImport
+      preLoaderRoute: typeof authUsersettingsLazyImport
+      parentRoute: typeof authImport
+    }
+    '/(reference)/create-reference': {
+      id: '/(reference)/create-reference'
+      path: '/create-reference'
+      fullPath: '/create-reference'
+      preLoaderRoute: typeof referenceCreateReferenceLazyImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/admin-dashboard': {
-      id: '/_auth/admin-dashboard'
+    '/(reference)/edit-reference': {
+      id: '/(reference)/edit-reference'
+      path: '/edit-reference'
+      fullPath: '/edit-reference'
+      preLoaderRoute: typeof referenceEditReferenceLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/_auth/admin-dashboard': {
+      id: '/(auth)/_auth/admin-dashboard'
       path: '/admin-dashboard'
       fullPath: '/admin-dashboard'
-      preLoaderRoute: typeof AuthAdminDashboardImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof authAuthAdminDashboardImport
+      parentRoute: typeof authAuthImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AuthRouteChildren {
-  AuthAdminDashboardRoute: typeof AuthAdminDashboardRoute
+interface authAuthRouteChildren {
+  authAuthAdminDashboardRoute: typeof authAuthAdminDashboardRoute
 }
 
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthAdminDashboardRoute: AuthAdminDashboardRoute,
+const authAuthRouteChildren: authAuthRouteChildren = {
+  authAuthAdminDashboardRoute: authAuthAdminDashboardRoute,
 }
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const authAuthRouteWithChildren = authAuthRoute._addFileChildren(
+  authAuthRouteChildren,
+)
+
+interface authRouteChildren {
+  authAuthRoute: typeof authAuthRouteWithChildren
+  authLoginLazyRoute: typeof authLoginLazyRoute
+  authLogoutLazyRoute: typeof authLogoutLazyRoute
+  authResetPasswordLazyRoute: typeof authResetPasswordLazyRoute
+  authSignupLazyRoute: typeof authSignupLazyRoute
+  authUsersettingsLazyRoute: typeof authUsersettingsLazyRoute
+}
+
+const authRouteChildren: authRouteChildren = {
+  authAuthRoute: authAuthRouteWithChildren,
+  authLoginLazyRoute: authLoginLazyRoute,
+  authLogoutLazyRoute: authLogoutLazyRoute,
+  authResetPasswordLazyRoute: authResetPasswordLazyRoute,
+  authSignupLazyRoute: authSignupLazyRoute,
+  authUsersettingsLazyRoute: authUsersettingsLazyRoute,
+}
+
+const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
-  '': typeof AuthRouteWithChildren
+  '/': typeof authAuthRouteWithChildren
   '/contact': typeof ContactLazyRoute
-  '/create-reference': typeof CreateReferenceLazyRoute
-  '/edit-reference': typeof EditReferenceLazyRoute
   '/library': typeof LibraryLazyRoute
-  '/login': typeof LoginLazyRoute
-  '/logout': typeof LogoutLazyRoute
-  '/reset-password': typeof ResetPasswordLazyRoute
-  '/signup': typeof SignupLazyRoute
-  '/usersettings': typeof UsersettingsLazyRoute
-  '/admin-dashboard': typeof AuthAdminDashboardRoute
+  '/references/$refId': typeof ReferencesRefIdRoute
+  '/login': typeof authLoginLazyRoute
+  '/logout': typeof authLogoutLazyRoute
+  '/reset-password': typeof authResetPasswordLazyRoute
+  '/signup': typeof authSignupLazyRoute
+  '/usersettings': typeof authUsersettingsLazyRoute
+  '/create-reference': typeof referenceCreateReferenceLazyRoute
+  '/edit-reference': typeof referenceEditReferenceLazyRoute
+  '/admin-dashboard': typeof authAuthAdminDashboardRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
-  '': typeof AuthRouteWithChildren
+  '/': typeof authAuthRouteWithChildren
   '/contact': typeof ContactLazyRoute
-  '/create-reference': typeof CreateReferenceLazyRoute
-  '/edit-reference': typeof EditReferenceLazyRoute
   '/library': typeof LibraryLazyRoute
-  '/login': typeof LoginLazyRoute
-  '/logout': typeof LogoutLazyRoute
-  '/reset-password': typeof ResetPasswordLazyRoute
-  '/signup': typeof SignupLazyRoute
-  '/usersettings': typeof UsersettingsLazyRoute
-  '/admin-dashboard': typeof AuthAdminDashboardRoute
+  '/references/$refId': typeof ReferencesRefIdRoute
+  '/login': typeof authLoginLazyRoute
+  '/logout': typeof authLogoutLazyRoute
+  '/reset-password': typeof authResetPasswordLazyRoute
+  '/signup': typeof authSignupLazyRoute
+  '/usersettings': typeof authUsersettingsLazyRoute
+  '/create-reference': typeof referenceCreateReferenceLazyRoute
+  '/edit-reference': typeof referenceEditReferenceLazyRoute
+  '/admin-dashboard': typeof authAuthAdminDashboardRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
-  '/_auth': typeof AuthRouteWithChildren
   '/contact': typeof ContactLazyRoute
-  '/create-reference': typeof CreateReferenceLazyRoute
-  '/edit-reference': typeof EditReferenceLazyRoute
   '/library': typeof LibraryLazyRoute
-  '/login': typeof LoginLazyRoute
-  '/logout': typeof LogoutLazyRoute
-  '/reset-password': typeof ResetPasswordLazyRoute
-  '/signup': typeof SignupLazyRoute
-  '/usersettings': typeof UsersettingsLazyRoute
-  '/_auth/admin-dashboard': typeof AuthAdminDashboardRoute
+  '/(auth)': typeof authRouteWithChildren
+  '/(auth)/_auth': typeof authAuthRouteWithChildren
+  '/references/$refId': typeof ReferencesRefIdRoute
+  '/(auth)/login': typeof authLoginLazyRoute
+  '/(auth)/logout': typeof authLogoutLazyRoute
+  '/(auth)/reset-password': typeof authResetPasswordLazyRoute
+  '/(auth)/signup': typeof authSignupLazyRoute
+  '/(auth)/usersettings': typeof authUsersettingsLazyRoute
+  '/(reference)/create-reference': typeof referenceCreateReferenceLazyRoute
+  '/(reference)/edit-reference': typeof referenceEditReferenceLazyRoute
+  '/(auth)/_auth/admin-dashboard': typeof authAuthAdminDashboardRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | ''
     | '/contact'
-    | '/create-reference'
-    | '/edit-reference'
     | '/library'
+    | '/references/$refId'
     | '/login'
     | '/logout'
     | '/reset-password'
     | '/signup'
     | '/usersettings'
+    | '/create-reference'
+    | '/edit-reference'
     | '/admin-dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | ''
     | '/contact'
-    | '/create-reference'
-    | '/edit-reference'
     | '/library'
+    | '/references/$refId'
     | '/login'
     | '/logout'
     | '/reset-password'
     | '/signup'
     | '/usersettings'
+    | '/create-reference'
+    | '/edit-reference'
     | '/admin-dashboard'
   id:
     | '__root__'
     | '/'
-    | '/_auth'
     | '/contact'
-    | '/create-reference'
-    | '/edit-reference'
     | '/library'
-    | '/login'
-    | '/logout'
-    | '/reset-password'
-    | '/signup'
-    | '/usersettings'
-    | '/_auth/admin-dashboard'
+    | '/(auth)'
+    | '/(auth)/_auth'
+    | '/references/$refId'
+    | '/(auth)/login'
+    | '/(auth)/logout'
+    | '/(auth)/reset-password'
+    | '/(auth)/signup'
+    | '/(auth)/usersettings'
+    | '/(reference)/create-reference'
+    | '/(reference)/edit-reference'
+    | '/(auth)/_auth/admin-dashboard'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
-  AuthRoute: typeof AuthRouteWithChildren
   ContactLazyRoute: typeof ContactLazyRoute
-  CreateReferenceLazyRoute: typeof CreateReferenceLazyRoute
-  EditReferenceLazyRoute: typeof EditReferenceLazyRoute
   LibraryLazyRoute: typeof LibraryLazyRoute
-  LoginLazyRoute: typeof LoginLazyRoute
-  LogoutLazyRoute: typeof LogoutLazyRoute
-  ResetPasswordLazyRoute: typeof ResetPasswordLazyRoute
-  SignupLazyRoute: typeof SignupLazyRoute
-  UsersettingsLazyRoute: typeof UsersettingsLazyRoute
+  authRoute: typeof authRouteWithChildren
+  ReferencesRefIdRoute: typeof ReferencesRefIdRoute
+  referenceCreateReferenceLazyRoute: typeof referenceCreateReferenceLazyRoute
+  referenceEditReferenceLazyRoute: typeof referenceEditReferenceLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
-  AuthRoute: AuthRouteWithChildren,
   ContactLazyRoute: ContactLazyRoute,
-  CreateReferenceLazyRoute: CreateReferenceLazyRoute,
-  EditReferenceLazyRoute: EditReferenceLazyRoute,
   LibraryLazyRoute: LibraryLazyRoute,
-  LoginLazyRoute: LoginLazyRoute,
-  LogoutLazyRoute: LogoutLazyRoute,
-  ResetPasswordLazyRoute: ResetPasswordLazyRoute,
-  SignupLazyRoute: SignupLazyRoute,
-  UsersettingsLazyRoute: UsersettingsLazyRoute,
+  authRoute: authRouteWithChildren,
+  ReferencesRefIdRoute: ReferencesRefIdRoute,
+  referenceCreateReferenceLazyRoute: referenceCreateReferenceLazyRoute,
+  referenceEditReferenceLazyRoute: referenceEditReferenceLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -342,57 +405,73 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_auth",
         "/contact",
-        "/create-reference",
-        "/edit-reference",
         "/library",
-        "/login",
-        "/logout",
-        "/reset-password",
-        "/signup",
-        "/usersettings"
+        "/(auth)",
+        "/references/$refId",
+        "/(reference)/create-reference",
+        "/(reference)/edit-reference"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
     },
-    "/_auth": {
-      "filePath": "_auth.tsx",
-      "children": [
-        "/_auth/admin-dashboard"
-      ]
-    },
     "/contact": {
       "filePath": "contact.lazy.tsx"
-    },
-    "/create-reference": {
-      "filePath": "create-reference.lazy.tsx"
-    },
-    "/edit-reference": {
-      "filePath": "edit-reference.lazy.tsx"
     },
     "/library": {
       "filePath": "library.lazy.tsx"
     },
-    "/login": {
-      "filePath": "login.lazy.tsx"
+    "/(auth)": {
+      "filePath": "(auth)",
+      "children": [
+        "/(auth)/_auth",
+        "/(auth)/login",
+        "/(auth)/logout",
+        "/(auth)/reset-password",
+        "/(auth)/signup",
+        "/(auth)/usersettings"
+      ]
     },
-    "/logout": {
-      "filePath": "logout.lazy.tsx"
+    "/(auth)/_auth": {
+      "filePath": "(auth)/_auth.tsx",
+      "parent": "/(auth)",
+      "children": [
+        "/(auth)/_auth/admin-dashboard"
+      ]
     },
-    "/reset-password": {
-      "filePath": "reset-password.lazy.tsx"
+    "/references/$refId": {
+      "filePath": "references.$refId.tsx"
     },
-    "/signup": {
-      "filePath": "signup.lazy.tsx"
+    "/(auth)/login": {
+      "filePath": "(auth)/login.lazy.tsx",
+      "parent": "/(auth)"
     },
-    "/usersettings": {
-      "filePath": "usersettings.lazy.tsx"
+    "/(auth)/logout": {
+      "filePath": "(auth)/logout.lazy.tsx",
+      "parent": "/(auth)"
     },
-    "/_auth/admin-dashboard": {
-      "filePath": "_auth.admin-dashboard.tsx",
-      "parent": "/_auth"
+    "/(auth)/reset-password": {
+      "filePath": "(auth)/reset-password.lazy.tsx",
+      "parent": "/(auth)"
+    },
+    "/(auth)/signup": {
+      "filePath": "(auth)/signup.lazy.tsx",
+      "parent": "/(auth)"
+    },
+    "/(auth)/usersettings": {
+      "filePath": "(auth)/usersettings.lazy.tsx",
+      "parent": "/(auth)"
+    },
+    "/(reference)/create-reference": {
+      "filePath": "(reference)/create-reference.lazy.tsx"
+    },
+    "/(reference)/edit-reference": {
+      "filePath": "(reference)/edit-reference.lazy.tsx"
+    },
+    "/(auth)/_auth/admin-dashboard": {
+      "filePath": "(auth)/_auth.admin-dashboard.tsx",
+      "parent": "/(auth)/_auth"
     }
   }
 }

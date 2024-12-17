@@ -2,10 +2,12 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
+import { useAuth } from "@/utils/AuthProvider.tsx";
 
 export default function LogoutLink() {
     const { toast } = useToast();
     const navigate = useNavigate();
+    const { setIsAuthenticated } = useAuth();
 
     const logout = async (e: any) => {
         e.preventDefault();
@@ -17,7 +19,8 @@ export default function LogoutLink() {
             );
 
             if (res.status === 200) {
-                navigate("/login");
+                setIsAuthenticated(false);
+                await navigate({ to: "/login" });
                 toast({
                     title: "Successfully Logged Out",
                     description: `User logged out`,
