@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Melin.Server.Controllers.Admin;
 
@@ -20,9 +21,17 @@ public class AdminDashboardController : ControllerBase
         _roleManager = roleManager;
     }
     
+    /// <summary>
+    /// Retrieves a Paginated List of all users in the current instance of the application
+    /// </summary>
+    /// <param name="paginationFilter">A PaginationFilter Object <see cref="PaginationFilter"/></param>
+    /// <returns>A List of IdentityUser <see cref="IdentityUser{TKey}"/></returns>
     [HttpGet("all-users")]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<List<IdentityUser>>> GetUsers([FromBody] UserPaginationFilter paginationFilter)
+    [ProducesResponseType(typeof(ActionResult<List<IdentityUser>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<List<IdentityUser>>> GetUsers([FromQuery] UserPaginationFilter paginationFilter)
     {
         if (!ModelState.IsValid)
         {
@@ -31,6 +40,12 @@ public class AdminDashboardController : ControllerBase
         
         try
         {
+            if (User.Identity?.Name == null)
+            {
+               Log.Information("Unauthenticated Attempt to GetUsers for Admin Dashboard");
+               return Unauthorized();
+            }
+            
             // Validate filter to ensure non-negative values
             if (paginationFilter.PageNumber < 0)
             {
@@ -41,23 +56,39 @@ public class AdminDashboardController : ControllerBase
             {
                 return BadRequest("Page Size cannot be negative");
             }
+            
+            var validFilter = new PaginationFilter(
+                paginationFilter.PageNumber > 0 ? paginationFilter.PageNumber : 1, 
+                paginationFilter.PageSize > 0 ? paginationFilter.PageSize : 10
+            );
 
             var users = await _userManager.Users
-                .Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize)
-                .Take(paginationFilter.PageSize)
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
                 .ToListAsync();
             
+            Log.Information("Admin User: {AdminUser} Retrieved {UserCount} Users", User.Identity.Name, users.Count);
             return Ok(users);
         }
         catch (Exception e)
         {
+            Log.Information("Exception Caught when retrieving Users for Admin Dashboard");
             Console.WriteLine(e);
-            throw;
+            return BadRequest();
         }
     }
 
+    /// <summary>
+    /// Updates a Users Role via HTTP PUT
+    /// NOTE: Calling User must have the Role of "Admin"
+    /// </summary>
+    /// <param name="userEmail">A string value for the desired user to be updated</param>
+    /// <param name="newRole">A string value for the new role</param>
+    /// <returns>A Status Code</returns>
     [HttpPut("update-user-role")]
     [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateUserRole([FromQuery] string userEmail, [FromBody] string newRole)
     {
         if (!ModelState.IsValid)
@@ -94,8 +125,58 @@ public class AdminDashboardController : ControllerBase
         }
         catch (Exception e)
         {
+            Log.Information("Exception Caught when updating a users role");
             Console.WriteLine(e);
             return BadRequest(e);
+        }
+    }
+
+    /// <summary>
+    /// Deletes a user from the database
+    /// Caller must contain the "Admin" role
+    /// </summary>
+    /// <param name="userEmail">String query parameter for the desired user to delete</param>
+    /// <returns>A Status Code for the result of the action</returns>
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> DeleteUser([FromQuery] string userEmail)
+    {
+        try
+        {
+            if (User.Identity?.Name == null)
+            {
+                Log.Information("Unauthorized attempt to delete user: {UserEmail}", userEmail);
+                return Unauthorized();
+            }
+
+            var user = await _userManager.FindByEmailAsync(userEmail);
+
+            if (user == null)
+            {
+                Log.Information("User not found when attempting to delete User: {UserEmail}", userEmail);
+                return NotFound();
+            }
+            
+            var response = await _userManager.DeleteAsync(user);
+
+            if (!response.Succeeded)
+            {
+                Log.Information("User: {UserEmail} Unsuccessfully deleted", userEmail);
+                return BadRequest();
+            }
+            
+            Log.Information("User: {UserEmail} deleted, by Admin: {AdminUser}", userEmail, User.Identity.Name);
+            return Ok($"User {userEmail} Successfully Deleted");
+        }
+        catch (Exception e)
+        {
+            Log.Warning("Exception Caught when attempting to delete user: {UserEmail}", userEmail);
+            Console.WriteLine(e);
+            return BadRequest();
         }
     }
 }

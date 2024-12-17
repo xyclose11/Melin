@@ -11,23 +11,34 @@ const checkAuth = async () => {
     return await instance.get(`api/Auth/check`, { withCredentials: true });
 };
 
+const checkRole = async () => {
+    return await instance.get(`api/Auth/user-role`, { withCredentials: true });
+};
+
 interface AuthContextType {
     isAuthenticated: boolean;
     setIsAuthenticated: (value: boolean) => void;
     userRole: string;
+    setUserRole: (value: string) => void;
+}
+
+enum Roles {
+    User = "USER",
+    Admin = "ADMIN",
+    Guest = "GUEST",
+    Moderator = "MODERATOR",
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-    children,
-}) => {
+                                                                    children,
+                                                                }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(() => {
         // Check localStorage for stored authentication state on initial load
         const storedAuthState = localStorage.getItem("isAuthenticated");
         return storedAuthState ? JSON.parse(storedAuthState) : false;
     });
-
     const [userRole, setUserRole] = useState("Guest");
 
     const checkUserAuth = async () => {
@@ -49,18 +60,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
     const checkUserRole = async () => {
         try {
-            let res = await instance.get("api/Auth/user-role", {
-                withCredentials: true,
-            });
-            if (res.status === 200) {
-                setUserRole(res.data[0]);
+            const response = await checkRole();
+            // Role is in the 0th index position because the application currently only supports a single Role per user
+            const role = response.data[0].toUpperCase();
+            // verify User Role
+            if (Object.values(Roles).includes(role)) {
+                setUserRole(role);
             } else {
-                // setting User Role to guest on response fail to ensure user cannot access
-                // sensitive pages if auth server is down
-                setUserRole("Guest");
+                console.error("USER ROLE INVALID: ", response);
+                // TODO implement logging
             }
-        } catch (e) {
-            console.error("Failed to retrieve users role", e);
+        } catch (error) {
+            console.error("Failed to retrieve user role: ", error);
+            // Default role to "Guest" to prevent privilege escalation
+            setUserRole("Guest");
         }
     };
 
@@ -79,12 +92,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         }
     };
 
+    const handleSetUserRole = (value: string) => {
+        setUserRole(value);
+    };
+
     return (
         <AuthContext.Provider
             value={{
                 isAuthenticated,
                 setIsAuthenticated: handleSetIsAuthenticated,
                 userRole,
+                setUserRole: handleSetUserRole,
             }}
         >
             {children}

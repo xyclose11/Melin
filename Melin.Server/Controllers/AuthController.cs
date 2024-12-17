@@ -152,7 +152,6 @@ public class AuthController : ControllerBase
     /// Retrieves the current Users role(s)
     /// </summary>
     /// <param name="userManager"><see cref="UserManager{TUser}"/></param>
-    /// <param name="userEmail">String Value for UserEmail</param>
     /// <returns><see cref="IActionResult"/></returns>
     [HttpGet("user-role")]
     [Authorize]
@@ -161,19 +160,19 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetUserRole(UserManager<IdentityUser> userManager)
     {
-        
-        Log.Information("Initiated Check-User-Role");
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("UNABLE TO RETRIEVE USER ROLE");
-        }
-
         if (User.Identity?.Name == null)
         {
             return Unauthorized();
         }
 
         var userEmail = User.Identity.Name;
+        
+        Log.Information("Initiated Check-User-Role... for {UserEmail}", userEmail);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("UNABLE TO RETRIEVE USER ROLE");
+        }
+        
         var user = await userManager.FindByEmailAsync(userEmail);
 
         if (user == null)

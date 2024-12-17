@@ -22,7 +22,7 @@ export function SignUpForm() {
     const handleRegistration = async (e: any) => {
         e.preventDefault();
         try {
-            await instance.post("register", { email, password });
+            await instance.post("api/Auth/sign-up", { email, password });
             console.log("SUCCESS");
         } catch (error) {
             console.error("Registration failed:", error);
