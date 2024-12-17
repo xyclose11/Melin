@@ -6,6 +6,11 @@
     Boxes,
     Tag,
     ChevronDown,
+    Users,
+    Target,
+    FileSliders,
+    Logs,
+    Mailbox,
 } from "lucide-react";
 import {
     Sidebar,
@@ -19,6 +24,7 @@ import {
     SidebarMenuItem,
     SidebarMenuSub,
     SidebarMenuSubItem,
+    SidebarSeparator,
 } from "@/components/ui/sidebar.tsx";
 import { Roles, useAuth } from "@/utils/AuthProvider.tsx";
 import {
@@ -26,6 +32,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible.tsx";
+import { useLocation } from "@tanstack/react-router";
 
 const items = [
     {
@@ -61,6 +68,7 @@ const items = [
 ];
 export function WorkspaceToolBar() {
     const { userRole } = useAuth();
+    const location = useLocation();
     return (
         <Sidebar className={"flex-1 mt-16"}>
             <SidebarContent>
@@ -79,9 +87,17 @@ export function WorkspaceToolBar() {
                                 </SidebarMenuItem>
                             ))}
                         </SidebarMenu>
-                        {userRole === Roles.Admin ? <AdminSidebar /> : <></>}
                     </SidebarGroupContent>
                 </SidebarGroup>
+                {userRole === Roles.Admin &&
+                location.pathname == "/admin-dashboard" ? (
+                    <>
+                        <SidebarSeparator />
+                        <AdminSidebar />
+                    </>
+                ) : (
+                    <></>
+                )}
             </SidebarContent>
         </Sidebar>
     );
@@ -89,27 +105,69 @@ export function WorkspaceToolBar() {
 
 function AdminSidebar() {
     return (
-        <SidebarMenu>
-            <Collapsible defaultOpen className="group/collapsible">
-                <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                        <SidebarMenuButton>
-                            Admin Tools
-                            <SidebarMenuBadge>
-                                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                            </SidebarMenuBadge>
-                        </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                        <SidebarMenuSub>
-                            <SidebarMenuSubItem>
-                                HI
-                                <SidebarMenuBadge>2</SidebarMenuBadge>
-                            </SidebarMenuSubItem>
-                        </SidebarMenuSub>
-                    </CollapsibleContent>
-                </SidebarMenuItem>
-            </Collapsible>
-        </SidebarMenu>
+        <SidebarGroup>
+            <SidebarGroupContent>
+                <SidebarMenu>
+                    <Collapsible defaultOpen className="group/collapsible">
+                        <SidebarMenuItem>
+                            <CollapsibleTrigger asChild>
+                                <SidebarMenuButton>
+                                    <SidebarGroupLabel>
+                                        Administrator Actions
+                                    </SidebarGroupLabel>
+                                    <SidebarMenuBadge>
+                                        <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                                    </SidebarMenuBadge>
+                                </SidebarMenuButton>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent>
+                                <SidebarMenuSub>
+                                    <SidebarMenuSubItem>
+                                        <SidebarMenuButton>
+                                            Overview
+                                            <SidebarMenuBadge>
+                                                <Target strokeWidth={1} />
+                                            </SidebarMenuBadge>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuSubItem>
+                                    <SidebarMenuSubItem>
+                                        <SidebarMenuButton>
+                                            Manage Users
+                                            <SidebarMenuBadge>
+                                                <Users strokeWidth={1} />
+                                            </SidebarMenuBadge>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuSubItem>
+                                    <SidebarMenuSubItem>
+                                        <SidebarMenuButton>
+                                            Manage References
+                                            <SidebarMenuBadge>
+                                                <FileSliders strokeWidth={1} />
+                                            </SidebarMenuBadge>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuSubItem>
+                                    <SidebarMenuSubItem>
+                                        <SidebarMenuButton>
+                                            View Logs
+                                            <SidebarMenuBadge>
+                                                <Logs strokeWidth={1} />
+                                            </SidebarMenuBadge>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuSubItem>
+                                    <SidebarMenuSubItem>
+                                        <SidebarMenuButton>
+                                            View User Requests
+                                            <SidebarMenuBadge>
+                                                <Mailbox strokeWidth={1} />
+                                            </SidebarMenuBadge>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuSubItem>
+                                </SidebarMenuSub>
+                            </CollapsibleContent>
+                        </SidebarMenuItem>
+                    </Collapsible>
+                </SidebarMenu>
+            </SidebarGroupContent>
+        </SidebarGroup>
     );
 }
