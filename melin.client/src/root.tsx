@@ -24,7 +24,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
             <div className={"w-screen min-h-dvh"}>
                 {!isAuthenticated ? (
                     <main className={"w-screen mt-16 flex p-2"}>
-                        {/*{children}*/}
+                        {children}
                         <Outlet />
                     </main>
                 ) : (
@@ -34,7 +34,9 @@ export default function Root({ children }: { children: React.ReactNode }) {
                     >
                         <WorkspaceToolBar />
                         <main className={"w-screen mt-16 flex p-2"}>
-                            <SidebarTrigger>{children}</SidebarTrigger>
+                            <SidebarTrigger>
+                                <Outlet />
+                            </SidebarTrigger>
                             <Workspace />
                         </main>
                         <Toaster />

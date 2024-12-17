@@ -18,7 +18,7 @@ import { useAuth } from "@/utils/AuthProvider.tsx";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 
 export function NavBar() {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, userRole } = useAuth();
 
     return (
         <header className="fixed top-0 p-4 flex w-screen justify-center h-16 items-center gap-4 border-b bg-background">
@@ -93,6 +93,21 @@ export function NavBar() {
                                     <UserSettingsLink />
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
+                                {userRole === "ADMIN" ? (
+                                    <div>
+                                        <DropdownMenuItem>
+                                            <Link
+                                                to={"/admin-dashboard"}
+                                                className="text-muted-foreground transition-colors hover:text-foreground"
+                                            >
+                                                Admin Dashboard
+                                            </Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                    </div>
+                                ) : (
+                                    <DropdownMenuItem></DropdownMenuItem>
+                                )}
                                 <DropdownMenuItem>
                                     <LogoutLink />
                                 </DropdownMenuItem>

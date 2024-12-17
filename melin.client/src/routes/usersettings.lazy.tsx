@@ -1,9 +1,6 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
+import { createLazyFileRoute } from "@tanstack/react-router";
+import UserSettingsPage from "@/UserSettingsPage.tsx";
 
-export const Route = createLazyFileRoute('/usersettings')({
-  component: RouteComponent,
-})
-
-function RouteComponent() {
-  return <div>Hello "/usersettings"!</div>
-}
+export const Route = createLazyFileRoute("/usersettings")({
+    component: UserSettingsPage,
+});

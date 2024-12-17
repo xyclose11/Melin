@@ -2,10 +2,10 @@
 import { Roles, useAuth } from "@/utils/AuthProvider.tsx";
 
 export const Route = createFileRoute("/_auth/admin-dashboard")({
-    component: RouteComponent,
+    component: AdminDashboard,
 });
 
-function RouteComponent() {
+function AdminDashboard() {
     const auth = useAuth();
     if (auth.userRole !== Roles.Admin) {
         throw redirect({
