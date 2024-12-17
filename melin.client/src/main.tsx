@@ -4,6 +4,7 @@ import { routeTree } from "./routeTree.gen";
 import { AuthProvider, useAuth } from "@/utils/AuthProvider.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import "./index.css";
+import NotFoundPage from "@/NotFoundPage.tsx";
 
 const router = createRouter({
     routeTree,
@@ -11,6 +12,7 @@ const router = createRouter({
     context: {
         auth: undefined,
     },
+    defaultNotFoundComponent: NotFoundPage,
 });
 
 declare module "@tanstack/react-router" {
