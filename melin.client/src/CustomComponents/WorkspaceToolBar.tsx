@@ -1,11 +1,31 @@
-﻿import { Search, Settings, SquarePlus, PanelsTopLeft, Boxes, Tag } from "lucide-react";
+﻿import {
+    Search,
+    Settings,
+    SquarePlus,
+    PanelsTopLeft,
+    Boxes,
+    Tag,
+    ChevronDown,
+} from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
-    SidebarGroup, SidebarGroupContent,
-    SidebarGroupLabel, SidebarMenu,
-    SidebarMenuButton, SidebarMenuItem
+    SidebarGroup,
+    SidebarGroupContent,
+    SidebarGroupLabel,
+    SidebarMenu,
+    SidebarMenuBadge,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubItem,
 } from "@/components/ui/sidebar.tsx";
+import { Roles, useAuth } from "@/utils/AuthProvider.tsx";
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from "@/components/ui/collapsible.tsx";
 
 const items = [
     {
@@ -38,8 +58,9 @@ const items = [
         url: "#",
         icon: Settings,
     },
-]
+];
 export function WorkspaceToolBar() {
+    const { userRole } = useAuth();
     return (
         <Sidebar className={"flex-1 mt-16"}>
             <SidebarContent>
@@ -58,9 +79,37 @@ export function WorkspaceToolBar() {
                                 </SidebarMenuItem>
                             ))}
                         </SidebarMenu>
+                        {userRole === Roles.Admin ? <AdminSidebar /> : <></>}
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
         </Sidebar>
+    );
+}
+
+function AdminSidebar() {
+    return (
+        <SidebarMenu>
+            <Collapsible defaultOpen className="group/collapsible">
+                <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                        <SidebarMenuButton>
+                            Admin Tools
+                            <SidebarMenuBadge>
+                                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                            </SidebarMenuBadge>
+                        </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <SidebarMenuSub>
+                            <SidebarMenuSubItem>
+                                HI
+                                <SidebarMenuBadge>2</SidebarMenuBadge>
+                            </SidebarMenuSubItem>
+                        </SidebarMenuSub>
+                    </CollapsibleContent>
+                </SidebarMenuItem>
+            </Collapsible>
+        </SidebarMenu>
     );
 }

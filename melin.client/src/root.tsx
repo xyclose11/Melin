@@ -17,6 +17,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
     function onSidebarChange() {
         setCookie("sidebar:state", !defaultOpen);
     }
+
     return (
         <>
             <NavBar />
