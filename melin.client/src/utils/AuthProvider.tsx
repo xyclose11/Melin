@@ -22,7 +22,7 @@ interface AuthContextType {
     setUserRole: (value: string) => void;
 }
 
-enum Roles {
+export enum Roles {
     User = "USER",
     Admin = "ADMIN",
     Guest = "GUEST",
@@ -32,8 +32,8 @@ enum Roles {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-                                                                    children,
-                                                                }) => {
+    children,
+}) => {
     const [isAuthenticated, setIsAuthenticated] = useState(() => {
         // Check localStorage for stored authentication state on initial load
         const storedAuthState = localStorage.getItem("isAuthenticated");
