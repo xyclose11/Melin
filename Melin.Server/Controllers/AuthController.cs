@@ -159,14 +159,21 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetUserRole(UserManager<IdentityUser> userManager, string userEmail)
+    public async Task<IActionResult> GetUserRole(UserManager<IdentityUser> userManager)
     {
-        Log.Information("Initiated Check-User-Role... for {UserEmail}", userEmail);
+        
+        Log.Information("Initiated Check-User-Role");
         if (!ModelState.IsValid)
         {
             return BadRequest("UNABLE TO RETRIEVE USER ROLE");
         }
 
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+
+        var userEmail = User.Identity.Name;
         var user = await userManager.FindByEmailAsync(userEmail);
 
         if (user == null)

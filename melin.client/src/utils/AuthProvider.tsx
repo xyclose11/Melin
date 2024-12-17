@@ -14,18 +14,21 @@ const checkAuth = async () => {
 interface AuthContextType {
     isAuthenticated: boolean;
     setIsAuthenticated: (value: boolean) => void;
+    userRole: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-                                                                    children,
-                                                                }) => {
+    children,
+}) => {
     const [isAuthenticated, setIsAuthenticated] = useState(() => {
         // Check localStorage for stored authentication state on initial load
         const storedAuthState = localStorage.getItem("isAuthenticated");
         return storedAuthState ? JSON.parse(storedAuthState) : false;
     });
+
+    const [userRole, setUserRole] = useState("Guest");
 
     const checkUserAuth = async () => {
         try {
@@ -33,7 +36,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             const isAuthenticated = response.data; // Ensure response.data is a boolean
             setIsAuthenticated(isAuthenticated);
             // Store authentication state in localStorage
-            localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
+            localStorage.setItem(
+                "isAuthenticated",
+                JSON.stringify(isAuthenticated),
+            );
         } catch (error) {
             console.error("Failed to check authentication:", error);
             setIsAuthenticated(false); // Handle the error case
@@ -41,8 +47,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         }
     };
 
+    const checkUserRole = async () => {
+        try {
+            let res = await instance.get("api/Auth/user-role", {
+                withCredentials: true,
+            });
+            if (res.status === 200) {
+                setUserRole(res.data[0]);
+            } else {
+                // setting User Role to guest on response fail to ensure user cannot access
+                // sensitive pages if auth server is down
+                setUserRole("Guest");
+            }
+        } catch (e) {
+            console.error("Failed to retrieve users role", e);
+        }
+    };
+
     useEffect(() => {
         checkUserAuth();
+        checkUserRole();
     }, []);
 
     const handleSetIsAuthenticated = (value: boolean) => {
@@ -56,7 +80,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated: handleSetIsAuthenticated }}>
+        <AuthContext.Provider
+            value={{
+                isAuthenticated,
+                setIsAuthenticated: handleSetIsAuthenticated,
+                userRole,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

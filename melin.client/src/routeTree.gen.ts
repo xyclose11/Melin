@@ -13,6 +13,8 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthImport } from './routes/_auth'
+import { Route as AuthAdminDashboardImport } from './routes/_auth.admin-dashboard'
 
 // Create Virtual Routes
 
@@ -89,11 +91,22 @@ const ContactLazyRoute = ContactLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/contact.lazy').then((d) => d.Route))
 
+const AuthRoute = AuthImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const AuthAdminDashboardRoute = AuthAdminDashboardImport.update({
+  id: '/admin-dashboard',
+  path: '/admin-dashboard',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -104,6 +117,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
     '/contact': {
@@ -169,13 +189,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsersettingsLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/admin-dashboard': {
+      id: '/_auth/admin-dashboard'
+      path: '/admin-dashboard'
+      fullPath: '/admin-dashboard'
+      preLoaderRoute: typeof AuthAdminDashboardImport
+      parentRoute: typeof AuthImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AuthRouteChildren {
+  AuthAdminDashboardRoute: typeof AuthAdminDashboardRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthAdminDashboardRoute: AuthAdminDashboardRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '': typeof AuthRouteWithChildren
   '/contact': typeof ContactLazyRoute
   '/create-reference': typeof CreateReferenceLazyRoute
   '/edit-reference': typeof EditReferenceLazyRoute
@@ -185,10 +223,12 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordLazyRoute
   '/signup': typeof SignupLazyRoute
   '/usersettings': typeof UsersettingsLazyRoute
+  '/admin-dashboard': typeof AuthAdminDashboardRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '': typeof AuthRouteWithChildren
   '/contact': typeof ContactLazyRoute
   '/create-reference': typeof CreateReferenceLazyRoute
   '/edit-reference': typeof EditReferenceLazyRoute
@@ -198,11 +238,13 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordLazyRoute
   '/signup': typeof SignupLazyRoute
   '/usersettings': typeof UsersettingsLazyRoute
+  '/admin-dashboard': typeof AuthAdminDashboardRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/_auth': typeof AuthRouteWithChildren
   '/contact': typeof ContactLazyRoute
   '/create-reference': typeof CreateReferenceLazyRoute
   '/edit-reference': typeof EditReferenceLazyRoute
@@ -212,12 +254,14 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordLazyRoute
   '/signup': typeof SignupLazyRoute
   '/usersettings': typeof UsersettingsLazyRoute
+  '/_auth/admin-dashboard': typeof AuthAdminDashboardRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | ''
     | '/contact'
     | '/create-reference'
     | '/edit-reference'
@@ -227,9 +271,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/usersettings'
+    | '/admin-dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | ''
     | '/contact'
     | '/create-reference'
     | '/edit-reference'
@@ -239,9 +285,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/usersettings'
+    | '/admin-dashboard'
   id:
     | '__root__'
     | '/'
+    | '/_auth'
     | '/contact'
     | '/create-reference'
     | '/edit-reference'
@@ -251,11 +299,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/usersettings'
+    | '/_auth/admin-dashboard'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  AuthRoute: typeof AuthRouteWithChildren
   ContactLazyRoute: typeof ContactLazyRoute
   CreateReferenceLazyRoute: typeof CreateReferenceLazyRoute
   EditReferenceLazyRoute: typeof EditReferenceLazyRoute
@@ -269,6 +319,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  AuthRoute: AuthRouteWithChildren,
   ContactLazyRoute: ContactLazyRoute,
   CreateReferenceLazyRoute: CreateReferenceLazyRoute,
   EditReferenceLazyRoute: EditReferenceLazyRoute,
@@ -291,6 +342,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/_auth",
         "/contact",
         "/create-reference",
         "/edit-reference",
@@ -304,6 +356,12 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/_auth": {
+      "filePath": "_auth.tsx",
+      "children": [
+        "/_auth/admin-dashboard"
+      ]
     },
     "/contact": {
       "filePath": "contact.lazy.tsx"
@@ -331,6 +389,10 @@ export const routeTree = rootRoute
     },
     "/usersettings": {
       "filePath": "usersettings.lazy.tsx"
+    },
+    "/_auth/admin-dashboard": {
+      "filePath": "_auth.admin-dashboard.tsx",
+      "parent": "/_auth"
     }
   }
 }
