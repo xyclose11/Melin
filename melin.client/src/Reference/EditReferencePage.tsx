@@ -1,6 +1,6 @@
-﻿import React, { useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
-import { getRouteApi, useNavigate, useParams } from "@tanstack/react-router";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import {
     artworkSchema,
     baseReferenceSchema,
@@ -43,9 +43,9 @@ import { Tag } from "emblor";
 
 let nextId = 0;
 
-const route = getRouteApi("/(reference)/edit-reference");
+const route = getRouteApi("/(reference)/edit-reference/$refId");
 
-export function EditReferencePage() {
+export function EditReferencePage({ reference }) {
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
@@ -57,9 +57,9 @@ export function EditReferencePage() {
 
     const form = useForm<z.infer<typeof refSchema>>({
         resolver: refSchema ? zodResolver(refSchema) : undefined,
-        defaultValues: async () => {
-            return await getReferenceData();
-        },
+        // defaultValues: async () => {
+        //     return await getReferenceData();
+        // },
     });
 
     const {
@@ -67,77 +67,80 @@ export function EditReferencePage() {
         formState: { errors, isLoading },
         handleSubmit,
     } = form;
-    const getReferenceData = async () => {
-        try {
-            const res = await instance.get(
-                `Reference/get-single-reference?refId=${refId}`,
-                {
-                    withCredentials: true,
-                },
-            );
-
-            if (res.status == 200) {
-                let newSchema: ZodObject<any>;
-                let name = "";
-
-                setDatePublished(new Date(res.data.datePublished));
-                switch (res.data.type) {
-                    case "Artwork":
-                        newSchema = artworkSchema;
-                        name = "artwork";
-                        break;
-                    case "Book":
-                        newSchema = bookSchema;
-                        name = "book";
-                        break;
-                    case "Report":
-                        newSchema = reportSchema;
-                        name = "report";
-                        break;
-                    case "Website":
-                        newSchema = websiteSchema;
-                        name = "website";
-                        break;
-                    default:
-                        newSchema = baseReferenceSchema;
-                        break;
-                }
-
-                if (res.data.creators.length !== null) {
-                    console.log(res.data.creators);
-                    console.log(creatorArray);
-                    res.data.creators.map(
-                        (creator: {
-                            id: number;
-                            firstName: string;
-                            lastName: string;
-                            types: string;
-                        }) => {
-                            console.log(creator);
-                            creatorArray.push(
-                                <CreatorInput
-                                    firstName={creator.firstName}
-                                    lastName={creator.lastName}
-                                    types={creator.types}
-                                    name={`creators.${nextId}`}
-                                    key={creator.id}
-                                />,
-                            );
-                        },
-                    );
-                    nextId++;
-                }
-
-                setRefSchema(newSchema);
-                setSchemaName(name);
-                return res.data;
-            } else {
-                console.error(res);
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    };
+    // const getReferenceData = async () => {
+    //     try {
+    //         const res = await instance.get(
+    //             `Reference/get-single-reference?refId=${refId}`,
+    //             {
+    //                 withCredentials: true,
+    //             },
+    //         );
+    //         console.log(res);
+    //
+    //         if (res.status == 200) {
+    //             let newSchema: ZodObject<any>;
+    //             let name = "";
+    //
+    //             setDatePublished(new Date(res.data.datePublished));
+    //             switch (res.data.type) {
+    //                 case "Artwork":
+    //                     newSchema = artworkSchema;
+    //                     name = "artwork";
+    //                     break;
+    //                 case "Book":
+    //                     newSchema = bookSchema;
+    //                     name = "book";
+    //                     break;
+    //                 case "Report":
+    //                     newSchema = reportSchema;
+    //                     name = "report";
+    //                     break;
+    //                 case "Website":
+    //                     newSchema = websiteSchema;
+    //                     name = "website";
+    //                     break;
+    //                 default:
+    //                     newSchema = baseReferenceSchema;
+    //                     break;
+    //             }
+    //
+    //             console.log(res.data);
+    //
+    //             if (res.data.creators.length !== null) {
+    //                 console.log(res.data.creators);
+    //                 console.log(creatorArray);
+    //                 res.data.creators.map(
+    //                     (creator: {
+    //                         id: number;
+    //                         firstName: string;
+    //                         lastName: string;
+    //                         types: string;
+    //                     }) => {
+    //                         console.log(creator);
+    //                         creatorArray.push(
+    //                             <CreatorInput
+    //                                 firstName={creator.firstName}
+    //                                 lastName={creator.lastName}
+    //                                 types={creator.types}
+    //                                 name={`creators.${nextId}`}
+    //                                 key={creator.id}
+    //                             />,
+    //                         );
+    //                     },
+    //                 );
+    //                 nextId++;
+    //             }
+    //
+    //             setRefSchema(newSchema);
+    //             setSchemaName(name);
+    //             return res.data;
+    //         } else {
+    //             console.error(res);
+    //         }
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // };
     function onClickAddCreator() {
         setCreatorArray([
             ...creatorArray,
@@ -225,6 +228,13 @@ export function EditReferencePage() {
     if (isLoading || !refSchema) {
         return <div>Loading...</div>;
     }
+
+    useEffect(() => {
+        console.log(reference);
+    }, []);
+
+    console.log("REFERENCE");
+    console.log(reference.data);
 
     console.log(errors);
 
