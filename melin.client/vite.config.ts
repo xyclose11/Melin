@@ -52,7 +52,7 @@ export default defineConfig({
         outDir: "../Melin.Server/wwwroot",
         emptyOutDir: false,
     },
-    plugins: [plugin(), TanStackRouterVite()],
+    plugins: [TanStackRouterVite(), plugin()],
     css: {
         postcss: {
             plugins: [tailwindcss()],
