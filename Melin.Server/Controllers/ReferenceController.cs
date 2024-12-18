@@ -174,19 +174,19 @@ public class ReferenceController : ControllerBase
     }
     
     /// <summary>
-    /// Updates a User owned Reference, via HTTP PATCH.
+    /// Updates a User owned Reference, via HTTP PUT.
     /// </summary>
     /// <param name="id">Integer value depicting the Reference to be updated</param>
-    /// <param name="updatedItem"><see cref="JsonPatchDocument"/></param>
+    /// <param name="updatedItem">An updated Reference</param>
     /// <returns><see cref="IActionResult"/></returns>
     // UPDATE
-    [HttpPatch("update/{id}")]
+    [HttpPut("update/{id}")]
     [Authorize]
     [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateItem([FromQuery] int id, [FromBody] JsonPatchDocument<Reference> updatedItem)
+    public async Task<IActionResult> UpdateItem(int id, [FromBody] Reference updatedItem)
     {
         if (!ModelState.IsValid)
         {
@@ -199,7 +199,7 @@ public class ReferenceController : ControllerBase
             return Unauthorized("User Currently Not Authorized to Update Item");
         }
         
-        Log.Information("PATCH: {userEmail}, updating reference", User.Identity.Name);
+        Log.Information("PUT: {userEmail}, updating reference", User.Identity.Name);
         
 
         // Find the item to update
@@ -215,16 +215,9 @@ public class ReferenceController : ControllerBase
         {
             return BadRequest();
         }
-        
-        updatedItem.ApplyTo(existingItem, ModelState);
 
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("ERROR");
-        }
-        
-        // apply patch to DB
-        _referenceService.ApplyPatch(existingItem);
+        await _referenceService.UpdateReferenceAsync(User.Identity.Name, id, updatedItem);
+
         return new ObjectResult(existingItem);
     }
 

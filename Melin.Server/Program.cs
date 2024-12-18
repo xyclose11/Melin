@@ -150,6 +150,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddControllers(options =>
 {
+    // Enables HTTP PATCH
     options.InputFormatters.Insert(0, MelinJPIF.GetJsonPatchInputFormatter());
 });
 

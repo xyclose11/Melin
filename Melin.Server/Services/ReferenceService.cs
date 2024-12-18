@@ -130,7 +130,20 @@ public class ReferenceService : IReferenceService
 
     async Task<Result<bool>> IReferenceService.UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _referenceRepository.UpdateReferenceAsync(updatedReference);
+            return new Result<bool>
+            {
+                Success = true,
+                Data = true,
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
     
 
