@@ -200,25 +200,15 @@ public class ReferenceController : ControllerBase
         }
         
         Log.Information("PUT: {userEmail}, updating reference", User.Identity.Name);
-        
 
-        // Find the item to update
-        var existingItemResult = await _referenceService.GetReferenceWithAllDetailsById(User.Identity.Name, id);
-        if (!existingItemResult.Success)
-        {
-            return NotFound();
-        }
+        var result = await _referenceService.UpdateReferenceAsync(User.Identity.Name, id, updatedItem);
 
-        var existingItem = existingItemResult.Data;
-
-        if (existingItem == null)
+        if (!result.Success)
         {
             return BadRequest();
         }
 
-        await _referenceService.UpdateReferenceAsync(User.Identity.Name, id, updatedItem);
-
-        return new ObjectResult(existingItem);
+        return new ObjectResult(updatedItem);
     }
 
     /// <summary>

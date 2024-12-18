@@ -132,12 +132,45 @@ public class ReferenceService : IReferenceService
     {
         try
         {
-            await _referenceRepository.UpdateReferenceAsync(updatedReference);
+            var existingReferenceResult = await _referenceRepository.GetReferenceAllDetailsByIdAsync(userEmail, referenceId);
+
+            if (existingReferenceResult is { Success: false, Data: not null })
+            {
+                return new Result<bool>
+                {
+                    Success = false,
+                    Data = false,
+                };
+            }
+
+            if (existingReferenceResult.Data == null)
+            {
+                return new Result<bool>
+                {
+                    Success = false,
+                    Data = false,
+                };
+            }
+
+            var existingReference = existingReferenceResult.Data;
+            var generalFieldResult = UpdateGeneralFields(existingReference, updatedReference);
+            
+            
+            var res = await _referenceRepository.UpdateReferenceAsync(existingReference);
+            if (res.Success)
+            {
+                return new Result<bool>
+                {
+                    Success = true,
+                    Data = true,
+                };
+            }
             return new Result<bool>
             {
-                Success = true,
-                Data = true,
+                Success = false,
+                Data = false,
             };
+            
         }
         catch (Exception e)
         {
@@ -152,59 +185,59 @@ public class ReferenceService : IReferenceService
         throw new NotImplementedException();
     }
     
-    private async Task<bool> UpdateGeneralFields(Reference prevReference, Reference newReference)
+    private bool UpdateGeneralFields(Reference existingReference, Reference updatedReference)
     {
         try
         {
-            if (!prevReference.Title.Equals(newReference.Title))
+            if (!existingReference.Title.Equals(updatedReference.Title))
             {
-                prevReference.Title = newReference.Title;
+                existingReference.Title = updatedReference.Title;
             }
 
-            if (prevReference.ShortTitle != null)
+            if (existingReference.ShortTitle != null)
             {
-                if (!prevReference.ShortTitle.Equals(newReference.ShortTitle))
+                if (!existingReference.ShortTitle.Equals(updatedReference.ShortTitle))
                 {
-                    prevReference.ShortTitle = newReference.ShortTitle;
+                    existingReference.ShortTitle = updatedReference.ShortTitle;
                 }
             }
             
-            if (!prevReference.Language.Equals(newReference.Language))
+            if (!existingReference.Language.Equals(updatedReference.Language))
             {
-                prevReference.Language = newReference.Language;
+                existingReference.Language = updatedReference.Language;
             }
 
-            if (prevReference.Rights != null)
+            if (existingReference.Rights != null)
             {
-                if (!prevReference.Rights.Equals(newReference.Rights))
+                if (!existingReference.Rights.Equals(updatedReference.Rights))
                 {
-                    prevReference.Rights = newReference.Rights;
+                    existingReference.Rights = updatedReference.Rights;
                 }
             }
             
-            if (!prevReference.DatePublished.Equals(newReference.DatePublished))
+            if (!existingReference.DatePublished.Equals(updatedReference.DatePublished))
             {
-                prevReference.DatePublished = newReference.DatePublished;
+                existingReference.DatePublished = updatedReference.DatePublished;
             }
 
-            if (prevReference.Creators != null)
+            if (existingReference.Creators != null)
             {
-                if (!prevReference.Creators.Equals(newReference.Creators))
+                if (!existingReference.Creators.Equals(updatedReference.Creators))
                 {
-                    prevReference.Creators = newReference.Creators;
+                    existingReference.Creators = updatedReference.Creators;
                 }
             }
 
-            if (prevReference.Tags != null)
+            if (existingReference.Tags != null)
             {
-                if (!prevReference.Tags.Equals(newReference.Tags))
+                if (!existingReference.Tags.Equals(updatedReference.Tags))
                 {
-                    prevReference.Tags = newReference.Tags;
+                    existingReference.Tags = updatedReference.Tags;
                 }
             }
 
 
-            await _referenceRepository.UpdateReferenceAsync(prevReference);
+            // await _referenceRepository.UpdateReferenceAsync(existingReference);
 
             return true;
         }

@@ -43,6 +43,7 @@ import {
 } from "@/CreateRefComponents/CreatorInput.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
 import { Tag } from "emblor";
+import { useMutation } from "@tanstack/react-query";
 
 let nextId = 0;
 
@@ -58,11 +59,31 @@ export function EditReferencePage({ reference }) {
         useState<ZodObject<any>>(baseReferenceSchema);
     const [schemaName, setSchemaName] = useState("");
 
+    const mutation = useMutation({
+        mutationFn: (data) => {
+            return instance.put(`Reference/update/${refId}`, data, {
+                withCredentials: true,
+            });
+        },
+        onSuccess: () => {
+            toast({
+                variant: "default",
+                title: "Reference Successfully Updated!",
+                description: ``,
+            });
+            navigate({ to: "/library" });
+        },
+        onError: () => {
+            toast({
+                variant: "destructive",
+                title: "Reference Not Updated Successfully",
+                description: `Query Error: ${mutation?.error?.message}`,
+            });
+        },
+    });
+
     const form = useForm<z.infer<typeof refSchema>>({
         resolver: refSchema ? zodResolver(refSchema) : undefined,
-        // defaultValues: async () => {
-        //     return await getReferenceData();
-        // },
         defaultValues: reference,
     });
 
@@ -71,80 +92,7 @@ export function EditReferencePage({ reference }) {
         formState: { errors, isLoading },
         handleSubmit,
     } = form;
-    // const getReferenceData = async () => {
-    //     try {
-    //         const res = await instance.get(
-    //             `Reference/get-single-reference?refId=${refId}`,
-    //             {
-    //                 withCredentials: true,
-    //             },
-    //         );
-    //         console.log(res);
-    //
-    //         if (res.status == 200) {
-    //             let newSchema: ZodObject<any>;
-    //             let name = "";
-    //
-    //             setDatePublished(new Date(res.data.datePublished));
-    //             switch (res.data.type) {
-    //                 case "Artwork":
-    //                     newSchema = artworkSchema;
-    //                     name = "artwork";
-    //                     break;
-    //                 case "Book":
-    //                     newSchema = bookSchema;
-    //                     name = "book";
-    //                     break;
-    //                 case "Report":
-    //                     newSchema = reportSchema;
-    //                     name = "report";
-    //                     break;
-    //                 case "Website":
-    //                     newSchema = websiteSchema;
-    //                     name = "website";
-    //                     break;
-    //                 default:
-    //                     newSchema = baseReferenceSchema;
-    //                     break;
-    //             }
-    //
-    //             console.log(res.data);
-    //
-    //             if (res.data.creators.length !== null) {
-    //                 console.log(res.data.creators);
-    //                 console.log(creatorArray);
-    //                 res.data.creators.map(
-    //                     (creator: {
-    //                         id: number;
-    //                         firstName: string;
-    //                         lastName: string;
-    //                         types: string;
-    //                     }) => {
-    //                         console.log(creator);
-    //                         creatorArray.push(
-    //                             <CreatorInput
-    //                                 firstName={creator.firstName}
-    //                                 lastName={creator.lastName}
-    //                                 types={creator.types}
-    //                                 name={`creators.${nextId}`}
-    //                                 key={creator.id}
-    //                             />,
-    //                         );
-    //                     },
-    //                 );
-    //                 nextId++;
-    //             }
-    //
-    //             setRefSchema(newSchema);
-    //             setSchemaName(name);
-    //             return res.data;
-    //         } else {
-    //             console.error(res);
-    //         }
-    //     } catch (e) {
-    //         console.error(e);
-    //     }
-    // };
+
     function onClickAddCreator() {
         setCreatorArray([
             ...creatorArray,
@@ -187,7 +135,6 @@ export function EditReferencePage({ reference }) {
         return Math.floor(Math.random() * (max + 1));
     }
     const onSubmit = async (data: any) => {
-        console.log(data);
         const convertedTags = data.tags?.map((tag: Tag) => ({
             ...tag,
             id: generateRandom32BitInteger(),
@@ -202,26 +149,16 @@ export function EditReferencePage({ reference }) {
             // figure out which reference type is being used
             console.log("newData");
             console.log(newData);
-            const response = await instance.put(
-                `Reference/update/${refId}`,
-                newData,
-                {
-                    withCredentials: true,
-                },
-            );
-            if (response.status === 200) {
-                toast({
-                    variant: "default",
-                    title: "Reference Successfully Updated!",
-                    description: ``,
-                });
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Reference Not Created Successfully",
-                    description: ``,
-                });
-            }
+            let res = mutation.mutate(newData);
+            // const response = await instance.put(
+            //     `Reference/update/${refId}`,
+            //     newData,
+            //     {
+            //         withCredentials: true,
+            //     },
+            // );
+            console.log("MUTATION:");
+            console.log(res);
 
             await navigate({ to: "/library" });
             console.log("SUCCESS");
