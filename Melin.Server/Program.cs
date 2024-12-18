@@ -33,6 +33,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders().AddConsole().AddDebug();
 
 // Serilog
+// Ensuring that Debug logging is off for production to avoid verbose logs that could
+// degrade service
+var logLevel = builder.Environment.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Warning;
+
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .Enrich.WithExceptionDetails()
@@ -41,7 +45,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("Logs/all-.logs",
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}}",
         rollingInterval: RollingInterval.Day)
-    .MinimumLevel.Debug()
+    .MinimumLevel.Is(logLevel)
     .CreateLogger();
 
 // builder.Services.AddScoped<IReferenceService, ReferenceService>();
