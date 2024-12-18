@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from "@/utils/AuthProvider.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import "./index.css";
 import NotFoundPage from "@/NotFoundPage.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const router = createRouter({
     routeTree,
@@ -14,6 +15,8 @@ const router = createRouter({
     },
     defaultNotFoundComponent: NotFoundPage,
 });
+
+const queryClient = new QueryClient();
 
 declare module "@tanstack/react-router" {
     interface Register {
@@ -28,9 +31,11 @@ function InnerApp() {
 
 function App() {
     return (
-        <AuthProvider>
-            <InnerApp />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+                <InnerApp />
+            </AuthProvider>
+        </QueryClientProvider>
     );
 }
 
