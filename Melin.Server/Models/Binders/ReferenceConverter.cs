@@ -316,9 +316,17 @@ public class ReferenceConverter : JsonConverter<Reference>
     {
         if (value == null)
         {
+            writer.WriteNull();
             return;
         }
-        
-        serializer.Serialize(writer, value);
+
+        var settings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            Formatting = Formatting.Indented,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        };
+        var specializedSerializer = JsonSerializer.Create(settings);
+        specializedSerializer.Serialize(writer, value);
     }
 }

@@ -4,6 +4,7 @@ using Melin.Server.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
 using Melin.Server.Models.DTO;
+using Melin.Server.Models.References;
 using Melin.Server.Services;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
@@ -35,11 +36,11 @@ public class ReferenceController : ControllerBase
     /// <returns>A Single Reference</returns>
     [HttpGet("get-single-reference")]
     [Authorize]
-    [ProducesResponseType(typeof(ICollection<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ActionResult<Reference>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetSingleReference([FromQuery] int refId)
+    public async Task<ActionResult<Reference>> GetSingleReference([FromQuery] int refId)
     {
         try
         {
@@ -51,7 +52,7 @@ public class ReferenceController : ControllerBase
             Log.Information("GET: SingleReference of ID: {refId}", refId);
             var reference = await _referenceService.GetReferenceWithAllDetailsById(User.Identity.Name, refId);
             
-            if (reference.Success)
+            if (reference is { Success: true, Data: not null })
             {
                 Log.Information("GET: Reference ID: {refId} Successfully retrieved by User: {userEmail}", refId, User.Identity.Name);
                 return Ok(reference.Data);
