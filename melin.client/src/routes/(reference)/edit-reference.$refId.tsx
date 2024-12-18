@@ -1,20 +1,10 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { EditReferencePage } from "@/Reference/EditReferencePage.tsx";
-import { instance } from "@/utils/axiosInstance.ts";
-
-let referenceCache: any;
+import { useQuery } from "@tanstack/react-query";
+import getSingleReference from "@/api/getSingleReference.ts";
 
 export const Route = createFileRoute("/(reference)/edit-reference/$refId")({
-    loader: async ({ params }) => {
-        referenceCache = await instance.get(
-            `Reference/get-single-reference?refId=${params.refId}`,
-            { withCredentials: true },
-        );
-        console.log(referenceCache.data);
-    },
-    component: () => {
-        return <EditReferencePage reference={referenceCache} />;
-    },
+    component: EditReferenceRoute,
     notFoundComponent: () => {
         return <div>Reference Not Found</div>;
     },
@@ -22,3 +12,24 @@ export const Route = createFileRoute("/(reference)/edit-reference/$refId")({
         return <div>Loading...</div>;
     },
 });
+
+function EditReferenceRoute() {
+    const { refId } = Route.useParams();
+
+    const { isLoading, data } = useQuery({
+        queryKey: ["single-reference", refId],
+        queryFn: () => getSingleReference(refId),
+        staleTime: 10000,
+    });
+
+    if (isLoading) {
+        return <div>LOADING...</div>;
+    } else {
+        console.log(data);
+        return (
+            <div>
+                <EditReferencePage reference={data} />
+            </div>
+        );
+    }
+}

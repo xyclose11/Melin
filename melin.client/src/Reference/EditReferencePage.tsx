@@ -37,7 +37,10 @@ import { Button } from "@/components/ui/button.tsx";
 import { cn } from "@/lib/utils.ts";
 import { CalendarIcon, SquareX } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar.tsx";
-import { CreatorInput } from "@/CreateRefComponents/CreatorInput.tsx";
+import {
+    CREATOR_TYPES,
+    CreatorInput,
+} from "@/CreateRefComponents/CreatorInput.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
 import { Tag } from "emblor";
 
@@ -60,6 +63,7 @@ export function EditReferencePage({ reference }) {
         // defaultValues: async () => {
         //     return await getReferenceData();
         // },
+        defaultValues: reference,
     });
 
     const {
@@ -147,7 +151,7 @@ export function EditReferencePage({ reference }) {
             <CreatorInput
                 firstName={""}
                 lastName={""}
-                types={""}
+                types={CREATOR_TYPES[0].label}
                 name={`creators.${nextId}`}
                 key={nextId}
             />,
@@ -196,9 +200,10 @@ export function EditReferencePage({ reference }) {
 
         try {
             // figure out which reference type is being used
+            console.log("newData");
             console.log(newData);
             const response = await instance.put(
-                `Reference/update-${refId}`,
+                `Reference/update/${refId}`,
                 newData,
                 {
                     withCredentials: true,
@@ -230,11 +235,62 @@ export function EditReferencePage({ reference }) {
     }
 
     useEffect(() => {
-        console.log(reference);
-    }, []);
+        let newSchema: ZodObject<any>;
+        let name = "";
 
-    console.log("REFERENCE");
-    console.log(reference.data);
+        setDatePublished(new Date(reference.datePublished));
+        switch (reference.type) {
+            case "Artwork":
+                newSchema = artworkSchema;
+                name = "artwork";
+                break;
+            case "Book":
+                newSchema = bookSchema;
+                name = "book";
+                break;
+            case "Report":
+                newSchema = reportSchema;
+                name = "report";
+                break;
+            case "Website":
+                newSchema = websiteSchema;
+                name = "website";
+                break;
+            default:
+                newSchema = baseReferenceSchema;
+                break;
+        }
+
+        if (reference.creators.length !== null) {
+            console.log(reference.creators);
+            console.log(creatorArray);
+            reference.creators.map(
+                (creator: {
+                    id: number;
+                    firstName: string;
+                    lastName: string;
+                    types: string;
+                }) => {
+                    console.log(creator);
+                    creatorArray.push(
+                        <CreatorInput
+                            firstName={creator.firstName}
+                            lastName={creator.lastName}
+                            types={creator.types}
+                            name={`creators.${nextId}`}
+                            key={creator.id}
+                        />,
+                    );
+                },
+            );
+            nextId++;
+        }
+
+        console.log("SCHEMA");
+        console.log(name);
+        setRefSchema(newSchema);
+        setSchemaName(name);
+    }, []);
 
     console.log(errors);
 
