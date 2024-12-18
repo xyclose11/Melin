@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Filter;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
@@ -133,10 +135,11 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+        options.SerializerSettings.Converters.Add(new ReferenceConverter());
         options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
-        options.SerializerSettings.Converters.Add(new ReferenceConverter());
     });
 
 builder.Services.AddControllers()

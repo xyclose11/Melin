@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Melin.Server.Models.References;
+using Newtonsoft.Json.Converters;
 
 namespace Melin.Server.Models.Binders;
 
@@ -320,11 +321,13 @@ public class ReferenceConverter : JsonConverter<Reference>
             return;
         }
 
+
         var settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             Formatting = Formatting.Indented,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            Converters = new List<JsonConverter> { new StringEnumConverter() } // THIS IS REQUIRED FOR CONVERTING ENUMS -> STRINGS FOR JSON OUTPUT
         };
         var specializedSerializer = JsonSerializer.Create(settings);
         specializedSerializer.Serialize(writer, value);
