@@ -49,7 +49,7 @@ let nextId = 0;
 
 const route = getRouteApi("/(reference)/edit-reference/$refId");
 
-export function EditReferencePage({ reference }) {
+export function EditReferencePage({ reference }: { reference: any }) {
     const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
@@ -57,7 +57,6 @@ export function EditReferencePage({ reference }) {
     const { refId } = route.useParams();
     const [refSchema, setRefSchema] =
         useState<ZodObject<any>>(baseReferenceSchema);
-    const [schemaName, setSchemaName] = useState("");
 
     const mutation = useMutation({
         mutationFn: (data) => {
@@ -99,7 +98,7 @@ export function EditReferencePage({ reference }) {
             <CreatorInput
                 firstName={""}
                 lastName={""}
-                types={CREATOR_TYPES[0].label}
+                types={CREATOR_TYPES[0].value}
                 name={`creators.${nextId}`}
                 key={nextId}
             />,
@@ -145,26 +144,7 @@ export function EditReferencePage({ reference }) {
             tags: convertedTags,
         };
 
-        try {
-            // figure out which reference type is being used
-            console.log("newData");
-            console.log(newData);
-            let res = mutation.mutate(newData);
-            // const response = await instance.put(
-            //     `Reference/update/${refId}`,
-            //     newData,
-            //     {
-            //         withCredentials: true,
-            //     },
-            // );
-            console.log("MUTATION:");
-            console.log(res);
-
-            await navigate({ to: "/library" });
-            console.log("SUCCESS");
-        } catch (error) {
-            console.error("Update reference failed:", error);
-        }
+        mutation.mutate(newData);
     };
 
     if (isLoading || !refSchema) {
@@ -226,7 +206,6 @@ export function EditReferencePage({ reference }) {
         console.log("SCHEMA");
         console.log(name);
         setRefSchema(newSchema);
-        setSchemaName(name);
     }, []);
 
     console.log(errors);
