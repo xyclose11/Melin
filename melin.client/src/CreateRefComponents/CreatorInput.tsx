@@ -47,9 +47,9 @@ export const CREATOR_TYPES = [
 
 export const creatorFormSchema = z.object({
     id: z.number().optional(),
-    creatorType: z
+    types: z
         .enum(
-            CREATOR_TYPES.map((type) => type.value) as [string, ...string[]],
+            CREATOR_TYPES.map((type) => type.label) as [string, ...string[]],
             { errorMap: () => ({ message: "Invalid Creator Type" }) },
         )
         .optional(),
@@ -85,8 +85,8 @@ export function CreatorInput({ name }: { name: string }) {
                                         )}
                                     >
                                         {CREATOR_TYPES.find(
-                                            (type) =>
-                                                type.value === field.value,
+                                            (types) =>
+                                                types.label === field.value,
                                         )?.label || "Type"}
                                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-100" />
                                     </Button>
@@ -104,7 +104,7 @@ export function CreatorInput({ name }: { name: string }) {
                                                 (creatorType) => (
                                                     <CommandItem
                                                         value={
-                                                            creatorType.label
+                                                            creatorType.value
                                                         }
                                                         key={creatorType.value}
                                                         onSelect={() => {

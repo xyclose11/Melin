@@ -105,7 +105,7 @@ export function EditReferencePage({ reference }: { reference: any }) {
         append({
             firstName: "",
             lastName: "",
-            types: "",
+            types: CREATOR_TYPES[0].value,
         });
     }
 
