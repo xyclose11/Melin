@@ -53,12 +53,9 @@ import { format } from "date-fns";
 import { isValidDate } from "@/utils/isValidDate.ts";
 import { DevTool } from "@hookform/devtools";
 
-let nextId = 0;
-
 const route = getRouteApi("/(reference)/edit-reference/$refId");
 
 export function EditReferencePage({ reference }: { reference: any }) {
-    const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
     const { toast } = useToast();
@@ -106,7 +103,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
     });
     function onClickAddCreator() {
         append({
-            name: "",
             firstName: "",
             lastName: "",
             types: "",
@@ -159,28 +155,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
             default:
                 newSchema = baseReferenceSchema;
                 break;
-        }
-
-        if (reference.creators.length !== null) {
-            reference.creators.map(
-                (creator: {
-                    id: number;
-                    firstName: string;
-                    lastName: string;
-                    types: string;
-                }) => {
-                    creatorArray.push(
-                        <CreatorInput
-                            firstName={creator.firstName}
-                            lastName={creator.lastName}
-                            types={creator.types}
-                            name={`creators.${nextId}`}
-                            key={creator.id}
-                        />,
-                    );
-                },
-            );
-            nextId++;
         }
 
         setRefSchema(newSchema);
@@ -368,26 +342,23 @@ export function EditReferencePage({ reference }: { reference: any }) {
                                 </CardHeader>
                                 <CardContent>
                                     <ul className="grid grid-cols-2 grid-rows-1 place-items-center">
-                                        {fields.map((item, index) => (
-                                            <li key={item.id}>
-                                                <CreatorInput
-                                                    name={index.toString()}
-                                                    firstName={""}
-                                                    lastName={""}
-                                                    types={
-                                                        CREATOR_TYPES[0].value
-                                                    }
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        remove(index)
-                                                    }
-                                                >
-                                                    <SquareX />
-                                                </button>
-                                            </li>
-                                        ))}
+                                        {fields.map((item, index) => {
+                                            return (
+                                                <li key={item.id}>
+                                                    <CreatorInput
+                                                        name={`creators.${index}`}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            remove(index)
+                                                        }
+                                                    >
+                                                        <SquareX />
+                                                    </button>
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                     <Button
                                         className="m-2"
