@@ -48,7 +48,7 @@ import {
 } from "@/CreateRefComponents/CreatorInput.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
 import { Tag } from "emblor";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { isValidDate } from "@/utils/isValidDate.ts";
 import { DevTool } from "@hookform/devtools";
@@ -63,6 +63,10 @@ export function EditReferencePage({ reference }: { reference: any }) {
     const [refSchema, setRefSchema] =
         useState<ZodObject<any>>(baseReferenceSchema);
 
+    const { isPending, isError, refetch, error } = useQuery({
+        queryKey: ["single-reference", refId],
+    });
+
     const mutation = useMutation({
         mutationFn: (data) => {
             return instance.put(`Reference/update/${refId}`, data, {
@@ -75,6 +79,7 @@ export function EditReferencePage({ reference }: { reference: any }) {
                 title: "Reference Successfully Updated!",
                 description: ``,
             });
+            refetch();
             navigate({ to: "/library" });
         },
         onError: () => {
@@ -161,6 +166,14 @@ export function EditReferencePage({ reference }: { reference: any }) {
     }, []);
 
     console.log(errors);
+
+    if (isPending) {
+        return <div>LOADING... QUERY</div>;
+    }
+
+    if (isError) {
+        return <div>ERROR: {error.message}</div>;
+    }
 
     return (
         <>
