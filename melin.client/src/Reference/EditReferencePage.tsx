@@ -44,6 +44,8 @@ import {
 import { useToast } from "@/hooks/use-toast.ts";
 import { Tag } from "emblor";
 import { useMutation } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { isValidDate } from "@/utils/isValidDate.ts";
 
 let nextId = 0;
 
@@ -153,25 +155,21 @@ export function EditReferencePage({ reference }: { reference: any }) {
 
     useEffect(() => {
         let newSchema: ZodObject<any>;
-        let name = "";
 
         setDatePublished(new Date(reference.datePublished));
+        console.log(datePublished);
         switch (reference.type) {
             case "Artwork":
                 newSchema = artworkSchema;
-                name = "artwork";
                 break;
             case "Book":
                 newSchema = bookSchema;
-                name = "book";
                 break;
             case "Report":
                 newSchema = reportSchema;
-                name = "report";
                 break;
             case "Website":
                 newSchema = websiteSchema;
-                name = "website";
                 break;
             default:
                 newSchema = baseReferenceSchema;
@@ -179,8 +177,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
         }
 
         if (reference.creators.length !== null) {
-            console.log(reference.creators);
-            console.log(creatorArray);
             reference.creators.map(
                 (creator: {
                     id: number;
@@ -188,7 +184,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
                     lastName: string;
                     types: string;
                 }) => {
-                    console.log(creator);
                     creatorArray.push(
                         <CreatorInput
                             firstName={creator.firstName}
@@ -203,8 +198,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
             nextId++;
         }
 
-        console.log("SCHEMA");
-        console.log(name);
         setRefSchema(newSchema);
     }, []);
 
@@ -299,17 +292,21 @@ export function EditReferencePage({ reference }: { reference: any }) {
                                                             )}
                                                         >
                                                             <CalendarIcon />
-                                                            {/*{datePublished ? (*/}
-                                                            {/*    format(*/}
-                                                            {/*        // datePublished,*/}
-                                                            {/*        "PPP",*/}
-                                                            {/*    )*/}
-                                                            {/*) : (*/}
-                                                            {/*    <span>*/}
-                                                            {/*        {" "}*/}
-                                                            {/*        Click Here!{" "}*/}
-                                                            {/*    </span>*/}
-                                                            {/*)}*/}
+                                                            {isValidDate(
+                                                                datePublished,
+                                                            ) &&
+                                                            datePublished !==
+                                                                undefined ? (
+                                                                format(
+                                                                    datePublished,
+                                                                    "PPP",
+                                                                )
+                                                            ) : (
+                                                                <span>
+                                                                    {" "}
+                                                                    Click Here!{" "}
+                                                                </span>
+                                                            )}
                                                         </Button>
                                                     </PopoverTrigger>
                                                     <PopoverContent className="w-auto p-0">

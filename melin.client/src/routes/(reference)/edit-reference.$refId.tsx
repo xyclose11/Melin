@@ -25,7 +25,6 @@ function EditReferenceRoute() {
     if (isLoading) {
         return <div>LOADING...</div>;
     } else {
-        console.log(data);
         return (
             <div>
                 <EditReferencePage reference={data} />
