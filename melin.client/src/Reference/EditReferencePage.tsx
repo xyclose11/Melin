@@ -46,6 +46,7 @@ import { Tag } from "emblor";
 import { useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { isValidDate } from "@/utils/isValidDate.ts";
+import { DevTool } from "@hookform/devtools";
 
 let nextId = 0;
 
@@ -128,6 +129,7 @@ export function EditReferencePage({ reference }: { reference: any }) {
                         (item as React.ReactElement).key !== removeId,
                 ),
             );
+            console.log(creatorArray);
         }
     }
 
@@ -145,6 +147,9 @@ export function EditReferencePage({ reference }: { reference: any }) {
             ...data,
             tags: convertedTags,
         };
+
+        console.log("data:");
+        console.log(data);
 
         mutation.mutate(newData);
     };
@@ -480,6 +485,7 @@ export function EditReferencePage({ reference }: { reference: any }) {
                     </form>
                 </Form>
             </FormProvider>
+            <DevTool control={control} />
         </>
     );
 }
