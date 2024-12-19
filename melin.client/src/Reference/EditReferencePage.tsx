@@ -9,7 +9,12 @@ import {
     websiteSchema,
 } from "@/ReferenceCreationPages/BaseReferenceSchema.ts";
 import { z, ZodObject } from "zod";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import {
+    Controller,
+    FormProvider,
+    useFieldArray,
+    useForm,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Form,
@@ -95,42 +100,17 @@ export function EditReferencePage({ reference }: { reference: any }) {
         handleSubmit,
     } = form;
 
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "creators",
+    });
     function onClickAddCreator() {
-        setCreatorArray([
-            ...creatorArray,
-            <CreatorInput
-                firstName={""}
-                lastName={""}
-                types={CREATOR_TYPES[0].value}
-                name={`creators.${nextId}`}
-                key={nextId}
-            />,
-        ]);
-        nextId++;
-    }
-
-    function onClickRemoveCreator(removeId: string | null) {
-        if (removeId === null) {
-            toast({
-                variant: "destructive",
-                title: "Cannot remove creator",
-                description: `Unable to remove creator!`,
-            });
-        } else if (creatorArray.length <= 0) {
-            toast({
-                variant: "default",
-                title: "Creator's is empty",
-                description: ``,
-            });
-        } else {
-            setCreatorArray(
-                creatorArray.filter(
-                    (item: React.ReactNode) =>
-                        (item as React.ReactElement).key !== removeId,
-                ),
-            );
-            console.log(creatorArray);
-        }
+        append({
+            name: "",
+            firstName: "",
+            lastName: "",
+            types: "",
+        });
     }
 
     function generateRandom32BitInteger() {
@@ -388,34 +368,24 @@ export function EditReferencePage({ reference }: { reference: any }) {
                                 </CardHeader>
                                 <CardContent>
                                     <ul className="grid grid-cols-2 grid-rows-1 place-items-center">
-                                        {creatorArray.map((creator) => (
-                                            <li
-                                                key={
-                                                    (
-                                                        creator as React.ReactElement
-                                                    ).key
-                                                }
-                                                className={"col-span-3 w-full"}
-                                            >
-                                                <div
-                                                    className={
-                                                        "flex justify-between items-center p-1"
+                                        {fields.map((item, index) => (
+                                            <li key={item.id}>
+                                                <CreatorInput
+                                                    name={index.toString()}
+                                                    firstName={""}
+                                                    lastName={""}
+                                                    types={
+                                                        CREATOR_TYPES[0].value
+                                                    }
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        remove(index)
                                                     }
                                                 >
-                                                    {creator}
-                                                    <div className={""}>
-                                                        <SquareX
-                                                            className="h-5 w-5"
-                                                            onClick={() => {
-                                                                onClickRemoveCreator(
-                                                                    (
-                                                                        creator as React.ReactElement
-                                                                    ).key,
-                                                                );
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
+                                                    <SquareX />
+                                                </button>
                                             </li>
                                         ))}
                                     </ul>
