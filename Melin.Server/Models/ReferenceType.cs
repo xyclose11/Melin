@@ -21,6 +21,7 @@ public enum ReferenceType
     Interview,
     JournalArticle,
     Letter,
+    Legislation,
     MagazineArticle,
     Manuscript,
     Map,
