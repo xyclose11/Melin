@@ -104,7 +104,7 @@ export function CreatorInput({ name }: { name: string }) {
                                                 (creatorType) => (
                                                     <CommandItem
                                                         value={
-                                                            creatorType.label
+                                                            creatorType.value
                                                         }
                                                         key={creatorType.label}
                                                         onSelect={() => {
