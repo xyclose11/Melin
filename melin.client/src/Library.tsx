@@ -55,8 +55,11 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { AddTagToReference } from "@/Tag/AddTagToReference.tsx";
-import { Link } from "@tanstack/react-router";
+import { getRouteApi, Link } from "@tanstack/react-router";
 import { useGroupSelection } from "@/Context/SelectedGroupContext.tsx";
+import { useQueryClient } from "@tanstack/react-query";
+import { fetchReferences } from "@/api/fetchReferences.ts";
+import { Pagination } from "@/api/referencesQueryOptions.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -93,7 +96,6 @@ export function Library() {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
-    const [totalRef, setTotalRef] = useState(0);
     const { toast } = useToast();
 
     const { selectedReferences, toggleReference, clearSelection } =
@@ -101,9 +103,14 @@ export function Library() {
 
     const { selectedGroup } = useGroupSelection();
 
-    const [data, setData] = React.useState<Reference[]>([]);
+    const queryClient = useQueryClient();
 
-    const [pagination, setPagination] = useState({
+    const routeApi = getRouteApi("/library");
+    const t = routeApi.useLoaderData();
+    const refData = t.data.data;
+
+    const [data, setData] = React.useState<Reference[]>(refData);
+    const [pagination, setPagination] = useState<Pagination>({
         pageSize: 15,
         pageIndex: 0,
     });
@@ -373,72 +380,10 @@ export function Library() {
         },
     ];
 
-    const URLLimt = 1600;
-
     function formatRowDate(val: string): string {
         const date: Date = new Date(val);
         return date.toUTCString();
     }
-    const fetchData = async () => {
-        try {
-            let fetchUrl = `Reference/references?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`;
-            if (
-                selectedGroup !== null &&
-                selectedGroup !== undefined &&
-                selectedGroup.length > 0
-            ) {
-                if (selectedGroup.length === 1) {
-                    fetchUrl = `get-references-from-group?groupName=${selectedGroup[0]}`;
-                } else {
-                    let requestURI = `?groupNames=${selectedGroup[0]}`;
-                    selectedGroup.slice(1).map((g) => {
-                        requestURI += "&groupNames=" + g;
-                    });
-                    if (requestURI.length > URLLimt) {
-                        // Limit URL to 1600 characters for performance
-                        toast({
-                            title: "Request too long",
-                            variant: "destructive",
-                            description: `The request for group specific references is ${requestURI.length} characters long. Currently the application has a max URL character limit of 2,000`,
-                        });
-                    } else {
-                        fetchUrl = `get-references-from-multiple-groups${requestURI}`;
-                    }
-                }
-            }
-
-            const response = await instance.get(fetchUrl, {
-                withCredentials: true,
-            });
-
-            if (response.status === 200) {
-                setData(response.data.data);
-                console.log(response.data.data);
-                setTotalRef(response.data.TotalPages);
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Unable to get References",
-                    description: "Please try again later",
-                    action: (
-                        <ToastAction altText={"Try Again"}>
-                            Try Again
-                        </ToastAction>
-                    ),
-                });
-            }
-        } catch (error) {
-            toast({
-                variant: "destructive",
-                title: "Unable to get References",
-                description: "Please try again later",
-                action: (
-                    <ToastAction altText={"Try Again"}>Try Again</ToastAction>
-                ),
-            });
-            console.error("Unable to get references:", error);
-        }
-    };
 
     const handleReferenceDelete = async (referenceId: number) => {
         try {
@@ -473,8 +418,17 @@ export function Library() {
     };
 
     useEffect(() => {
-        fetchData();
-    }, [pagination, selectedGroup]);
+        queryClient
+            .prefetchQuery({
+                queryKey: ["references", pagination.pageIndex + 1],
+                queryFn: () =>
+                    fetchReferences({
+                        pageSize: pagination.pageSize,
+                        pageIndex: pagination.pageIndex + 1,
+                    }),
+            })
+            .then((r) => console.log("PREFETCHED" + r));
+    }, [data, pagination, queryClient, selectedGroup]);
 
     const table = useReactTable({
         data,
@@ -491,7 +445,7 @@ export function Library() {
         onPaginationChange: setPagination,
         columnResizeMode: "onEnd",
         columnResizeDirection: "rtl",
-        rowCount: totalRef,
+        rowCount: data.length,
         state: {
             sorting,
             columnFilters,

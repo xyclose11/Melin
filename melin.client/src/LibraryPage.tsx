@@ -116,8 +116,6 @@ export function LibraryPage() {
         }
     };
 
-    // TODO MAKE REMOVING REFERENCES FROM GROUP STATEFUL
-
     return (
         <div className={"flex gap-3"}>
             <ReferenceSelectionProvider>

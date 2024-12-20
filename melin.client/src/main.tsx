@@ -7,16 +7,18 @@ import "./index.css";
 import NotFoundPage from "@/NotFoundPage.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+const queryClient = new QueryClient();
+
 const router = createRouter({
     routeTree,
     defaultPreload: "intent",
     context: {
         auth: undefined,
+        queryClient,
     },
+    defaultPreloadStaleTime: 0,
     defaultNotFoundComponent: NotFoundPage,
 });
-
-const queryClient = new QueryClient();
 
 declare module "@tanstack/react-router" {
     interface Register {
