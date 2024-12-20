@@ -236,9 +236,6 @@ public class ReferenceService : IReferenceService
                 }
             }
 
-
-            // await _referenceRepository.UpdateReferenceAsync(existingReference);
-
             return true;
         }
         catch (Exception e)

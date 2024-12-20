@@ -143,7 +143,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
         let newSchema: ZodObject<any>;
 
         setDatePublished(new Date(reference.datePublished));
-        console.log(datePublished);
         switch (reference.type) {
             case "Artwork":
                 newSchema = artworkSchema;
@@ -297,6 +296,14 @@ export function EditReferencePage({ reference }: { reference: any }) {
                                                                     date,
                                                                 );
                                                             }}
+                                                            disabled={(date) =>
+                                                                date >
+                                                                    new Date() ||
+                                                                date <
+                                                                    new Date(
+                                                                        "1900-01-01",
+                                                                    )
+                                                            }
                                                             initialFocus
                                                             {...field}
                                                         />
