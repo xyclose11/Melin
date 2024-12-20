@@ -129,9 +129,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
             tags: convertedTags,
         };
 
-        console.log("data:");
-        console.log(data);
-
         mutation.mutate(newData);
     };
 

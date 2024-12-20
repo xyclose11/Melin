@@ -2,7 +2,12 @@
 import { z, ZodObject } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import {
+    Controller,
+    FormProvider,
+    useFieldArray,
+    useForm,
+} from "react-hook-form";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -16,10 +21,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
+    CREATOR_TYPES,
     creatorFormSchema,
     CreatorInput,
 } from "@/CreateRefComponents/CreatorInput.tsx";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
     Popover,
     PopoverContent,
@@ -58,7 +64,6 @@ const formSchema = z.object({
     tags: z.array(tagSchema).optional(),
 });
 
-let nextId = 0;
 export function BaseReferenceCreator({
     refSchema,
     schemaName,
@@ -66,7 +71,6 @@ export function BaseReferenceCreator({
     refSchema: ZodObject<any>;
     schemaName: string;
 }) {
-    const [creatorArray, setCreatorArray] = useState<React.ReactNode[]>([]);
     const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
     const { toast } = useToast();
@@ -128,7 +132,7 @@ export function BaseReferenceCreator({
                 });
             }
 
-            navigate("/library");
+            navigate({ to: "/library" });
         } catch (error) {
             console.error("Create reference failed:", error);
         }
@@ -139,41 +143,17 @@ export function BaseReferenceCreator({
         formState: { errors },
     } = form;
 
-    function onClickAddCreator() {
-        setCreatorArray([
-            ...creatorArray,
-            <CreatorInput
-                types={""}
-                lastName={""}
-                firstName={""}
-                name={`creators.${nextId}`}
-                key={nextId}
-            />,
-        ]);
-        nextId++;
-    }
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "creators",
+    });
 
-    function onClickRemoveCreator(removeId: string | null) {
-        if (removeId === null) {
-            toast({
-                variant: "destructive",
-                title: "Cannot remove creator",
-                description: `Unable to remove creator!`,
-            });
-        } else if (creatorArray.length <= 0) {
-            toast({
-                variant: "default",
-                title: "Creator's is empty",
-                description: ``,
-            });
-        } else {
-            setCreatorArray(
-                creatorArray.filter(
-                    (item: React.ReactNode) =>
-                        (item as React.ReactElement).key !== removeId,
-                ),
-            );
-        }
+    function onClickAddCreator() {
+        append({
+            firstName: "",
+            lastName: "",
+            types: CREATOR_TYPES[0].value,
+        });
     }
 
     useEffect(() => {
@@ -356,36 +336,23 @@ export function BaseReferenceCreator({
                                 </CardHeader>
                                 <CardContent>
                                     <ul className="grid grid-cols-2 grid-rows-1 place-items-center">
-                                        {creatorArray.map((creator) => (
-                                            <li
-                                                key={
-                                                    (
-                                                        creator as React.ReactElement
-                                                    ).key
-                                                }
-                                                className={"col-span-3 w-full"}
-                                            >
-                                                <div
-                                                    className={
-                                                        "flex justify-between items-center p-1"
-                                                    }
-                                                >
-                                                    {creator}
-                                                    <div className={""}>
-                                                        <SquareX
-                                                            className="h-5 w-5"
-                                                            onClick={() => {
-                                                                onClickRemoveCreator(
-                                                                    (
-                                                                        creator as React.ReactElement
-                                                                    ).key,
-                                                                );
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        ))}
+                                        {fields.map((item, index) => {
+                                            return (
+                                                <li key={item.id}>
+                                                    <CreatorInput
+                                                        name={`creators.${index}`}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            remove(index)
+                                                        }
+                                                    >
+                                                        <SquareX />
+                                                    </button>
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                     <Button
                                         className="m-2"

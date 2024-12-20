@@ -47,7 +47,7 @@ export const artworkSchema = baseReferenceSchema.extend({
     mapType: z.string().min(2).max(128).optional().or(z.literal("")),
 });
 
-export const legislationSchema = z.object({
+export const legislationSchema = baseReferenceSchema.extend({
     NameOfAct: z.string().min(2).max(256),
     BillNumber: z.string().min(2).max(256),
     Code: z.string().min(2).max(256),
@@ -64,7 +64,7 @@ export const legislationSchema = z.object({
     History: z.string().min(2).max(256).optional(),
 });
 
-export const legalCaseSchema = z.object({
+export const legalCaseSchema = baseReferenceSchema.extend({
     History: z.string().min(2).max(256).optional(),
     CaseName: z.string().min(2).max(256).optional(),
     Court: z.string().min(2).max(256).optional(),
@@ -75,7 +75,7 @@ export const legalCaseSchema = z.object({
     FirstPage: z.string().min(2).max(256).optional(),
 });
 
-export const patentSchema = z.object({
+export const patentSchema = baseReferenceSchema.extend({
     Country: z.string().min(2).max(256),
     Assignee: z.string().min(2).max(256),
     IssuingAuthority: z.string().min(2).max(256),
@@ -88,20 +88,20 @@ export const patentSchema = z.object({
     LegalStatus: z.string().min(2).max(256),
 });
 
-export const presentationSchema = z.object({
+export const presentationSchema = baseReferenceSchema.extend({
     ProceedingTitle: z.string().min(2).max(256),
     ConferenceName: z.string().min(2).max(256),
     Place: z.string().min(2).max(256),
     PresentationType: z.string().min(2).max(256),
 });
 
-export const primarySourceSchema = z.object({
+export const primarySourceSchema = baseReferenceSchema.extend({
     Medium: z.string().min(2).max(256),
     PrimarySourceType: z.string().min(2).max(256),
     Subject: z.string().min(2).max(256),
 });
 
-export const recordingSchema = z.object({
+export const recordingSchema = baseReferenceSchema.extend({
     FileFormat: z.string().min(2).max(256),
     RunningTime: z.string().min(2).max(256),
     ProgramTitle: z.string().min(2).max(256),
@@ -113,20 +113,20 @@ export const recordingSchema = z.object({
     Studio: z.string().min(2).max(256),
 });
 
-export const reportSchema = z.object({
+export const reportSchema = baseReferenceSchema.extend({
     ReportType: z.string().min(2).max(256),
     ReportNumber: z.number().min(0),
     Institution: z.string().min(2).max(256),
 });
 
-export const softwareSchema = z.object({
+export const softwareSchema = baseReferenceSchema.extend({
     Version: z.string().min(2).max(256),
     System: z.string().min(2).max(256),
     Company: z.string().min(2).max(256).optional(),
     ProgrammingLanguage: z.string().min(2).max(256).optional().default(""),
 });
 
-export const websiteSchema = z.object({
+export const websiteSchema = baseReferenceSchema.extend({
     WebsiteTitle: z.string().min(2).max(256),
     ForumTitle: z.string().min(2).max(256).optional(),
     WebsiteType: z.string().min(2).max(256).optional(),
