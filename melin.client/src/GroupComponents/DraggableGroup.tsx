@@ -301,7 +301,7 @@ export function DraggableGroup({
                         {groups
                             .filter((g) => g)
                             .map((g: GroupType) => (
-                                <CollapsibleContent>
+                                <CollapsibleContent key={g.id}>
                                     <DraggableGroup
                                         groupName={g.name}
                                         groups={g.groups}
