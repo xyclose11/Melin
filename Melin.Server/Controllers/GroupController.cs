@@ -28,7 +28,6 @@ public class GroupController : ControllerBase
     /// Gets a specific groups References.
     /// User must be authorized to access.
     /// </summary>
-    /// <param name="groupName">The name of the specific group</param>
     /// <returns> A collection of References </returns>
     [HttpGet("get-group-references")]
     [Authorize]
@@ -71,7 +70,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Get all owned groups for a user. With Pagination.
     /// </summary>
-    /// <param name="filter"> A PaginationFilter: { pageNumber: int, pageSize: int }</param>
     /// <returns>A List of Groups</returns>
     [HttpGet("get-owned-groups")]
     [Authorize]
@@ -122,7 +120,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Retrieves References from a specific Group
     /// </summary>
-    /// <param name="groupName">A string specifying groupName</param>
     /// <returns>A List of References</returns>
     [HttpGet("get-references-from-group")]
     [Authorize]
@@ -171,7 +168,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Retrieves References from a List of Groups
     /// </summary>
-    /// <param name="groupNames">A String Array of groupNames</param>
     /// <returns>A List of References</returns>
     [HttpGet("get-references-from-multiple-groups")]
     [Authorize]
@@ -223,7 +219,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Retrieves a single group, with References
     /// </summary>
-    /// <param name="groupId">String value for group name</param>
     /// <returns>A Group with any related References</returns>
     [HttpGet("single-group")]
     [Authorize]
@@ -261,8 +256,7 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Creates a Group with the current logged-in User as its Owner
     /// </summary>
-    /// <param name="group">A <see cref="Group"/> Object</param>
-    /// <returns><see cref="ActionResult{TValue}"/>Group ID for use in the Reactive UI</returns>
+    /// <returns><see cref="ActionResult{TValue}"/>Group Name for use in the Reactive UI</returns>
     [HttpPost("create-group")]
     [Authorize]
     [ProducesResponseType(typeof(ActionResult<string>), StatusCodes.Status200OK)]
@@ -287,10 +281,17 @@ public class GroupController : ControllerBase
             {
                 return NoContent();
             }
+            
+            
             _referenceContext.Group.Add(group);
 
             await _referenceContext.SaveChangesAsync();
-            return Ok(group.Id);
+            
+            // returning group.Name here instead of group.Id since the ID is not yet
+            // generated and the call to the DB is unnecessary since the group name
+            // should be unique to each group
+            Log.Information("Group Created: {GroupName}", group.Name);
+            return Ok(group.Name);
         }
         catch (Exception e)
         {
@@ -302,8 +303,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Updates a Groups details via HTTP PUT
     /// </summary>
-    /// <param name="prevGroupName">String Query value for the Group ID</param>
-    /// <param name="updatedGroup">A <see cref="Group"/> Object</param>
     /// <returns><see cref="ActionResult{Group}"/></returns>
     // UPDATE: group related details, not contents
     [HttpPut("update-group-details")]
@@ -345,8 +344,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Adds a list of Reference ID's to a specified Group owned by the current user
     /// </summary>
-    /// <param name="groupName">String value for the group name</param>
-    /// <param name="referenceIds">A <see cref="List{T}"/> of reference ID's</param>
     /// <returns>A <see cref="ActionResult{TValue}"/></returns>
     // POST: add references to group
     [HttpPost("add-refs-to-group")]
@@ -406,7 +403,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Add a Group to a Group
     /// </summary>
-    /// <param name="addGroupToGroup">A <see cref="AddGroupToGroup"/> Data Transfer Object (DTO)</param>
     /// <returns><see cref="ActionResult{TValue}"/></returns>
     // POST: add references to group
     [HttpPost("add-group-to-group")]
@@ -466,8 +462,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Removes References from a Group
     /// </summary>
-    /// <param name="groupName">String Group-Name</param>
-    /// <param name="referenceId">Integer for the Reference ID</param>
     /// <returns><see cref="ActionResult{TValue}"/></returns>
     // POST: add references to group
     [HttpPut("remove-refs-from-group")]
@@ -516,7 +510,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Delete a User's Group
     /// </summary>
-    /// <param name="groupName">String Query Parameter for the Group-Name</param>
     /// <returns><see cref="ActionResult"/></returns>
     // DELETE
     [HttpDelete("delete-group")]
