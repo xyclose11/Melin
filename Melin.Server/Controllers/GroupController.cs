@@ -262,14 +262,14 @@ public class GroupController : ControllerBase
     /// Creates a Group with the current logged-in User as its Owner
     /// </summary>
     /// <param name="group">A <see cref="Group"/> Object</param>
-    /// <returns><see cref="ActionResult{TValue}"/></returns>
+    /// <returns><see cref="ActionResult{TValue}"/>Group ID for use in the Reactive UI</returns>
     [HttpPost("create-group")]
     [Authorize]
-    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ActionResult<string>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> CreateGroup([FromBody] Group group)
+    public async Task<ActionResult<string>> CreateGroup([FromBody] Group group)
     {
         try
         {
@@ -290,7 +290,7 @@ public class GroupController : ControllerBase
             _referenceContext.Group.Add(group);
 
             await _referenceContext.SaveChangesAsync();
-            return Ok();
+            return Ok(group.Id);
         }
         catch (Exception e)
         {

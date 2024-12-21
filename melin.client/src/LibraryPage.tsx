@@ -10,6 +10,7 @@ import { ToastAction } from "@/components/ui/toast.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { GroupSelectedProvider } from "@/Context/SelectedGroupContext.tsx";
+import { Group } from "@/LibraryViews/GroupLibrary.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -41,6 +42,18 @@ export type Reference = {
 export function LibraryPage() {
     const [userGroups, setUserGroups] = useState<GroupType[]>([]);
     const { toast } = useToast();
+
+    const handleAddToUserGroup = (newGroup: Group) => {
+        // convert Group to GroupType
+        const updatedGroup: GroupType = {
+            isRoot: true,
+            references: [],
+            name: newGroup.name,
+            groups: [],
+            id: newGroup.id,
+        };
+        setUserGroups([...userGroups, updatedGroup]);
+    };
 
     const getGroups = async () => {
         try {
@@ -120,7 +133,7 @@ export function LibraryPage() {
         <div className={"flex gap-3"}>
             <ReferenceSelectionProvider>
                 <GroupSelectedProvider>
-                    <LibrarySideBar>
+                    <LibrarySideBar handleAddToUserGroup={handleAddToUserGroup}>
                         <DndContext onDragEnd={handleDragEnd}>
                             {userGroups
                                 .filter((g) => g.isRoot)

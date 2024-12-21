@@ -16,6 +16,7 @@ import { instance } from "@/utils/axiosInstance.ts";
 import { TextArea } from "@radix-ui/themes";
 import { useToast } from "@/hooks/use-toast.ts";
 import { ToastAction } from "@/components/ui/toast.tsx";
+import { Group } from "@/LibraryViews/GroupLibrary.tsx";
 
 export const GroupFormSchema = z.object({
     name: z.string().min(2, {
@@ -24,7 +25,11 @@ export const GroupFormSchema = z.object({
     description: z.string().optional(),
 });
 
-export function CreateGroupForm() {
+export function CreateGroupForm({
+    handleAddToUserGroup,
+}: {
+    handleAddToUserGroup: (newGroup: Group) => void;
+}) {
     const form = useForm<z.infer<typeof GroupFormSchema>>({
         resolver: zodResolver(GroupFormSchema),
         defaultValues: {
@@ -45,6 +50,14 @@ export function CreateGroupForm() {
                     variant: "default",
                     title: `Group: ${data.name} Created Successfully`,
                 });
+                const newGroup: Group = {
+                    id: res.data,
+                    name: data.name,
+                    description:
+                        data.description === undefined ? "" : data.description,
+                    updatedAt: "",
+                };
+                handleAddToUserGroup(newGroup);
             } else {
                 toast({
                     variant: "destructive",

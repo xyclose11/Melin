@@ -16,8 +16,15 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
 import { EllipsisVertical } from "lucide-react";
+import { Group } from "@/LibraryViews/GroupLibrary.tsx";
 
-export function LibrarySideBar(props: any) {
+export function LibrarySideBar({
+    children,
+    handleAddToUserGroup,
+}: {
+    children: React.ReactNode;
+    handleAddToUserGroup: (newGroup: Group) => void;
+}) {
     return (
         <>
             <Card>
@@ -33,14 +40,18 @@ export function LibrarySideBar(props: any) {
                                     Create Group
                                 </DropdownMenuSubTrigger>
                                 <DropdownMenuSubContent>
-                                    <CreateGroupForm />
+                                    <CreateGroupForm
+                                        handleAddToUserGroup={
+                                            handleAddToUserGroup
+                                        }
+                                    />
                                 </DropdownMenuSubContent>
                             </DropdownMenuSub>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </CardHeader>
 
-                <CardContent>{props.children}</CardContent>
+                <CardContent>{children}</CardContent>
 
                 <CardFooter></CardFooter>
             </Card>
