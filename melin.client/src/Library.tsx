@@ -67,7 +67,7 @@ export enum CREATOR_TYPES {
 
 type Creator = {
     id: number;
-    type: CREATOR_TYPES;
+    types: CREATOR_TYPES;
     firstName: string;
     lastName: string;
 };
@@ -194,17 +194,26 @@ export function Library() {
                     </Button>
                 );
             },
+            enablePinning: true,
+            minSize: 0,
+            maxSize: 3,
+            size: 1,
 
             cell: ({ row }) => {
                 const creators: Creator[] = row.getValue("creators");
                 return (
-                    <div>
+                    <div className="overflow-hidden grid grid-cols-1">
                         {creators === undefined ? (
                             <div> </div>
                         ) : (
-                            creators.map((creator) => (
-                                <div key={creator.id}>
-                                    <div>{creator.type}</div>
+                            creators.map((creator: Creator) => (
+                                <div
+                                    className="text-xs grid grid-cols-3"
+                                    key={creator.id}
+                                >
+                                    <div className="font-bold">
+                                        {creator.types}:
+                                    </div>
                                     <div>{creator.firstName}</div>
                                     <div>{creator.lastName}</div>
                                 </div>
