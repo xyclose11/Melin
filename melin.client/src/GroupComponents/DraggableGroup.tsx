@@ -64,10 +64,10 @@ export type GroupReferenceSchema = z.infer<typeof GroupReferenceSchema>;
 export function DraggableGroup({
     groupName,
     references,
-    groups,
+    childGroups,
 }: {
     groupName: string;
-    groups: [];
+    childGroups: [];
     references: [];
 }) {
     const { selectedReferences } = useReferenceSelection();
@@ -179,6 +179,8 @@ export function DraggableGroup({
         }
     };
 
+    console.log(childGroups);
+
     return (
         <>
             <Card
@@ -280,7 +282,8 @@ export function DraggableGroup({
                     <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90">
                         <SidebarMenuButton
                             disabled={
-                                references.length <= 0 && groups.length <= 0
+                                references.length <= 0 &&
+                                childGroups.length <= 0
                             }
                         >
                             <CollapsibleTrigger asChild>
@@ -298,13 +301,13 @@ export function DraggableGroup({
                                 </div>
                             </CollapsibleContent>
                         ))}
-                        {groups
+                        {childGroups
                             .filter((g) => g)
                             .map((g: GroupType) => (
                                 <CollapsibleContent key={g.id}>
                                     <DraggableGroup
                                         groupName={g.name}
-                                        groups={g.groups}
+                                        childGroups={g.childGroups}
                                         references={g.references}
                                     />
                                 </CollapsibleContent>

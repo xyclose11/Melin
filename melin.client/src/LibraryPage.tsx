@@ -20,7 +20,7 @@ export type GroupType = {
     id: number;
     name: string;
     references: [];
-    groups: [];
+    childGroups: [];
     isRoot: boolean;
 };
 
@@ -49,7 +49,7 @@ export function LibraryPage() {
             isRoot: true,
             references: [],
             name: newGroup.name,
-            groups: [],
+            childGroups: [],
             id: newGroup.id,
         };
         setUserGroups([...userGroups, updatedGroup]);
@@ -125,9 +125,6 @@ export function LibraryPage() {
                 });
 
                 setUserGroups(t);
-                console.log(userGroups);
-
-                // add child group to parent's state
             } else {
                 console.log(res);
             }
@@ -148,7 +145,7 @@ export function LibraryPage() {
                                     <DraggableGroup
                                         key={g.id}
                                         groupName={g.name}
-                                        groups={g.groups}
+                                        childGroups={g.childGroups}
                                         references={g.references}
                                     ></DraggableGroup>
                                 ))}

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 
 namespace Melin.Server.Models;
 
@@ -21,7 +22,11 @@ public class Group {
     public List<Reference>? References { get; } = [];
     // TODO add field to track usage
 
-    public List<Group>? Groups { get; } = [];
+    public List<Group>? ChildGroups { get; set; } = [];
+    
+    [ForeignKey("ParentGroupId")]
+    public Group? ParentGroup { get; set; }
+    public int? ParentGroupId { get; set; }
     
     public bool IsRoot { get; set; } = true;
 

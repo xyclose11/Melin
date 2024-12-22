@@ -96,14 +96,17 @@ public class GroupController : ControllerBase
                 .Where(g => g.IsRoot == true)
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Include(g => g.References)
-                .Include(g => g.Groups)
+                .Include(g => g.ChildGroups)
                 .Take(validFilter.PageSize)
                 .OrderBy(g => g.UpdatedAt)
                 .ToListAsync();
 
             Log.Information("[GroupController][GetOwnedGroups()] {GroupAmount} found for {UserEmail}", groups.Count,userName);
 
-            return Ok(groups);
+            var gr = await GetGroupsWithChildrenAsync(userName, (validFilter.PageNumber - 1) * validFilter.PageSize, validFilter.PageSize);
+            var groupDtos = gr.Select(MapToDto).ToList();
+            return Ok(groupDtos);
+            // return Ok(groups);
         }
         catch (Exception e)
         {
@@ -111,6 +114,51 @@ public class GroupController : ControllerBase
             return BadRequest();
         }
     }
+    
+    private GroupDto MapToDto(Group group)
+    {
+        return new GroupDto
+        {
+            Id = group.Id,
+            Name = group.Name,
+            Description = group.Description,
+            IsRoot = group.IsRoot,
+            ChildGroups = group.ChildGroups?.Select(MapToDto).ToList(),
+            References = group.References
+        };
+    }
+    
+    private async Task<List<Group>> GetGroupsWithChildrenAsync(string userName, int skip, int take)
+    {
+        var rootGroups = await _referenceContext.Group
+            .Where(g => g.CreatedBy == userName)
+            .Where(g => g.IsRoot)
+            .Include(g => g.References)
+            .OrderBy(g => g.UpdatedAt)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
+
+        foreach (var group in rootGroups)
+        {
+            await LoadChildGroups(group);
+        }
+
+        return rootGroups;
+    }
+
+    private async Task LoadChildGroups(Group group)
+    {
+        await _referenceContext.Entry(group)
+            .Collection(g => g.ChildGroups)
+            .LoadAsync();
+
+        foreach (var childGroup in group.ChildGroups)
+        {
+            await LoadChildGroups(childGroup);
+        }
+    }
+
 
     /// <summary>
     /// Retrieves References from a specific Group
@@ -427,18 +475,18 @@ public class GroupController : ControllerBase
             }
             
             var group = await _referenceContext.Group
-                .Where(g => g.Name == parent && g.CreatedBy == User.Identity.Name)
+                .Where(g => g.Name == parent && g.CreatedBy == User.Identity.Name).Include(group => group.ChildGroups)
                 .FirstAsync();
      
             var r = await _referenceContext.Group.Where(g => g.Name == child && g.CreatedBy == User.Identity.Name).FirstAsync();
 
             r.IsRoot = false;
             // see if group is already in the group
-            if (group.Groups != null)
+            if (group.ChildGroups != null)
             {
-                if (!group.Groups.Contains(r))
+                if (!group.ChildGroups.Contains(r))
                 {
-                    group.Groups.Add(r);
+                    group.ChildGroups.Add(r);
                 }
             }
             
