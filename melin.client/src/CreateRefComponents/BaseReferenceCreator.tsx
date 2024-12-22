@@ -161,7 +161,7 @@ export function BaseReferenceCreator({
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-2 gap-2 justify-items-start grid grid-cols-3"
+                        className="gap-2 justify-items-start grid grid-cols-3"
                     >
                         <Card>
                             <CardHeader className={"text-center"}>
@@ -171,8 +171,8 @@ export function BaseReferenceCreator({
                                 <TagCreateDropdown />
                             </CardContent>
                         </Card>
-                        <Card className={"col-span-2 m-0"}>
-                            <CardHeader className={"m-0"}>
+                        <Card className={"col-span-2"}>
+                            <CardHeader className={"text-center"}>
                                 <CardTitle>General Fields*</CardTitle>
                             </CardHeader>
                             <CardContent>
