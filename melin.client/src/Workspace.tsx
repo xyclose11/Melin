@@ -2,7 +2,7 @@
 
 export function Workspace() {
     return (
-        <div className="flex-1 ml-12 mr-36">
+        <div className="w-full ml-12 mr-36 justify-center">
             <div className="flex">
                 <Outlet />
             </div>

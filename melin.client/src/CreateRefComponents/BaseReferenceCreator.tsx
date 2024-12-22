@@ -161,7 +161,7 @@ export function BaseReferenceCreator({
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="gap-2 justify-items-start grid grid-cols-3"
+                        className="gap-2 justify-items-start grid grid-cols-2"
                     >
                         <Card>
                             <CardHeader className={"text-center"}>
@@ -171,11 +171,11 @@ export function BaseReferenceCreator({
                                 <TagCreateDropdown />
                             </CardContent>
                         </Card>
-                        <Card className={"col-span-2"}>
+                        <Card className={"w-full"}>
                             <CardHeader className={"text-center"}>
                                 <CardTitle>General Fields*</CardTitle>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className={"w-full"}>
                                 <FormField
                                     control={form.control}
                                     name="title"
@@ -360,44 +360,58 @@ export function BaseReferenceCreator({
                             </Card>
                         </div>
 
-                        <Card className={"col-span-3 w-full"}>
+                        <Card className={"col-span-2 w-full"}>
                             <CardHeader>
                                 <CardTitle>Reference Specific</CardTitle>
                             </CardHeader>
 
                             <CardContent className={"grid grid-cols-2 gap-4"}>
-                                {Object.keys(refSchema.shape).map((key) => (
-                                    <Controller
-                                        key={key}
-                                        control={control}
-                                        name={
-                                            `bookSchema.${key}` as keyof z.infer<
-                                                typeof formSchema
-                                            >
-                                        }
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    {key.replace(
-                                                        /([A-Z])/g,
-                                                        " $1",
-                                                    )}
-                                                    :
-                                                </FormLabel>
-                                                <FormControl className={""}>
-                                                    {/*@ts-ignore*/}
-                                                    <Input
-                                                        placeholder={key.replace(
+                                {Object.keys(refSchema.shape)
+                                    .filter((schemaField) => {
+                                        const excludedFields = [
+                                            "title",
+                                            "shortTitle",
+                                            "language",
+                                            "datePublished",
+                                            "creators",
+                                            "type",
+                                        ];
+                                        return !excludedFields.includes(
+                                            schemaField,
+                                        );
+                                    })
+                                    .map((key) => (
+                                        <Controller
+                                            key={key}
+                                            control={control}
+                                            name={
+                                                `bookSchema.${key}` as keyof z.infer<
+                                                    typeof formSchema
+                                                >
+                                            }
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        {key.replace(
                                                             /([A-Z])/g,
                                                             " $1",
                                                         )}
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                ))}
+                                                        :
+                                                    </FormLabel>
+                                                    <FormControl className={""}>
+                                                        {/*@ts-ignore*/}
+                                                        <Input
+                                                            placeholder={key.replace(
+                                                                /([A-Z])/g,
+                                                                " $1",
+                                                            )}
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    ))}
                             </CardContent>
                         </Card>
 
