@@ -2,8 +2,8 @@
 
 export function CreateReferencePage() {
     return (
-        <>
+        <div className="">
             <CreateReference />
-        </>
+        </div>
     );
 }

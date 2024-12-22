@@ -18,16 +18,16 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <>
             <NavBar />
 
-            <div className={"w-screen min-h-dvh"}>
+            <div className={"flex flex-col h-screen"}>
                 {!isAuthenticated ? (
-                    <main className={"w-screen mt-16 flex p-2"}>
+                    <main className={"mt-16 p-2"}>
                         {children}
                         <Outlet />
                     </main>
                 ) : (
                     <SidebarProvider defaultOpen={defaultOpen}>
                         <WorkspaceToolBar />
-                        <main className={"w-screen mt-16 flex p-2"}>
+                        <main className={"mt-16 p-2"}>
                             <SidebarTrigger>
                                 <Outlet />
                             </SidebarTrigger>

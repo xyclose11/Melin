@@ -25,7 +25,7 @@ import {
     creatorFormSchema,
     CreatorInput,
 } from "@/CreateRefComponents/CreatorInput.tsx";
-import React, { useEffect } from "react";
+import React from "react";
 import {
     Popover,
     PopoverContent,
@@ -154,10 +154,6 @@ export function BaseReferenceCreator({
             types: CREATOR_TYPES[0].value,
         });
     }
-
-    useEffect(() => {
-        onClickAddCreator();
-    }, []);
 
     return (
         <div>
