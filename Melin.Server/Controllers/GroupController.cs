@@ -28,7 +28,6 @@ public class GroupController : ControllerBase
     /// Gets a specific groups References.
     /// User must be authorized to access.
     /// </summary>
-    /// <param name="groupName">The name of the specific group</param>
     /// <returns> A collection of References </returns>
     [HttpGet("get-group-references")]
     [Authorize]
@@ -71,7 +70,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Get all owned groups for a user. With Pagination.
     /// </summary>
-    /// <param name="filter"> A PaginationFilter: { pageNumber: int, pageSize: int }</param>
     /// <returns>A List of Groups</returns>
     [HttpGet("get-owned-groups")]
     [Authorize]
@@ -95,22 +93,20 @@ public class GroupController : ControllerBase
             // GET owned groups
             var groups = await _referenceContext.Group
                 .Where(g => g.CreatedBy == userName)
+                .Where(g => g.IsRoot == true)
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Include(g => g.References)
-                .Include(g => g.Groups)
+                .Include(g => g.ChildGroups)
                 .Take(validFilter.PageSize)
                 .OrderBy(g => g.UpdatedAt)
                 .ToListAsync();
 
-            if (groups == null)
-            {
-                Log.Information("[GroupController][GetOwnedGroups()] No Groups found for {UserEmail}", userName);
-                return NotFound("No Groups Found");
-            }
-
             Log.Information("[GroupController][GetOwnedGroups()] {GroupAmount} found for {UserEmail}", groups.Count,userName);
 
-            return Ok(groups);
+            var gr = await GetGroupsWithChildrenAsync(userName, (validFilter.PageNumber - 1) * validFilter.PageSize, validFilter.PageSize);
+            var groupDtos = gr.Select(MapToDto).ToList();
+            return Ok(groupDtos);
+            // return Ok(groups);
         }
         catch (Exception e)
         {
@@ -118,11 +114,55 @@ public class GroupController : ControllerBase
             return BadRequest();
         }
     }
+    
+    private GroupDto MapToDto(Group group)
+    {
+        return new GroupDto
+        {
+            Id = group.Id,
+            Name = group.Name,
+            Description = group.Description,
+            IsRoot = group.IsRoot,
+            ChildGroups = group.ChildGroups?.Select(MapToDto).ToList(),
+            References = group.References
+        };
+    }
+    
+    private async Task<List<Group>> GetGroupsWithChildrenAsync(string userName, int skip, int take)
+    {
+        var rootGroups = await _referenceContext.Group
+            .Where(g => g.CreatedBy == userName)
+            .Where(g => g.IsRoot)
+            .Include(g => g.References)
+            .OrderBy(g => g.UpdatedAt)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
+
+        foreach (var group in rootGroups)
+        {
+            await LoadChildGroups(group);
+        }
+
+        return rootGroups;
+    }
+
+    private async Task LoadChildGroups(Group group)
+    {
+        await _referenceContext.Entry(group)
+            .Collection(g => g.ChildGroups)
+            .LoadAsync();
+
+        foreach (var childGroup in group.ChildGroups)
+        {
+            await LoadChildGroups(childGroup);
+        }
+    }
+
 
     /// <summary>
     /// Retrieves References from a specific Group
     /// </summary>
-    /// <param name="groupName">A string specifying groupName</param>
     /// <returns>A List of References</returns>
     [HttpGet("get-references-from-group")]
     [Authorize]
@@ -171,7 +211,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Retrieves References from a List of Groups
     /// </summary>
-    /// <param name="groupNames">A String Array of groupNames</param>
     /// <returns>A List of References</returns>
     [HttpGet("get-references-from-multiple-groups")]
     [Authorize]
@@ -223,7 +262,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Retrieves a single group, with References
     /// </summary>
-    /// <param name="groupId">String value for group name</param>
     /// <returns>A Group with any related References</returns>
     [HttpGet("single-group")]
     [Authorize]
@@ -261,15 +299,14 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Creates a Group with the current logged-in User as its Owner
     /// </summary>
-    /// <param name="group">A <see cref="Group"/> Object</param>
-    /// <returns><see cref="ActionResult{TValue}"/></returns>
+    /// <returns><see cref="ActionResult{TValue}"/>Group ID for use in the Reactive UI</returns>
     [HttpPost("create-group")]
     [Authorize]
-    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ActionResult<string>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> CreateGroup([FromBody] Group group)
+    public async Task<ActionResult<string>> CreateGroup([FromBody] Group group)
     {
         try
         {
@@ -287,10 +324,15 @@ public class GroupController : ControllerBase
             {
                 return NoContent();
             }
+            
+            
             _referenceContext.Group.Add(group);
 
             await _referenceContext.SaveChangesAsync();
-            return Ok();
+            
+            Log.Information("Group Created: {GroupName}", group.Name);
+            
+            return Ok(group.Id);
         }
         catch (Exception e)
         {
@@ -302,8 +344,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Updates a Groups details via HTTP PUT
     /// </summary>
-    /// <param name="prevGroupName">String Query value for the Group ID</param>
-    /// <param name="updatedGroup">A <see cref="Group"/> Object</param>
     /// <returns><see cref="ActionResult{Group}"/></returns>
     // UPDATE: group related details, not contents
     [HttpPut("update-group-details")]
@@ -345,8 +385,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Adds a list of Reference ID's to a specified Group owned by the current user
     /// </summary>
-    /// <param name="groupName">String value for the group name</param>
-    /// <param name="referenceIds">A <see cref="List{T}"/> of reference ID's</param>
     /// <returns>A <see cref="ActionResult{TValue}"/></returns>
     // POST: add references to group
     [HttpPost("add-refs-to-group")]
@@ -384,6 +422,9 @@ public class GroupController : ControllerBase
                 
                 if (r == null) continue;
                 
+                // add group to reference
+                r.Groups?.Add(group);
+                
                 // see if reference is already in the group
                 if (!group.References.Contains(r))
                 {
@@ -392,6 +433,8 @@ public class GroupController : ControllerBase
             }
             
             group.References.AddRange(references);
+            
+
 
             await _referenceContext.SaveChangesAsync();
             return Ok();
@@ -406,7 +449,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Add a Group to a Group
     /// </summary>
-    /// <param name="addGroupToGroup">A <see cref="AddGroupToGroup"/> Data Transfer Object (DTO)</param>
     /// <returns><see cref="ActionResult{TValue}"/></returns>
     // POST: add references to group
     [HttpPost("add-group-to-group")]
@@ -438,18 +480,18 @@ public class GroupController : ControllerBase
             }
             
             var group = await _referenceContext.Group
-                .Where(g => g.Name == parent && g.CreatedBy == User.Identity.Name)
+                .Where(g => g.Name == parent && g.CreatedBy == User.Identity.Name).Include(group => group.ChildGroups)
                 .FirstAsync();
      
             var r = await _referenceContext.Group.Where(g => g.Name == child && g.CreatedBy == User.Identity.Name).FirstAsync();
 
             r.IsRoot = false;
             // see if group is already in the group
-            if (group.Groups != null)
+            if (group.ChildGroups != null)
             {
-                if (!group.Groups.Contains(r))
+                if (!group.ChildGroups.Contains(r))
                 {
-                    group.Groups.Add(r);
+                    group.ChildGroups.Add(r);
                 }
             }
             
@@ -466,8 +508,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Removes References from a Group
     /// </summary>
-    /// <param name="groupName">String Group-Name</param>
-    /// <param name="referenceId">Integer for the Reference ID</param>
     /// <returns><see cref="ActionResult{TValue}"/></returns>
     // POST: add references to group
     [HttpPut("remove-refs-from-group")]
@@ -516,7 +556,6 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Delete a User's Group
     /// </summary>
-    /// <param name="groupName">String Query Parameter for the Group-Name</param>
     /// <returns><see cref="ActionResult"/></returns>
     // DELETE
     [HttpDelete("delete-group")]

@@ -28,4 +28,8 @@
       <ProjectReference Include="..\Melin.Server\Melin.Server.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="AdminDashboardTests\" />
+    </ItemGroup>
+
 </Project>

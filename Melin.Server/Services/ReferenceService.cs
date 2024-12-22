@@ -130,7 +130,138 @@ public class ReferenceService : IReferenceService
 
     async Task<Result<bool>> IReferenceService.UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var existingReferenceResult = await _referenceRepository.GetReferenceAllDetailsByIdAsync(userEmail, referenceId);
+
+            if (existingReferenceResult is { Success: false, Data: not null })
+            {
+                return new Result<bool>
+                {
+                    Success = false,
+                    Data = false,
+                };
+            }
+
+            if (existingReferenceResult.Data == null)
+            {
+                return new Result<bool>
+                {
+                    Success = false,
+                    Data = false,
+                };
+            }
+
+            var existingReference = existingReferenceResult.Data;
+
+            UpdateGeneralFields(existingReference, updatedReference);
+            
+            // ensure that both references are of the same type
+            if (existingReference.Type != updatedReference.Type)
+            {
+                return new Result<bool>
+                {
+                    Success = false
+                };
+            }
+
+
+            // determine Reference type and update fields
+            switch (existingReference.Type)
+            {
+                case ReferenceType.Artwork:
+                    if (existingReference is not Artwork existingArtwork|| updatedReference is not Artwork updatedArtwork)
+                    {
+                        return new Result<bool>
+                        {
+                            Success = false
+                        };
+                    }
+                    UpdateArtworkFields(existingArtwork, updatedArtwork);
+                    break;
+                case ReferenceType.AudioRecording:
+                    if (existingReference is not AudioRecording existingAudioRecording|| updatedReference is not AudioRecording updatedAudioRecording)
+                    {
+                        return new Result<bool>
+                        {
+                            Success = false
+                        };
+                    }
+                    UpdateAudioRecordingFields(existingAudioRecording, updatedAudioRecording);
+                    break;
+                case ReferenceType.Book:
+                    if (existingReference is not Book existingBook|| updatedReference is not Book updatedBook)
+                    {
+                        return new Result<bool>
+                        {
+                            Success = false
+                        };
+                    }
+                    UpdateBookFields(existingBook, updatedBook);
+                    break;
+                case ReferenceType.BookSection:
+                    if (existingReference is not BookSection existingBookSection|| updatedReference is not BookSection updatedBookSection)
+                    {
+                        return new Result<bool>
+                        {
+                            Success = false
+                        };
+                    }
+                    UpdateBookSectionFields(existingBookSection, updatedBookSection);
+                    break;
+                case ReferenceType.Document:
+                    if (existingReference is not Document existingDocument || updatedReference is not Document updatedDocument)
+                    {
+                        return new Result<bool>
+                        {
+                            Success = false
+                        };
+                    }
+                    UpdateDocumentFields(existingDocument, updatedDocument);
+                    break;
+                case ReferenceType.JournalArticle:
+                    if (existingReference is not JournalArticle existingJournalArticle || updatedReference is not JournalArticle updatedJournalArticle)
+                    {
+                        return new Result<bool>
+                        {
+                            Success = false
+                        };
+                    }
+                    UpdateJournalArticleFields(existingJournalArticle, updatedJournalArticle);
+                    break;
+                case ReferenceType.EncyclopediaArticle:
+                    if (existingReference is not EncyclopediaArticle existingEncycArticle || updatedReference is not EncyclopediaArticle updatedEncycArticle)
+                    {
+                        return new Result<bool>
+                        {
+                            Success = false
+                        };
+                    }
+                    UpdateEncyclopediaArticleFields(existingEncycArticle, updatedEncycArticle);
+                    break;
+            }
+            
+            var res = await _referenceRepository.UpdateReferenceAsync(existingReference);
+            if (res.Success)
+            {
+                return new Result<bool>
+                {
+                    Success = true,
+                    Data = true,
+                };
+            }
+            return new Result<bool>
+            {
+                Success = false,
+                Data = false,
+            };
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
     
 
@@ -139,67 +270,154 @@ public class ReferenceService : IReferenceService
         throw new NotImplementedException();
     }
     
-    private async Task<bool> UpdateGeneralFields(Reference prevReference, Reference newReference)
+    private void UpdateGeneralFields(Reference existingReference, Reference updatedReference)
     {
         try
         {
-            if (!prevReference.Title.Equals(newReference.Title))
+            if (!existingReference.Title.Equals(updatedReference.Title))
             {
-                prevReference.Title = newReference.Title;
+                existingReference.Title = updatedReference.Title;
             }
 
-            if (prevReference.ShortTitle != null)
+            if (existingReference.ShortTitle != null)
             {
-                if (!prevReference.ShortTitle.Equals(newReference.ShortTitle))
+                if (!existingReference.ShortTitle.Equals(updatedReference.ShortTitle))
                 {
-                    prevReference.ShortTitle = newReference.ShortTitle;
+                    existingReference.ShortTitle = updatedReference.ShortTitle;
                 }
             }
             
-            if (!prevReference.Language.Equals(newReference.Language))
+            if (!existingReference.Language.Equals(updatedReference.Language))
             {
-                prevReference.Language = newReference.Language;
+                existingReference.Language = updatedReference.Language;
             }
 
-            if (prevReference.Rights != null)
+            if (existingReference.Rights != null)
             {
-                if (!prevReference.Rights.Equals(newReference.Rights))
+                if (!existingReference.Rights.Equals(updatedReference.Rights))
                 {
-                    prevReference.Rights = newReference.Rights;
+                    existingReference.Rights = updatedReference.Rights;
                 }
             }
             
-            if (!prevReference.DatePublished.Equals(newReference.DatePublished))
+            if (!existingReference.DatePublished.Equals(updatedReference.DatePublished))
             {
-                prevReference.DatePublished = newReference.DatePublished;
+                existingReference.DatePublished = updatedReference.DatePublished;
             }
 
-            if (prevReference.Creators != null)
+            if (existingReference.Creators != null)
             {
-                if (!prevReference.Creators.Equals(newReference.Creators))
+                if (!existingReference.Creators.Equals(updatedReference.Creators))
                 {
-                    prevReference.Creators = newReference.Creators;
+                    existingReference.Creators = updatedReference.Creators;
                 }
             }
 
-            if (prevReference.Tags != null)
+            if (existingReference.Tags != null)
             {
-                if (!prevReference.Tags.Equals(newReference.Tags))
+                if (!existingReference.Tags.Equals(updatedReference.Tags))
                 {
-                    prevReference.Tags = newReference.Tags;
+                    existingReference.Tags = updatedReference.Tags;
                 }
             }
 
-
-            await _referenceRepository.UpdateReferenceAsync(prevReference);
-
-            return true;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
+    }
+
+    private static void UpdateArtworkFields(Artwork existingReference, Artwork updatedReference)
+    {
+        existingReference.Medium = updatedReference.Medium;
+        existingReference.Dimensions = updatedReference.Dimensions;
+        existingReference.Scale = updatedReference.Scale;
+        existingReference.MapType = updatedReference.MapType;
+    }
+    
+    private static void UpdateAudioRecordingFields(AudioRecording existing, AudioRecording updated)
+    {
+        existing.AudioRecordingFormat = updated.AudioRecordingFormat;
+        existing.SeriesTitle = updated.SeriesTitle;
+        existing.Volume = updated.Volume;
+        existing.NumberOfVolumes = updated.NumberOfVolumes;
+        existing.Place = updated.Place;
+        existing.Label = updated.Label;
+        existing.RunningTime = updated.RunningTime;
+    }
+
+    private static void UpdateBookFields(Book existing, Book updated)
+    {
+        existing.Publication = updated.Publication;
+        existing.BookTitle = updated.BookTitle;
+        existing.Volume = updated.Volume;
+        existing.Issue = updated.Issue;
+        existing.Pages = updated.Pages;
+        existing.Edition = updated.Edition;
+        existing.Series = updated.Series;
+        existing.SeriesNumber = updated.SeriesNumber;
+        existing.SeriesTitle = updated.SeriesTitle;
+        existing.VolumeAmount = updated.VolumeAmount;
+        existing.PageAmount = updated.PageAmount;
+        existing.Section = updated.Section;
+        existing.Place = updated.Place;
+        existing.Publisher = updated.Publisher;
+        existing.JournalAbbr = updated.JournalAbbr;
+        existing.ISBN = updated.ISBN;
+        existing.ISSN = updated.ISSN;
+    }
+
+    private static void UpdateBookSectionFields(BookSection existing, BookSection updated)
+    {
+        existing.BookTitle = updated.BookTitle;
+        existing.Series = updated.Series;
+        existing.SeriesNumber = updated.SeriesNumber;
+        existing.Volume = updated.Volume;
+        existing.NumberOfVolumes = updated.NumberOfVolumes;
+        existing.Edition = updated.Edition;
+        existing.Place = updated.Place;
+        existing.Publisher = updated.Publisher;
+        existing.Date = updated.Date;
+        existing.Pages = updated.Pages;
+        existing.ISBN = updated.ISBN;
+    }
+
+    private static void UpdateDocumentFields(Document existing, Document updated)
+    {
+        existing.Publisher = updated.Publisher;
+        existing.Date = updated.Date;
+    }
+
+    private static void UpdateJournalArticleFields(JournalArticle existing, JournalArticle updated)
+    {
+        existing.PublicationTitle = updated.PublicationTitle;
+        existing.Volume = updated.Volume;
+        existing.Issue = updated.Issue;
+        existing.Pages = updated.Pages;
+        existing.Date = updated.Date;
+        existing.SeriesTitle = updated.SeriesTitle;
+        existing.Series = updated.Series;
+        existing.SeriesText = updated.SeriesText;
+        existing.JournalAbbreviation = updated.JournalAbbreviation;
+        existing.DOI = updated.DOI;
+        existing.ISSN = updated.ISSN;
+    }
+
+    private static void UpdateEncyclopediaArticleFields(EncyclopediaArticle existing, EncyclopediaArticle updated)
+    {
+        existing.EncyclopediaTitle = updated.EncyclopediaTitle;
+        existing.Series = updated.Series;
+        existing.SeriesNumber = updated.SeriesNumber;
+        existing.Volume = updated.Volume;
+        existing.NumberOfVolumes = updated.NumberOfVolumes;
+        existing.Edition = updated.Edition;
+        existing.Place = updated.Place;
+        existing.Publisher = updated.Publisher;
+        existing.Date = updated.Date;
+        existing.Pages = updated.Pages;
+        existing.ISBN = updated.ISBN;
     }
     
     public async Task<bool> DeleteReferenceAsync(string userEmail, int referenceId)

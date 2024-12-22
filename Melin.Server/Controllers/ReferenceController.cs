@@ -4,6 +4,7 @@ using Melin.Server.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
 using Melin.Server.Models.DTO;
+using Melin.Server.Models.References;
 using Melin.Server.Services;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
@@ -35,15 +36,15 @@ public class ReferenceController : ControllerBase
     /// <returns>A Single Reference</returns>
     [HttpGet("get-single-reference")]
     [Authorize]
-    [ProducesResponseType(typeof(ICollection<Reference>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ActionResult<Reference>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetSingleReference([FromQuery] int refId)
+    public async Task<ActionResult<Reference>> GetSingleReference([FromQuery] int refId)
     {
         try
         {
-            if (User.Identity == null)
+            if (User.Identity?.Name == null)
             {
                 Log.Information("Unauthorized Attempt to Retrieve Reference: {ReferenceID}", refId);
                 return Unauthorized();
@@ -51,7 +52,7 @@ public class ReferenceController : ControllerBase
             Log.Information("GET: SingleReference of ID: {refId}", refId);
             var reference = await _referenceService.GetReferenceWithAllDetailsById(User.Identity.Name, refId);
             
-            if (reference.Success)
+            if (reference is { Success: true, Data: not null })
             {
                 Log.Information("GET: Reference ID: {refId} Successfully retrieved by User: {userEmail}", refId, User.Identity.Name);
                 return Ok(reference.Data);
@@ -114,12 +115,14 @@ public class ReferenceController : ControllerBase
                     Id = reference.Id,
                     Type = reference.Type.ToString(),
                     Title = reference.Title,
+                    LocationStored = reference.LocationStored,
                     CreatedAt = reference.CreatedAt.ToString(CultureInfo.CurrentCulture),
                     UpdatedAt = reference.UpdatedAt.ToString(CultureInfo.CurrentCulture),
                     Creators = reference.Creators?.ToList(),
                     Tags = reference.Tags?.ToList(),
                     Language = reference.Language.ToString(),
-                    DatePublished = reference.DatePublished.ToString()
+                    DatePublished = reference.DatePublished.ToString(),
+                    GroupNames = reference.Groups?.ToList().ConvertAll<string>(g => g.Name)
                 };
                 output.Add(res);
             }
@@ -173,19 +176,19 @@ public class ReferenceController : ControllerBase
     }
     
     /// <summary>
-    /// Updates a User owned Reference, via HTTP PATCH.
+    /// Updates a User owned Reference, via HTTP PUT.
     /// </summary>
     /// <param name="id">Integer value depicting the Reference to be updated</param>
-    /// <param name="updatedItem"><see cref="JsonPatchDocument"/></param>
+    /// <param name="updatedItem">An updated Reference</param>
     /// <returns><see cref="IActionResult"/></returns>
     // UPDATE
-    [HttpPatch("update/{id}")]
+    [HttpPut("update/{id}")]
     [Authorize]
     [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateItem([FromQuery] int id, [FromBody] JsonPatchDocument<Reference> updatedItem)
+    public async Task<IActionResult> UpdateItem(int id, [FromBody] Reference updatedItem)
     {
         if (!ModelState.IsValid)
         {
@@ -198,33 +201,16 @@ public class ReferenceController : ControllerBase
             return Unauthorized("User Currently Not Authorized to Update Item");
         }
         
-        Log.Information("PATCH: {userEmail}, updating reference", User.Identity.Name);
-        
+        Log.Information("PUT: {userEmail}, updating reference", User.Identity.Name);
 
-        // Find the item to update
-        var existingItemResult = await _referenceService.GetReferenceWithAllDetailsById(User.Identity.Name, id);
-        if (!existingItemResult.Success)
-        {
-            return NotFound();
-        }
+        var result = await _referenceService.UpdateReferenceAsync(User.Identity.Name, id, updatedItem);
 
-        var existingItem = existingItemResult.Data;
-
-        if (existingItem == null)
+        if (!result.Success)
         {
             return BadRequest();
         }
-        
-        updatedItem.ApplyTo(existingItem, ModelState);
 
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("ERROR");
-        }
-        
-        // apply patch to DB
-        _referenceService.ApplyPatch(existingItem);
-        return new ObjectResult(existingItem);
+        return new ObjectResult(updatedItem);
     }
 
     /// <summary>

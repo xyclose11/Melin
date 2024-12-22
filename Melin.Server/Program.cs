@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Filter;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
@@ -33,6 +35,10 @@ builder.Services.AddHttpLogging(logging =>
 builder.Logging.ClearProviders().AddConsole().AddDebug();
 
 // Serilog
+// Ensuring that Debug logging is off for production to avoid verbose logs that could
+// degrade service
+var logLevel = builder.Environment.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Warning;
+
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .Enrich.WithExceptionDetails()
@@ -41,34 +47,29 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("Logs/all-.logs",
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}}",
         rollingInterval: RollingInterval.Day)
-    .MinimumLevel.Debug()
+    .MinimumLevel.Is(logLevel)
     .CreateLogger();
 
-builder.Services.AddScoped<IReferenceService, ReferenceService>();
+// builder.Services.AddScoped<IReferenceService, ReferenceService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 
+var melinConnectionString = builder.Configuration.GetConnectionString("MelinDatabase");
 // Add services to the container.
 builder.Services.AddDbContext<ReferenceContext>(options =>
 {
-    var config = builder.Configuration;
-    var connectionString = config.GetConnectionString("MelinDatabase");
-    options.UseNpgsql(connectionString);
+    options.UseNpgsql(melinConnectionString);
 });
 
 builder.Services.AddScoped<TagService>();
 
 builder.Services.AddDbContext<TagContext>(options =>
 {
-    var config = builder.Configuration;
-    var connectionString = config.GetConnectionString("MelinDatabase");
-    options.UseNpgsql(connectionString);
+    options.UseNpgsql(melinConnectionString);
 });
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    var config = builder.Configuration;
-    var connectionString = config.GetConnectionString("MelinDatabase");
-    options.UseNpgsql(connectionString);
+    options.UseNpgsql(melinConnectionString);
 });
 
 builder.Services.AddControllers();
@@ -131,7 +132,15 @@ builder.Services.AddCors(options =>
         });
 });
 
-
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+        options.SerializerSettings.Converters.Add(new ReferenceConverter());
+        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+    });
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -141,6 +150,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddControllers(options =>
 {
+    // Enables HTTP PATCH
     options.InputFormatters.Insert(0, MelinJPIF.GetJsonPatchInputFormatter());
 });
 
@@ -149,13 +159,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<AuthorizationFilter>();
 });
 
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(options =>
-    {
-        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-        options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
-        options.SerializerSettings.Converters.Add(new ReferenceConverter());
-    });
+
 
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -252,9 +256,10 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
     const string email = "melinAdmin@admin.com";
-    
-    // ENSURE THAT YOU CHANGE THIS PASSWORD ON NEW PROJECT CREATION
-    const string password = "Admin11!";
+
+    var tempAdminPassword = Environment.GetEnvironmentVariable("SINGLE_USE_ADMIN_PASSWORD");
+
+
     
     // Checking if Admin account already exists to not create duplicate/overwrite account
     if (await userManager.FindByEmailAsync(email) == null)
@@ -265,7 +270,12 @@ using (var scope = app.Services.CreateScope())
             Email = email,
         };
 
-        await userManager.CreateAsync(user, password);
+        if (tempAdminPassword == null)
+        {
+            Console.WriteLine("PLEASE SET TEMPORARY ADMIN PASSWORD IN appsettings.development.json");
+            throw new NullReferenceException();
+        }
+        await userManager.CreateAsync(user, tempAdminPassword);
 
         // Only add user to Admin role if the user does not exist
         await userManager.AddToRoleAsync(user, "Admin");

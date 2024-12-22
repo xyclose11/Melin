@@ -13,5 +13,8 @@
 },
   "ConnectionStrings": {
     "MelinDatabase": "Host=;Username=;Password=;Database=;"
+  },
+  "SingleUsePasswords": {
+    "SINGLE_USE_ADMIN_PASSWORD": "enterDefaultPasswordHere"
   }
 }

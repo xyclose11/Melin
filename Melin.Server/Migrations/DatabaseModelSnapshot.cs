@@ -88,9 +88,6 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("integer");
-
                     b.Property<bool>("IsRoot")
                         .HasColumnType("boolean");
 
@@ -99,12 +96,15 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
+                    b.Property<int?>("ParentGroupId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("ParentGroupId");
 
                     b.ToTable("Group");
                 });
@@ -233,7 +233,7 @@ namespace Melin.Server.Migrations
                     b.ToTable("ReferenceTag");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.Artwork", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.Artwork", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
@@ -255,16 +255,98 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Medium")
-                                .HasColumnName("Artwork_Medium");
-                        });
-
                     b.HasDiscriminator().HasValue("Artwork");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.Book", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.AudioRecording", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("AudioRecordingFormat")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Label")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<int?>("NumberOfVolumes")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("RunningTime")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("SeriesTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Volume")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.HasDiscriminator().HasValue("AudioRecording");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Bill", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("BillNumber")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("CodePages")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("CodeVolume")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("History")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("LegislativeBody")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Section")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Session")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.HasDiscriminator().HasValue("Bill");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.BlogPost", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("BlogTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("WebsiteType")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.HasDiscriminator().HasValue("BlogPost");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Book", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
@@ -339,12 +421,590 @@ namespace Melin.Server.Migrations
 
                             t.Property("Section")
                                 .HasColumnName("Book_Section");
+
+                            t.Property("SeriesTitle")
+                                .HasColumnName("Book_SeriesTitle");
+
+                            t.Property("Volume")
+                                .HasColumnName("Book_Volume");
                         });
 
                     b.HasDiscriminator().HasValue("Book");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.LegalCases", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.BookSection", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("BookTitle")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Edition")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("ISBN")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<int?>("NumberOfVolumes")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Pages")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Series")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<int?>("SeriesNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Volume")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("BookTitle")
+                                .HasColumnName("BookSection_BookTitle");
+
+                            t.Property("Edition")
+                                .HasColumnName("BookSection_Edition");
+
+                            t.Property("ISBN")
+                                .HasColumnName("BookSection_ISBN");
+
+                            t.Property("NumberOfVolumes")
+                                .HasColumnName("BookSection_NumberOfVolumes");
+
+                            t.Property("Pages")
+                                .HasColumnName("BookSection_Pages");
+
+                            t.Property("Place")
+                                .HasColumnName("BookSection_Place");
+
+                            t.Property("Publisher")
+                                .HasColumnName("BookSection_Publisher");
+
+                            t.Property("Series")
+                                .HasColumnName("BookSection_Series");
+
+                            t.Property("SeriesNumber")
+                                .HasColumnName("BookSection_SeriesNumber");
+
+                            t.Property("Volume")
+                                .HasColumnName("BookSection_Volume");
+                        });
+
+                    b.HasDiscriminator().HasValue("BookSection");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.ConferencePaper", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("ConferenceName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("DOI")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("ISBN")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Pages")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("ProceedingsTitle")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Series")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Volume")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("ISBN")
+                                .HasColumnName("ConferencePaper_ISBN");
+
+                            t.Property("Pages")
+                                .HasColumnName("ConferencePaper_Pages");
+
+                            t.Property("Place")
+                                .HasColumnName("ConferencePaper_Place");
+
+                            t.Property("Publisher")
+                                .HasColumnName("ConferencePaper_Publisher");
+
+                            t.Property("Series")
+                                .HasColumnName("ConferencePaper_Series");
+
+                            t.Property("Volume")
+                                .HasColumnName("ConferencePaper_Volume");
+                        });
+
+                    b.HasDiscriminator().HasValue("ConferencePaper");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.DictionaryEntry", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("DictionaryTitle")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Edition")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("ISBN")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NumberOfVolumes")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Pages")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Series")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<int?>("SeriesNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Volume")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("DictionaryEntry_Date");
+
+                            t.Property("Edition")
+                                .HasColumnName("DictionaryEntry_Edition");
+
+                            t.Property("ISBN")
+                                .HasColumnName("DictionaryEntry_ISBN");
+
+                            t.Property("NumberOfVolumes")
+                                .HasColumnName("DictionaryEntry_NumberOfVolumes");
+
+                            t.Property("Pages")
+                                .HasColumnName("DictionaryEntry_Pages");
+
+                            t.Property("Place")
+                                .HasColumnName("DictionaryEntry_Place");
+
+                            t.Property("Publisher")
+                                .HasColumnName("DictionaryEntry_Publisher");
+
+                            t.Property("Series")
+                                .HasColumnName("DictionaryEntry_Series");
+
+                            t.Property("SeriesNumber")
+                                .HasColumnName("DictionaryEntry_SeriesNumber");
+
+                            t.Property("Volume")
+                                .HasColumnName("DictionaryEntry_Volume");
+                        });
+
+                    b.HasDiscriminator().HasValue("DictionaryEntry");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Document", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("Document_Date");
+
+                            t.Property("Publisher")
+                                .HasColumnName("Document_Publisher");
+                        });
+
+                    b.HasDiscriminator().HasValue("Document");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Email", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Subject")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("Email_Date");
+                        });
+
+                    b.HasDiscriminator().HasValue("Email");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.EncyclopediaArticle", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Edition")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("EncyclopediaTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("ISBN")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("NumberOfVolumes")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Pages")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Series")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("SeriesNumber")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Volume")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("EncyclopediaArticle_Date");
+
+                            t.Property("Edition")
+                                .HasColumnName("EncyclopediaArticle_Edition");
+
+                            t.Property("ISBN")
+                                .HasColumnName("EncyclopediaArticle_ISBN");
+
+                            t.Property("NumberOfVolumes")
+                                .HasColumnName("EncyclopediaArticle_NumberOfVolumes");
+
+                            t.Property("Pages")
+                                .HasColumnName("EncyclopediaArticle_Pages");
+
+                            t.Property("Place")
+                                .HasColumnName("EncyclopediaArticle_Place");
+
+                            t.Property("Publisher")
+                                .HasColumnName("EncyclopediaArticle_Publisher");
+
+                            t.Property("Series")
+                                .HasColumnName("EncyclopediaArticle_Series");
+
+                            t.Property("SeriesNumber")
+                                .HasColumnName("EncyclopediaArticle_SeriesNumber");
+
+                            t.Property("Volume")
+                                .HasColumnName("EncyclopediaArticle_Volume");
+                        });
+
+                    b.HasDiscriminator().HasValue("EncyclopediaArticle");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Film", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Distributor")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Genre")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("RunningTime")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("VideoRecordingFormat")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("Film_Date");
+
+                            t.Property("RunningTime")
+                                .HasColumnName("Film_RunningTime");
+                        });
+
+                    b.HasDiscriminator().HasValue("Film");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.ForumPost", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("ForumTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("PostType")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.HasDiscriminator().HasValue("ForumPost");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Hearing", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Committee")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("DocumentNumber")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("History")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("LegislativeBody")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("NumberOfVolumes")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Pages")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Session")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("History")
+                                .HasColumnName("Hearing_History");
+
+                            t.Property("LegislativeBody")
+                                .HasColumnName("Hearing_LegislativeBody");
+
+                            t.Property("NumberOfVolumes")
+                                .HasColumnName("Hearing_NumberOfVolumes");
+
+                            t.Property("Pages")
+                                .HasColumnName("Hearing_Pages");
+
+                            t.Property("Place")
+                                .HasColumnName("Hearing_Place");
+
+                            t.Property("Publisher")
+                                .HasColumnName("Hearing_Publisher");
+
+                            t.Property("Session")
+                                .HasColumnName("Hearing_Session");
+                        });
+
+                    b.HasDiscriminator().HasValue("Hearing");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.InstantMessage", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.HasDiscriminator().HasValue("InstantMessage");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Interview", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("InterviewMedium")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.HasDiscriminator().HasValue("Interview");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.JournalArticle", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("DOI")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("ISSN")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Issue")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("JournalAbbreviation")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Pages")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("PublicationTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Series")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("SeriesText")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("SeriesTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Volume")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("DOI")
+                                .HasColumnName("JournalArticle_DOI");
+
+                            t.Property("Date")
+                                .HasColumnName("JournalArticle_Date");
+
+                            t.Property("ISSN")
+                                .HasColumnName("JournalArticle_ISSN");
+
+                            t.Property("Issue")
+                                .HasColumnName("JournalArticle_Issue");
+
+                            t.Property("Pages")
+                                .HasColumnName("JournalArticle_Pages");
+
+                            t.Property("Series")
+                                .HasColumnName("JournalArticle_Series");
+
+                            t.Property("SeriesTitle")
+                                .HasColumnName("JournalArticle_SeriesTitle");
+
+                            t.Property("Volume")
+                                .HasColumnName("JournalArticle_Volume");
+                        });
+
+                    b.HasDiscriminator().HasValue("JournalArticle");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.LegalCases", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
@@ -388,7 +1048,7 @@ namespace Melin.Server.Migrations
                     b.HasDiscriminator().HasValue("LegalCases");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.Legislation", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.Legislation", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
@@ -453,10 +1113,273 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("BillNumber")
+                                .HasColumnName("Legislation_BillNumber");
+
+                            t.Property("Code")
+                                .HasColumnName("Legislation_Code");
+
+                            t.Property("CodePages")
+                                .HasColumnName("Legislation_CodePages");
+
+                            t.Property("CodeVolume")
+                                .HasColumnName("Legislation_CodeVolume");
+
+                            t.Property("Committee")
+                                .HasColumnName("Legislation_Committee");
+
+                            t.Property("DocumentNumber")
+                                .HasColumnName("Legislation_DocumentNumber");
+
+                            t.Property("History")
+                                .HasColumnName("Legislation_History");
+
+                            t.Property("LegislativeBody")
+                                .HasColumnName("Legislation_LegislativeBody");
+
+                            t.Property("Section")
+                                .HasColumnName("Legislation_Section");
+
+                            t.Property("Session")
+                                .HasColumnName("Legislation_Session");
+                        });
+
                     b.HasDiscriminator().HasValue("Legislation");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.Patent", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.Letter", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("LetterType")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("Letter_Date");
+                        });
+
+                    b.HasDiscriminator().HasValue("Letter");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.MagazineArticle", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("ISSN")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Issue")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Pages")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("PublicationTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Volume")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("MagazineArticle_Date");
+
+                            t.Property("ISSN")
+                                .HasColumnName("MagazineArticle_ISSN");
+
+                            t.Property("Issue")
+                                .HasColumnName("MagazineArticle_Issue");
+
+                            t.Property("Pages")
+                                .HasColumnName("MagazineArticle_Pages");
+
+                            t.Property("PublicationTitle")
+                                .HasColumnName("MagazineArticle_PublicationTitle");
+
+                            t.Property("Volume")
+                                .HasColumnName("MagazineArticle_Volume");
+                        });
+
+                    b.HasDiscriminator().HasValue("MagazineArticle");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Manuscript", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("ManuscriptType")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("NumberOfPages")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("Manuscript_Date");
+
+                            t.Property("Place")
+                                .HasColumnName("Manuscript_Place");
+                        });
+
+                    b.HasDiscriminator().HasValue("Manuscript");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Map", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Edition")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("ISBN")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("MapType")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Scale")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("SeriesTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("Map_Date");
+
+                            t.Property("Edition")
+                                .HasColumnName("Map_Edition");
+
+                            t.Property("ISBN")
+                                .HasColumnName("Map_ISBN");
+
+                            t.Property("MapType")
+                                .HasColumnName("MapType1");
+
+                            t.Property("Place")
+                                .HasColumnName("Map_Place");
+
+                            t.Property("Publisher")
+                                .HasColumnName("Map_Publisher");
+
+                            t.Property("Scale")
+                                .HasColumnName("Map_Scale");
+
+                            t.Property("SeriesTitle")
+                                .HasColumnName("Map_SeriesTitle");
+                        });
+
+                    b.HasDiscriminator().HasValue("Map");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.NewspaperArticle", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Edition")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("ISSN")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Pages")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("PublicationTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Section")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("NewspaperArticle_Date");
+
+                            t.Property("Edition")
+                                .HasColumnName("NewspaperArticle_Edition");
+
+                            t.Property("ISSN")
+                                .HasColumnName("NewspaperArticle_ISSN");
+
+                            t.Property("Pages")
+                                .HasColumnName("NewspaperArticle_Pages");
+
+                            t.Property("Place")
+                                .HasColumnName("NewspaperArticle_Place");
+
+                            t.Property("PublicationTitle")
+                                .HasColumnName("NewspaperArticle_PublicationTitle");
+
+                            t.Property("Section")
+                                .HasColumnName("NewspaperArticle_Section");
+                        });
+
+                    b.HasDiscriminator().HasValue("NewspaperArticle");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Patent", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
@@ -501,34 +1424,71 @@ namespace Melin.Server.Migrations
                     b.HasDiscriminator().HasValue("Patent");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.Presentation", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.Podcast", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
-                    b.Property<string>("ConferenceName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                    b.Property<string>("AudioFileType")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("EpisodeNumber")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("RunningTime")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("SeriesTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("RunningTime")
+                                .HasColumnName("Podcast_RunningTime");
+
+                            t.Property("SeriesTitle")
+                                .HasColumnName("Podcast_SeriesTitle");
+                        });
+
+                    b.HasDiscriminator().HasValue("Podcast");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Presentation", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("MeetingName")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Place")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("PresentationType")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
-                    b.Property<string>("ProceedingTitle")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Date")
+                                .HasColumnName("Presentation_Date");
+
+                            t.Property("Place")
+                                .HasColumnName("Presentation_Place");
+                        });
 
                     b.HasDiscriminator().HasValue("Presentation");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.PrimarySource", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.PrimarySource", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
@@ -547,10 +1507,72 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Medium")
+                                .HasColumnName("PrimarySource_Medium");
+
+                            t.Property("Subject")
+                                .HasColumnName("PrimarySource_Subject");
+                        });
+
                     b.HasDiscriminator().HasValue("PrimarySource");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.Recording", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.RadioBroadcast", b =>
+                {
+                    b.HasBaseType("Melin.Server.Models.Reference");
+
+                    b.Property<string>("AudioRecordingFormat")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("EpisodeNumber")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Network")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Place")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("ProgramTitle")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("RunningTime")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("AudioRecordingFormat")
+                                .HasColumnName("RadioBroadcast_AudioRecordingFormat");
+
+                            t.Property("Date")
+                                .HasColumnName("RadioBroadcast_Date");
+
+                            t.Property("EpisodeNumber")
+                                .HasColumnName("RadioBroadcast_EpisodeNumber");
+
+                            t.Property("Place")
+                                .HasColumnName("RadioBroadcast_Place");
+
+                            t.Property("RunningTime")
+                                .HasColumnName("RadioBroadcast_RunningTime");
+                        });
+
+                    b.HasDiscriminator().HasValue("RadioBroadcast");
+                });
+
+            modelBuilder.Entity("Melin.Server.Models.References.Recording", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
@@ -559,8 +1581,9 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<int?>("EpisodeNumber")
-                        .HasColumnType("integer");
+                    b.Property<string>("EpisodeNumber")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("FileFormat")
                         .IsRequired()
@@ -597,929 +1620,128 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.ToTable("Reference", t =>
+                        {
+                            t.Property("Distributor")
+                                .HasColumnName("Recording_Distributor");
+
+                            t.Property("EpisodeNumber")
+                                .HasColumnName("Recording_EpisodeNumber");
+
+                            t.Property("Genre")
+                                .HasColumnName("Recording_Genre");
+
+                            t.Property("Label")
+                                .HasColumnName("Recording_Label");
+
+                            t.Property("Network")
+                                .HasColumnName("Recording_Network");
+
+                            t.Property("ProgramTitle")
+                                .HasColumnName("Recording_ProgramTitle");
+
+                            t.Property("RunningTime")
+                                .HasColumnName("Recording_RunningTime");
+                        });
+
                     b.HasDiscriminator().HasValue("Recording");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.References.AudioRecording", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.Report", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
-                    b.Property<string>("AudioRecordingFormat")
-                        .HasColumnType("text");
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
-                    b.Property<string>("Label")
-                        .HasColumnType("text");
+                    b.Property<string>("Institution")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
-                    b.Property<int?>("NumberOfVolumes")
-                        .HasColumnType("integer");
+                    b.Property<string>("Pages")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Place")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
-                    b.Property<string>("RunningTime")
-                        .HasColumnType("text");
+                    b.Property<string>("ReportNumber")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("ReportType")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("SeriesTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Volume")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.ToTable("Reference", t =>
                         {
-                            t.Property("Label")
-                                .HasColumnName("AudioRecording_Label");
+                            t.Property("Date")
+                                .HasColumnName("Report_Date");
+
+                            t.Property("Pages")
+                                .HasColumnName("Report_Pages");
 
                             t.Property("Place")
-                                .HasColumnName("AudioRecording_Place");
-
-                            t.Property("RunningTime")
-                                .HasColumnName("AudioRecording_RunningTime");
+                                .HasColumnName("Report_Place");
 
                             t.Property("SeriesTitle")
-                                .HasColumnName("AudioRecording_SeriesTitle");
-
-                            t.Property("Volume")
-                                .HasColumnName("AudioRecording_Volume");
+                                .HasColumnName("Report_SeriesTitle");
                         });
 
-                    b.HasDiscriminator().HasValue("AudioRecording");
+                    b.HasDiscriminator().HasValue("Report");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.References.Bill", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.Software", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
-                    b.Property<string>("BillNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Code")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CodePages")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CodeVolume")
-                        .HasColumnType("text");
-
-                    b.Property<string>("History")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LegislativeBody")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Section")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Session")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("BillNumber")
-                                .HasColumnName("BillNumber1");
-
-                            t.Property("Code")
-                                .HasColumnName("Bill_Code");
-
-                            t.Property("CodePages")
-                                .HasColumnName("Bill_CodePages");
-
-                            t.Property("CodeVolume")
-                                .HasColumnName("Bill_CodeVolume");
-
-                            t.Property("History")
-                                .HasColumnName("Bill_History");
-
-                            t.Property("LegislativeBody")
-                                .HasColumnName("Bill_LegislativeBody");
-
-                            t.Property("Section")
-                                .HasColumnName("Bill_Section");
-
-                            t.Property("Session")
-                                .HasColumnName("Bill_Session");
-                        });
-
-                    b.HasDiscriminator().HasValue("Bill");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.BlogPost", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("BlogTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("WebsiteType")
-                        .HasColumnType("text");
-
-                    b.HasDiscriminator().HasValue("BlogPost");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.BookSection", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("BookTitle")
-                        .HasColumnType("text");
+                    b.Property<string>("Company")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Edition")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ISBN")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("NumberOfVolumes")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Pages")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Place")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Publisher")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Series")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("SeriesNumber")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Volume")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("BookTitle")
-                                .HasColumnName("BookSection_BookTitle");
-
-                            t.Property("Edition")
-                                .HasColumnName("BookSection_Edition");
-
-                            t.Property("ISBN")
-                                .HasColumnName("BookSection_ISBN");
-
-                            t.Property("NumberOfVolumes")
-                                .HasColumnName("BookSection_NumberOfVolumes");
-
-                            t.Property("Pages")
-                                .HasColumnName("BookSection_Pages");
-
-                            t.Property("Place")
-                                .HasColumnName("BookSection_Place");
-
-                            t.Property("Publisher")
-                                .HasColumnName("BookSection_Publisher");
-
-                            t.Property("Series")
-                                .HasColumnName("BookSection_Series");
-
-                            t.Property("SeriesNumber")
-                                .HasColumnName("BookSection_SeriesNumber");
-
-                            t.Property("Volume")
-                                .HasColumnName("BookSection_Volume");
-                        });
-
-                    b.HasDiscriminator().HasValue("BookSection");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.ConferencePaper", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("ConferenceName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DOI")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ISBN")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pages")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Place")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProceedingsTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Publisher")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Series")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Volume")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("ConferenceName")
-                                .HasColumnName("ConferencePaper_ConferenceName");
-
-                            t.Property("ISBN")
-                                .HasColumnName("ConferencePaper_ISBN");
-
-                            t.Property("Pages")
-                                .HasColumnName("ConferencePaper_Pages");
-
-                            t.Property("Place")
-                                .HasColumnName("ConferencePaper_Place");
-
-                            t.Property("Publisher")
-                                .HasColumnName("ConferencePaper_Publisher");
-
-                            t.Property("Series")
-                                .HasColumnName("ConferencePaper_Series");
-
-                            t.Property("Volume")
-                                .HasColumnName("ConferencePaper_Volume");
-                        });
-
-                    b.HasDiscriminator().HasValue("ConferencePaper");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.DictionaryEntry", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DictionaryTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Edition")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ISBN")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NumberOfVolumes")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pages")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Place")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Publisher")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Series")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("SeriesNumber")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Volume")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("DictionaryEntry_Date");
-
-                            t.Property("Edition")
-                                .HasColumnName("DictionaryEntry_Edition");
-
-                            t.Property("ISBN")
-                                .HasColumnName("DictionaryEntry_ISBN");
-
-                            t.Property("NumberOfVolumes")
-                                .HasColumnName("DictionaryEntry_NumberOfVolumes");
-
-                            t.Property("Pages")
-                                .HasColumnName("DictionaryEntry_Pages");
-
-                            t.Property("Place")
-                                .HasColumnName("DictionaryEntry_Place");
-
-                            t.Property("Publisher")
-                                .HasColumnName("DictionaryEntry_Publisher");
-
-                            t.Property("Series")
-                                .HasColumnName("DictionaryEntry_Series");
-
-                            t.Property("SeriesNumber")
-                                .HasColumnName("DictionaryEntry_SeriesNumber");
-
-                            t.Property("Volume")
-                                .HasColumnName("DictionaryEntry_Volume");
-                        });
-
-                    b.HasDiscriminator().HasValue("DictionaryEntry");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.Document", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Publisher")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("Document_Date");
-
-                            t.Property("Publisher")
-                                .HasColumnName("Document_Publisher");
-                        });
-
-                    b.HasDiscriminator().HasValue("Document");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.Email", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Subject")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("Email_Date");
-
-                            t.Property("Subject")
-                                .HasColumnName("Email_Subject");
-                        });
-
-                    b.HasDiscriminator().HasValue("Email");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.EncyclopediaArticle", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Edition")
-                        .HasColumnType("text");
-
-                    b.Property<string>("EncyclopediaTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ISBN")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NumberOfVolumes")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pages")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Place")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Publisher")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Series")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SeriesNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Volume")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("EncyclopediaArticle_Date");
-
-                            t.Property("Edition")
-                                .HasColumnName("EncyclopediaArticle_Edition");
-
-                            t.Property("ISBN")
-                                .HasColumnName("EncyclopediaArticle_ISBN");
-
-                            t.Property("NumberOfVolumes")
-                                .HasColumnName("EncyclopediaArticle_NumberOfVolumes");
-
-                            t.Property("Pages")
-                                .HasColumnName("EncyclopediaArticle_Pages");
-
-                            t.Property("Place")
-                                .HasColumnName("EncyclopediaArticle_Place");
-
-                            t.Property("Publisher")
-                                .HasColumnName("EncyclopediaArticle_Publisher");
-
-                            t.Property("Series")
-                                .HasColumnName("EncyclopediaArticle_Series");
-
-                            t.Property("SeriesNumber")
-                                .HasColumnName("EncyclopediaArticle_SeriesNumber");
-
-                            t.Property("Volume")
-                                .HasColumnName("EncyclopediaArticle_Volume");
-                        });
-
-                    b.HasDiscriminator().HasValue("EncyclopediaArticle");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.Film", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Distributor")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Genre")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RunningTime")
-                        .HasColumnType("text");
-
-                    b.Property<string>("VideoRecordingFormat")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("Film_Date");
-
-                            t.Property("Distributor")
-                                .HasColumnName("Film_Distributor");
-
-                            t.Property("Genre")
-                                .HasColumnName("Film_Genre");
-
-                            t.Property("RunningTime")
-                                .HasColumnName("Film_RunningTime");
-                        });
-
-                    b.HasDiscriminator().HasValue("Film");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.ForumPost", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("ForumTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PostType")
-                        .HasColumnType("text");
-
-                    b.HasDiscriminator().HasValue("ForumPost");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.Hearing", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Committee")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DocumentNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("History")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LegislativeBody")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NumberOfVolumes")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pages")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Place")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Publisher")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Session")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Committee")
-                                .HasColumnName("Hearing_Committee");
-
-                            t.Property("DocumentNumber")
-                                .HasColumnName("Hearing_DocumentNumber");
-
-                            t.Property("History")
-                                .HasColumnName("Hearing_History");
-
-                            t.Property("LegislativeBody")
-                                .HasColumnName("Hearing_LegislativeBody");
-
-                            t.Property("NumberOfVolumes")
-                                .HasColumnName("Hearing_NumberOfVolumes");
-
-                            t.Property("Pages")
-                                .HasColumnName("Hearing_Pages");
-
-                            t.Property("Place")
-                                .HasColumnName("Hearing_Place");
-
-                            t.Property("Publisher")
-                                .HasColumnName("Hearing_Publisher");
-
-                            t.Property("Session")
-                                .HasColumnName("Hearing_Session");
-                        });
-
-                    b.HasDiscriminator().HasValue("Hearing");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.InstantMessage", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.HasDiscriminator().HasValue("InstantMessage");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.Interview", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("InterviewMedium")
-                        .HasColumnType("text");
-
-                    b.HasDiscriminator().HasValue("Interview");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.JournalArticle", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("DOI")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ISSN")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Issue")
-                        .HasColumnType("text");
-
-                    b.Property<string>("JournalAbbreviation")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pages")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PublicationTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Series")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SeriesText")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("ProgrammingLanguage")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("SeriesTitle")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
-                    b.Property<string>("Volume")
-                        .HasColumnType("text");
+                    b.Property<string>("System")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("VersionNumber")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.ToTable("Reference", t =>
                         {
-                            t.Property("DOI")
-                                .HasColumnName("JournalArticle_DOI");
-
                             t.Property("Date")
-                                .HasColumnName("JournalArticle_Date");
+                                .HasColumnName("Software_Date");
 
-                            t.Property("ISSN")
-                                .HasColumnName("JournalArticle_ISSN");
-
-                            t.Property("Issue")
-                                .HasColumnName("JournalArticle_Issue");
-
-                            t.Property("Pages")
-                                .HasColumnName("JournalArticle_Pages");
-
-                            t.Property("Series")
-                                .HasColumnName("JournalArticle_Series");
+                            t.Property("Place")
+                                .HasColumnName("Software_Place");
 
                             t.Property("SeriesTitle")
-                                .HasColumnName("JournalArticle_SeriesTitle");
-
-                            t.Property("Volume")
-                                .HasColumnName("JournalArticle_Volume");
+                                .HasColumnName("Software_SeriesTitle");
                         });
 
-                    b.HasDiscriminator().HasValue("JournalArticle");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.Letter", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LetterType")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("Letter_Date");
-                        });
-
-                    b.HasDiscriminator().HasValue("Letter");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.MagazineArticle", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ISSN")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Issue")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pages")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PublicationTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Volume")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("MagazineArticle_Date");
-
-                            t.Property("ISSN")
-                                .HasColumnName("MagazineArticle_ISSN");
-
-                            t.Property("Issue")
-                                .HasColumnName("MagazineArticle_Issue");
-
-                            t.Property("Pages")
-                                .HasColumnName("MagazineArticle_Pages");
-
-                            t.Property("PublicationTitle")
-                                .HasColumnName("MagazineArticle_PublicationTitle");
-
-                            t.Property("Volume")
-                                .HasColumnName("MagazineArticle_Volume");
-                        });
-
-                    b.HasDiscriminator().HasValue("MagazineArticle");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.Manuscript", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ManuscriptType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NumberOfPages")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Place")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("Manuscript_Date");
-
-                            t.Property("Place")
-                                .HasColumnName("Manuscript_Place");
-                        });
-
-                    b.HasDiscriminator().HasValue("Manuscript");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.Map", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Edition")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ISBN")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MapType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Place")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Publisher")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Scale")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SeriesTitle")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("Map_Date");
-
-                            t.Property("Edition")
-                                .HasColumnName("Map_Edition");
-
-                            t.Property("ISBN")
-                                .HasColumnName("Map_ISBN");
-
-                            t.Property("MapType")
-                                .HasColumnName("MapType1");
-
-                            t.Property("Place")
-                                .HasColumnName("Map_Place");
-
-                            t.Property("Publisher")
-                                .HasColumnName("Map_Publisher");
-
-                            t.Property("Scale")
-                                .HasColumnName("Map_Scale");
-
-                            t.Property("SeriesTitle")
-                                .HasColumnName("Map_SeriesTitle");
-                        });
-
-                    b.HasDiscriminator().HasValue("Map");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.NewspaperArticle", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Edition")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ISSN")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pages")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Place")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PublicationTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Section")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("Date")
-                                .HasColumnName("NewspaperArticle_Date");
-
-                            t.Property("Edition")
-                                .HasColumnName("NewspaperArticle_Edition");
-
-                            t.Property("ISSN")
-                                .HasColumnName("NewspaperArticle_ISSN");
-
-                            t.Property("Pages")
-                                .HasColumnName("NewspaperArticle_Pages");
-
-                            t.Property("Place")
-                                .HasColumnName("NewspaperArticle_Place");
-
-                            t.Property("PublicationTitle")
-                                .HasColumnName("NewspaperArticle_PublicationTitle");
-
-                            t.Property("Section")
-                                .HasColumnName("NewspaperArticle_Section");
-                        });
-
-                    b.HasDiscriminator().HasValue("NewspaperArticle");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.Podcast", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("AudioFileType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("EpisodeNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RunningTime")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SeriesTitle")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("EpisodeNumber")
-                                .HasColumnName("Podcast_EpisodeNumber");
-
-                            t.Property("RunningTime")
-                                .HasColumnName("Podcast_RunningTime");
-
-                            t.Property("SeriesTitle")
-                                .HasColumnName("Podcast_SeriesTitle");
-                        });
-
-                    b.HasDiscriminator().HasValue("Podcast");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.References.RadioBroadcast", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("AudioRecordingFormat")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("text");
-
-                    b.Property<string>("EpisodeNumber")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Network")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Place")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProgramTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RunningTime")
-                        .HasColumnType("text");
-
-                    b.ToTable("Reference", t =>
-                        {
-                            t.Property("AudioRecordingFormat")
-                                .HasColumnName("RadioBroadcast_AudioRecordingFormat");
-
-                            t.Property("Date")
-                                .HasColumnName("RadioBroadcast_Date");
-
-                            t.Property("EpisodeNumber")
-                                .HasColumnName("RadioBroadcast_EpisodeNumber");
-
-                            t.Property("Network")
-                                .HasColumnName("RadioBroadcast_Network");
-
-                            t.Property("Place")
-                                .HasColumnName("RadioBroadcast_Place");
-
-                            t.Property("ProgramTitle")
-                                .HasColumnName("RadioBroadcast_ProgramTitle");
-
-                            t.Property("RunningTime")
-                                .HasColumnName("RadioBroadcast_RunningTime");
-                        });
-
-                    b.HasDiscriminator().HasValue("RadioBroadcast");
+                    b.HasDiscriminator().HasValue("Software");
                 });
 
             modelBuilder.Entity("Melin.Server.Models.References.Statute", b =>
@@ -1527,31 +1749,40 @@ namespace Melin.Server.Migrations
                     b.HasBaseType("Melin.Server.Models.Reference");
 
                     b.Property<string>("Code")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("CodeNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("DateEnacted")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("History")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("NameOfAct")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Pages")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("PublicLawNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Section")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Session")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.ToTable("Reference", t =>
                         {
@@ -1591,25 +1822,32 @@ namespace Melin.Server.Migrations
                     b.HasBaseType("Melin.Server.Models.Reference");
 
                     b.Property<string>("Date")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("EpisodeNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Network")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Place")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("ProgramTitle")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("RunningTime")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("VideoRecordingFormat")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.ToTable("Reference", t =>
                         {
@@ -1643,19 +1881,24 @@ namespace Melin.Server.Migrations
                     b.HasBaseType("Melin.Server.Models.Reference");
 
                     b.Property<string>("Date")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("NumberOfPages")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Place")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("ThesisType")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("University")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.ToTable("Reference", t =>
                         {
@@ -1677,31 +1920,40 @@ namespace Melin.Server.Migrations
                     b.HasBaseType("Melin.Server.Models.Reference");
 
                     b.Property<string>("Date")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("ISBN")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("NumberOfVolumes")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Place")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("RunningTime")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("SeriesTitle")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Studio")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("VideoRecordingFormat")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("Volume")
-                        .HasColumnType("text");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.ToTable("Reference", t =>
                         {
@@ -1736,74 +1988,35 @@ namespace Melin.Server.Migrations
                     b.HasDiscriminator().HasValue("VideoRecording");
                 });
 
-            modelBuilder.Entity("Melin.Server.Models.Report", b =>
+            modelBuilder.Entity("Melin.Server.Models.References.Website", b =>
                 {
                     b.HasBaseType("Melin.Server.Models.Reference");
 
-                    b.Property<string>("Institution")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<int>("ReportNumber")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ReportType")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasDiscriminator().HasValue("Report");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.Software", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
-
-                    b.Property<string>("Company")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("ProgrammingLanguage")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("System")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("Version")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasDiscriminator().HasValue("Software");
-                });
-
-            modelBuilder.Entity("Melin.Server.Models.Website", b =>
-                {
-                    b.HasBaseType("Melin.Server.Models.Reference");
+                    b.Property<string>("Date")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("ForumTitle")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("PostType")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("WebsiteTitle")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<string>("WebsiteType")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.ToTable("Reference", t =>
                         {
+                            t.Property("Date")
+                                .HasColumnName("Website_Date");
+
                             t.Property("ForumTitle")
                                 .HasColumnName("Website_ForumTitle");
 
@@ -1841,9 +2054,11 @@ namespace Melin.Server.Migrations
 
             modelBuilder.Entity("Melin.Server.Models.Group", b =>
                 {
-                    b.HasOne("Melin.Server.Models.Group", null)
-                        .WithMany("Groups")
-                        .HasForeignKey("GroupId");
+                    b.HasOne("Melin.Server.Models.Group", "ParentGroup")
+                        .WithMany("ChildGroups")
+                        .HasForeignKey("ParentGroupId");
+
+                    b.Navigation("ParentGroup");
                 });
 
             modelBuilder.Entity("ReferenceTag", b =>
@@ -1863,7 +2078,7 @@ namespace Melin.Server.Migrations
 
             modelBuilder.Entity("Melin.Server.Models.Group", b =>
                 {
-                    b.Navigation("Groups");
+                    b.Navigation("ChildGroups");
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Reference", b =>
