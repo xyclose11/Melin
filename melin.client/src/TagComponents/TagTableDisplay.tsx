@@ -29,7 +29,6 @@ export function TagTableDisplay({
                     withCredentials: true,
                 },
             );
-            console.log(res);
         } catch (e) {
             console.error(e);
         }

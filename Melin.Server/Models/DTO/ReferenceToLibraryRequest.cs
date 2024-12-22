@@ -12,4 +12,5 @@ public class ReferenceToLibraryRequest
     public List<Creator>? Creators;
     public List<Tag>? Tags;
     public string? Language;
+    public List<string>? GroupNames;
 }

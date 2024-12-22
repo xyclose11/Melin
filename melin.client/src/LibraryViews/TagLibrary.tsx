@@ -71,7 +71,6 @@ export function TagLibrary() {
                     withCredentials: true,
                 },
             );
-            console.log(response);
             setData(response.data);
             setTotalTag(response.data.TotalPages);
         } catch (error) {
@@ -194,7 +193,6 @@ export function TagLibrary() {
                                 ),
                             });
                         }
-                        console.log(response);
                     } catch (error) {
                         console.error("Unable to delete tag:", error);
                     }

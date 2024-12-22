@@ -108,7 +108,6 @@ export function BaseReferenceCreator({
 
         newData.type = schemaName;
 
-        console.log(newData);
         try {
             // figure out which reference type is being used
             const response = await instance.post(

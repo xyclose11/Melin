@@ -128,7 +128,6 @@ export function LibraryPage() {
                     return;
                 }
                 const updatedGroups = userGroups.map((group) => {
-                    // Remove the child group from its previous parent
                     if (
                         group.childGroups.some(
                             (child) => child.name === data.child,
@@ -141,7 +140,6 @@ export function LibraryPage() {
                             ),
                         };
                     }
-                    // Add the child group to the new parent group
                     if (group.name === data.parent) {
                         return {
                             ...group,
@@ -177,7 +175,7 @@ export function LibraryPage() {
                                     ></DraggableGroup>
                                 ))}
                         </DndContext>
-                    </LibrarySideBar>{" "}
+                    </LibrarySideBar>
                     <Library />
                 </GroupSelectedProvider>
             </ReferenceSelectionProvider>

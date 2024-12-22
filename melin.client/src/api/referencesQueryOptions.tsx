@@ -11,5 +11,5 @@ export const referencesQueryOptions = (pagination: Pagination) =>
             "references",
             pagination.pageIndex === null ? 0 : pagination.pageIndex,
         ],
-        queryFn: () => fetchReferences(pagination),
+        queryFn: () => fetchReferences(pagination, { groupNames: [] }),
     });
