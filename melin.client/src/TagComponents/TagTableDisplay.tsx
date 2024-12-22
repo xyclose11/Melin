@@ -15,10 +15,12 @@ export function TagTableDisplay({
     name,
     tagId,
     refId,
+    handleRemoveTag,
 }: {
     name: string;
     tagId: number;
     refId: number;
+    handleRemoveTag: (tagToRemoveId: any) => void;
 }) {
     const removeTagFromRef = async () => {
         try {
@@ -29,6 +31,10 @@ export function TagTableDisplay({
                     withCredentials: true,
                 },
             );
+
+            if (res.status === 200) {
+                handleRemoveTag(tagId);
+            }
         } catch (e) {
             console.error(e);
         }

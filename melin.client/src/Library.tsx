@@ -231,6 +231,15 @@ export function Library() {
                 const [tags, setTags] = useState<ReferenceTag[]>(
                     row.getValue("tags"),
                 );
+
+                const handleRemoveTag = (tagToRemoveId: any) => {
+                    const filteredTags = tags.filter((t) => {
+                        return t.id !== tagToRemoveId;
+                    });
+
+                    setTags(filteredTags);
+                };
+
                 return (
                     <div className={"max-w-[25%]"}>
                         <div className={"flex gap-1 flex-wrap"}>
@@ -247,6 +256,7 @@ export function Library() {
                                         }
                                         refId={row.original.id}
                                         name={tag.text}
+                                        handleRemoveTag={handleRemoveTag}
                                     />
                                 ))
                             )}
