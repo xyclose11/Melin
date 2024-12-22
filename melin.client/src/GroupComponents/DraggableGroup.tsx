@@ -67,7 +67,7 @@ export function DraggableGroup({
     childGroups,
 }: {
     groupName: string;
-    childGroups: [];
+    childGroups: GroupType[];
     references: [];
 }) {
     const { selectedReferences } = useReferenceSelection();

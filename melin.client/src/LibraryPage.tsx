@@ -20,7 +20,7 @@ export type GroupType = {
     id: number;
     name: string;
     references: [];
-    childGroups: [];
+    childGroups: GroupType[];
     isRoot: boolean;
 };
 
@@ -120,11 +120,38 @@ export function LibraryPage() {
 
             if (res.status === 200) {
                 // remove child group from UserGroup state
-                const t = userGroups.filter((g) => {
-                    return String(g.name) !== data.child;
+                const childGroup = userGroups.find(
+                    (g) => g.name === data.child,
+                );
+                if (!childGroup) {
+                    console.error("Child group not found in userGroups");
+                    return;
+                }
+                const updatedGroups = userGroups.map((group) => {
+                    // Remove the child group from its previous parent
+                    if (
+                        group.childGroups.some(
+                            (child) => child.name === data.child,
+                        )
+                    ) {
+                        return {
+                            ...group,
+                            childGroups: group.childGroups.filter(
+                                (child) => child.name !== data.child,
+                            ),
+                        };
+                    }
+                    // Add the child group to the new parent group
+                    if (group.name === data.parent) {
+                        return {
+                            ...group,
+                            childGroups: [...group.childGroups, childGroup],
+                        };
+                    }
+                    return group;
                 });
 
-                setUserGroups(t);
+                setUserGroups(updatedGroups);
             } else {
                 console.log(res);
             }
