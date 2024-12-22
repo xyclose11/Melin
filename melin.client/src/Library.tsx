@@ -455,8 +455,6 @@ export function Library({ initialData }: { initialData: Reference[] }) {
         queryFn: () => fetchReferences(pagination, null),
     });
 
-    console.log(queryData?.data);
-
     const table = useReactTable({
         data: queryData?.data.data ?? data,
         columns,
@@ -469,11 +467,10 @@ export function Library({ initialData }: { initialData: Reference[] }) {
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         manualPagination: true,
-        pageCount: queryData?.data.totalPages ?? data.length,
         onPaginationChange: setPagination,
         columnResizeMode: "onEnd",
         columnResizeDirection: "rtl",
-        rowCount: queryData?.data.data.length ?? data.length,
+        rowCount: queryData?.data.totalRecords ?? data.length,
         state: {
             sorting,
             columnFilters,
@@ -595,8 +592,17 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
+                            onClick={() => {
+                                setPagination((prev) => ({
+                                    ...prev,
+                                    pageIndex: prev.pageIndex - 1,
+                                }));
+                                table.previousPage();
+                            }}
+                            disabled={
+                                !table.getCanPreviousPage() ||
+                                pagination.pageIndex === 0
+                            }
                         >
                             Previous
                         </Button>
@@ -609,7 +615,6 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                                     pageIndex: prev.pageIndex + 1,
                                 }));
                                 table.nextPage();
-                                console.log("ASDASD");
                             }}
                             disabled={
                                 !table.getCanNextPage() || isPlaceholderData
