@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { LibraryPage } from "@/LibraryPage.tsx";
 import { referencesQueryOptions } from "@/api/referencesQueryOptions.tsx";
 
@@ -15,9 +15,10 @@ export const Route = createFileRoute("/library")({
 });
 
 function LibraryRoute() {
+    const loaderData = useLoaderData({ from: Route.id });
     return (
         <>
-            <LibraryPage />
+            <LibraryPage initialData={loaderData.data.data} />
         </>
     );
 }

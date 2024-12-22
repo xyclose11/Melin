@@ -6,18 +6,20 @@ type FromGroup = {
 };
 export const fetchReferences = async (
     pagination: Pagination,
-    fromGroups: FromGroup,
+    fromGroups: FromGroup | null,
 ) => {
     let fetchUrl = "";
-    if (fromGroups.groupNames.length === 0) {
-        fetchUrl += `Reference/references?pageNumber=${pagination.pageIndex === undefined ? 0 : pagination.pageIndex}&pageSize=${pagination.pageSize === undefined ? 15 : pagination.pageSize}`;
-    } else if (fromGroups.groupNames.length >= 1) {
-        fetchUrl += `get-references-from-multiple-groups?groupNames=${fromGroups.groupNames}`;
+    try {
+        if (fromGroups === null || fromGroups.groupNames.length === 0) {
+            fetchUrl += `Reference/references?pageNumber=${pagination.pageIndex === undefined ? 0 : pagination.pageIndex}&pageSize=${pagination.pageSize === undefined ? 15 : pagination.pageSize}`;
+        } else if (fromGroups.groupNames.length >= 1) {
+            fetchUrl += `get-references-from-multiple-groups?groupNames=${fromGroups.groupNames}`;
+        }
+
+        return await instance.get(fetchUrl, {
+            withCredentials: true,
+        });
+    } catch (e) {
+        console.error(e);
     }
-
-    console.log(fetchUrl);
-
-    return await instance.get(fetchUrl, {
-        withCredentials: true,
-    });
 };

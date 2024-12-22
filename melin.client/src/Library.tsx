@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ToastAction } from "@/components/ui/toast";
 import {
@@ -55,11 +55,10 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { AddTagToReference } from "@/Tag/AddTagToReference.tsx";
-import { getRouteApi, Link } from "@tanstack/react-router";
-import { useGroupSelection } from "@/Context/SelectedGroupContext.tsx";
-import { useQueryClient } from "@tanstack/react-query";
-import { fetchReferences } from "@/api/fetchReferences.ts";
+import { Link } from "@tanstack/react-router";
 import { Pagination } from "@/api/referencesQueryOptions.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { fetchReferences } from "@/api/fetchReferences.ts";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -89,7 +88,7 @@ export type Reference = {
     language: string;
 };
 
-export function Library() {
+export function Library({ initialData }: { initialData: Reference[] }) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
@@ -101,15 +100,8 @@ export function Library() {
     const { selectedReferences, toggleReference, clearSelection } =
         useReferenceSelection();
 
-    const { selectedGroup } = useGroupSelection();
-
-    const queryClient = useQueryClient();
-
-    const routeApi = getRouteApi("/library");
-    const t = routeApi.useLoaderData();
-    const refData = t.data.data;
-
-    const [data, setData] = React.useState<Reference[]>(refData);
+    // const { selectedGroup } = useGroupSelection();
+    const [data, setData] = React.useState<Reference[]>(initialData);
     const [pagination, setPagination] = useState<Pagination>({
         pageSize: 15,
         pageIndex: 0,
@@ -458,29 +450,15 @@ export function Library() {
         }
     };
 
-    useEffect(() => {
-        queryClient
-            .fetchQuery({
-                queryKey: ["references", pagination.pageIndex],
-                queryFn: () =>
-                    fetchReferences(
-                        {
-                            pageSize: pagination.pageSize,
-                            pageIndex: pagination.pageIndex,
-                        },
-                        { groupNames: selectedGroup },
-                    ),
-            })
-            .then((newData) =>
-                queryClient.setQueryData(
-                    ["references", pagination.pageIndex],
-                    newData,
-                ),
-            );
-    }, [data, pagination, queryClient, selectedGroup]);
+    const { data: queryData, isPlaceholderData } = useQuery({
+        queryKey: ["references", pagination.pageIndex, pagination.pageSize],
+        queryFn: () => fetchReferences(pagination, null),
+    });
+
+    console.log(queryData?.data);
 
     const table = useReactTable({
-        data,
+        data: queryData?.data.data ?? data,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -491,10 +469,11 @@ export function Library() {
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         manualPagination: true,
+        pageCount: queryData?.data.totalPages ?? data.length,
         onPaginationChange: setPagination,
         columnResizeMode: "onEnd",
         columnResizeDirection: "rtl",
-        rowCount: data.length,
+        rowCount: queryData?.data.data.length ?? data.length,
         state: {
             sorting,
             columnFilters,
@@ -627,9 +606,14 @@ export function Library() {
                             onClick={() => {
                                 setPagination((prev) => ({
                                     ...prev,
-                                    pageIndex: prev.pageIndex + 1, // Increment pageIndex here
+                                    pageIndex: prev.pageIndex + 1,
                                 }));
+                                table.nextPage();
+                                console.log("ASDASD");
                             }}
+                            disabled={
+                                !table.getCanNextPage() || isPlaceholderData
+                            }
                         >
                             Next
                         </Button>

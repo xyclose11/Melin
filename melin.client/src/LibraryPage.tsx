@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { LibrarySideBar } from "@/LibraryViews/LibrarySideBar.tsx";
 import { DraggableGroup } from "@/GroupComponents/DraggableGroup.tsx";
-import { Library } from "@/Library.tsx";
+import { Library, Reference } from "@/Library.tsx";
 import { ReferenceSelectionProvider } from "@/Context/ReferencesSelectedContext.tsx";
 import { ToastAction } from "@/components/ui/toast.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
@@ -24,22 +24,7 @@ export type GroupType = {
     isRoot: boolean;
 };
 
-type Creator = {
-    id: number;
-    type: CREATOR_TYPES;
-    firstName: string;
-    lastName: string;
-};
-
-export type Reference = {
-    id: number;
-    type: string;
-    title: string;
-    creators: Creator[];
-    language: string;
-};
-
-export function LibraryPage() {
+export function LibraryPage({ initialData }: { initialData: Reference[] }) {
     const [userGroups, setUserGroups] = useState<GroupType[]>([]);
     const { toast } = useToast();
 
@@ -176,7 +161,7 @@ export function LibraryPage() {
                                 ))}
                         </DndContext>
                     </LibrarySideBar>
-                    <Library />
+                    <Library initialData={initialData} />
                 </GroupSelectedProvider>
             </ReferenceSelectionProvider>
         </div>
