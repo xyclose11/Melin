@@ -119,8 +119,15 @@ export function LibraryPage() {
             });
 
             if (res.status === 200) {
-                // TODO ADD ALERTS
-                console.log(res);
+                // remove child group from UserGroup state
+                const t = userGroups.filter((g) => {
+                    return String(g.name) !== data.child;
+                });
+
+                setUserGroups(t);
+                console.log(userGroups);
+
+                // add child group to parent's state
             } else {
                 console.log(res);
             }

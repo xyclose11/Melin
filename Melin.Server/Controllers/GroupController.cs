@@ -93,18 +93,13 @@ public class GroupController : ControllerBase
             // GET owned groups
             var groups = await _referenceContext.Group
                 .Where(g => g.CreatedBy == userName)
+                .Where(g => g.IsRoot == true)
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Include(g => g.References)
                 .Include(g => g.Groups)
                 .Take(validFilter.PageSize)
                 .OrderBy(g => g.UpdatedAt)
                 .ToListAsync();
-
-            if (groups == null)
-            {
-                Log.Information("[GroupController][GetOwnedGroups()] No Groups found for {UserEmail}", userName);
-                return NotFound("No Groups Found");
-            }
 
             Log.Information("[GroupController][GetOwnedGroups()] {GroupAmount} found for {UserEmail}", groups.Count,userName);
 
@@ -256,7 +251,7 @@ public class GroupController : ControllerBase
     /// <summary>
     /// Creates a Group with the current logged-in User as its Owner
     /// </summary>
-    /// <returns><see cref="ActionResult{TValue}"/>Group Name for use in the Reactive UI</returns>
+    /// <returns><see cref="ActionResult{TValue}"/>Group ID for use in the Reactive UI</returns>
     [HttpPost("create-group")]
     [Authorize]
     [ProducesResponseType(typeof(ActionResult<string>), StatusCodes.Status200OK)]
@@ -287,11 +282,9 @@ public class GroupController : ControllerBase
 
             await _referenceContext.SaveChangesAsync();
             
-            // returning group.Name here instead of group.Id since the ID is not yet
-            // generated and the call to the DB is unnecessary since the group name
-            // should be unique to each group
             Log.Information("Group Created: {GroupName}", group.Name);
-            return Ok(group.Name);
+            
+            return Ok(group.Id);
         }
         catch (Exception e)
         {
