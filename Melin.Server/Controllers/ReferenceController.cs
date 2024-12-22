@@ -121,7 +121,8 @@ public class ReferenceController : ControllerBase
                     Creators = reference.Creators?.ToList(),
                     Tags = reference.Tags?.ToList(),
                     Language = reference.Language.ToString(),
-                    DatePublished = reference.DatePublished.ToString()
+                    DatePublished = reference.DatePublished.ToString(),
+                    GroupNames = reference.Groups?.ToList().ConvertAll<string>(g => g.Name)
                 };
                 output.Add(res);
             }

@@ -422,6 +422,9 @@ public class GroupController : ControllerBase
                 
                 if (r == null) continue;
                 
+                // add group to reference
+                r.Groups?.Add(group);
+                
                 // see if reference is already in the group
                 if (!group.References.Contains(r))
                 {
@@ -430,6 +433,8 @@ public class GroupController : ControllerBase
             }
             
             group.References.AddRange(references);
+            
+
 
             await _referenceContext.SaveChangesAsync();
             return Ok();

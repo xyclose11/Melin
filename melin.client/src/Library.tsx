@@ -443,8 +443,6 @@ export function Library() {
                     action: <ToastAction altText={"Undo"}>Undo</ToastAction>,
                 });
             }
-
-            console.log(response);
         } catch (error) {
             console.error("Unable to delete reference:", error);
         }
@@ -455,12 +453,15 @@ export function Library() {
             .prefetchQuery({
                 queryKey: ["references", pagination.pageIndex + 1],
                 queryFn: () =>
-                    fetchReferences({
-                        pageSize: pagination.pageSize,
-                        pageIndex: pagination.pageIndex + 1,
-                    }),
+                    fetchReferences(
+                        {
+                            pageSize: pagination.pageSize,
+                            pageIndex: pagination.pageIndex + 1,
+                        },
+                        { groupNames: selectedGroup },
+                    ),
             })
-            .then((r) => console.log("PREFETCHED" + r));
+            .then((r) => console.log(r));
     }, [data, pagination, queryClient, selectedGroup]);
 
     const table = useReactTable({
