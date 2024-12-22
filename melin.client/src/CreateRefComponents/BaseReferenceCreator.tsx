@@ -385,26 +385,36 @@ export function BaseReferenceCreator({
                                             key={key}
                                             control={control}
                                             name={
-                                                `bookSchema.${key}` as keyof z.infer<
+                                                `schema.${key}` as keyof z.infer<
                                                     typeof formSchema
                                                 >
                                             }
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>
-                                                        {key.replace(
-                                                            /([A-Z])/g,
-                                                            " $1",
-                                                        )}
+                                                        {key
+                                                            .replace(
+                                                                /([A-Z])/g,
+                                                                " $1",
+                                                            )
+                                                            .charAt(0)
+                                                            .toUpperCase() +
+                                                            key.slice(1)}
                                                         :
                                                     </FormLabel>
                                                     <FormControl className={""}>
                                                         {/*@ts-ignore*/}
                                                         <Input
-                                                            placeholder={key.replace(
-                                                                /([A-Z])/g,
-                                                                " $1",
-                                                            )}
+                                                            placeholder={
+                                                                key
+                                                                    .replace(
+                                                                        /([A-Z])/g,
+                                                                        " $1",
+                                                                    )
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                key.slice(1)
+                                                            }
                                                             {...field}
                                                         />
                                                     </FormControl>
