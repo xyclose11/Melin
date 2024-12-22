@@ -115,6 +115,7 @@ public class ReferenceController : ControllerBase
                     Id = reference.Id,
                     Type = reference.Type.ToString(),
                     Title = reference.Title,
+                    LocationStored = reference.LocationStored,
                     CreatedAt = reference.CreatedAt.ToString(CultureInfo.CurrentCulture),
                     UpdatedAt = reference.UpdatedAt.ToString(CultureInfo.CurrentCulture),
                     Creators = reference.Creators?.ToList(),

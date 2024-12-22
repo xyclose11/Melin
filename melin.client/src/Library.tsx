@@ -274,6 +274,30 @@ export function Library() {
             },
         },
         {
+            accessorKey: "locationStored",
+            header: ({ column }) => {
+                return (
+                    <div className={"flex"}>
+                        Location Stored
+                        <ArrowUpDown
+                            className="ml-2 h-4 w-4"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc",
+                                )
+                            }
+                        />
+                    </div>
+                );
+            },
+            cell: ({ row }) => (
+                <div className="capitalize">
+                    {row.getValue("locationStored")}
+                </div>
+            ),
+            enableSorting: true,
+        },
+        {
             accessorKey: "datePublished",
             header: ({ column }) => {
                 return (
