@@ -178,9 +178,7 @@ export function DraggableGroup({
             console.error(e);
         }
     };
-
-    console.log(childGroups);
-
+    
     return (
         <>
             <Card

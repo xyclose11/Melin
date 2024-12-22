@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ToastAction } from "@/components/ui/toast";
 import {
@@ -55,11 +55,10 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { AddTagToReference } from "@/Tag/AddTagToReference.tsx";
-import { getRouteApi, Link } from "@tanstack/react-router";
-import { useGroupSelection } from "@/Context/SelectedGroupContext.tsx";
-import { useQueryClient } from "@tanstack/react-query";
-import { fetchReferences } from "@/api/fetchReferences.ts";
+import { Link } from "@tanstack/react-router";
 import { Pagination } from "@/api/referencesQueryOptions.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { fetchReferences } from "@/api/fetchReferences.ts";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -89,7 +88,7 @@ export type Reference = {
     language: string;
 };
 
-export function Library() {
+export function Library({ initialData }: { initialData: Reference[] }) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
@@ -101,15 +100,8 @@ export function Library() {
     const { selectedReferences, toggleReference, clearSelection } =
         useReferenceSelection();
 
-    const { selectedGroup } = useGroupSelection();
-
-    const queryClient = useQueryClient();
-
-    const routeApi = getRouteApi("/library");
-    const t = routeApi.useLoaderData();
-    const refData = t.data.data;
-
-    const [data, setData] = React.useState<Reference[]>(refData);
+    // const { selectedGroup } = useGroupSelection();
+    const [data, setData] = React.useState<Reference[]>(initialData);
     const [pagination, setPagination] = useState<Pagination>({
         pageSize: 15,
         pageIndex: 0,
@@ -231,6 +223,15 @@ export function Library() {
                 const [tags, setTags] = useState<ReferenceTag[]>(
                     row.getValue("tags"),
                 );
+
+                const handleRemoveTag = (tagToRemoveId: any) => {
+                    const filteredTags = tags.filter((t) => {
+                        return t.id !== tagToRemoveId;
+                    });
+
+                    setTags(filteredTags);
+                };
+
                 return (
                     <div className={"max-w-[25%]"}>
                         <div className={"flex gap-1 flex-wrap"}>
@@ -247,6 +248,7 @@ export function Library() {
                                         }
                                         refId={row.original.id}
                                         name={tag.text}
+                                        handleRemoveTag={handleRemoveTag}
                                     />
                                 ))
                             )}
@@ -448,24 +450,13 @@ export function Library() {
         }
     };
 
-    useEffect(() => {
-        queryClient
-            .prefetchQuery({
-                queryKey: ["references", pagination.pageIndex + 1],
-                queryFn: () =>
-                    fetchReferences(
-                        {
-                            pageSize: pagination.pageSize,
-                            pageIndex: pagination.pageIndex + 1,
-                        },
-                        { groupNames: selectedGroup },
-                    ),
-            })
-            .then((r) => console.log(r));
-    }, [data, pagination, queryClient, selectedGroup]);
+    const { data: queryData, isPlaceholderData } = useQuery({
+        queryKey: ["references", pagination.pageIndex, pagination.pageSize],
+        queryFn: () => fetchReferences(pagination, null),
+    });
 
     const table = useReactTable({
-        data,
+        data: queryData?.data.data ?? data,
         columns,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -479,7 +470,7 @@ export function Library() {
         onPaginationChange: setPagination,
         columnResizeMode: "onEnd",
         columnResizeDirection: "rtl",
-        rowCount: data.length,
+        rowCount: queryData?.data.totalRecords ?? data.length,
         state: {
             sorting,
             columnFilters,
@@ -601,8 +592,17 @@ export function Library() {
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
+                            onClick={() => {
+                                setPagination((prev) => ({
+                                    ...prev,
+                                    pageIndex: prev.pageIndex - 1,
+                                }));
+                                table.previousPage();
+                            }}
+                            disabled={
+                                !table.getCanPreviousPage() ||
+                                pagination.pageIndex === 0
+                            }
                         >
                             Previous
                         </Button>
@@ -612,9 +612,13 @@ export function Library() {
                             onClick={() => {
                                 setPagination((prev) => ({
                                     ...prev,
-                                    pageIndex: prev.pageIndex + 1, // Increment pageIndex here
+                                    pageIndex: prev.pageIndex + 1,
                                 }));
+                                table.nextPage();
                             }}
+                            disabled={
+                                !table.getCanNextPage() || isPlaceholderData
+                            }
                         >
                             Next
                         </Button>

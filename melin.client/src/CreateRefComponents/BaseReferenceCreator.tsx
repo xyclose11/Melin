@@ -25,7 +25,7 @@ import {
     creatorFormSchema,
     CreatorInput,
 } from "@/CreateRefComponents/CreatorInput.tsx";
-import React, { useEffect } from "react";
+import React from "react";
 import {
     Popover,
     PopoverContent,
@@ -45,6 +45,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card.tsx";
+import { DevTool } from "@hookform/devtools";
 
 const rightsSchema = z.object({
     name: z.string().optional(),
@@ -75,8 +76,8 @@ export function BaseReferenceCreator({
     const navigate = useNavigate();
     const { toast } = useToast();
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof refSchema>>({
+        resolver: zodResolver(refSchema),
         defaultValues: {
             type: "0",
             title: "",
@@ -95,11 +96,12 @@ export function BaseReferenceCreator({
         return Math.floor(Math.random() * (max + 1));
     }
 
-    const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        const convertedTags = data.tags?.map((tag) => ({
+    const onSubmit = async (data: any) => {
+        const convertedTags = data.tags?.map((tag: any) => ({
             ...tag,
             id: generateRandom32BitInteger(),
         }));
+        console.log(data);
 
         const newData = {
             ...data,
@@ -108,7 +110,6 @@ export function BaseReferenceCreator({
 
         newData.type = schemaName;
 
-        console.log(newData);
         try {
             // figure out which reference type is being used
             const response = await instance.post(
@@ -156,17 +157,13 @@ export function BaseReferenceCreator({
         });
     }
 
-    useEffect(() => {
-        onClickAddCreator();
-    }, []);
-
     return (
         <div>
             <FormProvider {...form}>
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-2 gap-2 justify-items-start grid grid-cols-3"
+                        className="gap-2 justify-items-start grid grid-cols-2"
                     >
                         <Card>
                             <CardHeader className={"text-center"}>
@@ -176,11 +173,11 @@ export function BaseReferenceCreator({
                                 <TagCreateDropdown />
                             </CardContent>
                         </Card>
-                        <Card className={"col-span-2 m-0"}>
-                            <CardHeader className={"m-0"}>
+                        <Card className={"w-full"}>
+                            <CardHeader className={"text-center"}>
                                 <CardTitle>General Fields*</CardTitle>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className={"w-full"}>
                                 <FormField
                                     control={form.control}
                                     name="title"
@@ -365,44 +362,71 @@ export function BaseReferenceCreator({
                             </Card>
                         </div>
 
-                        <Card className={"col-span-3 w-full"}>
+                        <Card className={"col-span-2 w-full"}>
                             <CardHeader>
                                 <CardTitle>Reference Specific</CardTitle>
                             </CardHeader>
 
                             <CardContent className={"grid grid-cols-2 gap-4"}>
-                                {Object.keys(refSchema.shape).map((key) => (
-                                    <Controller
-                                        key={key}
-                                        control={control}
-                                        name={
-                                            `bookSchema.${key}` as keyof z.infer<
-                                                typeof formSchema
-                                            >
-                                        }
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    {key.replace(
-                                                        /([A-Z])/g,
-                                                        " $1",
-                                                    )}
-                                                    :
-                                                </FormLabel>
-                                                <FormControl className={""}>
-                                                    {/*@ts-ignore*/}
-                                                    <Input
-                                                        placeholder={key.replace(
-                                                            /([A-Z])/g,
-                                                            " $1",
-                                                        )}
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                ))}
+                                {Object.keys(refSchema.shape)
+                                    .filter((schemaField) => {
+                                        const excludedFields = [
+                                            "title",
+                                            "shortTitle",
+                                            "language",
+                                            "datePublished",
+                                            "creators",
+                                            "type",
+                                        ];
+                                        return !excludedFields.includes(
+                                            schemaField,
+                                        );
+                                    })
+                                    .map((key) => (
+                                        <Controller
+                                            key={key}
+                                            control={form.control}
+                                            name={
+                                                `${key}` as keyof z.infer<
+                                                    typeof formSchema
+                                                >
+                                            }
+                                            defaultValue={""}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        {key
+                                                            .replace(
+                                                                /([A-Z])/g,
+                                                                " $1",
+                                                            )
+                                                            .charAt(0)
+                                                            .toUpperCase() +
+                                                            key.slice(1)}
+                                                        :
+                                                    </FormLabel>
+                                                    <FormControl className={""}>
+                                                        {/*@ts-ignore*/}
+                                                        <Input
+                                                            placeholder={
+                                                                key
+                                                                    .replace(
+                                                                        /([A-Z])/g,
+                                                                        " $1",
+                                                                    )
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                key.slice(1)
+                                                            }
+                                                            {...form.register(
+                                                                field.name,
+                                                            )}
+                                                        />
+                                                    </FormControl>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    ))}
                             </CardContent>
                         </Card>
 
@@ -433,6 +457,7 @@ export function BaseReferenceCreator({
                     </form>
                 </Form>
             </FormProvider>
+            <DevTool control={control} />
         </div>
     );
 }

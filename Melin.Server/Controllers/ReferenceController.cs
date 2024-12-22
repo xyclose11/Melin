@@ -122,7 +122,7 @@ public class ReferenceController : ControllerBase
                     Tags = reference.Tags?.ToList(),
                     Language = reference.Language.ToString(),
                     DatePublished = reference.DatePublished.ToString(),
-                    GroupNames = reference.Groups?.ToList().ConvertAll<string>(g => g.Name)
+                    GroupNames = reference.Groups?.Select(g => g.Name).ToList()
                 };
                 output.Add(res);
             }

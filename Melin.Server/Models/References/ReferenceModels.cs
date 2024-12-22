@@ -31,7 +31,6 @@ public class AudioRecording : Reference
     public string? SeriesTitle { get; set; }
     [MaxLength(512)]
     public string? Volume { get; set; }
-    [Range(0, 99999, ErrorMessage = "Max number of volumes must be < than 100,000")]
     public int? NumberOfVolumes { get; set; }
     [MaxLength(512)]
     public string? Place { get; set; }
@@ -80,19 +79,15 @@ public class Book : Reference
     public string? Volume { get; set; } = "";
     [MaxLength(256)]
     public string? Issue { get; set; } = "";
-    [Range(1, 99999, ErrorMessage = "Max Pages are 99,999")]
     public int? Pages { get; set; } = 0;
     [MaxLength(256)]
     public string? Edition { get; set; } = "";
     [MaxLength(256)]
     public string? Series { get; set; } = "";
-    [Range(1, 99999, ErrorMessage = "Max Series Number is 99,999")]
     public int? SeriesNumber { get; set; } = 0;
     [MaxLength(256)]
     public string? SeriesTitle { get; set; } = "";
-    [Range(1, 99999, ErrorMessage = "Max Volume Amount is 99,999")]
     public int? VolumeAmount { get; set; } = 0;
-    [Range(1, 99999, ErrorMessage = "Max Page Amount is 99,999")]
     public int? PageAmount { get; set; } = 0;
     [MaxLength(256)]
     public string? Section { get; set; } = "";
@@ -114,11 +109,9 @@ public class BookSection : Reference
     public string? BookTitle { get; set; } = "publicationTitle";
     [MaxLength(256)]
     public string? Series { get; set; }
-    [Range(1, 99999, ErrorMessage = "Max Series Number is 99,999")]
     public int? SeriesNumber { get; set; }
     [MaxLength(256)]
     public string? Volume { get; set; }
-    [Range(1, 99999, ErrorMessage = "Max Number of Volumes is 99,999")]
     public int? NumberOfVolumes { get; set; }
     [MaxLength(256)]
     public string? Edition { get; set; }
@@ -167,7 +160,6 @@ public class DictionaryEntry : Reference
     public string? DictionaryTitle { get; set; } = "publicationTitle";
     [MaxLength(256)]
     public string? Series { get; set; }
-    [Range(1, 99999, ErrorMessage = "Max Series Number is 99,999")]
     public int? SeriesNumber { get; set; }
     [MaxLength(256)]
     public string? Volume { get; set; }

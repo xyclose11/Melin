@@ -135,7 +135,6 @@ export const columns: ColumnDef<Group>[] = [
                             withCredentials: true,
                         },
                     );
-                    console.log(response);
                 } catch (error) {
                     console.error("Unable to delete group:", error);
                 }
@@ -193,7 +192,6 @@ export function GroupLibrary() {
                     withCredentials: true,
                 },
             );
-            console.log(response);
             setData(response.data);
             setTotalGroup(response.data.TotalPages);
         } catch (error) {

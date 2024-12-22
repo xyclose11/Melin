@@ -54,9 +54,7 @@ export function AddTagToReference({
                     withCredentials: true,
                 },
             );
-
-            console.log(response);
-
+            
             response.data.map(
                 (t: {
                     id: number | string;
@@ -94,9 +92,7 @@ export function AddTagToReference({
                     withCredentials: true,
                 },
             );
-
-            console.log(response);
-
+            
             response.data.map(
                 (t: {
                     id: number | string;
