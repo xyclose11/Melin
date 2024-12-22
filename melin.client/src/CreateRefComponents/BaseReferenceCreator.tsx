@@ -45,6 +45,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card.tsx";
+import { DevTool } from "@hookform/devtools";
 
 const rightsSchema = z.object({
     name: z.string().optional(),
@@ -75,8 +76,8 @@ export function BaseReferenceCreator({
     const navigate = useNavigate();
     const { toast } = useToast();
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof refSchema>>({
+        resolver: zodResolver(refSchema),
         defaultValues: {
             type: "0",
             title: "",
@@ -95,11 +96,12 @@ export function BaseReferenceCreator({
         return Math.floor(Math.random() * (max + 1));
     }
 
-    const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        const convertedTags = data.tags?.map((tag) => ({
+    const onSubmit = async (data: any) => {
+        const convertedTags = data.tags?.map((tag: any) => ({
             ...tag,
             id: generateRandom32BitInteger(),
         }));
+        console.log(data);
 
         const newData = {
             ...data,
@@ -383,12 +385,13 @@ export function BaseReferenceCreator({
                                     .map((key) => (
                                         <Controller
                                             key={key}
-                                            control={control}
+                                            control={form.control}
                                             name={
-                                                `schema.${key}` as keyof z.infer<
+                                                `${key}` as keyof z.infer<
                                                     typeof formSchema
                                                 >
                                             }
+                                            defaultValue={""}
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>
@@ -415,7 +418,9 @@ export function BaseReferenceCreator({
                                                                     .toUpperCase() +
                                                                 key.slice(1)
                                                             }
-                                                            {...field}
+                                                            {...form.register(
+                                                                field.name,
+                                                            )}
                                                         />
                                                     </FormControl>
                                                 </FormItem>
@@ -452,6 +457,7 @@ export function BaseReferenceCreator({
                     </form>
                 </Form>
             </FormProvider>
+            <DevTool control={control} />
         </div>
     );
 }
