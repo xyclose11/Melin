@@ -2,10 +2,8 @@
 
 export function Workspace() {
     return (
-        <div className="ml-12 mr-36 justify-center">
-            <div className="flex">
-                <Outlet />
-            </div>
+        <div className="ml-12 flex justify-center">
+            <Outlet />
         </div>
     );
 }

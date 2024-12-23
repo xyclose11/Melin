@@ -1,11 +1,10 @@
 import { Workspace } from "@/Workspace.tsx";
-import { WorkspaceToolBar } from "@/CustomComponents/WorkspaceToolBar.tsx";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar.tsx";
 import React from "react";
 import { NavBar } from "@/Layout.tsx";
 import { Toaster } from "@/components/ui/toaster";
 import { useAuth } from "@/utils/AuthProvider.tsx";
 import { Outlet } from "@tanstack/react-router";
+import { Footer } from "@/Footer.tsx";
 
 export default function Root({ children }: { children: React.ReactNode }) {
     const { isAuthenticated } = useAuth();
@@ -26,6 +25,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
                         <Toaster />
                     </main>
                 )}
+                <Footer />
             </div>
         </>
     );

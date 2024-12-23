@@ -1,4 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
+import { Features } from "@/index/Features.tsx";
 
 export const Route = createLazyFileRoute("/")({
     component: RouteComponent,
@@ -6,9 +7,10 @@ export const Route = createLazyFileRoute("/")({
 
 function RouteComponent() {
     return (
-        <>
+        <div>
             <Hero32 />
-        </>
+            <Features />
+        </div>
     );
 }
 
