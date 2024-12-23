@@ -6,13 +6,9 @@ import { NavBar } from "@/Layout.tsx";
 import { Toaster } from "@/components/ui/toaster";
 import { useAuth } from "@/utils/AuthProvider.tsx";
 import { Outlet } from "@tanstack/react-router";
-import { useCookies } from "react-cookie";
 
 export default function Root({ children }: { children: React.ReactNode }) {
     const { isAuthenticated } = useAuth();
-
-    const [cookies] = useCookies(["sidebar:state"]);
-    const defaultOpen = cookies["sidebar:state"];
 
     return (
         <>
@@ -25,16 +21,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
                         <Outlet />
                     </main>
                 ) : (
-                    <SidebarProvider defaultOpen={defaultOpen}>
-                        <WorkspaceToolBar />
-                        <main className={"mt-16 p-2"}>
-                            <SidebarTrigger>
-                                <Outlet />
-                            </SidebarTrigger>
-                            <Workspace />
-                        </main>
+                    <main className={"mt-16 p-2"}>
+                        <Workspace />
                         <Toaster />
-                    </SidebarProvider>
+                    </main>
                 )}
             </div>
         </>

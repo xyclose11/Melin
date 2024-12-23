@@ -318,7 +318,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
             },
             cell: ({ row }) => (
                 <div className="capitalize">
-                    {formatRowDate(row.getValue("datePublished"))}
+                    {row.getValue("datePublished")}
                 </div>
             ),
             enableSorting: true,

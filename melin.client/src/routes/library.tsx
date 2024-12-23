@@ -1,6 +1,9 @@
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { LibraryPage } from "@/LibraryPage.tsx";
 import { referencesQueryOptions } from "@/api/referencesQueryOptions.tsx";
+import { useCookies } from "react-cookie";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar.tsx";
+import { WorkspaceToolBar } from "@/CustomComponents/WorkspaceToolBar.tsx";
 
 export const Route = createFileRoute("/library")({
     loaderDeps: ({ search: { pageIndex, pageSize } }) => ({
@@ -16,9 +19,17 @@ export const Route = createFileRoute("/library")({
 
 function LibraryRoute() {
     const loaderData = useLoaderData({ from: Route.id });
+
+    const [cookies] = useCookies(["sidebar:state"]);
+    const defaultOpen = cookies["sidebar:state"];
+
     return (
-        <>
-            <LibraryPage initialData={loaderData.data.data} />
-        </>
+        <div>
+            <SidebarProvider defaultOpen={defaultOpen}>
+                <WorkspaceToolBar />
+                <SidebarTrigger />
+                <LibraryPage initialData={loaderData.data.data} />
+            </SidebarProvider>
+        </div>
     );
 }
