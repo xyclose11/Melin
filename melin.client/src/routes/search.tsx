@@ -1,11 +1,11 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import {
     Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
-    CardContent,
-    CardFooter,
-    CardDescription,
 } from "@/components/ui/card.tsx";
 import {
     Form,
@@ -20,6 +20,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { instance } from "@/utils/axiosInstance.ts";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/search")({
     component: SearchComponent,
@@ -31,6 +34,22 @@ const searchSchema = z.object({
     }),
 });
 
+function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [value, delay]);
+
+    return debouncedValue;
+}
+
 function SearchComponent() {
     const form = useForm<z.infer<typeof searchSchema>>({
         resolver: zodResolver(searchSchema),
@@ -39,9 +58,27 @@ function SearchComponent() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof searchSchema>) {
-        console.log(values);
-    }
+    const debouncedInputValue = useDebounce(form.getValues().searchQuery, 4000);
+
+    const { isLoading, isError, data } = useQuery({
+        queryKey: ["search", debouncedInputValue],
+        queryFn: async () => {
+            return await fetchSearchParams(form.getValues().searchQuery);
+        },
+        staleTime: 15000,
+    });
+
+    const fetchSearchParams = async (searchParams: string) => {
+        const res = await instance.get(
+            `https://openlibrary.org/search.json?q=${searchParams}`,
+        );
+        if (res.status === 200) {
+            console.log(res.data);
+            return res.data;
+        } else {
+            return "";
+        }
+    };
 
     return (
         <div className="w-full flex justify-center items-center">
@@ -54,10 +91,7 @@ function SearchComponent() {
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-8"
-                        >
+                        <form className="space-y-8">
                             <FormField
                                 control={form.control}
                                 name="searchQuery"
@@ -77,8 +111,19 @@ function SearchComponent() {
                             <Button type="submit">Search</Button>
                         </form>
                     </Form>
+                    {data && (
+                        <ul>
+                            {data.docs.map((doc) => {
+                                return <li>{doc.title}</li>;
+                            })}
+                        </ul>
+                    )}
                 </CardContent>
-                <CardFooter>Footer</CardFooter>
+                <CardFooter>
+                    {isError && <p>Error fetching data</p>}
+
+                    {isLoading && <p>Loading...</p>}
+                </CardFooter>
             </Card>
         </div>
     );
