@@ -23,11 +23,12 @@ export const Features = () => (
                         <BookOpenText size={28} strokeWidth={1} />
                         <div className="flex flex-col">
                             <h3 className="text-xl tracking-tight">
-                                Pay supplier invoices
+                                Track Academic References
                             </h3>
                             <p className="text-muted-foreground max-w-xs text-base">
-                                Our goal is to streamline SMB trade, making it
-                                easier and faster than ever.
+                                Melin is designed to make the process of
+                                creating references as easy and fast as
+                                possible.
                             </p>
                         </div>
                     </div>
@@ -36,11 +37,69 @@ export const Features = () => (
                         <BookOpenText size={28} strokeWidth={1} />
                         <div className="flex flex-col">
                             <h3 className="text-xl tracking-tight">
-                                Pay supplier invoices
+                                Import/Export
                             </h3>
                             <p className="text-muted-foreground max-w-xs text-base">
-                                Our goal is to streamline SMB trade, making it
-                                easier and faster than ever.
+                                The process of finding the perfect reference
+                                management system is time-consuming, with that
+                                in mind Melin is able to import and export in 3
+                                formats: CSV, CSL-JSON, and BibLaTex
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
+                        <BookOpenText size={28} strokeWidth={1} />
+                        <Badge
+                            variant="secondary"
+                            className="w-full justify-center text-center"
+                        >
+                            Coming Soon
+                        </Badge>
+                        <div className="flex flex-col">
+                            <h3 className="text-xl tracking-tight">
+                                Collaborate with colleagues
+                            </h3>
+                            <p className="text-muted-foreground max-w-xs text-base">
+                                Invite team-members to edit documents, reference
+                                lists, and more!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
+                        <BookOpenText size={28} strokeWidth={1} />
+                        <Badge
+                            variant="secondary"
+                            className="w-full justify-center text-center"
+                        >
+                            Coming Soon
+                        </Badge>
+                        <div className="flex flex-col">
+                            <h3 className="text-xl tracking-tight">
+                                10,000+ Citation Styles
+                            </h3>
+                            <p className="text-muted-foreground max-w-xs text-base">
+                                Melin has the ability to generate citations and
+                                bibliographies based on the references provided
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
+                        <BookOpenText size={28} strokeWidth={1} />
+                        <Badge
+                            variant="secondary"
+                            className="w-full justify-center text-center"
+                        >
+                            Coming Soon
+                        </Badge>
+                        <div className="flex flex-col">
+                            <h3 className="text-xl tracking-tight">Search</h3>
+                            <p className="text-muted-foreground max-w-xs text-base">
+                                Melin utilizes several API providers to provide
+                                responsive yet integral data, based on multiple
+                                search parameters.
                             </p>
                         </div>
                     </div>
@@ -49,76 +108,51 @@ export const Features = () => (
                         <BookOpenText size={28} strokeWidth={1} />
                         <div className="flex flex-col">
                             <h3 className="text-xl tracking-tight">
-                                Pay supplier invoices
+                                Open Source
                             </h3>
                             <p className="text-muted-foreground max-w-xs text-base">
-                                Our goal is to streamline SMB trade, making it
-                                easier and faster than ever.
+                                Melin is 100% open source and can be found on
+                                GitHub
                             </p>
                         </div>
                     </div>
 
                     <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
                         <BookOpenText size={28} strokeWidth={1} />
+                        <Badge
+                            variant="secondary"
+                            className="w-full justify-center text-center"
+                        >
+                            Coming Soon
+                        </Badge>
                         <div className="flex flex-col">
                             <h3 className="text-xl tracking-tight">
-                                Pay supplier invoices
+                                QR Scanning
                             </h3>
                             <p className="text-muted-foreground max-w-xs text-base">
-                                Our goal is to streamline SMB trade, making it
-                                easier and faster than ever.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
-                        <BookOpenText size={28} strokeWidth={1} />
-                        <div className="flex flex-col">
-                            <h3 className="text-xl tracking-tight">
-                                Pay supplier invoices
-                            </h3>
-                            <p className="text-muted-foreground max-w-xs text-base">
-                                Our goal is to streamline SMB trade, making it
-                                easier and faster than ever.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
-                        <BookOpenText size={28} strokeWidth={1} />
-                        <div className="flex flex-col">
-                            <h3 className="text-xl tracking-tight">
-                                Pay supplier invoices
-                            </h3>
-                            <p className="text-muted-foreground max-w-xs text-base">
-                                Our goal is to streamline SMB trade, making it
-                                easier and faster than ever.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
-                        <BookOpenText size={28} strokeWidth={1} />
-                        <div className="flex flex-col">
-                            <h3 className="text-xl tracking-tight">
-                                Pay supplier invoices
-                            </h3>
-                            <p className="text-muted-foreground max-w-xs text-base">
-                                Our goal is to streamline SMB trade, making it
-                                easier and faster than ever.
+                                Scan any QR code that resembles an ISBN, ISSN,
+                                or DOI and Melin will import the applicable
+                                information.
                             </p>
                         </div>
                     </div>
 
                     <div className="bg-muted h-full rounded-md p-6 flex justify-between flex-col lg:col-span-2">
                         <BookOpenText size={28} strokeWidth={1} />
+                        <Badge
+                            variant="secondary"
+                            className="w-full justify-center text-center"
+                        >
+                            Coming Soon
+                        </Badge>
                         <div className="flex flex-col">
                             <h3 className="text-xl tracking-tight">
-                                Pay supplier invoices
+                                Custom Fields
                             </h3>
                             <p className="text-muted-foreground max-w-xs text-base">
-                                Our goal is to streamline SMB trade, making it
-                                easier and faster than ever.
+                                Don't like the structured format of the Book
+                                type? With Melin you can add your own fields to
+                                better fit your References.
                             </p>
                         </div>
                     </div>
