@@ -1,4 +1,13 @@
-import { BookOpenText, User } from "lucide-react";
+import {
+    ArrowDownUp,
+    BookOpenText,
+    GitPullRequest,
+    QrCode,
+    RectangleEllipsis,
+    ScrollText,
+    SearchCheck,
+    UsersRound,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export const Features = () => (
@@ -34,7 +43,7 @@ export const Features = () => (
                     </div>
 
                     <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
-                        <BookOpenText size={28} strokeWidth={1} />
+                        <ArrowDownUp size={28} strokeWidth={1} />
                         <div className="flex flex-col">
                             <h3 className="text-xl tracking-tight">
                                 Import/Export
@@ -49,7 +58,7 @@ export const Features = () => (
                     </div>
 
                     <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
-                        <BookOpenText size={28} strokeWidth={1} />
+                        <UsersRound size={28} strokeWidth={1} />
                         <Badge
                             variant="secondary"
                             className="w-full justify-center text-center"
@@ -68,7 +77,7 @@ export const Features = () => (
                     </div>
 
                     <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
-                        <BookOpenText size={28} strokeWidth={1} />
+                        <ScrollText size={28} strokeWidth={1} />
                         <Badge
                             variant="secondary"
                             className="w-full justify-center text-center"
@@ -87,7 +96,7 @@ export const Features = () => (
                     </div>
 
                     <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
-                        <BookOpenText size={28} strokeWidth={1} />
+                        <SearchCheck size={28} strokeWidth={1} />
                         <Badge
                             variant="secondary"
                             className="w-full justify-center text-center"
@@ -105,7 +114,7 @@ export const Features = () => (
                     </div>
 
                     <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
-                        <BookOpenText size={28} strokeWidth={1} />
+                        <GitPullRequest size={28} strokeWidth={1} />{" "}
                         <div className="flex flex-col">
                             <h3 className="text-xl tracking-tight">
                                 Open Source
@@ -118,7 +127,7 @@ export const Features = () => (
                     </div>
 
                     <div className="bg-muted h-full rounded-md aspect-square p-6 flex justify-between flex-col">
-                        <BookOpenText size={28} strokeWidth={1} />
+                        <QrCode size={28} strokeWidth={1} />
                         <Badge
                             variant="secondary"
                             className="w-full justify-center text-center"
@@ -138,7 +147,7 @@ export const Features = () => (
                     </div>
 
                     <div className="bg-muted h-full rounded-md p-6 flex justify-between flex-col lg:col-span-2">
-                        <BookOpenText size={28} strokeWidth={1} />
+                        <RectangleEllipsis size={28} strokeWidth={1} />
                         <Badge
                             variant="secondary"
                             className="w-full justify-center text-center"
