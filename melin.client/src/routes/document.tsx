@@ -1,7 +1,8 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button.tsx";
 import Connector from "../DocumentEditing/documentActions.ts";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
+
 export const Route = createFileRoute("/document")({
     component: DocumentComponent,
 });
@@ -11,8 +12,12 @@ function DocumentComponent() {
     const [message, setMessage] = useState("initial value");
 
     useEffect(() => {
-        console.log(message);
-        events((_, message) => setMessage(message));
+        const handleMessageReceived = (_: any, message: string) =>
+            setMessage(message);
+
+        // const handleNewConnectionReceived = ()
+
+        // events(handleMessageReceived);
     }, []);
 
     return (

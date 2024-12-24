@@ -4,6 +4,7 @@ class Connector {
     private connection: signalR.HubConnection;
     public events: (
         onMessageReceived: (username: string, message: string) => void,
+        onNewConnection: () => void,
     ) => void;
     static instance: Connector;
     constructor() {
@@ -12,17 +13,21 @@ class Connector {
             .withAutomaticReconnect()
             .build();
         this.connection.start().catch((err) => document.write(err));
-        this.events = (onMessageReceived) => {
+        this.events = (onMessageReceived, onNewConnection) => {
             this.connection.on("messageReceived", (username, message) => {
                 onMessageReceived(username, message);
+            });
+            this.connection.on("", () => {
+                onNewConnection();
             });
         };
     }
     public newMessage = (messages: string) => {
         this.connection
-            .send("NewMessage", "foo", messages)
+            .send("NewMessage", messages)
             .then(() => console.log("sent"));
     };
+
     public static getInstance(): Connector {
         if (!Connector.instance) Connector.instance = new Connector();
         return Connector.instance;

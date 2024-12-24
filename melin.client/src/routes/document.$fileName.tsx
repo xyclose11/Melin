@@ -16,9 +16,14 @@ function DocumentComponent() {
     const [message, setMessage] = useState("initial value");
 
     useEffect(() => {
-        console.log(message);
-        events((_, message) => setMessage(message));
+        const handleMessageReceived = (_: any, message: string) =>
+            setMessage(message);
+
+        const handleNewConnectionReceived = () => {};
+
+        events(handleMessageReceived);
     }, []);
+
     return (
         <div>
             <span>
