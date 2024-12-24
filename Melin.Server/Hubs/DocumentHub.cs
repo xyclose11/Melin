@@ -9,4 +9,9 @@ public class DocumentHub : Hub
         await Clients.All.SendAsync("messageReceived", user, message);
     }
 
+    public async Task ChangeMade()
+    {
+        
+    }
+
 }

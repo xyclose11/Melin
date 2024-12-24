@@ -21,7 +21,7 @@ class Connector {
     public newMessage = (messages: string) => {
         this.connection
             .send("NewMessage", "foo", messages)
-            .then((x) => console.log("sent"));
+            .then(() => console.log("sent"));
     };
     public static getInstance(): Connector {
         if (!Connector.instance) Connector.instance = new Connector();
