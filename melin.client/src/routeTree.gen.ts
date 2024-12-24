@@ -14,7 +14,8 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LibraryImport } from './routes/library'
-import { Route as ReferencesRefIdImport } from './routes/references.$refId'
+import { Route as DocumentImport } from './routes/document'
+import { Route as DocumentDocIdImport } from './routes/document.$docId'
 import { Route as authAuthImport } from './routes/(auth)/_auth'
 import { Route as referenceEditReferenceRefIdImport } from './routes/(reference)/edit-reference.$refId'
 import { Route as authAuthAdminDashboardImport } from './routes/(auth)/_auth.admin-dashboard'
@@ -49,6 +50,12 @@ const ContactLazyRoute = ContactLazyImport.update({
 const LibraryRoute = LibraryImport.update({
   id: '/library',
   path: '/library',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DocumentRoute = DocumentImport.update({
+  id: '/document',
+  path: '/document',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -110,10 +117,10 @@ const authLoginLazyRoute = authLoginLazyImport
   } as any)
   .lazy(() => import('./routes/(auth)/login.lazy').then((d) => d.Route))
 
-const ReferencesRefIdRoute = ReferencesRefIdImport.update({
-  id: '/references/$refId',
-  path: '/references/$refId',
-  getParentRoute: () => rootRoute,
+const DocumentDocIdRoute = DocumentDocIdImport.update({
+  id: '/$docId',
+  path: '/$docId',
+  getParentRoute: () => DocumentRoute,
 } as any)
 
 const authAuthRoute = authAuthImport.update({
@@ -145,6 +152,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/document': {
+      id: '/document'
+      path: '/document'
+      fullPath: '/document'
+      preLoaderRoute: typeof DocumentImport
+      parentRoute: typeof rootRoute
+    }
     '/library': {
       id: '/library'
       path: '/library'
@@ -173,12 +187,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authAuthImport
       parentRoute: typeof authRoute
     }
-    '/references/$refId': {
-      id: '/references/$refId'
-      path: '/references/$refId'
-      fullPath: '/references/$refId'
-      preLoaderRoute: typeof ReferencesRefIdImport
-      parentRoute: typeof rootRoute
+    '/document/$docId': {
+      id: '/document/$docId'
+      path: '/$docId'
+      fullPath: '/document/$docId'
+      preLoaderRoute: typeof DocumentDocIdImport
+      parentRoute: typeof DocumentImport
     }
     '/(auth)/login': {
       id: '/(auth)/login'
@@ -241,6 +255,18 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface DocumentRouteChildren {
+  DocumentDocIdRoute: typeof DocumentDocIdRoute
+}
+
+const DocumentRouteChildren: DocumentRouteChildren = {
+  DocumentDocIdRoute: DocumentDocIdRoute,
+}
+
+const DocumentRouteWithChildren = DocumentRoute._addFileChildren(
+  DocumentRouteChildren,
+)
+
 interface authAuthRouteChildren {
   authAuthAdminDashboardRoute: typeof authAuthAdminDashboardRoute
 }
@@ -275,9 +301,10 @@ const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof authAuthRouteWithChildren
+  '/document': typeof DocumentRouteWithChildren
   '/library': typeof LibraryRoute
   '/contact': typeof ContactLazyRoute
-  '/references/$refId': typeof ReferencesRefIdRoute
+  '/document/$docId': typeof DocumentDocIdRoute
   '/login': typeof authLoginLazyRoute
   '/logout': typeof authLogoutLazyRoute
   '/reset-password': typeof authResetPasswordLazyRoute
@@ -290,9 +317,10 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof authAuthRouteWithChildren
+  '/document': typeof DocumentRouteWithChildren
   '/library': typeof LibraryRoute
   '/contact': typeof ContactLazyRoute
-  '/references/$refId': typeof ReferencesRefIdRoute
+  '/document/$docId': typeof DocumentDocIdRoute
   '/login': typeof authLoginLazyRoute
   '/logout': typeof authLogoutLazyRoute
   '/reset-password': typeof authResetPasswordLazyRoute
@@ -306,11 +334,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/document': typeof DocumentRouteWithChildren
   '/library': typeof LibraryRoute
   '/contact': typeof ContactLazyRoute
   '/(auth)': typeof authRouteWithChildren
   '/(auth)/_auth': typeof authAuthRouteWithChildren
-  '/references/$refId': typeof ReferencesRefIdRoute
+  '/document/$docId': typeof DocumentDocIdRoute
   '/(auth)/login': typeof authLoginLazyRoute
   '/(auth)/logout': typeof authLogoutLazyRoute
   '/(auth)/reset-password': typeof authResetPasswordLazyRoute
@@ -325,9 +354,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/document'
     | '/library'
     | '/contact'
-    | '/references/$refId'
+    | '/document/$docId'
     | '/login'
     | '/logout'
     | '/reset-password'
@@ -339,9 +369,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/document'
     | '/library'
     | '/contact'
-    | '/references/$refId'
+    | '/document/$docId'
     | '/login'
     | '/logout'
     | '/reset-password'
@@ -353,11 +384,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/document'
     | '/library'
     | '/contact'
     | '/(auth)'
     | '/(auth)/_auth'
-    | '/references/$refId'
+    | '/document/$docId'
     | '/(auth)/login'
     | '/(auth)/logout'
     | '/(auth)/reset-password'
@@ -371,20 +403,20 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  DocumentRoute: typeof DocumentRouteWithChildren
   LibraryRoute: typeof LibraryRoute
   ContactLazyRoute: typeof ContactLazyRoute
   authRoute: typeof authRouteWithChildren
-  ReferencesRefIdRoute: typeof ReferencesRefIdRoute
   referenceCreateReferenceLazyRoute: typeof referenceCreateReferenceLazyRoute
   referenceEditReferenceRefIdRoute: typeof referenceEditReferenceRefIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  DocumentRoute: DocumentRouteWithChildren,
   LibraryRoute: LibraryRoute,
   ContactLazyRoute: ContactLazyRoute,
   authRoute: authRouteWithChildren,
-  ReferencesRefIdRoute: ReferencesRefIdRoute,
   referenceCreateReferenceLazyRoute: referenceCreateReferenceLazyRoute,
   referenceEditReferenceRefIdRoute: referenceEditReferenceRefIdRoute,
 }
@@ -400,16 +432,22 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/document",
         "/library",
         "/contact",
         "/(auth)",
-        "/references/$refId",
         "/(reference)/create-reference",
         "/(reference)/edit-reference/$refId"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
+    },
+    "/document": {
+      "filePath": "document.tsx",
+      "children": [
+        "/document/$docId"
+      ]
     },
     "/library": {
       "filePath": "library.tsx"
@@ -435,8 +473,9 @@ export const routeTree = rootRoute
         "/(auth)/_auth/admin-dashboard"
       ]
     },
-    "/references/$refId": {
-      "filePath": "references.$refId.tsx"
+    "/document/$docId": {
+      "filePath": "document.$docId.tsx",
+      "parent": "/document"
     },
     "/(auth)/login": {
       "filePath": "(auth)/login.lazy.tsx",

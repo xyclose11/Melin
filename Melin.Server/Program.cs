@@ -1,7 +1,6 @@
-using System.Text.Json.Serialization;
-using Melin.Server;
 using Melin.Server.Data;
 using Melin.Server.Filter;
+using Melin.Server.Hubs;
 using Melin.Server.JSONInputFormatter;
 using Melin.Server.Middleware;
 using Melin.Server.Models;
@@ -159,8 +158,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<AuthorizationFilter>();
 });
 
-
-
+builder.Services.AddSignalR();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -209,6 +207,7 @@ if (builder.Environment.IsProduction())
 {
     app.UseSpaStaticFiles();
 }
+
 
 app.UseSpa(spa => {});
 
@@ -281,5 +280,7 @@ using (var scope = app.Services.CreateScope())
         await userManager.AddToRoleAsync(user, "Admin");
     }
 }
+
+app.MapHub<DocumentHub>("/document");
 
 app.Run();
