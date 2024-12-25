@@ -7,6 +7,7 @@ using Melin.Server.Models;
 using Melin.Server.Models.Binders;
 using Melin.Server.Models.Context;
 using Melin.Server.Models.Repository;
+using Melin.Server.Models.User;
 using Melin.Server.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpLogging;
@@ -173,7 +174,7 @@ builder.Services.AddAuthentication()
     
 builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
@@ -209,9 +210,9 @@ if (builder.Environment.IsProduction())
 }
 
 
-app.UseSpa(spa => {});
+app.UseSpa(_ => {});
 
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<ApplicationUser>();
 
 app.UseCors();
 app.UseCookiePolicy();
@@ -252,7 +253,7 @@ using (var scope = app.Services.CreateScope())
 // Create default Admin account *** IF CREATING NEW PROJECT ENSURE CREDENTIALS ARE CHANGED ***
 using (var scope = app.Services.CreateScope())
 {
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
     const string email = "melinAdmin@admin.com";
 
@@ -263,7 +264,7 @@ using (var scope = app.Services.CreateScope())
     // Checking if Admin account already exists to not create duplicate/overwrite account
     if (await userManager.FindByEmailAsync(email) == null)
     {
-        var user = new IdentityUser
+        var user = new ApplicationUser
         {
             UserName = email,
             Email = email,

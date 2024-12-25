@@ -34,7 +34,7 @@ namespace Melin.Server.Migrations
 
                     b.HasIndex("ReferencesId");
 
-                    b.ToTable("GroupReference");
+                    b.ToTable("GroupReference", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Creator", b =>
@@ -65,7 +65,7 @@ namespace Melin.Server.Migrations
 
                     b.HasIndex("ReferenceId");
 
-                    b.ToTable("Creators");
+                    b.ToTable("Creators", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Group", b =>
@@ -106,7 +106,7 @@ namespace Melin.Server.Migrations
 
                     b.HasIndex("ParentGroupId");
 
-                    b.ToTable("Group");
+                    b.ToTable("Group", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Reference", b =>
@@ -179,7 +179,7 @@ namespace Melin.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reference");
+                    b.ToTable("Reference", (string)null);
 
                     b.HasDiscriminator().HasValue("Reference");
 
@@ -215,7 +215,7 @@ namespace Melin.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("ReferenceTag", b =>
@@ -230,7 +230,7 @@ namespace Melin.Server.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("ReferenceTag");
+                    b.ToTable("ReferenceTag", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.References.Artwork", b =>
@@ -414,7 +414,7 @@ namespace Melin.Server.Migrations
                     b.Property<int?>("VolumeAmount")
                         .HasColumnType("integer");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Place")
                                 .HasColumnName("Book_Place");
@@ -478,7 +478,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("BookTitle")
                                 .HasColumnName("BookSection_BookTitle");
@@ -554,7 +554,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("ISBN")
                                 .HasColumnName("ConferencePaper_ISBN");
@@ -625,7 +625,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("DictionaryEntry_Date");
@@ -673,7 +673,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Document_Date");
@@ -697,7 +697,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Email_Date");
@@ -754,7 +754,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("EncyclopediaArticle_Date");
@@ -814,7 +814,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Film_Date");
@@ -881,7 +881,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("History")
                                 .HasColumnName("Hearing_History");
@@ -974,7 +974,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("DOI")
                                 .HasColumnName("JournalArticle_DOI");
@@ -1039,7 +1039,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("History")
                                 .HasColumnName("LegalCases_History");
@@ -1113,7 +1113,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("BillNumber")
                                 .HasColumnName("Legislation_BillNumber");
@@ -1161,7 +1161,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Letter_Date");
@@ -1198,7 +1198,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("MagazineArticle_Date");
@@ -1242,7 +1242,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Manuscript_Date");
@@ -1290,7 +1290,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Map_Date");
@@ -1352,7 +1352,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("NewspaperArticle_Date");
@@ -1444,7 +1444,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("RunningTime")
                                 .HasColumnName("Podcast_RunningTime");
@@ -1476,7 +1476,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Presentation_Date");
@@ -1507,7 +1507,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Medium")
                                 .HasColumnName("PrimarySource_Medium");
@@ -1551,7 +1551,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("AudioRecordingFormat")
                                 .HasColumnName("RadioBroadcast_AudioRecordingFormat");
@@ -1620,7 +1620,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Distributor")
                                 .HasColumnName("Recording_Distributor");
@@ -1679,7 +1679,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Report_Date");
@@ -1729,7 +1729,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Software_Date");
@@ -1784,7 +1784,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Code")
                                 .HasColumnName("Statute_Code");
@@ -1849,7 +1849,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("TVBroadcast_Date");
@@ -1900,7 +1900,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Thesis_Date");
@@ -1955,7 +1955,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("VideoRecording_Date");
@@ -2012,7 +2012,7 @@ namespace Melin.Server.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
-                    b.ToTable("Reference", t =>
+                    b.ToTable("Reference", null, t =>
                         {
                             t.Property("Date")
                                 .HasColumnName("Website_Date");
