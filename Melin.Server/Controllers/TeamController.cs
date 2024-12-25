@@ -1,5 +1,4 @@
 ﻿using Melin.Server.Models;
-using Melin.Server.Models.DTO;
 using Melin.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,8 +33,68 @@ public class TeamController : ControllerBase
 
         return Ok(res);
     }
-    
-    [HttpPost]
+
+    [HttpPost("create")]
     [Authorize]
-    public async Task
+    public async Task<IActionResult> CreateTeam([FromBody] Team team)
+    {
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+
+        var res = await _teamService.CreateTeam(User.Identity.Name, team);
+
+        if (res)
+        {
+            return Ok();
+        }
+        
+        return BadRequest("Unable to create new Team");
+    }
+
+    [HttpPut]
+    [Authorize]
+    public async Task<IActionResult> UpdateTeam([FromBody] Team updatedTeam, string existingTeamName)
+    {
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+
+        var existingTeam = await _teamService.GetTeamByNameAsync(User.Identity.Name, existingTeamName);
+        
+        if (existingTeam == null)
+        {
+            return NotFound("Existing Team Not Found");
+        }
+        
+        var res = await _teamService.UpdateTeam(User.Identity.Name, existingTeam, updatedTeam);
+
+        if (res)
+        {
+            return Ok();
+        }
+
+        return BadRequest();
+    }
+
+    [HttpDelete("delete")]
+    [Authorize]
+    public async Task<IActionResult> DeleteTeam([FromQuery] string teamName)
+    {
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+
+        var res = await _teamService.DeleteTeam(User.Identity.Name, teamName);
+
+        if (res)
+        {
+            return Ok("Team Deleted Successfully");
+        }
+
+        return BadRequest("Team Unable to be Deleted");
+    }
 }
