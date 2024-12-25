@@ -1,4 +1,5 @@
-﻿using Melin.Server.Models.User;
+﻿using Melin.Server.Models;
+using Melin.Server.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,6 @@ public class DataContext : IdentityDbContext<ApplicationUser>
 {
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
-        
     }
+    public DbSet<Team> Teams => Set<Team>();
 }

@@ -192,6 +192,7 @@ public class AuthController : ControllerBase
 
     [HttpPost("enable-disable-account")]
     [Authorize]
+    // TODO Log and Documentation
     public async Task<IActionResult> EnableDisableAccount([FromQuery] string userEmail, [FromQuery] bool decision, UserManager<ApplicationUser> userManager)
     {
         if (User.Identity?.Name == null)

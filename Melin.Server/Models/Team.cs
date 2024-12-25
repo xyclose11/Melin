@@ -22,5 +22,4 @@ public class Team
 
     [MaxLength(256)]
     public required string OwnerId { get; set; } = null!;
-
 }
