@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Melin.Server.Models;
+using Melin.Server.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Login(UserManager<IdentityUser> userManager, [FromBody] LoginModel model)
+    public async Task<IActionResult> Login(UserManager<ApplicationUser> userManager, [FromBody] LoginModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -45,6 +46,8 @@ public class AuthController : ControllerBase
                 Log.Information("Failed Login Attempt. User is null. {userEmail}", model.Email);
                 return BadRequest();
             }
+
+            user.LastLoginDate = DateTime.UtcNow;
             
             var roles = await userManager.GetRolesAsync(user);
             
@@ -158,7 +161,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetUserRole(UserManager<IdentityUser> userManager)
+    public async Task<IActionResult> GetUserRole(UserManager<ApplicationUser> userManager)
     {
         if (User.Identity?.Name == null)
         {
@@ -184,6 +187,28 @@ public class AuthController : ControllerBase
         var role = await userManager.GetRolesAsync(user);
         Log.Information("Successfully retrieved {UserEmail} roles:: {Roles}", userEmail, role);
         return Ok(role);
+    }
+
+
+    [HttpPost("enable-disable-account")]
+    [Authorize]
+    public async Task<IActionResult> EnableDisableAccount([FromQuery] string userEmail, [FromQuery] bool decision, UserManager<ApplicationUser> userManager)
+    {
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+
+        var user = await userManager.FindByEmailAsync(userEmail);
+
+        if (user == null)
+        {
+            return StatusCode(500, "Unable to find user in user manager");
+        }
+
+        user.IsActive = decision;
+
+        return Ok($"User has been: {decision}");
     }
 
 }
