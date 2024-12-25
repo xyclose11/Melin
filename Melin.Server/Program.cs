@@ -99,6 +99,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IReferenceService, ReferenceService>();
 builder.Services.AddTransient<IReferenceRepository, ReferenceRepository>();
+builder.Services.AddTransient<ITeamService, TeamService>();
 
 builder.Services.AddCors(options =>
 {

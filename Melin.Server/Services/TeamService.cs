@@ -1,5 +1,7 @@
 ﻿using Melin.Server.Data;
 using Melin.Server.Models;
+using Melin.Server.Models.User;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,6 +49,80 @@ public class TeamService : ITeamService
         await _dataContext.SaveChangesAsync();
         
         return true;
+    }
+
+    public async Task<bool> AddUser(UserManager<ApplicationUser> userManager, string teamName, string ownerEmail, string newUserEmail)
+    {
+        if (string.IsNullOrWhiteSpace(teamName) || string.IsNullOrWhiteSpace(ownerEmail) || string.IsNullOrWhiteSpace(newUserEmail))
+        {
+            return false;
+        }
+
+        try
+        {
+            var team = await _dataContext.Teams
+                .Where(t => t.OwnerId == ownerEmail)
+                .Where(t => t.Name == teamName)
+                .FirstOrDefaultAsync();
+            
+            if (team == null)
+            {
+                return false;
+            }
+
+            var user = await userManager.FindByEmailAsync(newUserEmail);
+            
+            if (user == null)
+            {
+                return false;
+            }
+            
+            team.Members.Add(user);
+            await _dataContext.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
+    }
+
+    public async Task<bool> RemoveUser(UserManager<ApplicationUser> userManager, string teamName, string ownerEmail, string existingUserEmail)
+    {
+        if (string.IsNullOrWhiteSpace(teamName) || string.IsNullOrWhiteSpace(ownerEmail) || string.IsNullOrWhiteSpace(existingUserEmail))
+        {
+            return false;
+        }
+
+        try
+        {
+            var team = await _dataContext.Teams
+                .Where(t => t.OwnerId == ownerEmail)
+                .Where(t => t.Name == teamName)
+                .FirstOrDefaultAsync();
+            
+            if (team == null)
+            {
+                return false;
+            }
+
+            var user = await userManager.FindByEmailAsync(existingUserEmail);
+            
+            if (user == null)
+            {
+                return false;
+            }
+            
+            team.Members.Remove(user);
+            await _dataContext.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
     }
 
     public async Task<bool> DeleteTeam(string userEmail, string teamName)
