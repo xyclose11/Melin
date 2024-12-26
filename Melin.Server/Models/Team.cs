@@ -7,19 +7,17 @@ namespace Melin.Server.Models;
 
 public class Team
 {
-    [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public required int Id { get; set; }
-    
-    [MaxLength(512)]
-    public required string Name { get; set; }
+    public int Id { get; set; }
+
+    [Required] [MaxLength(512)] public required string Name { get; set; } = null!;
     
     [MaxLength(1024)]
     public string? Description { get; set; }
 
-    [Range(0, 100)]
     public ICollection<Member> Members { get; set; } = new List<Member>();
 
+    [Required]
     [MaxLength(256)]
     public required string OwnerId { get; set; } = null!;
 }

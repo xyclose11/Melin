@@ -1,4 +1,5 @@
 ﻿using Melin.Server.Models;
+using Melin.Server.Models.DTO;
 using Melin.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,12 +37,21 @@ public class TeamController : ControllerBase
 
     [HttpPost("create")]
     [Authorize]
-    public async Task<IActionResult> CreateTeam([FromBody] Team team)
+    public async Task<IActionResult> CreateTeam([FromBody] TeamCreateDto teamCreateDto)
     {
         if (User.Identity?.Name == null)
         {
             return Unauthorized();
         }
+
+        var team = new Team
+        {
+            Name = teamCreateDto.Name,
+            Description = teamCreateDto.Description,
+            Members = teamCreateDto.Members,
+            OwnerId = User.Identity.Name
+        };
+
 
         var res = await _teamService.CreateTeam(User.Identity.Name, team);
 
