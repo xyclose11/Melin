@@ -18,7 +18,7 @@ public class Team
     public string? Description { get; set; }
 
     [Range(0, 100)]
-    public ICollection<ApplicationUser> Members { get; set; } = new List<ApplicationUser>();
+    public ICollection<Member> Members { get; set; } = new List<Member>();
 
     [MaxLength(256)]
     public required string OwnerId { get; set; } = null!;

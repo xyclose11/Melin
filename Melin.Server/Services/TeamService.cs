@@ -72,12 +72,19 @@ public class TeamService : ITeamService
 
             var user = await userManager.FindByEmailAsync(newUserEmail);
             
-            if (user == null)
+            if (user?.Email == null)
             {
                 return false;
             }
+
+            var member = new Member
+            {
+                Id = user.Id,
+                EmailAddress = user.Email,
+                UserName = user.DisplayName ?? "TEMP"
+            };
             
-            team.Members.Add(user);
+            team.Members.Add(member);
             user.Teams?.Add(team);
             await _dataContext.SaveChangesAsync();
             return true;
@@ -110,12 +117,19 @@ public class TeamService : ITeamService
 
             var user = await userManager.FindByEmailAsync(existingUserEmail);
             
-            if (user == null)
+            if (user?.Email == null)
             {
                 return false;
             }
+
+            var member = new Member
+            {
+                Id = user.Id,
+                EmailAddress = user.Email,
+                UserName = user.DisplayName ?? "TEMP"
+            };
             
-            team.Members.Remove(user);
+            team.Members.Remove(member);
             user.Teams?.Remove(team);
             await _dataContext.SaveChangesAsync();
             return true;
