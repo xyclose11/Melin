@@ -25,6 +25,7 @@ import { Route as authAuthAdminDashboardImport } from './routes/(auth)/_auth.adm
 const authImport = createFileRoute('/(auth)')()
 const ContactLazyImport = createFileRoute('/contact')()
 const IndexLazyImport = createFileRoute('/')()
+const teamCreateTeamLazyImport = createFileRoute('/(team)/create-team')()
 const referenceCreateReferenceLazyImport = createFileRoute(
   '/(reference)/create-reference',
 )()
@@ -64,6 +65,14 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const teamCreateTeamLazyRoute = teamCreateTeamLazyImport
+  .update({
+    id: '/(team)/create-team',
+    path: '/create-team',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(team)/create-team.lazy').then((d) => d.Route))
 
 const referenceCreateReferenceLazyRoute = referenceCreateReferenceLazyImport
   .update({
@@ -236,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof referenceCreateReferenceLazyImport
       parentRoute: typeof rootRoute
     }
+    '/(team)/create-team': {
+      id: '/(team)/create-team'
+      path: '/create-team'
+      fullPath: '/create-team'
+      preLoaderRoute: typeof teamCreateTeamLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/(auth)/_auth/admin-dashboard': {
       id: '/(auth)/_auth/admin-dashboard'
       path: '/admin-dashboard'
@@ -311,6 +327,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof authSignupLazyRoute
   '/usersettings': typeof authUsersettingsLazyRoute
   '/create-reference': typeof referenceCreateReferenceLazyRoute
+  '/create-team': typeof teamCreateTeamLazyRoute
   '/admin-dashboard': typeof authAuthAdminDashboardRoute
   '/edit-reference/$refId': typeof referenceEditReferenceRefIdRoute
 }
@@ -327,6 +344,7 @@ export interface FileRoutesByTo {
   '/signup': typeof authSignupLazyRoute
   '/usersettings': typeof authUsersettingsLazyRoute
   '/create-reference': typeof referenceCreateReferenceLazyRoute
+  '/create-team': typeof teamCreateTeamLazyRoute
   '/admin-dashboard': typeof authAuthAdminDashboardRoute
   '/edit-reference/$refId': typeof referenceEditReferenceRefIdRoute
 }
@@ -346,6 +364,7 @@ export interface FileRoutesById {
   '/(auth)/signup': typeof authSignupLazyRoute
   '/(auth)/usersettings': typeof authUsersettingsLazyRoute
   '/(reference)/create-reference': typeof referenceCreateReferenceLazyRoute
+  '/(team)/create-team': typeof teamCreateTeamLazyRoute
   '/(auth)/_auth/admin-dashboard': typeof authAuthAdminDashboardRoute
   '/(reference)/edit-reference/$refId': typeof referenceEditReferenceRefIdRoute
 }
@@ -364,6 +383,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/usersettings'
     | '/create-reference'
+    | '/create-team'
     | '/admin-dashboard'
     | '/edit-reference/$refId'
   fileRoutesByTo: FileRoutesByTo
@@ -379,6 +399,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/usersettings'
     | '/create-reference'
+    | '/create-team'
     | '/admin-dashboard'
     | '/edit-reference/$refId'
   id:
@@ -396,6 +417,7 @@ export interface FileRouteTypes {
     | '/(auth)/signup'
     | '/(auth)/usersettings'
     | '/(reference)/create-reference'
+    | '/(team)/create-team'
     | '/(auth)/_auth/admin-dashboard'
     | '/(reference)/edit-reference/$refId'
   fileRoutesById: FileRoutesById
@@ -408,6 +430,7 @@ export interface RootRouteChildren {
   ContactLazyRoute: typeof ContactLazyRoute
   authRoute: typeof authRouteWithChildren
   referenceCreateReferenceLazyRoute: typeof referenceCreateReferenceLazyRoute
+  teamCreateTeamLazyRoute: typeof teamCreateTeamLazyRoute
   referenceEditReferenceRefIdRoute: typeof referenceEditReferenceRefIdRoute
 }
 
@@ -418,6 +441,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactLazyRoute: ContactLazyRoute,
   authRoute: authRouteWithChildren,
   referenceCreateReferenceLazyRoute: referenceCreateReferenceLazyRoute,
+  teamCreateTeamLazyRoute: teamCreateTeamLazyRoute,
   referenceEditReferenceRefIdRoute: referenceEditReferenceRefIdRoute,
 }
 
@@ -437,6 +461,7 @@ export const routeTree = rootRoute
         "/contact",
         "/(auth)",
         "/(reference)/create-reference",
+        "/(team)/create-team",
         "/(reference)/edit-reference/$refId"
       ]
     },
@@ -499,6 +524,9 @@ export const routeTree = rootRoute
     },
     "/(reference)/create-reference": {
       "filePath": "(reference)/create-reference.lazy.tsx"
+    },
+    "/(team)/create-team": {
+      "filePath": "(team)/create-team.lazy.tsx"
     },
     "/(auth)/_auth/admin-dashboard": {
       "filePath": "(auth)/_auth.admin-dashboard.tsx",
