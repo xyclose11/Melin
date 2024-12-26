@@ -12,9 +12,9 @@ namespace Melin.Server.Controllers;
 [Route("/api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public AuthController(SignInManager<IdentityUser> signInManager)
+    public AuthController(SignInManager<ApplicationUser> signInManager)
     {
         _signInManager = signInManager;
     }
@@ -80,7 +80,7 @@ public class AuthController : ControllerBase
     [HttpPost("sign-up")]
     [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> SignUp(UserManager<IdentityUser> userManager, [FromBody] UserCreationModel userCreationModel)
+    public async Task<IActionResult> SignUp(UserManager<ApplicationUser> userManager, [FromBody] UserCreationModel userCreationModel)
     {
         Log.Information("Sign Up Started... With Email: {NewUserEmail}", userCreationModel.Email);
         if (!ModelState.IsValid)
@@ -88,7 +88,7 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        IdentityUser user = new IdentityUser()
+        ApplicationUser user = new ApplicationUser()
         {
             UserName = userCreationModel.Email,
             Email = userCreationModel.Email

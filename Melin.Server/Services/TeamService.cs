@@ -78,6 +78,7 @@ public class TeamService : ITeamService
             }
             
             team.Members.Add(user);
+            user.Teams?.Add(team);
             await _dataContext.SaveChangesAsync();
             return true;
         }
@@ -115,6 +116,7 @@ public class TeamService : ITeamService
             }
             
             team.Members.Remove(user);
+            user.Teams?.Remove(team);
             await _dataContext.SaveChangesAsync();
             return true;
         }
@@ -138,8 +140,9 @@ public class TeamService : ITeamService
         }
 
         _dataContext.Teams.Remove(res);
+        // TODO: Add it so that if a Team is deleted it will cascade delete the reference in the
+        // users Teams list
         await _dataContext.SaveChangesAsync();
         
         return true;
-    }
-}
+    } }

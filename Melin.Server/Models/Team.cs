@@ -17,7 +17,7 @@ public class Team
     [MaxLength(1024)]
     public string? Description { get; set; }
 
-    [Range(1, 100)]
+    [Range(0, 100)]
     public ICollection<ApplicationUser> Members { get; set; } = new List<ApplicationUser>();
 
     [MaxLength(256)]
