@@ -3,6 +3,7 @@ using Melin.Server.Filter;
 using Melin.Server.Models;
 using Melin.Server.Models.Context;
 using Melin.Server.Models.DTO;
+using Melin.Server.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +15,9 @@ namespace Melin.Server.Controllers;
 public class TagController : ControllerBase
 {
     private readonly ReferenceContext _referenceContext;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public TagController(ReferenceContext referenceContext, UserManager<IdentityUser> userManager)
+    public TagController(ReferenceContext referenceContext, UserManager<ApplicationUser> userManager)
     {
         _referenceContext = referenceContext;
         _userManager = userManager;

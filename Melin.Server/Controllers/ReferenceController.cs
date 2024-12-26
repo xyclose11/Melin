@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
 using Melin.Server.Models.DTO;
 using Melin.Server.Models.References;
+using Melin.Server.Models.User;
 using Melin.Server.Services;
 using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
@@ -19,10 +20,10 @@ namespace Melin.Server.Controllers;
 public class ReferenceController : ControllerBase
 {
     private readonly IReferenceService _referenceService;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly TagService _tagService;
 
-    public ReferenceController(IReferenceService referenceService, UserManager<IdentityUser> userManager, TagService tagService)
+    public ReferenceController(IReferenceService referenceService, UserManager<ApplicationUser> userManager, TagService tagService)
     {
         _referenceService = referenceService;
         _userManager = userManager;

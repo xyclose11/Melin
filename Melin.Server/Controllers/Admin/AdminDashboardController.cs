@@ -1,5 +1,6 @@
 ﻿using Melin.Server.Filter;
 using Melin.Server.Models;
+using Melin.Server.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,10 @@ namespace Melin.Server.Controllers.Admin;
 [Route("/api/[controller]")]
 public class AdminDashboardController : ControllerBase
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     
-    public AdminDashboardController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+    public AdminDashboardController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -28,10 +29,10 @@ public class AdminDashboardController : ControllerBase
     /// <returns>A List of IdentityUser <see cref="IdentityUser{TKey}"/></returns>
     [HttpGet("all-users")]
     [Authorize(Roles = "Admin")]
-    [ProducesResponseType(typeof(ActionResult<List<IdentityUser>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ActionResult<List<ApplicationUser>>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<List<IdentityUser>>> GetUsers([FromQuery] UserPaginationFilter paginationFilter)
+    public async Task<ActionResult<List<ApplicationUser>>> GetUsers([FromQuery] UserPaginationFilter paginationFilter)
     {
         if (!ModelState.IsValid)
         {

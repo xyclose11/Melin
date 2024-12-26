@@ -1,3 +1,4 @@
+using Melin.Server.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,15 +9,15 @@ namespace Melin.Server.Controllers;
 [Route("/api/auth/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public UserController(UserManager<IdentityUser> userManager)
+    public UserController(UserManager<ApplicationUser> userManager)
     {
         _userManager = userManager;
     }
     
     [HttpGet(Name = "GetUser")]
-    public async Task<IdentityUser> GetUser(string userId)
+    public async Task<ApplicationUser> GetUser(string userId)
     {
         try
         {

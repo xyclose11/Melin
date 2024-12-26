@@ -47,7 +47,7 @@ namespace Melin.Server.Migrations.Data
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.Team", b =>
@@ -79,7 +79,7 @@ namespace Melin.Server.Migrations.Data
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Teams", (string)null);
                 });
 
             modelBuilder.Entity("Melin.Server.Models.User.ApplicationUser", b =>

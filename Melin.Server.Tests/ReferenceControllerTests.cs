@@ -1,4 +1,5 @@
 using Melin.Server.Models;
+using Melin.Server.Models.User;
 using Melin.Server.Services;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,7 +8,7 @@ namespace Melin.Server.Tests;
 
 public class ReferenceControllerTests {
     private readonly ReferenceContext _referenceContext;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly TagService _tagService;
     
     [Fact]
