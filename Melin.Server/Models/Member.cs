@@ -6,8 +6,8 @@ namespace Melin.Server.Models;
 public class Member
 {
     [Required]
-    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-    public required string Id { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public required int Id { get; set; }
     
     [Required]
     [MaxLength(512)]

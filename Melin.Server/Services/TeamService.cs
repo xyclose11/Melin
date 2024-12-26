@@ -79,7 +79,7 @@ public class TeamService : ITeamService
 
             var member = new Member
             {
-                Id = user.Id,
+                Id = (int.Parse(user.Id)),
                 EmailAddress = user.Email,
                 UserName = user.DisplayName ?? "TEMP"
             };
@@ -121,10 +121,11 @@ public class TeamService : ITeamService
             {
                 return false;
             }
-
+            
+            
             var member = new Member
             {
-                Id = user.Id,
+                Id = (int.Parse(user.Id)),
                 EmailAddress = user.Email,
                 UserName = user.DisplayName ?? "TEMP"
             };

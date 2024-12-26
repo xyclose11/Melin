@@ -12,4 +12,5 @@ public class DataContext : IdentityDbContext<ApplicationUser>
     {
     }
     public DbSet<Team> Teams => Set<Team>();
+    public DbSet<Member> Members => Set<Member>();
 }

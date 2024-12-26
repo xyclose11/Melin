@@ -9,7 +9,7 @@ public class Team
 {
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public required int Id { get; set; }
     
     [MaxLength(512)]
     public required string Name { get; set; }
