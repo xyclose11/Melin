@@ -1,5 +1,8 @@
 ﻿using System.Text;
+using Melin.Server.Models;
 using Melin.Server.Models.DTO;
+using Melin.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 namespace Melin.Server.Controllers;
@@ -8,38 +11,64 @@ namespace Melin.Server.Controllers;
 [Route("[controller]")]
 public class DocumentController : ControllerBase
 {
-    [HttpGet("retrieve")]
-    public IActionResult GetDocument([FromQuery] string fileName)
+    private readonly IMelinDocumentService _documentService;
+
+    public DocumentController(IMelinDocumentService service)
     {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UserDocuments", fileName);
-
-        if (!System.IO.File.Exists(filePath))
-        {
-            return NotFound("Filed not found");
-        }
-
-        var fileContent = System.IO.File.ReadAllText(filePath);
-
-        return Ok(fileContent);
+        _documentService = service;
     }
     
-    [HttpPost("create")]
-    public IActionResult CreateDocument([FromBody] CreateTextFileRequest fileRequest)
+    [HttpGet("retrieve")]
+    [Authorize]
+    public async Task<ActionResult<MelinDocument>> GetDocument([FromQuery] string fileName)
     {
-        if (string.IsNullOrWhiteSpace(fileRequest.FileName))
+        if (User.Identity?.Name == null)
         {
-            return BadRequest("File name is required.");
+            return Unauthorized();
         }
 
-        try
+        var document = await _documentService.GetDocumentAsync(User.Identity.Name, fileName);
+
+        if (document != null)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "UserDocuments", fileRequest.FileName);
-            System.IO.File.WriteAllText(filePath, fileRequest.Content);
-            return Ok(new { Message = "File created successfully" });
+            return Ok(document);
         }
-        catch (Exception e)
+
+        return NotFound();
+    }
+    
+    [HttpGet("retrieve-all")]
+    [Authorize]
+    public async Task<ActionResult<List<MelinDocument>>> GetAllDocuments()
+    {
+        if (User.Identity?.Name == null)
         {
-            return StatusCode(500, "Internal server error occured when Creating Document");
+            return Unauthorized();
         }
+
+        var document = await _documentService.GetDocumentsAsync(User.Identity.Name);
+
+        if (document != null)
+        {
+            return Ok(document);
+        }
+
+        return NotFound();
+    }
+    
+    
+    
+    [HttpPost("create")]
+    [Authorize]
+    public async Task<ActionResult<MelinDocument>> CreateDocument([FromBody] CreateTextFileRequest fileRequest)
+    {
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+
+        var res = await _documentService
+            .CreateDocumentAsync(User.Identity.Name, fileRequest.FileName, fileRequest.Content);
+        return res;
     }
 }

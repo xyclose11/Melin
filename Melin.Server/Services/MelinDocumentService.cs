@@ -63,4 +63,13 @@ public class MelinDocumentService : IMelinDocumentService
 
         return document ?? null;
     }
+
+    public async Task<List<MelinDocument>?> GetDocumentsAsync(string userEmail)
+    {
+        var documents = await _dataContext.MelinDocuments
+            .Where(d => d.OwnerEmail == userEmail)
+            .ToListAsync();
+        
+        return documents ?? null;
+    }   
 }
