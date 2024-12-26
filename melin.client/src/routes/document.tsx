@@ -1,7 +1,7 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button.tsx";
 import Connector from "../DocumentEditing/documentActions.ts";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/document")({
     component: DocumentComponent,

@@ -17,6 +17,7 @@ import { Route as LibraryImport } from './routes/library'
 import { Route as DocumentImport } from './routes/document'
 import { Route as DocumentFileNameImport } from './routes/document.$fileName'
 import { Route as teamTeamImport } from './routes/(team)/team'
+import { Route as documentDocumentsImport } from './routes/(document)/documents'
 import { Route as authAuthImport } from './routes/(auth)/_auth'
 import { Route as referenceEditReferenceRefIdImport } from './routes/(reference)/edit-reference.$refId'
 import { Route as authAuthAdminDashboardImport } from './routes/(auth)/_auth.admin-dashboard'
@@ -139,6 +140,12 @@ const teamTeamRoute = teamTeamImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const documentDocumentsRoute = documentDocumentsImport.update({
+  id: '/(document)/documents',
+  path: '/documents',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const authAuthRoute = authAuthImport.update({
   id: '/_auth',
   getParentRoute: () => authRoute,
@@ -202,6 +209,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof authAuthImport
       parentRoute: typeof authRoute
+    }
+    '/(document)/documents': {
+      id: '/(document)/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof documentDocumentsImport
+      parentRoute: typeof rootRoute
     }
     '/(team)/team': {
       id: '/(team)/team'
@@ -334,6 +348,7 @@ export interface FileRoutesByFullPath {
   '/document': typeof DocumentRouteWithChildren
   '/library': typeof LibraryRoute
   '/contact': typeof ContactLazyRoute
+  '/documents': typeof documentDocumentsRoute
   '/team': typeof teamTeamRoute
   '/document/$fileName': typeof DocumentFileNameRoute
   '/login': typeof authLoginLazyRoute
@@ -352,6 +367,7 @@ export interface FileRoutesByTo {
   '/document': typeof DocumentRouteWithChildren
   '/library': typeof LibraryRoute
   '/contact': typeof ContactLazyRoute
+  '/documents': typeof documentDocumentsRoute
   '/team': typeof teamTeamRoute
   '/document/$fileName': typeof DocumentFileNameRoute
   '/login': typeof authLoginLazyRoute
@@ -373,6 +389,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactLazyRoute
   '/(auth)': typeof authRouteWithChildren
   '/(auth)/_auth': typeof authAuthRouteWithChildren
+  '/(document)/documents': typeof documentDocumentsRoute
   '/(team)/team': typeof teamTeamRoute
   '/document/$fileName': typeof DocumentFileNameRoute
   '/(auth)/login': typeof authLoginLazyRoute
@@ -393,6 +410,7 @@ export interface FileRouteTypes {
     | '/document'
     | '/library'
     | '/contact'
+    | '/documents'
     | '/team'
     | '/document/$fileName'
     | '/login'
@@ -410,6 +428,7 @@ export interface FileRouteTypes {
     | '/document'
     | '/library'
     | '/contact'
+    | '/documents'
     | '/team'
     | '/document/$fileName'
     | '/login'
@@ -429,6 +448,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/(auth)'
     | '/(auth)/_auth'
+    | '/(document)/documents'
     | '/(team)/team'
     | '/document/$fileName'
     | '/(auth)/login'
@@ -449,6 +469,7 @@ export interface RootRouteChildren {
   LibraryRoute: typeof LibraryRoute
   ContactLazyRoute: typeof ContactLazyRoute
   authRoute: typeof authRouteWithChildren
+  documentDocumentsRoute: typeof documentDocumentsRoute
   teamTeamRoute: typeof teamTeamRoute
   referenceCreateReferenceLazyRoute: typeof referenceCreateReferenceLazyRoute
   teamCreateTeamLazyRoute: typeof teamCreateTeamLazyRoute
@@ -461,6 +482,7 @@ const rootRouteChildren: RootRouteChildren = {
   LibraryRoute: LibraryRoute,
   ContactLazyRoute: ContactLazyRoute,
   authRoute: authRouteWithChildren,
+  documentDocumentsRoute: documentDocumentsRoute,
   teamTeamRoute: teamTeamRoute,
   referenceCreateReferenceLazyRoute: referenceCreateReferenceLazyRoute,
   teamCreateTeamLazyRoute: teamCreateTeamLazyRoute,
@@ -482,6 +504,7 @@ export const routeTree = rootRoute
         "/library",
         "/contact",
         "/(auth)",
+        "/(document)/documents",
         "/(team)/team",
         "/(reference)/create-reference",
         "/(team)/create-team",
@@ -520,6 +543,9 @@ export const routeTree = rootRoute
       "children": [
         "/(auth)/_auth/admin-dashboard"
       ]
+    },
+    "/(document)/documents": {
+      "filePath": "(document)/documents.tsx"
     },
     "/(team)/team": {
       "filePath": "(team)/team.tsx"
