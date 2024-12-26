@@ -8,6 +8,7 @@ namespace Melin.Server.Services;
 public interface ITeamService
 {
     public Task<Team?> GetTeamByNameAsync(string userEmail, string teamName);
+    public Task<List<Team>> GetOwnedTeamsAsync(string userEmail);
 
     public Task<bool> CreateTeam(string userEmail, Team team);
 

@@ -51,13 +51,13 @@ const items = [
         icon: Search,
     },
     {
-        title: "Groups",
-        url: "/groups",
+        title: "Documents",
+        url: "/document",
         icon: Boxes,
     },
     {
-        title: "Tags",
-        url: "/tags",
+        title: "Teams",
+        url: "/team",
         icon: Tag,
     },
     {

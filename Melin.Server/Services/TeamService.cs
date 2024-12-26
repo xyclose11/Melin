@@ -27,6 +27,15 @@ public class TeamService : ITeamService
         return res;
     }
 
+    public async Task<List<Team>> GetOwnedTeamsAsync(string userEmail)
+    {
+        var output = await _dataContext.Teams
+            .Where(t => t.OwnerId == userEmail)
+            .ToListAsync();
+
+        return output;
+    }
+
     public async Task<bool> CreateTeam(string userEmail, Team team)
     {
         _dataContext.Teams.Add(team);

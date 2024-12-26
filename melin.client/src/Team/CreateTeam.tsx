@@ -12,6 +12,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { instance } from "@/utils/axiosInstance.ts";
 
 const member = z.object({
     EmailAddress: z.string().email(),
@@ -34,8 +35,19 @@ export default function CreateTeam() {
         },
     });
 
-    function onSubmit(values: z.infer<typeof teamSchema>) {
-        console.log(values);
+    async function onSubmit(values: z.infer<typeof teamSchema>) {
+        try {
+            const res = await instance.post("api/Team/create", values, {
+                withCredentials: true,
+            });
+
+            console.log(res);
+            if (res.status === 200) {
+                console.log("SUCCESS");
+            }
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     return (
@@ -63,6 +75,23 @@ export default function CreateTeam() {
                                     What will your team be called. * This can be
                                     changed later on *
                                 </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    ></FormField>
+                    <FormField
+                        control={form.control}
+                        name={"description"}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Description"
+                                        {...field}
+                                    ></Input>
+                                </FormControl>
+                                <FormDescription></FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}

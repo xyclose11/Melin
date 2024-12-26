@@ -35,6 +35,19 @@ public class TeamController : ControllerBase
         return Ok(res);
     }
 
+    [HttpGet("owned-teams")]
+    [Authorize]
+    public async Task<IActionResult> RetrieveOwnedTeams()
+    {
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+
+        var output = await _teamService.GetOwnedTeamsAsync(User.Identity.Name);
+        return Ok(output);
+    }
+
     [HttpPost("create")]
     [Authorize]
     public async Task<IActionResult> CreateTeam([FromBody] TeamCreateDto teamCreateDto)
