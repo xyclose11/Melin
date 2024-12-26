@@ -100,6 +100,7 @@ builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericReposi
 builder.Services.AddTransient<IReferenceService, ReferenceService>();
 builder.Services.AddTransient<IReferenceRepository, ReferenceRepository>();
 builder.Services.AddTransient<ITeamService, TeamService>();
+builder.Services.AddTransient<IMelinDocumentService, MelinDocumentService>();
 
 builder.Services.AddCors(options =>
 {
