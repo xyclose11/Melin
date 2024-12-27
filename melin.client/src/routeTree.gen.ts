@@ -14,7 +14,6 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LibraryImport } from './routes/library'
-import { Route as DocumentImport } from './routes/document'
 import { Route as DocumentFileNameImport } from './routes/document.$fileName'
 import { Route as teamTeamImport } from './routes/(team)/team'
 import { Route as documentDocumentsImport } from './routes/(document)/documents'
@@ -53,12 +52,6 @@ const ContactLazyRoute = ContactLazyImport.update({
 const LibraryRoute = LibraryImport.update({
   id: '/library',
   path: '/library',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DocumentRoute = DocumentImport.update({
-  id: '/document',
-  path: '/document',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -129,9 +122,9 @@ const authLoginLazyRoute = authLoginLazyImport
   .lazy(() => import('./routes/(auth)/login.lazy').then((d) => d.Route))
 
 const DocumentFileNameRoute = DocumentFileNameImport.update({
-  id: '/$fileName',
-  path: '/$fileName',
-  getParentRoute: () => DocumentRoute,
+  id: '/document/$fileName',
+  path: '/document/$fileName',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const teamTeamRoute = teamTeamImport.update({
@@ -173,13 +166,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/document': {
-      id: '/document'
-      path: '/document'
-      fullPath: '/document'
-      preLoaderRoute: typeof DocumentImport
       parentRoute: typeof rootRoute
     }
     '/library': {
@@ -226,10 +212,10 @@ declare module '@tanstack/react-router' {
     }
     '/document/$fileName': {
       id: '/document/$fileName'
-      path: '/$fileName'
+      path: '/document/$fileName'
       fullPath: '/document/$fileName'
       preLoaderRoute: typeof DocumentFileNameImport
-      parentRoute: typeof DocumentImport
+      parentRoute: typeof rootRoute
     }
     '/(auth)/login': {
       id: '/(auth)/login'
@@ -299,18 +285,6 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-interface DocumentRouteChildren {
-  DocumentFileNameRoute: typeof DocumentFileNameRoute
-}
-
-const DocumentRouteChildren: DocumentRouteChildren = {
-  DocumentFileNameRoute: DocumentFileNameRoute,
-}
-
-const DocumentRouteWithChildren = DocumentRoute._addFileChildren(
-  DocumentRouteChildren,
-)
-
 interface authAuthRouteChildren {
   authAuthAdminDashboardRoute: typeof authAuthAdminDashboardRoute
 }
@@ -345,7 +319,6 @@ const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof authAuthRouteWithChildren
-  '/document': typeof DocumentRouteWithChildren
   '/library': typeof LibraryRoute
   '/contact': typeof ContactLazyRoute
   '/documents': typeof documentDocumentsRoute
@@ -364,7 +337,6 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof authAuthRouteWithChildren
-  '/document': typeof DocumentRouteWithChildren
   '/library': typeof LibraryRoute
   '/contact': typeof ContactLazyRoute
   '/documents': typeof documentDocumentsRoute
@@ -384,7 +356,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
-  '/document': typeof DocumentRouteWithChildren
   '/library': typeof LibraryRoute
   '/contact': typeof ContactLazyRoute
   '/(auth)': typeof authRouteWithChildren
@@ -407,7 +378,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/document'
     | '/library'
     | '/contact'
     | '/documents'
@@ -425,7 +395,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/document'
     | '/library'
     | '/contact'
     | '/documents'
@@ -443,7 +412,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/document'
     | '/library'
     | '/contact'
     | '/(auth)'
@@ -465,12 +433,12 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
-  DocumentRoute: typeof DocumentRouteWithChildren
   LibraryRoute: typeof LibraryRoute
   ContactLazyRoute: typeof ContactLazyRoute
   authRoute: typeof authRouteWithChildren
   documentDocumentsRoute: typeof documentDocumentsRoute
   teamTeamRoute: typeof teamTeamRoute
+  DocumentFileNameRoute: typeof DocumentFileNameRoute
   referenceCreateReferenceLazyRoute: typeof referenceCreateReferenceLazyRoute
   teamCreateTeamLazyRoute: typeof teamCreateTeamLazyRoute
   referenceEditReferenceRefIdRoute: typeof referenceEditReferenceRefIdRoute
@@ -478,12 +446,12 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
-  DocumentRoute: DocumentRouteWithChildren,
   LibraryRoute: LibraryRoute,
   ContactLazyRoute: ContactLazyRoute,
   authRoute: authRouteWithChildren,
   documentDocumentsRoute: documentDocumentsRoute,
   teamTeamRoute: teamTeamRoute,
+  DocumentFileNameRoute: DocumentFileNameRoute,
   referenceCreateReferenceLazyRoute: referenceCreateReferenceLazyRoute,
   teamCreateTeamLazyRoute: teamCreateTeamLazyRoute,
   referenceEditReferenceRefIdRoute: referenceEditReferenceRefIdRoute,
@@ -500,12 +468,12 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/document",
         "/library",
         "/contact",
         "/(auth)",
         "/(document)/documents",
         "/(team)/team",
+        "/document/$fileName",
         "/(reference)/create-reference",
         "/(team)/create-team",
         "/(reference)/edit-reference/$refId"
@@ -513,12 +481,6 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.lazy.tsx"
-    },
-    "/document": {
-      "filePath": "document.tsx",
-      "children": [
-        "/document/$fileName"
-      ]
     },
     "/library": {
       "filePath": "library.tsx"
@@ -551,8 +513,7 @@ export const routeTree = rootRoute
       "filePath": "(team)/team.tsx"
     },
     "/document/$fileName": {
-      "filePath": "document.$fileName.tsx",
-      "parent": "/document"
+      "filePath": "document.$fileName.tsx"
     },
     "/(auth)/login": {
       "filePath": "(auth)/login.lazy.tsx",
