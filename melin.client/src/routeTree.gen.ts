@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as UploadImport } from './routes/upload'
 import { Route as LibraryImport } from './routes/library'
 import { Route as ReferencesRefIdImport } from './routes/references.$refId'
 import { Route as authAuthImport } from './routes/(auth)/_auth'
@@ -45,6 +46,12 @@ const ContactLazyRoute = ContactLazyImport.update({
   path: '/contact',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/contact.lazy').then((d) => d.Route))
+
+const UploadRoute = UploadImport.update({
+  id: '/upload',
+  path: '/upload',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LibraryRoute = LibraryImport.update({
   id: '/library',
@@ -150,6 +157,13 @@ declare module '@tanstack/react-router' {
       path: '/library'
       fullPath: '/library'
       preLoaderRoute: typeof LibraryImport
+      parentRoute: typeof rootRoute
+    }
+    '/upload': {
+      id: '/upload'
+      path: '/upload'
+      fullPath: '/upload'
+      preLoaderRoute: typeof UploadImport
       parentRoute: typeof rootRoute
     }
     '/contact': {
@@ -276,6 +290,7 @@ const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof authAuthRouteWithChildren
   '/library': typeof LibraryRoute
+  '/upload': typeof UploadRoute
   '/contact': typeof ContactLazyRoute
   '/references/$refId': typeof ReferencesRefIdRoute
   '/login': typeof authLoginLazyRoute
@@ -291,6 +306,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof authAuthRouteWithChildren
   '/library': typeof LibraryRoute
+  '/upload': typeof UploadRoute
   '/contact': typeof ContactLazyRoute
   '/references/$refId': typeof ReferencesRefIdRoute
   '/login': typeof authLoginLazyRoute
@@ -307,6 +323,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/library': typeof LibraryRoute
+  '/upload': typeof UploadRoute
   '/contact': typeof ContactLazyRoute
   '/(auth)': typeof authRouteWithChildren
   '/(auth)/_auth': typeof authAuthRouteWithChildren
@@ -326,6 +343,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/library'
+    | '/upload'
     | '/contact'
     | '/references/$refId'
     | '/login'
@@ -340,6 +358,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/library'
+    | '/upload'
     | '/contact'
     | '/references/$refId'
     | '/login'
@@ -354,6 +373,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/library'
+    | '/upload'
     | '/contact'
     | '/(auth)'
     | '/(auth)/_auth'
@@ -372,6 +392,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   LibraryRoute: typeof LibraryRoute
+  UploadRoute: typeof UploadRoute
   ContactLazyRoute: typeof ContactLazyRoute
   authRoute: typeof authRouteWithChildren
   ReferencesRefIdRoute: typeof ReferencesRefIdRoute
@@ -382,6 +403,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   LibraryRoute: LibraryRoute,
+  UploadRoute: UploadRoute,
   ContactLazyRoute: ContactLazyRoute,
   authRoute: authRouteWithChildren,
   ReferencesRefIdRoute: ReferencesRefIdRoute,
@@ -401,6 +423,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/library",
+        "/upload",
         "/contact",
         "/(auth)",
         "/references/$refId",
@@ -413,6 +436,9 @@ export const routeTree = rootRoute
     },
     "/library": {
       "filePath": "library.tsx"
+    },
+    "/upload": {
+      "filePath": "upload.tsx"
     },
     "/contact": {
       "filePath": "contact.lazy.tsx"

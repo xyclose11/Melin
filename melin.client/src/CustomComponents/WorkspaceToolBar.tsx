@@ -11,6 +11,7 @@
     FileSliders,
     Logs,
     Mailbox,
+    UploadIcon,
 } from "lucide-react";
 import {
     Sidebar,
@@ -39,6 +40,11 @@ const items = [
         title: "Create",
         url: "/create-reference",
         icon: SquarePlus,
+    },
+    {
+        title: "Upload",
+        url: "/upload",
+        icon: UploadIcon,
     },
     {
         title: "Library",
