@@ -311,11 +311,20 @@ For More information take a look at these webpages
 
 <!-- ROADMAP -->
 ## Roadmap
-Current abstracted roadmap for the remainder of 2024
+Current Roadmap of major milestones to be reached by the end of Q1 2025:
 
 - [ ] Import Reference(s) from (JSON, CSL-JSON, CSV, TXT, BibTex, BibLaTex, ISBN API, ISSN API, etc.)
 - [ ] Export Reference(s) in (JSON, CSV, TXT, BibTex, BibLaTex, CSL-JSON)
 - [ ] Barcode Scanner for mobile devices
+- [ ] Admin Dashboard: With the ability to manage users and references in a secure fashion
+- [ ] Share references
+- [ ] Citation Generation, this will be tricky due to the lack of citation generation libraries for C#/.NET. Will most likely have to create
+some kind of wrapper based around Citeproc-js or a seperate JS server with a gRPC connection
+
+Nice To Have Features:
+- [ ] Team implementation: Allow a User to create a team, invite members, and create resources based around that team
+- [ ] Document Editing (realtime): Implement a realtime document editing feature to allow users and/or teams to be able to edit a document in near real-time (using SignalR)
+- [ ] 
 
 See the [open issues](https://github.com/xyclose11/Melin/issues) for a full list of proposed features (and known issues).
 
