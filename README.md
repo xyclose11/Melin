@@ -61,28 +61,37 @@
 </details>
 
 
+[![Product Name Screen Shot][product-screenshot]](https://github.com/xyclose11/Melin)
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+Melin is a suite of different academic related tools to assist in the management of references.
+Melin is an open source reference management system that enables collaboration with coworkers, peers, colleagues, and more.
 
-The goal of Melin is to create an open source reference management system that enables collaboration with multiple people.
-The aim is not to replace any existing reference and/or citation management applications that are currently out there. The aim is to
-expand the field and to see how far I can take the application in a full-stack setting.
-Melin has the capability to run on both Linux and Windows, as long as you are able to install ASP.NET Core.
+
+### Disclaimer
+_The aim is not to replace any existing reference and/or citation management applications that currently exist. The aim is to
+expand the field and to see how far I can take the application in a full-stack setting, with the overall goal to scale the project to production.
+All in all Melin is a learning experience at its heart, expect issues, expect messy code, expect different implementation styles._
+
+### Objectives
+
+1. Enable users to manage (Create, Read, Update, Destroy) references and other related academic forms of media
+2. Allow users to import and export in a variety of formats including but not limited to: _CSV, JSON, Bib(La)Tex, TXT_
+3. Ability for any developer to deploy Melin on their own hardware, to act as its own independent service
+4. Allow users to collaborate together within Teams, or on a partner basis
+5. Allow users to share references, bibliographies, and documents
+6. Allow users to collaborate in near real-time on a document
+7. Allow users to generate a list of citations (bibliography) or in-text citations from a single or a grouping of references/academic media
+8. Users should be able to create and/or join several Teams which will consist of their own private collection of references, groups, and documents
+
 
 ### Built With
 
 - ASP.NET Core Web API (Version 8.0)
 - React.js
-- Shadcn
-- Nginx
 - PostgreSQL
-- Jenkins
-- Tanstack
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -90,6 +99,7 @@ Melin has the capability to run on both Linux and Windows, as long as you are ab
 
 <!-- GETTING STARTED -->
 ## Getting Started
+Melin has the capability to run on both Linux and Windows, as long as you are able to install ASP.NET Core.
 
 To get a local copy up and running follow these simple example steps.
 
