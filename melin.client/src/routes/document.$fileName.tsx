@@ -18,6 +18,7 @@ import {
     UnderlinePlugin,
 } from "@udecode/plate-basic-marks/react";
 import { PlateElement, PlateLeaf } from "@udecode/plate-common/react";
+import { PlateEditor } from "@/DocumentEditing/PlateEditor.tsx";
 
 export const Route = createFileRoute("/document/$fileName")({
     loader: async ({ params }) => {
@@ -87,19 +88,20 @@ function DocumentComponent() {
             {/*<Button onClick={() => newMessage(new Date().toISOString())}>*/}
             {/*    Send Message*/}
             {/*</Button>*/}
-            <Plate
-                editor={editor}
-                onChange={({ value }) => {
-                    localStorage.setItem(
-                        "editorContent",
-                        JSON.stringify(value),
-                    );
-                }}
-            >
-                <EditorContainer>
-                    <CustomEditor />
-                </EditorContainer>
-            </Plate>
+            {/*<Plate*/}
+            {/*    editor={editor}*/}
+            {/*    onChange={({ value }) => {*/}
+            {/*        localStorage.setItem(*/}
+            {/*            "editorContent",*/}
+            {/*            JSON.stringify(value),*/}
+            {/*        );*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    <EditorContainer>*/}
+            {/*        <CustomEditor />*/}
+            {/*    </EditorContainer>*/}
+            {/*</Plate>*/}
+            <PlateEditor />
         </div>
     );
 }
