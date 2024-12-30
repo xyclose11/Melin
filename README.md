@@ -52,6 +52,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#PROJECT-STRUCTURE">Project Structure</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -93,6 +94,7 @@ All in all Melin is a learning experience at its heart, expect issues, expect me
 - C# (Version 12.0)
 - React.js: (Tanstack Router, Tanstack Query, Shadcn)
 - PostgreSQL
+- Xunit
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -248,6 +250,64 @@ dotnet /bin/Release/net8.0/Melin.Server.dll
 ```
 
 
+<!-- PROJECT-STRUCTURE -->
+## Project Structure
+This section will briefly describe the folder structure of both the front and back end for Melin.
+
+The idea is to get a vague understanding of the workflow of the project as a whole
+### Frontend
+```Generic
+/melin.client/
+/public --> SVG Logo
+/src/
+    /api --> Separate files for commonly used API requests & Tanstack Query configs
+    /app --> Shadcn setup
+    /assets --> Assets (SVG's, img's, etc)
+    /components --> Shadcn Components, includes theme-provider
+    /Context --> Separate files for context definitions
+    /CreateRefComponents --> DEPRECATED
+    /CustomComponents --> Custom components to be used in larger page components
+    ** Everything until the 'routes' directory is in the name for its purpose **
+    ...
+    /hooks --> Shadcn toast hook
+    ...
+    /routes --> Tanstack Router implementation, using file-based routing
+    /routes/__root.tsx --> Root page where root.tsx is rendered
+    ...
+    /utils --> contains several utility files including authentication & authorization related logic
+    root.tsx --> Root component where every child is rendered. Includes NavBar
+    main.tsx --> Setup for Tanstack Router router
+    Layout.tsx --> Defines the NavBar
+/tests
+... configuration files, environment files, etc
+```
+
+For More information take a look at these webpages
+
+[Tanstack Router](https://tanstack.com/router/latest/docs/framework/react/overview)
+
+### Backend
+
+```Generic
+/Melin.Server/
+/wwwroot/index.html --> Root HTML page where static files are rendered
+/wwwroot/vite.svg --> Logo (Feel free to replace)
+/Controllers/ --> Defines each controller for the application
+/Data/ --> Holds the DataContext file
+/Filter/ --> Defines different filters used for responses. Includes Paginated response filters, etc.
+/JSONInputFormatter/ --> Custom JSON Input Formatter for deserializing incoming JSON requests with Reference data
+/Logs/ --> Contains the log files. **Will be blank if the application has not been run before**
+/Middleware --> Serilog Configuration i.e. Log provider configuration
+/Migrations --> DB Migrations
+/Models/Binders --> Custom Model Binders. Most notable is ReferenceConverter which maps incoming JSON requests to a specific reference type.
+/Models/DTO --> Data Transfer Objects used to reduce or alter requests/responses
+/Models/References --> Contains a file with 32 POCO describing the References within Melin
+/Models/Repository --> Will be deprecated in the next minor release
+/Models/User --> Custom IdentityUser Implementation
+/Models/ReferenceContext --> Reference Context
+/Services --> Describes the difference services which are used in controllers via Dependency Injection
+/Wrappers --> Custom classes used to shape requests and responses
+```
 
 <!-- ROADMAP -->
 ## Roadmap
