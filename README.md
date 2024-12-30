@@ -79,7 +79,7 @@ All in all Melin is a learning experience at its heart, expect issues, expect me
 
 1. Enable users to manage (Create, Read, Update, Destroy) references and other related academic forms of media
 2. Allow users to import and export in a variety of formats including but not limited to: _CSV, JSON, Bib(La)Tex, TXT_
-3. Ability for any developer to deploy Melin on their own hardware, to act as its own independent service
+3. Ability for any developer to deploy Melin on their own hardware, with security as a focus out of the box, to act as its own independent service
 4. Allow users to collaborate together within Teams, or on a partner basis
 5. Allow users to share references, bibliographies, and documents
 6. Allow users to collaborate in near real-time on a document
@@ -90,7 +90,8 @@ All in all Melin is a learning experience at its heart, expect issues, expect me
 ### Built With
 
 - ASP.NET Core Web API (Version 8.0)
-- React.js
+- C# (Version 12.0)
+- React.js: (Tanstack Router, Tanstack Query, Shadcn)
 - PostgreSQL
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -99,21 +100,154 @@ All in all Melin is a learning experience at its heart, expect issues, expect me
 
 <!-- GETTING STARTED -->
 ## Getting Started
-Melin has the capability to run on both Linux and Windows, as long as you are able to install ASP.NET Core.
+Melin has the capability to run on both Linux and Windows, as long as you are able to install ASP.NET Core, and a database of your choice.
 
-To get a local copy up and running follow these simple example steps.
+_Currently, the documentation lacks DB setup since there are a vast amount of tutorials that explain each setup step in more detail than I could.
+For the DB setup follow any tutorial on how to install PostgreSQL (Windows, or Linux)_
+
+
+To get a local copy up and running follow these steps.
 
 ### Prerequisites
 
 - ASP.NET Core version 8.0 (Windows/Linux)
 - C# version 12.0 (Although any version after 10.0 should work fine)
-- PostgreSQL server (Windows/Linux)
+- PostgreSQL server (Windows/Linux) _or your own desired database, but you will have to install a different package for entity framework core see more details in the documentation under section **Using a different Database provider**_
 
-When you first pull the repository traverse into the 'melin.client' project and run the following:
-* npm
+### Client Setup
+1. When you first pull the repository traverse into the 'melin.client' project and run the following:
   ```sh
   npm install
   ```
+This will install of the client related dependencies that are needed for the application to run
+
+2. Inside of _/melin.client_ Create an environment variable file called `.env.production`:
+```sh
+touch .env.production
+```
+- Enter the newly created environment file and remove everything after the '=' and replace with your fully qualified domain name. **WITH QUOTATION MARKS**
+```SH
+MELIN_SERVER_ADDR= "https://example.com"
+```
+The clientside is now good to go. You can test this by running:
+```SH
+npm run dev
+
+OR
+
+npm run preview
+
+OR
+
+npm run start
+```
+If any errors occur please open an issue on GitHub: https://github.com/xyclose11/Melin/issues 
+And I will remediate the documentation as soon as I can.
+
+### Server Setup
+1. Enter into the _Melin.Server_ directory.
+```SH
+cd Melin.Server
+```
+
+2. Install dependencies
+```SH
+dotnet restore
+```
+3. Create environment variable files:
+- Using both the _template.appsettings.json_ & the _template.appsettings.development.json_ as a template create
+2 new files called: _appsettings.json_ & _appsettings.development.json_
+
+#### appsettings.json: This will define settings to be used in a production setting
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "MelinDatabase": "Host=;Username=;Password=;Database=;"
+  },
+  "SingleUsePasswords": {
+    "SINGLE_USE_ADMIN_PASSWORD": "enterDefaultPasswordHere"
+  }
+}
+```
+
+NOTE: For both json files, for the ConnectionString -> "MelinDatabase" For the fields **DO NOT** include any quotation marks
+i.e. "MelinDatabase": "Host=localhost;Username=johnDoe;Password=john123;Database=johnDoeDB;"
+#### appsettings.Development.json: This will define settings to be used during development
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "MelinDatabase": "Host=;Username=;Password=;Database=;"
+  },
+  "SingleUsePasswords": {
+    "SINGLE_USE_ADMIN_PASSWORD": "enterDefaultPasswordHere"
+  }
+}
+```
+##### Explanation
+- SingleUsePasswords: SINGLE_USE_ADMIN_PASSWORD -> This is set so that on the first run of the backend server the database,
+will be 'seeded' with an Admin level account. I chose to do it this way to avoid manually creating an Admin level account in the database.
+As the name suggests, I strongly urge you to use a single use password for the initial account creation, and then change it afterward to something more secure.
+
+4. Database Setup
+- As previously stated I will not go through the installation of the PostgreSQL instance itself as there are plenty of well-rounded tutorials already out there.
+- However once the database is up and running, and you have implemented the connection string in both appsettings in the previous step, you will need to
+run the DB migrations to create the tables.
+- **Important**: There are 2 main DB contexts within Melin: "ReferenceContext" & "DataContext". ReferenceContext handles everything related to the business logic of Melin.
+DataContext deals with anything related to the Users and how they interact with Teams.
+
+With this said you will have to specify the DB context you are attempting to migrate
+
+```sh
+dotnet ef database update --context "ReferenceContext"
+
+THEN
+
+dotnet ef database update --context "DataContext"
+```
+
+**NOTE: I AM ASSUMING THAT THIS STEP WILL CAUSE THE MOST PROBLEMS ON THE INITIAL SETUP AS THE MIGRATION HISTORY IS QUITE MESSY
+THIS WILL BE FIXED IN THE NEXT VERSION OF MELIN**
+
+5. Running the Backend
+
+#### Development
+In a development environment use the following command:
+```SH
+dotnet run
+```
+
+### Production Build
+
+**NOTE:** For a production build you do not have to worry about build _melin.client_ since the backend .csproj will handle that
+```SH
+dotnet publish -c Release
+
+OR (you can specify your own output directory with --output)
+
+dotnet publish -c Release --output /put/output/here
+
+
+Production RUN (default file location)
+** Ensure that you are in the Melin.Server directory
+
+dotnet /bin/Release/net8.0/Melin.Server.dll
+```
+
+
 
 <!-- ROADMAP -->
 ## Roadmap

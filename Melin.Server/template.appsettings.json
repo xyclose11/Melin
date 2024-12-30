@@ -1,4 +1,11 @@
 {
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
   "ConnectionStrings": {
     "MelinDatabase": "Host=;Username=;Password=;Database=;"
   },
