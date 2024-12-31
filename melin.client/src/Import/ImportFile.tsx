@@ -53,8 +53,10 @@ export type ReferenceType = {
 };
 export function ImportFile({
     handleFileChange,
+    handleRawDataChange,
 }: {
     handleFileChange: (newFile: ReferenceType[]) => void;
+    handleRawDataChange: (newRawData: string[]) => void;
 }) {
     const form = useForm<z.infer<typeof fileFormSchema>>({
         resolver: zodResolver(fileFormSchema),
@@ -62,7 +64,7 @@ export function ImportFile({
 
     const fileRef = form.register("files");
 
-    function parseJSON(file: File) {
+    function parseJSON(file: File): Promise<ReferenceType> {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = function (e) {
@@ -90,6 +92,13 @@ export function ImportFile({
 
         values.files.forEach((file) => {
             const fileExtension = file.name.split(".").pop()?.toLowerCase();
+
+            file.text().then((rawData) => {
+                console.log(rawData);
+                if (rawData.length > 0) {
+                    handleRawDataChange([rawData]);
+                }
+            });
 
             switch (fileExtension) {
                 case "json":

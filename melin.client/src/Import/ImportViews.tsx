@@ -15,8 +15,15 @@ import {
     CardDescription,
 } from "@/components/ui/card.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { ReferenceType } from "@/Import/ImportFile.tsx";
 
-export function ImportViews() {
+export function ImportViews({
+    rawData,
+    formattedData,
+}: {
+    rawData: string[];
+    formattedData: ReferenceType[];
+}) {
     return (
         <div>
             <Card>
@@ -34,10 +41,14 @@ export function ImportViews() {
                             <TabsTrigger value="raw">Raw</TabsTrigger>
                         </TabsList>
                         <TabsContent value="formatted">
-                            <FormattedView />
+                            {formattedData.map((f) => (
+                                <FormattedView data={f} />
+                            ))}
                         </TabsContent>
                         <TabsContent value="raw">
-                            <RawView />
+                            {rawData.map((r) => (
+                                <RawView rawData={r} />
+                            ))}
                         </TabsContent>
                     </Tabs>
                 </CardContent>

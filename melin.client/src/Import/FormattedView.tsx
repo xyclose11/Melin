@@ -6,8 +6,9 @@
     CardTitle,
     CardDescription,
 } from "@/components/ui/card.tsx";
+import { ReferenceType } from "@/Import/ImportFile.tsx";
 
-export function FormattedView() {
+export function FormattedView({ data }: { data: ReferenceType }) {
     return (
         <div>
             <Card>
@@ -17,7 +18,7 @@ export function FormattedView() {
                         Here is the formatted view!
                     </CardDescription>
                 </CardHeader>
-                <CardContent>CONTENT</CardContent>
+                <CardContent>{data.title}</CardContent>
                 <CardFooter>FOOTER</CardFooter>
             </Card>
         </div>
