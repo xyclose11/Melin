@@ -1,6 +1,7 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { ImportFile, ReferenceType } from "@/Import/ImportFile.tsx";
+import { ImportViews } from "@/Import/ImportViews.tsx";
 
 export const Route = createFileRoute("/import")({
     component: ImportComponent,
@@ -16,6 +17,8 @@ function ImportComponent() {
     return (
         <>
             <ImportFile handleFileChange={handleFileChange} />
+
+            <ImportViews />
             <div>
                 <h3>Uploaded References</h3>
                 {files.map((f) => (
