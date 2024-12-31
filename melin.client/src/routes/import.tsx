@@ -14,7 +14,10 @@ function ImportComponent() {
         setFiles((prev) => [...prev, ...newFile]);
     };
     const handleRawDataChange = (newRawData: string[]) => {
-        setRawData([...rawData, ...newRawData]);
+        setRawData((prevRawData) => [
+            ...prevRawData,
+            ...newRawData.filter((data) => !prevRawData.includes(data)), // Add only unique items
+        ]);
     };
 
     return (
@@ -25,17 +28,6 @@ function ImportComponent() {
             />
 
             <ImportViews rawData={rawData} formattedData={files} />
-            <div>
-                <h3>Uploaded References</h3>
-                {files.map((f) => (
-                    <div key={f.id}>
-                        <h4>{f.title}</h4>
-                        <p>Edition: {f.edition}</p>
-                        <p>Language: {f.language}</p>
-                        <p>Type: {f.type}</p>
-                    </div>
-                ))}
-            </div>
         </>
     );
 }

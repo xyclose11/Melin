@@ -94,7 +94,6 @@ export function ImportFile({
             const fileExtension = file.name.split(".").pop()?.toLowerCase();
 
             file.text().then((rawData) => {
-                console.log(rawData);
                 if (rawData.length > 0) {
                     handleRawDataChange([rawData]);
                 }
@@ -104,13 +103,12 @@ export function ImportFile({
                 case "json":
                     parseJSON(file)
                         .then((data) => {
-                            // Ensure you're adding the complete ReferenceType object
                             const newFile: ReferenceType = {
-                                id: Date.now(), // You can generate an ID here
+                                id: Date.now(),
                                 title: data.title,
-                                edition: data.edition || "N/A", // Default if missing
+                                edition: data.edition || "N/A",
                                 language: data.language || "N/A",
-                                type: "book", // You may want to adjust this based on data
+                                type: data.type || "book",
                             };
                             handleFileChange([newFile]);
                         })
