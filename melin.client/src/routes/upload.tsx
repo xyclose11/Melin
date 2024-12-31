@@ -1,4 +1,4 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input.tsx";
 import {
     Form,
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/upload")({
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 3;
 
 const fileFormSchema = z.object({
-    file: z
+    files: z
         .instanceof(FileList)
         .refine((list) => list.length > 0, "No Files Selected")
         .refine((list) => list.length <= 5, "Maximum 5 files")
@@ -56,14 +56,28 @@ function UploadComponent() {
         resolver: zodResolver(fileFormSchema),
     });
 
-    const fileRef = form.register("file");
+    const fileRef = form.register("files");
 
     async function onSubmit(values: z.infer<typeof fileFormSchema>) {
-        console.log(values);
+        console.log(values.files);
         try {
-            const res = await instance.post("/api/File/upload-files", values, {
-                withCredentials: true,
+            const formData = new FormData();
+            Array.from(values.files).forEach((file) => {
+                formData.append("files", file, file.name);
             });
+
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value); // This should log "file-0", "file-1", etc., with correct file details
+            }
+
+            console.log(formData);
+            const res = await instance.post(
+                "/api/File/upload-files",
+                formData,
+                {
+                    withCredentials: true,
+                },
+            );
 
             if (res.status === 200) {
                 console.log(res.data);
@@ -82,7 +96,7 @@ function UploadComponent() {
                 >
                     <FormField
                         control={form.control}
-                        name="file"
+                        name="files"
                         render={({}) => (
                             <FormItem>
                                 <FormLabel>File Upload</FormLabel>
