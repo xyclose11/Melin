@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button.tsx";
+import { instance } from "@/utils/axiosInstance.ts";
 // users allowed to upload file of type TXT, CSV, CSL-JSON, BibTex
 export const Route = createFileRoute("/upload")({
     component: UploadComponent,
@@ -57,8 +58,19 @@ function UploadComponent() {
 
     const fileRef = form.register("file");
 
-    function onSubmit(values: z.infer<typeof fileFormSchema>) {
+    async function onSubmit(values: z.infer<typeof fileFormSchema>) {
         console.log(values);
+        try {
+            const res = await instance.post("/api/File/upload-files", values, {
+                withCredentials: true,
+            });
+
+            if (res.status === 200) {
+                console.log(res.data);
+            }
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     return (
