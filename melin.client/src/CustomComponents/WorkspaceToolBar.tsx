@@ -12,6 +12,7 @@
     Logs,
     Mailbox,
     UploadIcon,
+    ImportIcon,
 } from "lucide-react";
 import {
     Sidebar,
@@ -45,6 +46,11 @@ const items = [
         title: "Upload",
         url: "/upload",
         icon: UploadIcon,
+    },
+    {
+        title: "Import",
+        url: "/import",
+        icon: ImportIcon,
     },
     {
         title: "Library",
