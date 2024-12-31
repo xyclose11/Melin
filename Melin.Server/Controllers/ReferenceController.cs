@@ -303,4 +303,33 @@ public class ReferenceController : ControllerBase
             return BadRequest();
         }
     }
+
+    [HttpPost("import-references")]
+    [Authorize]
+    [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> UploadReferences([FromBody] List<Reference> references)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (User.Identity?.Name == null)
+        {
+            return Unauthorized();
+        }
+        
+        
+
+        foreach (var reference in references)
+        {
+            reference.OwnerEmail = User.Identity.Name;
+            await _referenceService.AddReferenceAsync(reference);
+        }
+
+        return Ok();
+    }
 }
