@@ -86,7 +86,7 @@ public class FileController : ControllerBase
             await file.CopyToAsync(stream);
         }
 
-        await _fileUploadService.ValidateJsonFile();
+        await _fileUploadService.ValidateFile();
         var size = files.Sum(f => f.Length);
 
         return Ok(new { count = files.Count, size});
