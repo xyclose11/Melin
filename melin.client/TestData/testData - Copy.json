@@ -1,0 +1,33 @@
+﻿{
+  "type": "book",
+  "id": "book-1",
+  "title": "Introduction to Algorithms",
+  "author": [
+    {
+      "family": "Cormen",
+      "given": "Thomas H."
+    },
+    {
+      "family": "Leiserson",
+      "given": "Charles E."
+    },
+    {
+      "family": "Rivest",
+      "given": "Ronald L."
+    },
+    {
+      "family": "Stein",
+      "given": "Clifford"
+    }
+  ],
+  "publisher": "MIT Press",
+  "publisher-place": "Cambridge, MA",
+  "issued": {
+    "date-parts": [
+      [2009]
+    ]
+  },
+  "edition": "3rd",
+  "language": "en",
+  "ISBN": "9780262033848"
+}

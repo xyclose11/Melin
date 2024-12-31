@@ -1,8 +1,23 @@
-﻿export function RawView() {
+﻿import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from "@/components/ui/card.tsx";
+
+export function RawView() {
     return (
         <div>
-            <h1>Raw View!</h1>
-            <p>Here is the Raw view</p>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Raw View</CardTitle>
+                    <CardDescription>Here is the Raw view!</CardDescription>
+                </CardHeader>
+                <CardContent>CONTENT</CardContent>
+                <CardFooter>FOOTER</CardFooter>
+            </Card>
         </div>
     );
 }
