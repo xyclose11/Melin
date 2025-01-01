@@ -21,13 +21,13 @@ function ImportComponent() {
     };
 
     return (
-        <>
+        <div className="sm:w-[60%] md:w-[75%] lg:w-[85%] justify-center align-middle items-center grid grid-cols-1">
             <ImportFile
                 handleFileChange={handleFileChange}
                 handleRawDataChange={handleRawDataChange}
             />
 
             <ImportViews rawData={rawData} formattedData={files} />
-        </>
+        </div>
     );
 }

@@ -12,14 +12,13 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-    CardDescription,
 } from "@/components/ui/card.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { ReferenceType } from "@/Import/ImportFile.tsx";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { DevTool } from "@hookform/devtools";
 
 const rawFormSchema = z.object({
@@ -56,16 +55,14 @@ export function ImportViews({
         <div>
             <FormProvider {...methods}>
                 <form onSubmit={methods.handleSubmit(onSubmit)}>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Parsed Data</CardTitle>
-                            <CardDescription></CardDescription>
+                    <Card className="size-full">
+                        <CardHeader className="">
+                            <CardTitle className="p-0 bg-sky-500/100">
+                                Parsed Data
+                            </CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <Tabs
-                                defaultValue="formatted"
-                                className="w-[400px]"
-                            >
+                        <CardContent className="justify-start p-5">
+                            <Tabs defaultValue="formatted" className="p-4">
                                 <TabsList>
                                     <TabsTrigger value="formatted">
                                         Formatted
@@ -78,27 +75,30 @@ export function ImportViews({
                                     ))}
                                 </TabsContent>
                                 <TabsContent value="raw">
-                                    {/*{rawData.map((r) => (*/}
-                                    {/*    <RawView rawData={r} />*/}
-                                    {/*))}*/}
                                     {fields.map((item, index) => {
-                                        console.log(item);
                                         return (
-                                            <li key={item.id}>
-                                                <RawView
-                                                    name={`rawDataArray.${index}`}
-                                                />
-                                            </li>
+                                            <RawView
+                                                key={item.id}
+                                                name={`rawDataArray.${index}`}
+                                            />
                                         );
                                     })}
                                 </TabsContent>
                             </Tabs>
                         </CardContent>
-                        <CardFooter>
-                            <Button type="reset" variant="destructive">
+                        <CardFooter className="gap-4 p-4 justify-end">
+                            <Button
+                                className="p-2"
+                                type="reset"
+                                variant="destructive"
+                            >
                                 Cancel
                             </Button>
-                            <Button type="submit" variant="secondary">
+                            <Button
+                                className="p-2"
+                                type="submit"
+                                variant="secondary"
+                            >
                                 Import
                             </Button>
                         </CardFooter>

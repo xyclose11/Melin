@@ -1,11 +1,4 @@
-﻿import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from "@/components/ui/card.tsx";
+﻿import { Card, CardContent, CardFooter } from "@/components/ui/card.tsx";
 import {
     FormControl,
     FormDescription,
@@ -16,47 +9,27 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useFormContext } from "react-hook-form";
-import { useEffect } from "react";
 
 export function RawView({ name }: { name: string }) {
-    const {
-        control,
-        setValue,
-        getValues,
-        register,
-        formState: { errors },
-    } = useFormContext();
-
-    useEffect(() => {
-        console.log(getValues());
-    }, []);
+    const { control, register } = useFormContext();
 
     return (
-        <div>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Raw View</CardTitle>
-                    <CardDescription>Here is the Raw view!</CardDescription>
-                </CardHeader>
+        <div className="mt-2">
+            <Card className="w-[100%] pt-5">
                 <CardContent>
                     <FormField
                         control={control}
                         name={`${name}`}
                         render={() => (
                             <FormItem>
-                                <FormLabel>Data</FormLabel>
                                 <FormControl>
                                     <Textarea
                                         placeholder=""
-                                        className="resize-none"
+                                        className="min-h-[250px] resize-none p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300"
                                         defaultValue={""}
                                         {...register(`${name}` as const)}
                                     />
                                 </FormControl>
-                                <FormDescription>
-                                    You can manually edit the parsed data here
-                                    before saving it.
-                                </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}

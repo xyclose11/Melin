@@ -21,12 +21,14 @@
 /*  text-decoration: inherit;*/
 /*}*/
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-}
+/*body {*/
+/*  margin: 0;*/
+/*  display: flex;*/
+/*  place-items: center;*/
+/*  min-width: 320px;*/
+/*}*/
+
+
 
 h1 {
   font-size: 3.2em;

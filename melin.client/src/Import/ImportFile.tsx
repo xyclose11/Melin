@@ -120,29 +120,43 @@ export function ImportFile({
         });
     }
     return (
-        <>
+        <div className="">
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(handleFileUpload)}
-                    className="space-y-8"
+                    className="flex flex-col space-y-6 w-full max-w-md bg-white p-6 rounded-lg shadow-md"
                 >
                     <FormField
                         control={form.control}
                         name="files"
                         render={({}) => (
-                            <FormItem>
-                                <FormLabel>File Upload</FormLabel>
+                            <FormItem className="flex flex-col space-y-4">
+                                <FormLabel className="text-lg font-medium">
+                                    File Upload
+                                </FormLabel>
                                 <FormControl>
-                                    <Input multiple type="file" {...fileRef} />
+                                    <Input
+                                        className="p-2 border rounded-md"
+                                        multiple
+                                        type="file"
+                                        {...fileRef}
+                                    />
                                 </FormControl>
-                                <FormDescription>File Upload!</FormDescription>
-                                <FormMessage />
+                                <FormDescription className="text-sm text-gray-500">
+                                    File Upload!
+                                </FormDescription>
+                                <FormMessage className="text-red-500 text-sm" />
                             </FormItem>
                         )}
                     />
-                    <Button type="submit">Submit</Button>
+                    <Button
+                        className="w-full py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                        type="submit"
+                    >
+                        Submit
+                    </Button>
                 </form>
             </Form>
-        </>
+        </div>
     );
 }
