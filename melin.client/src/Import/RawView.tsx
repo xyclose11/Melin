@@ -1,10 +1,8 @@
 ﻿import { Card, CardContent, CardFooter } from "@/components/ui/card.tsx";
 import {
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +13,7 @@ export function RawView({ name }: { name: string }) {
 
     return (
         <div className="mt-2">
-            <Card className="w-[100%] pt-5">
+            <Card className="w-[100%] pt-5 bg-accent">
                 <CardContent>
                     <FormField
                         control={control}
@@ -27,7 +25,7 @@ export function RawView({ name }: { name: string }) {
                                         placeholder=""
                                         className="min-h-[250px] resize-none p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300"
                                         defaultValue={""}
-                                        {...register(`${name}` as const)}
+                                        {...register(`${name}.value` as const)}
                                     />
                                 </FormControl>
                                 <FormMessage />

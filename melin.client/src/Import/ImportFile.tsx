@@ -52,10 +52,8 @@ export type ReferenceType = {
     type: string;
 };
 export function ImportFile({
-    handleFileChange,
     handleRawDataChange,
 }: {
-    handleFileChange: (newFile: ReferenceType[]) => void;
     handleRawDataChange: (newRawData: string[]) => void;
 }) {
     const form = useForm<z.infer<typeof fileFormSchema>>({
@@ -90,33 +88,51 @@ export function ImportFile({
             return;
         }
 
-        values.files.forEach((file) => {
-            const fileExtension = file.name.split(".").pop()?.toLowerCase();
+        values.files.forEach((file): Promise<string[]> => {
+            // const fileExtension = file.name.split(".").pop()?.toLowerCase();
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    if (
+                        e.target?.result &&
+                        typeof e.target.result === "string"
+                    ) {
+                        const lines = e.target.result.split("\n");
+                        handleRawDataChange([e.target.result]);
 
-            file.text().then((rawData) => {
-                if (rawData.length > 0) {
-                    handleRawDataChange([rawData]);
-                }
+                        resolve(lines);
+                    } else {
+                        reject("Failed to read text file");
+                    }
+                };
+                reader.readAsText(file);
             });
-
-            switch (fileExtension) {
-                case "json":
-                    parseJSON(file)
-                        .then((data) => {
-                            const newFile: ReferenceType = {
-                                id: Date.now(),
-                                title: data.title,
-                                edition: data.edition || "N/A",
-                                language: data.language || "N/A",
-                                type: data.type || "book",
-                            };
-                            handleFileChange([newFile]);
-                        })
-                        .catch((error) => alert(error));
-                    break;
-                default:
-                    alert("Unsupported file type.");
-            }
+            // file.text().then((rawData) => {
+            //     console.log(rawData);
+            //
+            //     if (rawData.length > 0) {
+            //         handleRawDataChange([rawData]);
+            //     }
+            // });
+            //
+            // switch (fileExtension) {
+            //     case "json":
+            //         parseJSON(file)
+            //             .then((data) => {
+            //                 const newFile: ReferenceType = {
+            //                     id: Date.now(),
+            //                     title: data.title,
+            //                     edition: data.edition || "N/A",
+            //                     language: data.language || "N/A",
+            //                     type: data.type || "book",
+            //                 };
+            //                 handleFileChange([newFile]);
+            //             })
+            //             .catch((error) => alert(error));
+            //         break;
+            //     default:
+            //         alert("Unsupported file type.");
+            // }
         });
     }
     return (

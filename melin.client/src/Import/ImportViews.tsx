@@ -15,22 +15,22 @@ import {
 } from "@/components/ui/card.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { ReferenceType } from "@/Import/ImportFile.tsx";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import {
+    FormProvider,
+    useFieldArray,
+    useForm,
+    useWatch,
+} from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { DevTool } from "@hookform/devtools";
+import { instance } from "@/utils/axiosInstance.ts";
 
 const rawFormSchema = z.object({
     rawDataArray: z.array(z.string()).optional(),
 });
-export function ImportViews({
-    rawData,
-    formattedData,
-}: {
-    rawData: string[];
-    formattedData: ReferenceType[];
-}) {
+export function ImportViews({ rawData }: { rawData: string[] }) {
     const methods = useForm<z.infer<typeof rawFormSchema>>({
         resolver: zodResolver(rawFormSchema),
         defaultValues: { rawDataArray: [] },
@@ -40,16 +40,44 @@ export function ImportViews({
         control: methods.control,
         name: "rawDataArray",
     });
-    const onSubmit = (values: any) => {
-        console.log(values);
+
+    const rawDataArray = useWatch({
+        control: methods.control,
+        name: "rawDataArray",
+    });
+
+    const derivedFormattedData = useMemo(() => {
+        return rawDataArray
+            ?.map((field) => {
+                try {
+                    return JSON.parse(field.value);
+                } catch {
+                    return null; // Ignore invalid JSON
+                }
+            })
+            .filter((data) => data !== null); // Exclude invalid entries
+    }, [rawDataArray]);
+    const onSubmit = async (values: any) => {
+        try {
+            const res = await instance.post(
+                "Reference/import-references",
+                values,
+                { withCredentials: true },
+            );
+
+            if (res.status === 200) {
+                console.log(res);
+            }
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     useEffect(() => {
-        console.log(rawData);
         if (rawData.length > 0) {
-            rawData.forEach((data) => append(data));
+            rawData.forEach((data) => append({ value: data }));
         }
-    }, [rawData]);
+    }, [rawData, append]);
 
     return (
         <div>
@@ -70,8 +98,11 @@ export function ImportViews({
                                     <TabsTrigger value="raw">Raw</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="formatted">
-                                    {formattedData.map((f) => (
-                                        <FormattedView key={f.id} data={f} />
+                                    {derivedFormattedData.map((data, index) => (
+                                        <FormattedView
+                                            key={index}
+                                            data={data}
+                                        />
                                     ))}
                                 </TabsContent>
                                 <TabsContent value="raw">
