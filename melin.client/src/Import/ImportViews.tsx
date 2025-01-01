@@ -124,7 +124,11 @@ export function ImportViews({ rawData }: { rawData: string[] }) {
                                         (data, index) => (
                                             <FormattedView
                                                 key={index}
+                                                name={`rawDataArray.${index}`}
                                                 data={data}
+                                                handleRemoveReference={
+                                                    handleRemoveReferenceData
+                                                }
                                             />
                                         ),
                                     )}

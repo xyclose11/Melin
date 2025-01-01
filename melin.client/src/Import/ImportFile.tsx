@@ -136,7 +136,7 @@ export function ImportFile({
         });
     }
     return (
-        <div className="">
+        <div className="mb-4">
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(handleFileUpload)}
@@ -147,7 +147,7 @@ export function ImportFile({
                         name="files"
                         render={({}) => (
                             <FormItem className="flex flex-col space-y-4">
-                                <FormLabel className="text-lg font-medium">
+                                <FormLabel className="text-xl font-medium">
                                     File Upload
                                 </FormLabel>
                                 <FormControl>
@@ -159,7 +159,15 @@ export function ImportFile({
                                     />
                                 </FormControl>
                                 <FormDescription className="text-sm text-gray-500">
-                                    File Upload!
+                                    <ul className="bg-accent rounded p-1">
+                                        <li className="text-lg">
+                                            Current Supported Formats: CSL-JSON,
+                                            TXT
+                                        </li>
+                                        <li className="text-sm italic">
+                                            Upcoming Formats: BibLaTex, CSV
+                                        </li>
+                                    </ul>
                                 </FormDescription>
                                 <FormMessage className="text-red-500 text-sm" />
                             </FormItem>

@@ -8,6 +8,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button.tsx";
+import { SquareXIcon } from "lucide-react";
 
 export function RawView({
     name,
@@ -16,7 +17,7 @@ export function RawView({
     name: string;
     handleRemoveReference: (idx: number) => void;
 }) {
-    const { control, register, getValues } = useFormContext();
+    const { control, register } = useFormContext();
 
     console.log();
     return (
@@ -41,12 +42,16 @@ export function RawView({
                         )}
                     />
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="justify-end">
                     <Button
+                        variant="destructive"
+                        className="p-1.5 m-0"
                         onClick={() =>
                             handleRemoveReference(parseInt(name.slice(13)))
                         }
-                    ></Button>
+                    >
+                        <SquareXIcon />
+                    </Button>
                 </CardFooter>
             </Card>
         </div>
