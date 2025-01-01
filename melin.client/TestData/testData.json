@@ -1,6 +1,5 @@
 ﻿{
   "type": "book",
-  "id": "book-1",
   "title": "Introduction to Algorithms",
   "author": [
     {
@@ -28,6 +27,5 @@
     ]
   },
   "edition": "3rd",
-  "language": "en",
   "ISBN": "9780262033848"
 }

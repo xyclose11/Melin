@@ -17,7 +17,7 @@ export function RawView({ name }: { name: string }) {
                 <CardContent>
                     <FormField
                         control={control}
-                        name={`${name}`}
+                        name={`${name}.value`}
                         render={() => (
                             <FormItem>
                                 <FormControl>

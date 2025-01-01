@@ -14,7 +14,6 @@ import {
     CardTitle,
 } from "@/components/ui/card.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { ReferenceType } from "@/Import/ImportFile.tsx";
 import {
     FormProvider,
     useFieldArray,
@@ -28,7 +27,7 @@ import { DevTool } from "@hookform/devtools";
 import { instance } from "@/utils/axiosInstance.ts";
 
 const rawFormSchema = z.object({
-    rawDataArray: z.array(z.string()).optional(),
+    rawDataArray: z.array(z.object({ value: z.string() })).optional(),
 });
 export function ImportViews({ rawData }: { rawData: string[] }) {
     const methods = useForm<z.infer<typeof rawFormSchema>>({
@@ -52,21 +51,33 @@ export function ImportViews({ rawData }: { rawData: string[] }) {
                 try {
                     return JSON.parse(field.value);
                 } catch {
-                    return null; // Ignore invalid JSON
+                    return null;
                 }
             })
-            .filter((data) => data !== null); // Exclude invalid entries
+            .filter((data) => data !== null);
     }, [rawDataArray]);
-    const onSubmit = async (values: any) => {
+    const onSubmit = async (values: z.infer<typeof rawFormSchema>) => {
         try {
+            console.log("SUBMITTING...");
+            console.log(values.rawDataArray);
+            const newValue = {
+                rawReferences: values.rawDataArray,
+            };
+            console.log(JSON.stringify(newValue));
+
+            // const mappedValues = values.rawDataArray?.forEach((v) => {
+            // })
+
             const res = await instance.post(
                 "Reference/import-references",
-                values,
+                newValue,
                 { withCredentials: true },
             );
 
             if (res.status === 200) {
                 console.log(res);
+            } else {
+                console.error(res);
             }
         } catch (e) {
             console.error(e);
@@ -98,12 +109,14 @@ export function ImportViews({ rawData }: { rawData: string[] }) {
                                     <TabsTrigger value="raw">Raw</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="formatted">
-                                    {derivedFormattedData.map((data, index) => (
-                                        <FormattedView
-                                            key={index}
-                                            data={data}
-                                        />
-                                    ))}
+                                    {derivedFormattedData?.map(
+                                        (data, index) => (
+                                            <FormattedView
+                                                key={index}
+                                                data={data}
+                                            />
+                                        ),
+                                    )}
                                 </TabsContent>
                                 <TabsContent value="raw">
                                     {fields.map((item, index) => {

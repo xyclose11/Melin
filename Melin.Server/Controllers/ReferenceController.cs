@@ -3,6 +3,7 @@ using System.Globalization;
 using Melin.Server.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Melin.Server.Models;
+using Melin.Server.Models.Binders;
 using Melin.Server.Models.DTO;
 using Melin.Server.Models.References;
 using Melin.Server.Services;
@@ -10,6 +11,8 @@ using Melin.Server.Wrappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Melin.Server.Controllers;
@@ -303,14 +306,27 @@ public class ReferenceController : ControllerBase
             return BadRequest();
         }
     }
+    
+    public class RawReference
+    {
+        public string Type { get; set; }
+        public string Value { get; set; }
 
+    }
+
+    /// <summary>
+    /// Used for importing/creating several References of dynamic types.
+    /// Implements a custom model binder.
+    /// </summary>
+    /// <param name="rawReferences">A List of JSON Reference objects</param>
+    /// <returns>An ActionResult</returns>
     [HttpPost("import-references")]
     [Authorize]
     [ProducesResponseType(typeof(ActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> UploadReferences([FromBody] List<Reference> references)
+    public async Task<ActionResult> UploadReferences([ModelBinder(BinderType = typeof(ReferenceListBinder))] [FromBody] List<Reference> rawReferences)
     {
         if (!ModelState.IsValid)
         {
@@ -321,13 +337,18 @@ public class ReferenceController : ControllerBase
         {
             return Unauthorized();
         }
-        
-        
 
-        foreach (var reference in references)
+        foreach (var reference in rawReferences)
         {
-            reference.OwnerEmail = User.Identity.Name;
-            await _referenceService.AddReferenceAsync(reference);
+            try
+            {
+                reference.OwnerEmail = User.Identity.Name;
+                await _referenceService.AddReferenceAsync(reference);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error processing reference: {ex.Message}");
+            }
         }
 
         return Ok();
