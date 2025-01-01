@@ -20,6 +20,10 @@ public class ReferenceConverter : JsonConverter<Reference>
         var obj = JObject.Load(reader);
         var referenceType = obj["type"]?.ToString();  // Get the Type field (e.g., Book or Artwork)
 
+        try
+        {
+
+
         if (referenceType == null)
         {
             throw new NullReferenceException();
@@ -309,6 +313,12 @@ public class ReferenceConverter : JsonConverter<Reference>
             {
                 return o as Note;
             }
+        }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return null;
         }
 
         throw new JsonSerializationException($"Unknown reference type: {referenceType}");
