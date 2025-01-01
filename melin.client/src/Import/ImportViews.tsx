@@ -25,6 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { DevTool } from "@hookform/devtools";
 import { instance } from "@/utils/axiosInstance.ts";
+import { toast } from "@/hooks/use-toast.ts";
 
 const rawFormSchema = z.object({
     rawDataArray: z.array(z.object({ value: z.string() })).optional(),
@@ -58,15 +59,9 @@ export function ImportViews({ rawData }: { rawData: string[] }) {
     }, [rawDataArray]);
     const onSubmit = async (values: z.infer<typeof rawFormSchema>) => {
         try {
-            console.log("SUBMITTING...");
-            console.log(values.rawDataArray);
             const newValue = {
                 rawReferences: values.rawDataArray,
             };
-            console.log(JSON.stringify(newValue));
-
-            // const mappedValues = values.rawDataArray?.forEach((v) => {
-            // })
 
             const res = await instance.post(
                 "Reference/import-references",
@@ -75,11 +70,23 @@ export function ImportViews({ rawData }: { rawData: string[] }) {
             );
 
             if (res.status === 200) {
-                console.log(res);
+                toast({
+                    title: "References Imported Successfully!",
+                    description: `${newValue.rawReferences?.length} Reference(s) Imported`,
+                });
             } else {
-                console.error(res);
+                toast({
+                    title: "Import Failure",
+                    description: `Please Try Again`,
+                    variant: "destructive",
+                });
             }
         } catch (e) {
+            toast({
+                title: "Import Failure",
+                description: `Please Try Again`,
+                variant: "destructive",
+            });
             console.error(e);
         }
     };
