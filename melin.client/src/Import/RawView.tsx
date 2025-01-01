@@ -7,10 +7,18 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useFormContext } from "react-hook-form";
+import { Button } from "@/components/ui/button.tsx";
 
-export function RawView({ name }: { name: string }) {
-    const { control, register } = useFormContext();
+export function RawView({
+    name,
+    handleRemoveReference,
+}: {
+    name: string;
+    handleRemoveReference: (idx: number) => void;
+}) {
+    const { control, register, getValues } = useFormContext();
 
+    console.log();
     return (
         <div className="mt-2">
             <Card className="w-[100%] pt-5 bg-accent">
@@ -33,7 +41,13 @@ export function RawView({ name }: { name: string }) {
                         )}
                     />
                 </CardContent>
-                <CardFooter>{/*    Display error messages HERE*/}</CardFooter>
+                <CardFooter>
+                    <Button
+                        onClick={() =>
+                            handleRemoveReference(parseInt(name.slice(13)))
+                        }
+                    ></Button>
+                </CardFooter>
             </Card>
         </div>
     );

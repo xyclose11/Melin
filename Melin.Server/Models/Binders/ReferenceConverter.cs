@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Melin.Server.Models.References;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Serilog;
 
 namespace Melin.Server.Models.Binders;
 
@@ -317,6 +318,7 @@ public class ReferenceConverter : JsonConverter<Reference>
         }
         catch (Exception e)
         {
+            Log.Error("Unable to parse JSON");
             Console.WriteLine(e);
             return null;
         }

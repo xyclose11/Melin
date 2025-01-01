@@ -36,7 +36,7 @@ export function ImportViews({ rawData }: { rawData: string[] }) {
         defaultValues: { rawDataArray: [] },
     });
 
-    const { fields, append } = useFieldArray({
+    const { fields, append, remove } = useFieldArray({
         control: methods.control,
         name: "rawDataArray",
     });
@@ -91,6 +91,10 @@ export function ImportViews({ rawData }: { rawData: string[] }) {
         }
     };
 
+    function handleRemoveReferenceData(idx: number) {
+        remove(idx);
+    }
+
     useEffect(() => {
         if (rawData.length > 0) {
             rawData.forEach((data) => append({ value: data }));
@@ -131,6 +135,9 @@ export function ImportViews({ rawData }: { rawData: string[] }) {
                                             <RawView
                                                 key={item.id}
                                                 name={`rawDataArray.${index}`}
+                                                handleRemoveReference={
+                                                    handleRemoveReferenceData
+                                                }
                                             />
                                         );
                                     })}
