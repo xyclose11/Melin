@@ -50,6 +50,7 @@ export function ImportViews({ rawData }: { rawData: string[] }) {
         return rawDataArray
             ?.map((field) => {
                 try {
+                    console.log(field.value);
                     return JSON.parse(field.value);
                 } catch {
                     return null;

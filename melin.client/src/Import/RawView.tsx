@@ -19,7 +19,6 @@ export function RawView({
 }) {
     const { control, register } = useFormContext();
 
-    console.log();
     return (
         <div className="mt-2">
             <Card className="w-[100%] pt-5 bg-accent">

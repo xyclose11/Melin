@@ -19,17 +19,54 @@ export function FormattedView({
     name: string;
     handleRemoveReference: (idx: number) => void;
 }) {
-    console.log(data);
     return (
-        <div>
+        <div className="mt-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>Formatted View</CardTitle>
+                    <CardTitle>{data.title}</CardTitle>
                     <CardDescription>
-                        Here is the formatted view!
+                        {data.type
+                            .slice(0, 1)
+                            .toUpperCase()
+                            .concat(data.type.slice(1, data.type.length))}
                     </CardDescription>
                 </CardHeader>
-                <CardContent>{data.title}</CardContent>
+                <CardContent>
+                    <div>
+                        <p>
+                            <label className="font-bold text-secondary">
+                                Edition:{" "}
+                            </label>
+                            {data.edition}
+                        </p>
+                        <p>
+                            <label className="font-bold text-secondary">
+                                Authors:{" "}
+                            </label>
+                            <ul>
+                                {data.author.map((a) => {
+                                    return (
+                                        <li>
+                                            {a.family}, {a.given}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </p>
+                        <p>
+                            <label className="font-bold text-secondary">
+                                Publisher:{" "}
+                            </label>
+                            {data.publisher}
+                        </p>
+                        <p>
+                            <label className="font-bold text-secondary">
+                                ISBN:{" "}
+                            </label>
+                            {data.ISBN}
+                        </p>
+                    </div>
+                </CardContent>
                 <CardFooter className="justify-end">
                     <Button
                         variant="destructive"

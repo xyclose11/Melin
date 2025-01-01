@@ -44,9 +44,21 @@ const fileFormSchema = z.object({
             },
         ),
 });
+type author = {
+    family: string;
+    given: string;
+};
+
 export type ReferenceType = {
     id: number;
     title: string;
+    publisher: string;
+    publisherPlace: string;
+    accessed: string;
+    ISBN: string;
+    ISSN: string;
+    DOI: string;
+    author: [author];
     edition: string;
     language: string;
     type: string;

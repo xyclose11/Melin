@@ -29,7 +29,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
-const REFERENCE_TYPES = [
+export const REFERENCE_TYPES = [
     { label: "Artwork", value: "artwork" },
     { label: "Audio Recording", value: "audio-recording" },
     // { label: "Bill", value: "bill" },
@@ -81,7 +81,7 @@ export function ReferenceTypeSelector({ handleState }: any) {
     function handleChange() {
         handleState(form.getValues().refType);
     }
-    
+
     return (
         <Form {...form}>
             <form className="space-y-6">
