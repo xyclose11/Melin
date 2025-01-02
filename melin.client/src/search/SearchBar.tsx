@@ -18,21 +18,11 @@ import "@citation-js/plugin-csl";
 import "@citation-js/plugin-isbn";
 import { useState } from "react";
 import { Progress } from "@/components/ui/progress.tsx";
+import { SearchIcon } from "lucide-react";
 
 const searchBarSchema = z.object({
     searchQuery: z.string().min(1),
 });
-
-interface Author {
-    given: string;
-    family: string;
-}
-
-export interface CSLJSON {
-    type: string;
-    author: Author[];
-    title: string;
-}
 
 export function SearchBar({
     handleQueryChange,
@@ -52,7 +42,7 @@ export function SearchBar({
     const { isSuccess, isFetching, isPending, isError } = useQuery({
         queryKey: ["userSearch", userSearch],
         queryFn: () => searchWithUserQuery(userSearch),
-        staleTime: Infinity,
+        staleTime: Infinity, // Stale-time set to infinity since the queried data is relatively static
     });
 
     async function searchWithUserQuery(q: string) {
@@ -85,7 +75,7 @@ export function SearchBar({
     }
 
     return (
-        <div className="justify-center w-[400px]">
+        <div className="justify-center w-full mt-16">
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
@@ -96,28 +86,33 @@ export function SearchBar({
                         name="searchQuery"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Query</FormLabel>
+                                <FormLabel>Search</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        disabled={isFetching}
-                                        className="min-w-[60%] max-w-[90%]"
-                                        placeholder="ISBN, ISSN, DOI, Title..."
-                                        onChangeCapture={(event) =>
-                                            handleQueryChange(
-                                                event.currentTarget.value,
-                                            )
-                                        }
-                                        {...field}
-                                    />
+                                    <div className="flex gap-4">
+                                        <Input
+                                            disabled={isFetching}
+                                            className="min-w-[60%] max-w-[100%]"
+                                            placeholder="ISBN, ISSN, DOI, Title..."
+                                            onChangeCapture={(event) =>
+                                                handleQueryChange(
+                                                    event.currentTarget.value,
+                                                )
+                                            }
+                                            {...field}
+                                        />
+                                        <Button type="submit" className="p-2">
+                                            <SearchIcon />
+                                        </Button>
+                                    </div>
                                 </FormControl>
+
                                 <FormDescription>
-                                    This is your public display name.
+                                    Search by ISBN, ISSN, DOI, Title, and more!
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
                     ></FormField>
-                    <Button type="submit">Submit</Button>
                 </form>
             </Form>
             {isPending && <Progress value={progress} />}
