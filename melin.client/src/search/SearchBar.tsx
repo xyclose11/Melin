@@ -12,6 +12,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { debounce } from "@/utils/debounce.ts";
 
 const searchBarSchema = z.object({
     searchQuery: z.string().min(1),
@@ -33,11 +34,13 @@ export function SearchBar({
         console.log(values);
     }
 
+    const debouncedSubmit = debounce(onSubmit, 5000);
+
     return (
         <div className="justify-center w-[400px]">
             <Form {...form}>
                 <form
-                    onSubmit={form.handleSubmit(onSubmit)}
+                    onSubmit={form.handleSubmit(debouncedSubmit)}
                     className="space-y-8"
                 >
                     <FormField
