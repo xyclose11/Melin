@@ -4,6 +4,7 @@ import { IReference } from "@/utils/Reference.ts";
 
 export const postSingleReference = async (data: CSLJSON) => {
     try {
+        // TODO finish this conversion for all potential types
         const convertedData: IReference = {
             type: data.type,
             title: data.title ?? "",
