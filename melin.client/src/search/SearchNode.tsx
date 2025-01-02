@@ -20,7 +20,7 @@ export function SearchNode({ data }: { data: CSLJSON }) {
                     <p>{data.title}</p>
                     <p>{data.type}</p>
                     <p>{data.ISBN}</p>
-                    {data.author.map((a) => {
+                    {data.author?.map((a) => {
                         return <p>{a.family}</p>;
                     })}
                 </CardContent>

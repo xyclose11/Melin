@@ -6,9 +6,9 @@ interface Author {
 export interface CSLJSON {
     id: string;
     type: string;
-    author: Author[];
-    title: string;
-    URL: string;
-    keyword: string;
-    ISBN: string;
+    author?: Author[];
+    title?: string;
+    URL?: string;
+    keyword?: string;
+    ISBN?: string;
 }

@@ -16,6 +16,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-csl";
 import "@citation-js/plugin-isbn";
+import "@citation-js/plugin-doi";
+import "@citation-js/plugin-wikidata";
+import "@citation-js/plugin-software-formats";
 import { useState } from "react";
 import { Progress } from "@/components/ui/progress.tsx";
 import { SearchIcon } from "lucide-react";
@@ -45,6 +48,7 @@ export function SearchBar({
         staleTime: Infinity, // Stale-time set to infinity since the queried data is relatively static
     });
 
+    // Current supported search types: ISBN, DOI, Wikidata QID, GitHub Repo URL, NPM package URL
     async function searchWithUserQuery(q: string) {
         try {
             const res = Cite.async(q)
@@ -107,7 +111,8 @@ export function SearchBar({
                                 </FormControl>
 
                                 <FormDescription>
-                                    Search by ISBN, ISSN, DOI, Title, and more!
+                                    Search by ISBN, DOI, Wikidata, Title, and
+                                    more!
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
