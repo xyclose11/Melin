@@ -16,7 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-csl";
 import "@citation-js/plugin-isbn";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Progress } from "@/components/ui/progress.tsx";
 
 const searchBarSchema = z.object({
@@ -52,14 +52,13 @@ export function SearchBar({
     const { isSuccess, isFetching, isPending, isError } = useQuery({
         queryKey: ["userSearch", userSearch],
         queryFn: () => searchWithUserQuery(userSearch),
-        staleTime: 50000,
+        staleTime: Infinity,
     });
 
     async function searchWithUserQuery(q: string) {
         try {
             const res = Cite.async(q)
                 .then((json: any) => {
-                    console.log(json);
                     // console.log(
                     //     json.format("bibliography", {
                     //         format: "text",
