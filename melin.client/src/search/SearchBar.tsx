@@ -13,6 +13,12 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { debounce } from "@/utils/debounce.ts";
+import { useQuery } from "@tanstack/react-query";
+import { Cite } from "@citation-js/core";
+import "@citation-js/plugin-csl";
+import "@citation-js/plugin-isbn";
+import { useState } from "react";
+import { isPending } from "@reduxjs/toolkit";
 
 const searchBarSchema = z.object({
     searchQuery: z.string().min(1),
@@ -23,6 +29,8 @@ export function SearchBar({
 }: {
     handleQueryChange: (query: string) => void;
 }) {
+    const [userSearch, setUserSearch] = useState("");
+
     const form = useForm<z.infer<typeof searchBarSchema>>({
         resolver: zodResolver(searchBarSchema),
         defaultValues: {
@@ -30,11 +38,51 @@ export function SearchBar({
         },
     });
 
+    const query = useQuery({
+        queryKey: ["userSearch", userSearch],
+        queryFn: () => searchWithUserQuery(userSearch),
+        staleTime: 50000,
+    });
+
+    async function searchWithUserQuery(q: string) {
+        try {
+            const res = Cite.async(q)
+                .then((json) => {
+                    console.log(
+                        json.format("bibliography", {
+                            format: "text",
+                            template: "apa",
+                        }),
+                    );
+
+                    return json.format("bibliography", {
+                        format: "text",
+                        template: "apa",
+                    });
+                })
+                .catch((error) => {
+                    console.log("catch");
+                    console.log(error);
+                });
+
+            return res;
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     function onSubmit(values: z.infer<typeof searchBarSchema>) {
-        console.log(values);
+        setUserSearch(values.searchQuery);
     }
 
     const debouncedSubmit = debounce(onSubmit, 5000);
+
+    if (query.isPending) {
+        return <span>Loading...</span>;
+    }
+    if (query.isError) {
+        return <span>Error: {query.error.message}</span>;
+    }
 
     return (
         <div className="justify-center w-[400px]">
@@ -71,6 +119,8 @@ export function SearchBar({
                     <Button type="submit">Submit</Button>
                 </form>
             </Form>
+            {query.isFetching && <div>Fetching...</div>}
+            {query.isSuccess && <div>Success</div>}
         </div>
     );
 }
