@@ -7,8 +7,13 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button.tsx";
+import { postSingleReference } from "@/api/postSingleReference.ts";
 
 export function SearchNode({ data }: { data: CSLJSON }) {
+    async function handlePostReference() {
+        await postSingleReference(data);
+    }
     return (
         <div className="mt-2">
             <Card>
@@ -24,7 +29,9 @@ export function SearchNode({ data }: { data: CSLJSON }) {
                         return <p>{a.family}</p>;
                     })}
                 </CardContent>
-                <CardFooter></CardFooter>
+                <CardFooter>
+                    <Button onClick={handlePostReference}>Add?</Button>
+                </CardFooter>
             </Card>
         </div>
     );
