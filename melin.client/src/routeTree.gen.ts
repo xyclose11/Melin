@@ -487,7 +487,7 @@ export const routeTree = rootRoute
       "filePath": "(reference)/create-reference.lazy.tsx"
     },
     "/(search)/search": {
-      "filePath": "(search)/search.lazy.jsx"
+      "filePath": "(search)/search.lazy.tsx"
     },
     "/(auth)/_auth/admin-dashboard": {
       "filePath": "(auth)/_auth.admin-dashboard.tsx",

@@ -12,17 +12,27 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { debounce } from "@/utils/debounce.ts";
 import { useQuery } from "@tanstack/react-query";
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-csl";
 import "@citation-js/plugin-isbn";
-import { useState } from "react";
-import { isPending } from "@reduxjs/toolkit";
+import { useEffect, useState } from "react";
+import { Progress } from "@/components/ui/progress.tsx";
 
 const searchBarSchema = z.object({
     searchQuery: z.string().min(1),
 });
+
+interface Author {
+    given: string;
+    family: string;
+}
+
+export interface CSLJSON {
+    type: string;
+    author: Author[];
+    title: string;
+}
 
 export function SearchBar({
     handleQueryChange,
@@ -30,6 +40,7 @@ export function SearchBar({
     handleQueryChange: (query: string) => void;
 }) {
     const [userSearch, setUserSearch] = useState("");
+    const [progress, setProgress] = useState(27);
 
     const form = useForm<z.infer<typeof searchBarSchema>>({
         resolver: zodResolver(searchBarSchema),
@@ -38,7 +49,7 @@ export function SearchBar({
         },
     });
 
-    const query = useQuery({
+    const { isSuccess, isFetching, isPending, isError } = useQuery({
         queryKey: ["userSearch", userSearch],
         queryFn: () => searchWithUserQuery(userSearch),
         staleTime: 50000,
@@ -47,20 +58,17 @@ export function SearchBar({
     async function searchWithUserQuery(q: string) {
         try {
             const res = Cite.async(q)
-                .then((json) => {
-                    console.log(
-                        json.format("bibliography", {
-                            format: "text",
-                            template: "apa",
-                        }),
-                    );
-
-                    return json.format("bibliography", {
-                        format: "text",
-                        template: "apa",
-                    });
+                .then((json: any) => {
+                    console.log(json);
+                    // console.log(
+                    //     json.format("bibliography", {
+                    //         format: "text",
+                    //         template: "apa",
+                    //     }),
+                    // );
+                    return json.data;
                 })
-                .catch((error) => {
+                .catch((error: any) => {
                     console.log("catch");
                     console.log(error);
                 });
@@ -73,22 +81,15 @@ export function SearchBar({
 
     function onSubmit(values: z.infer<typeof searchBarSchema>) {
         setUserSearch(values.searchQuery);
-    }
-
-    const debouncedSubmit = debounce(onSubmit, 5000);
-
-    if (query.isPending) {
-        return <span>Loading...</span>;
-    }
-    if (query.isError) {
-        return <span>Error: {query.error.message}</span>;
+        const timer = setTimeout(() => setProgress(99), 176);
+        return () => clearTimeout(timer);
     }
 
     return (
         <div className="justify-center w-[400px]">
             <Form {...form}>
                 <form
-                    onSubmit={form.handleSubmit(debouncedSubmit)}
+                    onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-8"
                 >
                     <FormField
@@ -99,6 +100,7 @@ export function SearchBar({
                                 <FormLabel>Query</FormLabel>
                                 <FormControl>
                                     <Input
+                                        disabled={isFetching}
                                         className="min-w-[60%] max-w-[90%]"
                                         placeholder="ISBN, ISSN, DOI, Title..."
                                         onChangeCapture={(event) =>
@@ -119,8 +121,10 @@ export function SearchBar({
                     <Button type="submit">Submit</Button>
                 </form>
             </Form>
-            {query.isFetching && <div>Fetching...</div>}
-            {query.isSuccess && <div>Success</div>}
+            {isPending && <Progress value={progress} />}
+
+            {isSuccess && <div>Success</div>}
+            {isError && <div>Error</div>}
         </div>
     );
 }
