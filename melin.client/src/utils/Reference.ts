@@ -32,7 +32,7 @@ export interface IReference {
     creators?: ICreator[];
     abstractNote?: string;
     language?: string;
-    datePublished: Date;
+    datePublished?: string;
     rights?: string[];
     extraFields?: string[];
     accessed?: string;

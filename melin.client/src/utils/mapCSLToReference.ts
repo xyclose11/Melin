@@ -10,7 +10,8 @@ export function mapCSLToReference(csl: CSLJSON) {
     const convertedData: IReference = {
         URL: csl.URL,
         abstractNote: csl.abstract,
-        accessed: parseDate(csl.accessed),
+        accessed:
+            csl.accessed !== undefined ? parseDate(csl.accessed) : undefined,
         applicationNumber: "",
         archive: "",
         archiveLocation: "",
@@ -30,11 +31,15 @@ export function mapCSLToReference(csl: CSLJSON) {
         conferenceName: "",
         country: "",
         court: "",
-        creators: mapContributors(csl, creatorTypes["author"]),
+        creators:
+            csl.author !== undefined
+                ? mapContributors(csl.author, [creatorTypes["author"]])
+                : undefined,
         dataType: "",
         date: "",
         dateDecided: "",
-        datePublished: undefined,
+        datePublished:
+            csl.issued !== undefined ? parseDate(csl.issued) : undefined,
         dimensions: "",
         distributor: "",
         docketNumber: "",
@@ -106,7 +111,7 @@ export function mapCSLToReference(csl: CSLJSON) {
 }
 
 export function mapContributors(
-    csljson: NameVariable,
+    csljson: NameVariable[],
     type: creatorTypes[],
 ): ICreator[] {
     let contributors: NameVariable[] = [];
@@ -122,10 +127,10 @@ export function mapContributors(
         lastName: contributor.family || "",
     }));
 }
-function parsePages(page: string): number | undefined {
-    const pageNumber = parseInt(page, 10);
-    return isNaN(pageNumber) ? undefined : pageNumber;
-}
+// function parsePages(page: string): number | undefined {
+//     const pageNumber = parseInt(page, 10);
+//     return isNaN(pageNumber) ? undefined : pageNumber;
+// }
 
 // Following EDTF Level 0 standard
 // Requires that YYYY always be present

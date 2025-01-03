@@ -82,7 +82,7 @@ describe("MapContributorsSuccessfullyMaps", () => {
             lastName: "Martin",
         };
         expect(
-            mapContributors(contributors, [creatorTypes.author]),
+            mapContributors([contributors], [creatorTypes.author]),
         ).toStrictEqual([concreteAuthor]);
     });
 });
