@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Melin.Server.Models.References;
 using Newtonsoft.Json.Converters;
@@ -56,6 +57,10 @@ public class ReferenceConverter : JsonConverter<Reference>
         }
         if (referenceType.Equals(ReferenceType.Book.ToString(), StringComparison.CurrentCultureIgnoreCase))
         {
+            // TODO impleent more thorough DateTime formatting
+            var t = obj["datePublished"]?.ToString();
+            DateTime.TryParseExact(t, "yyyy", null, DateTimeStyles.None, out DateTime result);
+            Console.WriteLine(result);
             var o = obj.ToObject(typeof(Book));
             if (o != null)
             {
