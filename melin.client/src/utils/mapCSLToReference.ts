@@ -1,5 +1,5 @@
-import { CSLJSON, DateVariable } from "@/utils/CSLJSON.ts";
-import { IReference } from "@/utils/Reference.ts";
+import { CSLJSON, DateVariable, NameVariable } from "../utils/CSLJSON.ts";
+import { creatorTypes, ICreator, IReference } from "../utils/Reference.ts";
 
 export function mapCSLToReference(csl: CSLJSON) {
     const type = csl.type.toLowerCase();
@@ -30,7 +30,7 @@ export function mapCSLToReference(csl: CSLJSON) {
         conferenceName: "",
         country: "",
         court: "",
-        creators: [],
+        creators: mapContributors(csl, creatorTypes["author"]),
         dataType: "",
         date: "",
         dateDecided: "",
@@ -105,11 +105,21 @@ export function mapCSLToReference(csl: CSLJSON) {
     return convertedData;
 }
 
-function mapAuthors(authors: CSLJSON[]): Author[] {
-    if (!authors) return [];
-    return authors.map((author) => ({
-        firstName: author.given || "",
-        lastName: author.family || "",
+export function mapContributors(
+    csljson: NameVariable,
+    type: creatorTypes[],
+): ICreator[] {
+    let contributors: NameVariable[] = [];
+
+    if (csljson !== undefined) {
+        contributors.push(...(Array.isArray(csljson) ? csljson : [csljson]));
+    }
+
+    if (!contributors) return [];
+    return contributors.map((contributor) => ({
+        type: type,
+        firstName: contributor.given || "",
+        lastName: contributor.family || "",
     }));
 }
 function parsePages(page: string): number | undefined {
@@ -119,6 +129,7 @@ function parsePages(page: string): number | undefined {
 
 // Following EDTF Level 0 standard
 // Requires that YYYY always be present
+// TODO ADD COVERAGE FOR OTHER DATE VARIABLE TYPES
 export function parseDate(date: DateVariable): string | undefined {
     if (!date) {
         return undefined;

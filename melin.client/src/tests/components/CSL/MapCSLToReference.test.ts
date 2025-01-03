@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { parseDate } from "../../../utils/mapCSLToReference.ts";
-import { DateVariable } from "@/utils/CSLJSON.ts";
+import {
+    parseDate,
+    mapContributors,
+} from "../../../utils/mapCSLToReference.ts";
+import { DateVariable, NameVariable } from "../../../utils/CSLJSON.ts";
+import { creatorTypes, ICreator } from "../../../utils/Reference.ts";
 
 describe("ParseDate", () => {
     it("should correctly parse the date into a formatted EDTF level 0 string", () => {
@@ -62,5 +66,23 @@ describe("ParseDateGivenOutOfBoundDay", () => {
             "date-parts": [[2025, 4, 0]],
         };
         expect(parseDate(dateVariable)).toBe(undefined);
+    });
+});
+
+describe("MapContributorsSuccessfullyMaps", () => {
+    it("should return an array of ICreator[] type", () => {
+        const contributors: NameVariable = {
+            family: "Martin",
+            given: "Rob",
+        };
+
+        const concreteAuthor: ICreator = {
+            type: [creatorTypes["author"]],
+            firstName: "Rob",
+            lastName: "Martin",
+        };
+        expect(
+            mapContributors(contributors, [creatorTypes.author]),
+        ).toStrictEqual([concreteAuthor]);
     });
 });
