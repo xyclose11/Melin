@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using Melin.Server.Models.References;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Serilog;
 
 namespace Melin.Server.Models.Binders;
 
@@ -27,37 +28,19 @@ public class ReferenceConverter : JsonConverter<Reference>
         }
         
         // Parse Dates
-
-        if (obj["datePublished"] != null)
-        {
-            var t = obj["datePublished"]?.ToString();
-            var dateLength = t?.Length;
-            if (dateLength == 4)
-            {
-                DateTime.TryParseExact(t, "yyyy", null, DateTimeStyles.None, out DateTime result);
-                obj["datePublished"] = result.ToUniversalTime();
-            }
-            else
-            {
-                DateTime.TryParse(t, out var result);
-                obj["datePublished"] = result.ToUniversalTime();
-            }
-
-        }
-
         if (obj["language"] != null)
         {
             var l = obj["language"]?.ToString();
-            Enum.TryParse(l, out Language result);
-
-            if (result != null)
+            if (Enum.TryParse(l, true, out Language result))
             {
                 obj["language"] = result.ToString();
             }
             else
             {
                 obj["language"] = "";
+                Log.Information("Failed to parse language field when Deserializing JSON: {language}", l);
             }
+            
         }
 
         if (referenceType.Equals(ReferenceType.Artwork.ToString(), StringComparison.CurrentCultureIgnoreCase))
