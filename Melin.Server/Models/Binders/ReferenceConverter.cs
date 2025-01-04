@@ -31,8 +31,18 @@ public class ReferenceConverter : JsonConverter<Reference>
         if (obj["datePublished"] != null)
         {
             var t = obj["datePublished"]?.ToString();
-            DateTime.TryParseExact(t, "yyyy", null, DateTimeStyles.None, out DateTime result);
-            obj["datePublished"] = result;
+            var dateLength = t?.Length;
+            if (dateLength == 4)
+            {
+                DateTime.TryParseExact(t, "yyyy", null, DateTimeStyles.None, out DateTime result);
+                obj["datePublished"] = result.ToUniversalTime();
+            }
+            else
+            {
+                DateTime.TryParse(t, out var result);
+                obj["datePublished"] = result.ToUniversalTime();
+            }
+
         }
 
         if (obj["language"] != null)
@@ -81,9 +91,6 @@ public class ReferenceConverter : JsonConverter<Reference>
         }
         if (referenceType.Equals(ReferenceType.Book.ToString(), StringComparison.CurrentCultureIgnoreCase))
         {
-            var t = obj["datePublished"]?.ToString();
-            DateTime.TryParseExact(t, "yyyy", null, DateTimeStyles.None, out DateTime result);
-            Console.WriteLine(result);
             var o = obj.ToObject(typeof(Book));
             if (o != null)
             {

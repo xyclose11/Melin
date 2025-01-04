@@ -170,8 +170,8 @@ public class ReferenceController : ControllerBase
 
             return Ok("Reference created successfully");
         } catch (Exception ex) {
-            Log.Warning("Unable to create reference");
-            return BadRequest();
+            Log.Warning("Unable to create reference: {exception}", ex.Message);
+            return BadRequest("Unable to create reference due to parsing error");
         }
     }
     

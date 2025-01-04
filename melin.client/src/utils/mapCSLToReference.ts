@@ -171,5 +171,5 @@ export function parseDate(date: DateVariable): string | undefined {
         return undefined;
     }
 
-    return year + "-" + month + "-" + day;
+    return year + "/" + month + "/" + day;
 }
