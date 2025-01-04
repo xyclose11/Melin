@@ -25,6 +25,30 @@ public class ReferenceConverter : JsonConverter<Reference>
         {
             throw new NullReferenceException();
         }
+        
+        // Parse Dates
+
+        if (obj["datePublished"] != null)
+        {
+            var t = obj["datePublished"]?.ToString();
+            DateTime.TryParseExact(t, "yyyy", null, DateTimeStyles.None, out DateTime result);
+            obj["datePublished"] = result;
+        }
+
+        if (obj["language"] != null)
+        {
+            var l = obj["language"]?.ToString();
+            Enum.TryParse(l, out Language result);
+
+            if (result != null)
+            {
+                obj["language"] = result.ToString();
+            }
+            else
+            {
+                obj["language"] = "";
+            }
+        }
 
         if (referenceType.Equals(ReferenceType.Artwork.ToString(), StringComparison.CurrentCultureIgnoreCase))
         {
@@ -57,7 +81,6 @@ public class ReferenceConverter : JsonConverter<Reference>
         }
         if (referenceType.Equals(ReferenceType.Book.ToString(), StringComparison.CurrentCultureIgnoreCase))
         {
-            // TODO impleent more thorough DateTime formatting
             var t = obj["datePublished"]?.ToString();
             DateTime.TryParseExact(t, "yyyy", null, DateTimeStyles.None, out DateTime result);
             Console.WriteLine(result);
