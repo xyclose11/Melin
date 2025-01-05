@@ -18,7 +18,6 @@ export function SearchNode({ data }: { data: CSLJSON }) {
             navigate({ to: "/library" }),
         );
     }
-    // TODO Add success/error alerts
     return (
         <div className="mt-2">
             <Card>
@@ -26,13 +25,42 @@ export function SearchNode({ data }: { data: CSLJSON }) {
                     <CardTitle>{data.title}</CardTitle>
                     <CardDescription>{data.keyword}</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <p>{data.title}</p>
-                    <p>{data.type}</p>
-                    <p>{data.ISBN}</p>
-                    {data.author?.map((a) => {
-                        return <p>{a.family}</p>;
-                    })}
+                <CardContent className="grid grid-cols-2 gap-2">
+                    <div className="flex gap-2">
+                        <h3 className="font-bold">Title:</h3>
+                        <p>{data.title}</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <h3 className="font-bold">Type:</h3>
+                        <p>{data.type}</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <h3 className="font-bold">ISBN:</h3>
+                        <p>{data.ISBN}</p>
+                    </div>
+
+                    {data.issued !== undefined && (
+                        <div className="flex gap-2">
+                            <h3 className="font-bold">Date Published:</h3>
+                            <p>
+                                {data?.issued?.["date-parts"]?.[0][0] +
+                                    "/" +
+                                    data.issued?.["date-parts"]?.[0][1] +
+                                    "/" +
+                                    data.issued?.["date-parts"]?.[0][2]}
+                            </p>
+                        </div>
+                    )}
+                    <div className="flex gap-2">
+                        <h3 className="font-bold">Author(s):</h3>
+                        {data.author?.map((a) => {
+                            return (
+                                <p key={a.given}>
+                                    {a.suffix} {a.given}, {a.family}
+                                </p>
+                            );
+                        })}
+                    </div>
                 </CardContent>
                 <CardFooter>
                     <Button onClick={handlePostReference}>Add?</Button>
