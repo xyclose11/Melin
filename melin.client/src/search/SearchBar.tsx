@@ -45,7 +45,7 @@ export function SearchBar({
         },
     });
 
-    const { isSuccess, isFetching, isPending, isError } = useQuery({
+    const { isFetching, isPending, isError } = useQuery({
         queryKey: ["userSearch", userSearch],
         queryFn: () => searchWithUserQuery(userSearch),
         staleTime: Infinity, // Stale-time set to infinity since the queried data is relatively static
@@ -80,7 +80,7 @@ export function SearchBar({
                             ),
                         );
                     }
-                    
+
                     convertedItems.push({
                         id: i.id,
                         type: "book",
@@ -90,6 +90,7 @@ export function SearchBar({
                                 given: a,
                             };
                         }),
+                        ISBN: i.volumeInfo.industryIdentifiers[0].identifier,
                         publisher: i.volumeInfo.publisher,
                         issued: {
                             "date-parts":
@@ -157,7 +158,6 @@ export function SearchBar({
             </Form>
             {isPending && <Progress value={progress} />}
 
-            {isSuccess && <div>Success</div>}
             {isError && <div className="text-red-400">No Items Found!</div>}
         </div>
     );

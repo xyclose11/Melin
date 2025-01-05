@@ -22,8 +22,6 @@ function SearchPage() {
         enabled: false, // Disabled here to avoid multiple queries when 'query' value changes
     });
 
-    console.log(data);
-
     return (
         <div className="flex justify-center w-screen max-w-screen">
             <div className="grid gap-4">
@@ -31,9 +29,12 @@ function SearchPage() {
 
                 <div
                     className="
+                    rounded-xl
+                    border
+                    shadow-md
                  snap-y max-h-[650px] scroll-smooth overflow-y-scroll mb-12"
                 >
-                    <ul>
+                    <ul className="min-h-[25vh] min-w-[75vh] p-1">
                         {data && data.length > 0 ? (
                             data.map((d) => (
                                 <li className="snap-start" key={d.id}>
@@ -41,7 +42,7 @@ function SearchPage() {
                                 </li>
                             ))
                         ) : (
-                            <p>No results found.</p>
+                            <></>
                         )}
                     </ul>
                 </div>

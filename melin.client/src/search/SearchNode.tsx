@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import { postSingleReference } from "@/api/postSingleReference.ts";
 import { useNavigate } from "@tanstack/react-router";
+import { PlusCircle } from "lucide-react";
 
 export function SearchNode({ data }: { data: CSLJSON }) {
     const navigate = useNavigate({ from: "/search" });
@@ -18,24 +19,23 @@ export function SearchNode({ data }: { data: CSLJSON }) {
             navigate({ to: "/library" }),
         );
     }
+
     return (
         <div className="mt-2 p-1">
             <Card>
                 <CardHeader>
-                    <CardTitle>{data.title}</CardTitle>
+                    <CardTitle>Title: {data.title}</CardTitle>
                     <CardDescription>Keywords: {data.keyword}</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-2">
-                    <div className="flex gap-2">
-                        <h3 className="font-bold">Title:</h3>
-                        <p>{data.title}</p>
-                    </div>
                     <div>
-                        <p>Source URL: {data.URL}</p>
+                        <p className="font-bold">
+                            <a href={data.URL}>Access URL</a>
+                        </p>
                     </div>
                     <div className="flex gap-2">
                         <h3 className="font-bold">Type:</h3>
-                        <p>{data.type}</p>
+                        <p className="capitalize">{data.type}</p>
                     </div>
                     <div className="flex gap-2">
                         <h3 className="font-bold">ISBN:</h3>
@@ -47,7 +47,7 @@ export function SearchNode({ data }: { data: CSLJSON }) {
                     </div>
                     <div className="flex gap-2">
                         <h3 className="font-bold">Language:</h3>
-                        <p>{data.language}</p>
+                        <p className="capitalize">{data.language}</p>
                     </div>
 
                     {data.issued !== undefined && (
@@ -73,8 +73,14 @@ export function SearchNode({ data }: { data: CSLJSON }) {
                         })}
                     </div>
                 </CardContent>
-                <CardFooter>
-                    <Button onClick={handlePostReference}>Add?</Button>
+                <CardFooter className="justify-end m-0">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={handlePostReference}
+                    >
+                        <PlusCircle />
+                    </Button>
                 </CardFooter>
             </Card>
         </div>
