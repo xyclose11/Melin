@@ -57,6 +57,7 @@ export function SearchBar({
             let citationResult;
             try {
                 citationResult = await Cite.async(q);
+                return citationResult.data;
             } catch (citationError) {
                 console.log("Citation.js parsing failed:", citationError);
             }
@@ -81,8 +82,6 @@ export function SearchBar({
 
                 return convertedItems;
             }
-
-            return citationResult;
         } catch (e) {
             console.error(e);
         }

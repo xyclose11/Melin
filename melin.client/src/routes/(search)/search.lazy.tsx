@@ -22,6 +22,8 @@ function SearchPage() {
         enabled: false, // Disabled here to avoid multiple queries when 'query' value changes
     });
 
+    console.log(data);
+
     return (
         <div className="flex justify-center w-screen max-w-screen">
             <div className="grid">
@@ -29,13 +31,15 @@ function SearchPage() {
 
                 <div className="max-h-96">
                     <ul className="overflow-auto">
-                        {data?.map((d) => {
-                            return (
+                        {data && data.length > 0 ? (
+                            data.map((d) => (
                                 <li key={d.id}>
                                     <SearchNode key={d.id} data={d} />
                                 </li>
-                            );
-                        })}
+                            ))
+                        ) : (
+                            <p>No results found.</p>
+                        )}
                     </ul>
                 </div>
             </div>
