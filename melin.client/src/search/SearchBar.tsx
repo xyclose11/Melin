@@ -22,6 +22,9 @@ import "@citation-js/plugin-software-formats";
 import { useState } from "react";
 import { Progress } from "@/components/ui/progress.tsx";
 import { SearchIcon } from "lucide-react";
+import { instance } from "@/utils/axiosInstance.ts";
+import { CSLJSON } from "@/utils/CSLJSON.ts";
+import { IGoogleBookAPIResponse } from "@/utils/IGoogleBookAPIResponse.ts";
 
 const searchBarSchema = z.object({
     searchQuery: z.string().min(1),
@@ -51,22 +54,35 @@ export function SearchBar({
     // Current supported search types: ISBN, DOI, Wikidata QID, GitHub Repo URL, NPM package URL
     async function searchWithUserQuery(q: string) {
         try {
-            const res = Cite.async(q)
-                .then((json: any) => {
-                    // console.log(
-                    //     json.format("bibliography", {
-                    //         format: "text",
-                    //         template: "apa",
-                    //     }),
-                    // );
-                    return json.data;
-                })
-                .catch((error: any) => {
-                    console.log("catch");
-                    console.log(error);
+            let citationResult;
+            try {
+                citationResult = await Cite.async(q);
+            } catch (citationError) {
+                console.log("Citation.js parsing failed:", citationError);
+            }
+
+            // Fetch normal text results as a fallback or complementary source
+            const normalTextRes = await instance.get(
+                `https://www.googleapis.com/books/v1/volumes?q=${q}`,
+            );
+
+            if (normalTextRes.status === 200) {
+                const convertedItems: CSLJSON[] = [];
+
+                normalTextRes.data.items.map((i: IGoogleBookAPIResponse) => {
+                    convertedItems.push({
+                        id: i.id,
+                        type: i.volumeInfo.type,
+                        title: i.volumeInfo.title,
+                        "number-of-pages": i.volumeInfo.pageCount,
+                        language: i.volumeInfo.language,
+                    });
                 });
 
-            return res;
+                return convertedItems;
+            }
+
+            return citationResult;
         } catch (e) {
             console.error(e);
         }
