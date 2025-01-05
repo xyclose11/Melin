@@ -19,7 +19,7 @@ export function SearchNode({ data }: { data: CSLJSON }) {
         );
     }
     return (
-        <div className="mt-2">
+        <div className="mt-2 p-1">
             <Card>
                 <CardHeader>
                     <CardTitle>{data.title}</CardTitle>

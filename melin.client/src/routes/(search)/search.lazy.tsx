@@ -26,14 +26,17 @@ function SearchPage() {
 
     return (
         <div className="flex justify-center w-screen max-w-screen">
-            <div className="grid">
+            <div className="grid gap-4">
                 <SearchBar handleQueryChange={handleQueryChange} />
 
-                <div className="max-h-96">
-                    <ul className="overflow-auto">
+                <div
+                    className="
+                 snap-y max-h-[650px] scroll-smooth overflow-y-scroll mb-12"
+                >
+                    <ul>
                         {data && data.length > 0 ? (
                             data.map((d) => (
-                                <li key={d.id}>
+                                <li className="snap-start" key={d.id}>
                                     <SearchNode key={d.id} data={d} />
                                 </li>
                             ))

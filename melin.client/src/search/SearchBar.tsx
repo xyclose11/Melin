@@ -23,7 +23,7 @@ import { useState } from "react";
 import { Progress } from "@/components/ui/progress.tsx";
 import { SearchIcon } from "lucide-react";
 import { instance } from "@/utils/axiosInstance.ts";
-import { CSLJSON } from "@/utils/CSLJSON.ts";
+import { CSLJSON, NameVariable } from "@/utils/CSLJSON.ts";
 import { IGoogleBookAPIResponse } from "@/utils/IGoogleBookAPIResponse.ts";
 
 const searchBarSchema = z.object({
@@ -71,10 +71,30 @@ export function SearchBar({
                 const convertedItems: CSLJSON[] = [];
 
                 normalTextRes.data.items.map((i: IGoogleBookAPIResponse) => {
+                    const dateParts: (string | number)[][] = [];
+                    if (i.volumeInfo.publishedDate) {
+                        const parts = i.volumeInfo.publishedDate.split("-");
+                        dateParts.push(
+                            parts.map((part) =>
+                                isNaN(Number(part)) ? part : Number(part),
+                            ),
+                        );
+                    }
+                    
                     convertedItems.push({
                         id: i.id,
-                        type: i.volumeInfo.type,
+                        type: "book",
                         title: i.volumeInfo.title,
+                        author: i.volumeInfo.authors.map((a): NameVariable => {
+                            return {
+                                given: a,
+                            };
+                        }),
+                        publisher: i.volumeInfo.publisher,
+                        issued: {
+                            "date-parts":
+                                dateParts.length > 0 ? dateParts : undefined,
+                        },
                         "number-of-pages": i.volumeInfo.pageCount,
                         language: i.volumeInfo.language,
                     });
