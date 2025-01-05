@@ -95,7 +95,7 @@ export function SearchBar({
                                     <div className="flex gap-4">
                                         <Input
                                             disabled={isFetching}
-                                            className="min-w-[60%] max-w-[100%]"
+                                            className="min-w-[70%] max-w-[100%]"
                                             placeholder="ISBN, ISSN, DOI, Title..."
                                             onChangeCapture={(event) =>
                                                 handleQueryChange(
@@ -123,7 +123,7 @@ export function SearchBar({
             {isPending && <Progress value={progress} />}
 
             {isSuccess && <div>Success</div>}
-            {isError && <div>Error</div>}
+            {isError && <div className="text-red-400">No Items Found!</div>}
         </div>
     );
 }

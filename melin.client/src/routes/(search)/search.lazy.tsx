@@ -27,15 +27,17 @@ function SearchPage() {
             <div className="grid">
                 <SearchBar handleQueryChange={handleQueryChange} />
 
-                <ul>
-                    {data?.map((d) => {
-                        return (
-                            <li key={d.id}>
-                                <SearchNode key={d.id} data={d} />
-                            </li>
-                        );
-                    })}
-                </ul>
+                <div className="max-h-96">
+                    <ul className="overflow-auto">
+                        {data?.map((d) => {
+                            return (
+                                <li key={d.id}>
+                                    <SearchNode key={d.id} data={d} />
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
             </div>
         </div>
     );

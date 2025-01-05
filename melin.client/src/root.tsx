@@ -28,7 +28,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
                     <SidebarProvider defaultOpen={defaultOpen}>
                         <WorkspaceToolBar />
                         <main className={"mt-16 p-2"}>
-                            <SidebarTrigger>
+                            <SidebarTrigger className="sticky top-20">
                                 <Outlet />
                             </SidebarTrigger>
                             <Workspace />

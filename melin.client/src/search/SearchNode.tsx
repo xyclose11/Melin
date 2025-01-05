@@ -23,12 +23,15 @@ export function SearchNode({ data }: { data: CSLJSON }) {
             <Card>
                 <CardHeader>
                     <CardTitle>{data.title}</CardTitle>
-                    <CardDescription>{data.keyword}</CardDescription>
+                    <CardDescription>Keywords: {data.keyword}</CardDescription>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-2">
                     <div className="flex gap-2">
                         <h3 className="font-bold">Title:</h3>
                         <p>{data.title}</p>
+                    </div>
+                    <div>
+                        <p>Source URL: {data.URL}</p>
                     </div>
                     <div className="flex gap-2">
                         <h3 className="font-bold">Type:</h3>
@@ -37,6 +40,14 @@ export function SearchNode({ data }: { data: CSLJSON }) {
                     <div className="flex gap-2">
                         <h3 className="font-bold">ISBN:</h3>
                         <p>{data.ISBN}</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <h3 className="font-bold">Number of Pages:</h3>
+                        <p>{data["number-of-pages"]}</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <h3 className="font-bold">Language:</h3>
+                        <p>{data.language}</p>
                     </div>
 
                     {data.issued !== undefined && (
