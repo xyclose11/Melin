@@ -192,11 +192,34 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         
     }
 
+    public async Task<bool> UpdateCreatorsAsync(Reference reference)
+    {
+        try
+        {
+            if (reference.Creators != null)
+            {
+                foreach (var creator in reference.Creators)
+                {
+                    _context.Creators.Update(creator);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
+    }
+
     public async Task<Result<bool>> UpdateReferenceAsync(Reference reference)
     {
         try
         {
             _context.Reference.Update(reference);
+            
             await _context.SaveChangesAsync();
             return Result<bool>.SuccessResult(true);
         }
