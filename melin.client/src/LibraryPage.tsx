@@ -158,8 +158,9 @@ export function LibraryPage({ initialData }: { initialData: Reference[] }) {
                     >
                         <ResizablePanel
                             defaultSize={15}
-                            minSize={10}
+                            minSize={12}
                             maxSize={30}
+                            order={1}
                         >
                             <LibrarySideBar
                                 handleAddToUserGroup={handleAddToUserGroup}
@@ -178,8 +179,8 @@ export function LibraryPage({ initialData }: { initialData: Reference[] }) {
                                 </DndContext>
                             </LibrarySideBar>
                         </ResizablePanel>
-                        <ResizableHandle withHandle />
-                        <ResizablePanel>
+                        <ResizableHandle withHandle className={"mr-4"} />
+                        <ResizablePanel order={2}>
                             <Library initialData={initialData} />
                         </ResizablePanel>
                     </ResizablePanelGroup>
