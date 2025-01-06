@@ -121,7 +121,7 @@ public class ReferenceController : ControllerBase
                     Creators = reference.Creators?.ToList(),
                     Tags = reference.Tags?.ToList(),
                     Language = reference.Language.ToString(),
-                    DatePublished = reference.DatePublished.ToString(),
+                    DatePublished = reference.DatePublished,
                     GroupNames = reference.Groups?.Select(g => g.Name).ToList()
                 };
                 output.Add(res);
@@ -170,8 +170,8 @@ public class ReferenceController : ControllerBase
 
             return Ok("Reference created successfully");
         } catch (Exception ex) {
-            Log.Warning("Unable to create reference");
-            return BadRequest();
+            Log.Warning("Unable to create reference: {exception}", ex.Message);
+            return BadRequest("Unable to create reference due to parsing error");
         }
     }
     
