@@ -270,7 +270,7 @@ public class ReferenceService : IReferenceService
         throw new NotImplementedException();
     }
     
-    private void UpdateGeneralFields(Reference existingReference, Reference updatedReference)
+    private async void UpdateGeneralFields(Reference existingReference, Reference updatedReference)
     {
         try
         {
@@ -300,17 +300,9 @@ public class ReferenceService : IReferenceService
                 }
             }
             
-            if (!existingReference.DatePublished.Equals(updatedReference.DatePublished))
+            if (existingReference.DatePublished != null && !existingReference.DatePublished.Equals(updatedReference.DatePublished))
             {
                 existingReference.DatePublished = updatedReference.DatePublished;
-            }
-
-            if (existingReference.Creators != null)
-            {
-                if (!existingReference.Creators.Equals(updatedReference.Creators))
-                {
-                    existingReference.Creators = updatedReference.Creators;
-                }
             }
 
             if (existingReference.Tags != null)
@@ -321,6 +313,10 @@ public class ReferenceService : IReferenceService
                 }
             }
 
+            await UpdateCreatorsAsync(existingReference, updatedReference);
+
+            await _referenceRepository.UpdateReferenceAsync(existingReference);
+
         }
         catch (Exception e)
         {
@@ -328,6 +324,55 @@ public class ReferenceService : IReferenceService
             throw;
         }
     }
+
+    private async Task UpdateCreatorsAsync(Reference existingReference, Reference updatedReference)
+    {
+        if (existingReference.Creators == null || updatedReference.Creators == null)
+            return;
+
+        // Replace existing creators if the existing list is empty
+        if (existingReference.Creators.Count == 0)
+        {
+            existingReference.Creators = new List<Creator>(updatedReference.Creators);
+        }
+        else
+        {
+            // Create a dictionary for efficient lookup of updated creators by ID
+            var updatedCreatorsMap = updatedReference.Creators.ToDictionary(c => c.Id);
+
+            // Update or detach existing creators
+            for (int i = 0; i < existingReference.Creators.Count; i++)
+            {
+                var existingCreator = existingReference.Creators.ToList()[i];
+                // LAST WORKING ON FIGURING OUT HOW TO DELETE CREATORS.
+                if (updatedCreatorsMap.TryGetValue(existingCreator.Id, out var updatedCreator))
+                {
+                    // Update existing creator's properties
+                    existingCreator.Types = updatedCreator.Types;
+                    existingCreator.FirstName = updatedCreator.FirstName;
+                    existingCreator.LastName = updatedCreator.LastName;
+
+                    // Remove from the map to mark as processed
+                    updatedCreatorsMap.Remove(existingCreator.Id);
+                }
+                else
+                {
+                    // Detach the creator if it doesn't exist in the updated list
+                    existingCreator.ReferenceId = null;
+                }
+            }
+
+            // Add new creators from the updated reference that are not already in the existing list
+            foreach (var newCreator in updatedCreatorsMap.Values)
+            {
+                existingReference.Creators.Add(newCreator);
+            }
+        }
+
+        // Persist changes asynchronously
+        await _referenceRepository.UpdateCreatorsAsync(existingReference);
+    }
+
 
     private static void UpdateArtworkFields(Artwork existingReference, Artwork updatedReference)
     {

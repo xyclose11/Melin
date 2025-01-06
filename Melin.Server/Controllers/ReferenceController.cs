@@ -182,7 +182,7 @@ public class ReferenceController : ControllerBase
     /// <param name="updatedItem">An updated Reference</param>
     /// <returns><see cref="IActionResult"/></returns>
     // UPDATE
-    [HttpPut("update/{id}")]
+    [HttpPut("update/{id:int}")]
     [Authorize]
     [ProducesResponseType(typeof(IActionResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -52,10 +52,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { isValidDate } from "@/utils/isValidDate.ts";
 import { DevTool } from "@hookform/devtools";
+import { IReference } from "@/utils/Reference.ts";
 
 const route = getRouteApi("/(reference)/edit-reference/$refId");
 
-export function EditReferencePage({ reference }: { reference: any }) {
+export function EditReferencePage({ reference }: { reference: IReference }) {
     const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
     const { toast } = useToast();
@@ -68,7 +69,7 @@ export function EditReferencePage({ reference }: { reference: any }) {
     });
 
     const mutation = useMutation({
-        mutationFn: (data) => {
+        mutationFn: (data: IReference) => {
             return instance.put(`Reference/update/${refId}`, data, {
                 withCredentials: true,
             });
@@ -139,7 +140,9 @@ export function EditReferencePage({ reference }: { reference: any }) {
     useEffect(() => {
         let newSchema: ZodObject<any>;
 
-        setDatePublished(new Date(reference.datePublished));
+        if (reference?.datePublished != null) {
+            setDatePublished(new Date(Date.parse(reference?.datePublished)));
+        }
         switch (reference.type) {
             case "Artwork":
                 newSchema = artworkSchema;
