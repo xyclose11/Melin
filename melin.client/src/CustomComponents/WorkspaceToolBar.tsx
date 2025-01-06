@@ -70,7 +70,11 @@ export function WorkspaceToolBar() {
     const { userRole } = useAuth();
     const location = useLocation();
     return (
-        <Sidebar collapsible="icon" className={"flex-1 mt-16"}>
+        <Sidebar
+            variant="sidebar"
+            collapsible="icon"
+            className={"flex-1 mt-16"}
+        >
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>Melin</SidebarGroupLabel>

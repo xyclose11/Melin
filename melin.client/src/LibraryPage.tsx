@@ -144,7 +144,7 @@ export function LibraryPage({ initialData }: { initialData: Reference[] }) {
     };
 
     return (
-        <div className={"w-full ml-12 justify-center flex gap-3"}>
+        <div className={"mr-10 mt-16 mb-12 ml-4 justify-center flex gap-2"}>
             <ReferenceSelectionProvider>
                 <GroupSelectedProvider>
                     <LibrarySideBar handleAddToUserGroup={handleAddToUserGroup}>

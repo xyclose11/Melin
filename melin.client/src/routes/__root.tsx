@@ -7,7 +7,7 @@ import { Footer } from "@/Footer.tsx";
 
 export const Route = createRootRoute({
     component: () => (
-        <div className="max-w-[100%]">
+        <div>
             <CookiesProvider>
                 <Root children />
             </CookiesProvider>
