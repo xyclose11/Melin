@@ -187,7 +187,7 @@ export function DraggableGroup({
                 {...attributes}
                 className={"mb-2"}
             >
-                <CardHeader className={"flex p-2"}>
+                <CardHeader className={"flex flex-wrap p-2"}>
                     <CardTitle
                         {...listeners}
                         className="text-sm text-wrap"

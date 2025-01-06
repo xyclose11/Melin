@@ -53,7 +53,9 @@ export function LibrarySideBar({
                     </DropdownMenu>
                 </CardHeader>
 
-                <CardContent>{children}</CardContent>
+                <CardContent className="flex flex-col flex-wrap">
+                    {children}
+                </CardContent>
 
                 <CardFooter></CardFooter>
             </Card>

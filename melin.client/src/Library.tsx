@@ -481,7 +481,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
     });
 
     return (
-        <div className={"flex gap-3"}>
+        <div className={"flex gap-0"}>
             <div className="w-full light">
                 <div className="flex items-center py-4">
                     <Input
