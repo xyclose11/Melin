@@ -11,6 +11,11 @@ import { useToast } from "@/hooks/use-toast.ts";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { GroupSelectedProvider } from "@/Context/SelectedGroupContext.tsx";
 import { Group } from "@/LibraryViews/GroupLibrary.tsx";
+import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from "@/components/ui/resizable.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -144,24 +149,40 @@ export function LibraryPage({ initialData }: { initialData: Reference[] }) {
     };
 
     return (
-        <div className={"mr-10 mt-16 mb-12 ml-4 justify-center flex gap-2"}>
+        <div className={"mr-10 mt-16 mb-12 ml-4 justify-center flex gap-4"}>
             <ReferenceSelectionProvider>
                 <GroupSelectedProvider>
-                    <LibrarySideBar handleAddToUserGroup={handleAddToUserGroup}>
-                        <DndContext onDragEnd={handleDragEnd}>
-                            {userGroups
-                                .filter((g) => g.isRoot)
-                                .map((g: GroupType) => (
-                                    <DraggableGroup
-                                        key={g.id}
-                                        groupName={g.name}
-                                        childGroups={g.childGroups}
-                                        references={g.references}
-                                    ></DraggableGroup>
-                                ))}
-                        </DndContext>
-                    </LibrarySideBar>
-                    <Library initialData={initialData} />
+                    <ResizablePanelGroup
+                        autoSaveId="persistent-group-sidebar"
+                        direction="horizontal"
+                    >
+                        <ResizablePanel
+                            defaultSize={15}
+                            minSize={10}
+                            maxSize={30}
+                        >
+                            <LibrarySideBar
+                                handleAddToUserGroup={handleAddToUserGroup}
+                            >
+                                <DndContext onDragEnd={handleDragEnd}>
+                                    {userGroups
+                                        .filter((g) => g.isRoot)
+                                        .map((g: GroupType) => (
+                                            <DraggableGroup
+                                                key={g.id}
+                                                groupName={g.name}
+                                                childGroups={g.childGroups}
+                                                references={g.references}
+                                            ></DraggableGroup>
+                                        ))}
+                                </DndContext>
+                            </LibrarySideBar>
+                        </ResizablePanel>
+                        <ResizableHandle withHandle />
+                        <ResizablePanel>
+                            <Library initialData={initialData} />
+                        </ResizablePanel>
+                    </ResizablePanelGroup>
                 </GroupSelectedProvider>
             </ReferenceSelectionProvider>
         </div>

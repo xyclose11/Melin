@@ -27,11 +27,13 @@ export function LibrarySideBar({
 }) {
     return (
         <>
-            <Card>
-                <CardHeader className={"flex"}>
-                    <CardTitle>Groups</CardTitle>
+            <Card className="h-[100%] rounded-br-none rounded-tr-none">
+                <CardHeader className={"flex p-4 justify-center"}>
+                    <CardTitle className="text-sm p-1 bg-secondary rounded">
+                        Groups
+                    </CardTitle>
                     <DropdownMenu>
-                        <DropdownMenuTrigger>
+                        <DropdownMenuTrigger className="justify-end">
                             <EllipsisVertical size={14} />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>

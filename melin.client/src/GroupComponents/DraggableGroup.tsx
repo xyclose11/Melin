@@ -178,7 +178,7 @@ export function DraggableGroup({
             console.error(e);
         }
     };
-    
+
     return (
         <>
             <Card
@@ -187,8 +187,12 @@ export function DraggableGroup({
                 {...attributes}
                 className={"mb-2"}
             >
-                <CardHeader className={"flex"}>
-                    <CardTitle {...listeners} ref={setActivatorNodeRef}>
+                <CardHeader className={"flex p-2"}>
+                    <CardTitle
+                        {...listeners}
+                        className="text-sm text-wrap"
+                        ref={setActivatorNodeRef}
+                    >
                         {groupName}
                     </CardTitle>
                     <Checkbox
@@ -275,7 +279,7 @@ export function DraggableGroup({
                 <CardContent
                     ref={setDropNodeRef}
                     style={dropStyle}
-                    className={"p-2"}
+                    className={"p-0"}
                 >
                     <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90">
                         <SidebarMenuButton
