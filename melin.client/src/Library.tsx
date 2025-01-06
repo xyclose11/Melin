@@ -164,7 +164,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
             },
             cell: ({ row }) => (
                 <Link
-                    className="capitalize"
+                    className="capitalize text-xs"
                     to={`/edit-reference/${row.original.id}`}
                 >
                     {row.getValue("title")}
@@ -486,7 +486,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
     return (
         <div className={"flex gap-0"}>
             <div className="w-full light">
-                <div className="flex items-center py-4 mr-1">
+                <div className="flex items-center py-4 mr-1 ml-1">
                     <Input
                         placeholder="Filter references..."
                         value={

@@ -54,7 +54,7 @@ export function AddTagToReference({
                     withCredentials: true,
                 },
             );
-            
+
             response.data.map(
                 (t: {
                     id: number | string;
@@ -92,32 +92,26 @@ export function AddTagToReference({
                     withCredentials: true,
                 },
             );
-            
-            response.data.map(
-                (t: {
-                    id: number | string;
-                    text: string;
-                    description: string;
-                }) => {
-                    t.id = String(t.id);
-                },
-            );
 
             if (response.status === 200) {
+                response.data.map(
+                    (t: {
+                        id: number | string;
+                        text: string;
+                        description: string;
+                    }) => {
+                        t.id = String(t.id);
+                    },
+                );
                 setCurrentTags(response.data);
-            } else {
-                toast({
-                    variant: "destructive",
-                    title: "Tag Retrieval Not Successful",
-                    description: ``,
-                });
             }
         } catch (error) {
-            toast({
-                variant: "destructive",
-                title: "Tag Retrieval Not Successful",
-                description: ``,
-            });
+            setCurrentTags([]);
+            // toast({
+            //     variant: "destructive",
+            //     title: "Tag Retrieval Not Successful",
+            //     description: ``,
+            // });
         }
     };
 
