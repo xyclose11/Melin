@@ -157,7 +157,7 @@ const integrations = [
 
 const Hero32 = () => {
     return (
-        <section className="relative overflow-hidden">
+        <section className="ml-12 relative overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
