@@ -93,7 +93,10 @@ export function Library({ initialData }: { initialData: Reference[] }) {
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({});
+        React.useState<VisibilityState>({
+            createdAt: false,
+            updatedAt: false,
+        });
     const [rowSelection, setRowSelection] = React.useState({});
     const { toast } = useToast();
 
