@@ -24,6 +24,7 @@ import { Route as authAuthAdminDashboardImport } from './routes/(auth)/_auth.adm
 const authImport = createFileRoute('/(auth)')()
 const ContactLazyImport = createFileRoute('/contact')()
 const IndexLazyImport = createFileRoute('/')()
+const searchSearchLazyImport = createFileRoute('/(search)/search')()
 const referenceCreateReferenceLazyImport = createFileRoute(
   '/(reference)/create-reference',
 )()
@@ -57,6 +58,14 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const searchSearchLazyRoute = searchSearchLazyImport
+  .update({
+    id: '/(search)/search',
+    path: '/search',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(search)/search.lazy').then((d) => d.Route))
 
 const referenceCreateReferenceLazyRoute = referenceCreateReferenceLazyImport
   .update({
@@ -222,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof referenceCreateReferenceLazyImport
       parentRoute: typeof rootRoute
     }
+    '/(search)/search': {
+      id: '/(search)/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof searchSearchLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/(auth)/_auth/admin-dashboard': {
       id: '/(auth)/_auth/admin-dashboard'
       path: '/admin-dashboard'
@@ -284,6 +300,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof authSignupLazyRoute
   '/usersettings': typeof authUsersettingsLazyRoute
   '/create-reference': typeof referenceCreateReferenceLazyRoute
+  '/search': typeof searchSearchLazyRoute
   '/admin-dashboard': typeof authAuthAdminDashboardRoute
   '/edit-reference/$refId': typeof referenceEditReferenceRefIdRoute
 }
@@ -299,6 +316,7 @@ export interface FileRoutesByTo {
   '/signup': typeof authSignupLazyRoute
   '/usersettings': typeof authUsersettingsLazyRoute
   '/create-reference': typeof referenceCreateReferenceLazyRoute
+  '/search': typeof searchSearchLazyRoute
   '/admin-dashboard': typeof authAuthAdminDashboardRoute
   '/edit-reference/$refId': typeof referenceEditReferenceRefIdRoute
 }
@@ -317,6 +335,7 @@ export interface FileRoutesById {
   '/(auth)/signup': typeof authSignupLazyRoute
   '/(auth)/usersettings': typeof authUsersettingsLazyRoute
   '/(reference)/create-reference': typeof referenceCreateReferenceLazyRoute
+  '/(search)/search': typeof searchSearchLazyRoute
   '/(auth)/_auth/admin-dashboard': typeof authAuthAdminDashboardRoute
   '/(reference)/edit-reference/$refId': typeof referenceEditReferenceRefIdRoute
 }
@@ -334,6 +353,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/usersettings'
     | '/create-reference'
+    | '/search'
     | '/admin-dashboard'
     | '/edit-reference/$refId'
   fileRoutesByTo: FileRoutesByTo
@@ -348,6 +368,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/usersettings'
     | '/create-reference'
+    | '/search'
     | '/admin-dashboard'
     | '/edit-reference/$refId'
   id:
@@ -364,6 +385,7 @@ export interface FileRouteTypes {
     | '/(auth)/signup'
     | '/(auth)/usersettings'
     | '/(reference)/create-reference'
+    | '/(search)/search'
     | '/(auth)/_auth/admin-dashboard'
     | '/(reference)/edit-reference/$refId'
   fileRoutesById: FileRoutesById
@@ -376,6 +398,7 @@ export interface RootRouteChildren {
   authRoute: typeof authRouteWithChildren
   ReferencesRefIdRoute: typeof ReferencesRefIdRoute
   referenceCreateReferenceLazyRoute: typeof referenceCreateReferenceLazyRoute
+  searchSearchLazyRoute: typeof searchSearchLazyRoute
   referenceEditReferenceRefIdRoute: typeof referenceEditReferenceRefIdRoute
 }
 
@@ -386,6 +409,7 @@ const rootRouteChildren: RootRouteChildren = {
   authRoute: authRouteWithChildren,
   ReferencesRefIdRoute: ReferencesRefIdRoute,
   referenceCreateReferenceLazyRoute: referenceCreateReferenceLazyRoute,
+  searchSearchLazyRoute: searchSearchLazyRoute,
   referenceEditReferenceRefIdRoute: referenceEditReferenceRefIdRoute,
 }
 
@@ -405,6 +429,7 @@ export const routeTree = rootRoute
         "/(auth)",
         "/references/$refId",
         "/(reference)/create-reference",
+        "/(search)/search",
         "/(reference)/edit-reference/$refId"
       ]
     },
@@ -460,6 +485,9 @@ export const routeTree = rootRoute
     },
     "/(reference)/create-reference": {
       "filePath": "(reference)/create-reference.lazy.tsx"
+    },
+    "/(search)/search": {
+      "filePath": "(search)/search.lazy.tsx"
     },
     "/(auth)/_auth/admin-dashboard": {
       "filePath": "(auth)/_auth.admin-dashboard.tsx",

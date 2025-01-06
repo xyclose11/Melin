@@ -1,16 +1,11 @@
 {
   "Logging": {
-  "Console": {
     "LogLevel": {
-      "Microsoft.Hosting.Lifetime": "Trace"
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
     }
   },
-  "Debug": {
-    "LogLevel": {
-
-    }
-  }
-},
   "ConnectionStrings": {
     "MelinDatabase": "Host=;Username=;Password=;Database=;"
   },

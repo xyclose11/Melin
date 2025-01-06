@@ -616,9 +616,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                                 }));
                                 table.nextPage();
                             }}
-                            disabled={
-                                !table.getCanNextPage() || isPlaceholderData
-                            }
+                            disabled={isPlaceholderData}
                         >
                             Next
                         </Button>

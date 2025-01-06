@@ -52,6 +52,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#PROJECT-STRUCTURE">Project Structure</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -61,28 +62,39 @@
 </details>
 
 
+[![Product Name Screen Shot][product-screenshot]](https://github.com/xyclose11/Melin)
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+Melin is a suite of different academic related tools to assist in the management of references.
+Melin is an open source reference management system that enables collaboration with coworkers, peers, colleagues, and more.
 
-The goal of Melin is to create an open source reference management system that enables collaboration with multiple people.
-The aim is not to replace any existing reference and/or citation management applications that are currently out there. The aim is to
-expand the field and to see how far I can take the application in a full-stack setting.
-Melin has the capability to run on both Linux and Windows, as long as you are able to install ASP.NET Core.
+
+### Disclaimer
+_The aim is not to replace any existing reference and/or citation management applications that currently exist. The aim is to
+expand the field and to see how far I can take the application in a full-stack setting, with the overall goal to scale the project to production.
+All in all Melin is a learning experience at its heart, expect issues, expect messy code, expect different implementation styles._
+
+### Objectives
+
+1. Enable users to manage (Create, Read, Update, Destroy) references and other related academic forms of media
+2. Allow users to import and export in a variety of formats including but not limited to: _CSV, JSON, Bib(La)Tex, TXT_
+3. Ability for any developer to deploy Melin on their own hardware, with security as a focus out of the box, to act as its own independent service
+4. Allow users to collaborate together within Teams, or on a partner basis
+5. Allow users to share references, bibliographies, and documents
+6. Allow users to collaborate in near real-time on a document
+7. Allow users to generate a list of citations (bibliography) or in-text citations from a single or a grouping of references/academic media
+8. Users should be able to create and/or join several Teams which will consist of their own private collection of references, groups, and documents
+
 
 ### Built With
 
 - ASP.NET Core Web API (Version 8.0)
-- React.js
-- Shadcn
-- Nginx
+- C# (Version 12.0)
+- React.js: (Tanstack Router, Tanstack Query, Shadcn)
 - PostgreSQL
-- Jenkins
-- Tanstack
+- Xunit
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -90,28 +102,229 @@ Melin has the capability to run on both Linux and Windows, as long as you are ab
 
 <!-- GETTING STARTED -->
 ## Getting Started
+Melin has the capability to run on both Linux and Windows, as long as you are able to install ASP.NET Core, and a database of your choice.
 
-To get a local copy up and running follow these simple example steps.
+_Currently, the documentation lacks DB setup since there are a vast amount of tutorials that explain each setup step in more detail than I could.
+For the DB setup follow any tutorial on how to install PostgreSQL (Windows, or Linux)_
+
+
+To get a local copy up and running follow these steps.
 
 ### Prerequisites
 
 - ASP.NET Core version 8.0 (Windows/Linux)
 - C# version 12.0 (Although any version after 10.0 should work fine)
-- PostgreSQL server (Windows/Linux)
+- PostgreSQL server (Windows/Linux) _or your own desired database, but you will have to install a different package for entity framework core see more details in the documentation under section **Using a different Database provider**_
 
-When you first pull the repository traverse into the 'melin.client' project and run the following:
-* npm
+### Client Setup
+1. When you first pull the repository traverse into the 'melin.client' project and run the following:
   ```sh
   npm install
   ```
+This will install of the client related dependencies that are needed for the application to run
+
+2. Inside of _/melin.client_ Create an environment variable file called `.env.production`:
+```sh
+touch .env.production
+```
+- Enter the newly created environment file and remove everything after the '=' and replace with your fully qualified domain name. **WITH QUOTATION MARKS**
+```SH
+MELIN_SERVER_ADDR= "https://example.com"
+```
+The clientside is now good to go. You can test this by running:
+```SH
+npm run dev
+
+OR
+
+npm run preview
+
+OR
+
+npm run start
+```
+If any errors occur please open an issue on GitHub: https://github.com/xyclose11/Melin/issues 
+And I will remediate the documentation as soon as I can.
+
+### Server Setup
+1. Enter into the _Melin.Server_ directory.
+```SH
+cd Melin.Server
+```
+
+2. Install dependencies
+```SH
+dotnet restore
+```
+3. Create environment variable files:
+- Using both the _template.appsettings.json_ & the _template.appsettings.development.json_ as a template create
+2 new files called: _appsettings.json_ & _appsettings.development.json_
+
+#### appsettings.json: This will define settings to be used in a production setting
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "MelinDatabase": "Host=;Username=;Password=;Database=;"
+  },
+  "SingleUsePasswords": {
+    "SINGLE_USE_ADMIN_PASSWORD": "enterDefaultPasswordHere"
+  }
+}
+```
+
+NOTE: For both json files, for the ConnectionString -> "MelinDatabase" For the fields **DO NOT** include any quotation marks
+i.e. "MelinDatabase": "Host=localhost;Username=johnDoe;Password=john123;Database=johnDoeDB;"
+#### appsettings.Development.json: This will define settings to be used during development
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "MelinDatabase": "Host=;Username=;Password=;Database=;"
+  },
+  "SingleUsePasswords": {
+    "SINGLE_USE_ADMIN_PASSWORD": "enterDefaultPasswordHere"
+  }
+}
+```
+##### Explanation
+- SingleUsePasswords: SINGLE_USE_ADMIN_PASSWORD -> This is set so that on the first run of the backend server the database,
+will be 'seeded' with an Admin level account. I chose to do it this way to avoid manually creating an Admin level account in the database.
+As the name suggests, I strongly urge you to use a single use password for the initial account creation, and then change it afterward to something more secure.
+
+4. Database Setup
+- As previously stated I will not go through the installation of the PostgreSQL instance itself as there are plenty of well-rounded tutorials already out there.
+- However once the database is up and running, and you have implemented the connection string in both appsettings in the previous step, you will need to
+run the DB migrations to create the tables.
+- **Important**: There are 2 main DB contexts within Melin: "ReferenceContext" & "DataContext". ReferenceContext handles everything related to the business logic of Melin.
+DataContext deals with anything related to the Users and how they interact with Teams.
+
+With this said you will have to specify the DB context you are attempting to migrate
+
+```sh
+dotnet ef database update --context "ReferenceContext"
+
+THEN
+
+dotnet ef database update --context "DataContext"
+```
+
+**NOTE: I AM ASSUMING THAT THIS STEP WILL CAUSE THE MOST PROBLEMS ON THE INITIAL SETUP AS THE MIGRATION HISTORY IS QUITE MESSY
+THIS WILL BE FIXED IN THE NEXT VERSION OF MELIN**
+
+5. Running the Backend
+
+#### Development
+In a development environment use the following command:
+```SH
+dotnet run
+```
+
+### Production Build
+
+**NOTE:** For a production build you do not have to worry about build _melin.client_ since the backend .csproj will handle that
+```SH
+dotnet publish -c Release
+
+OR (you can specify your own output directory with --output)
+
+dotnet publish -c Release --output /put/output/here
+
+
+Production RUN (default file location)
+** Ensure that you are in the Melin.Server directory
+
+dotnet /bin/Release/net8.0/Melin.Server.dll
+```
+
+
+<!-- PROJECT-STRUCTURE -->
+## Project Structure
+This section will briefly describe the folder structure of both the front and back end for Melin.
+
+The idea is to get a vague understanding of the workflow of the project as a whole
+### Frontend
+```Generic
+/melin.client/
+/public --> SVG Logo
+/src/
+    /api --> Separate files for commonly used API requests & Tanstack Query configs
+    /app --> Shadcn setup
+    /assets --> Assets (SVG's, img's, etc)
+    /components --> Shadcn Components, includes theme-provider
+    /Context --> Separate files for context definitions
+    /CreateRefComponents --> DEPRECATED
+    /CustomComponents --> Custom components to be used in larger page components
+    ** Everything until the 'routes' directory is in the name for its purpose **
+    ...
+    /hooks --> Shadcn toast hook
+    ...
+    /routes --> Tanstack Router implementation, using file-based routing
+    /routes/__root.tsx --> Root page where root.tsx is rendered
+    ...
+    /utils --> contains several utility files including authentication & authorization related logic
+    root.tsx --> Root component where every child is rendered. Includes NavBar
+    main.tsx --> Setup for Tanstack Router router
+    Layout.tsx --> Defines the NavBar
+/tests
+... configuration files, environment files, etc
+```
+
+For More information take a look at these webpages
+
+[Tanstack Router](https://tanstack.com/router/latest/docs/framework/react/overview)
+
+### Backend
+
+```Generic
+/Melin.Server/
+/wwwroot/index.html --> Root HTML page where static files are rendered
+/wwwroot/vite.svg --> Logo (Feel free to replace)
+/Controllers/ --> Defines each controller for the application
+/Data/ --> Holds the DataContext file
+/Filter/ --> Defines different filters used for responses. Includes Paginated response filters, etc.
+/JSONInputFormatter/ --> Custom JSON Input Formatter for deserializing incoming JSON requests with Reference data
+/Logs/ --> Contains the log files. **Will be blank if the application has not been run before**
+/Middleware --> Serilog Configuration i.e. Log provider configuration
+/Migrations --> DB Migrations
+/Models/Binders --> Custom Model Binders. Most notable is ReferenceConverter which maps incoming JSON requests to a specific reference type.
+/Models/DTO --> Data Transfer Objects used to reduce or alter requests/responses
+/Models/References --> Contains a file with 32 POCO describing the References within Melin
+/Models/Repository --> Will be deprecated in the next minor release
+/Models/User --> Custom IdentityUser Implementation
+/Models/ReferenceContext --> Reference Context
+/Services --> Describes the difference services which are used in controllers via Dependency Injection
+/Wrappers --> Custom classes used to shape requests and responses
+```
 
 <!-- ROADMAP -->
 ## Roadmap
-Current abstracted roadmap for the remainder of 2024
+Current Roadmap of major milestones to be reached by the end of Q1 2025:
 
 - [ ] Import Reference(s) from (JSON, CSL-JSON, CSV, TXT, BibTex, BibLaTex, ISBN API, ISSN API, etc.)
 - [ ] Export Reference(s) in (JSON, CSV, TXT, BibTex, BibLaTex, CSL-JSON)
 - [ ] Barcode Scanner for mobile devices
+- [ ] Admin Dashboard: With the ability to manage users and references in a secure fashion
+- [ ] Share references
+- [ ] Citation Generation, this will be tricky due to the lack of citation generation libraries for C#/.NET. Will most likely have to create
+some kind of wrapper based around Citeproc-js or a seperate JS server with a gRPC connection
+
+Nice To Have Features:
+- [ ] Team implementation: Allow a User to create a team, invite members, and create resources based around that team
+- [ ] Document Editing (realtime): Implement a realtime document editing feature to allow users and/or teams to be able to edit a document in near real-time (using SignalR)
+- [ ] 
 
 See the [open issues](https://github.com/xyclose11/Melin/issues) for a full list of proposed features (and known issues).
 

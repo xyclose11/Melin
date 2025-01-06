@@ -30,7 +30,7 @@ public class Reference
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Language? Language { get; set; }
-    public DateTime? DatePublished { get; set; }
+    public string? DatePublished { get; set; }
     
     // Extra fields
     public string[]? Rights { get; set; } // Copyright terms, license, or release
