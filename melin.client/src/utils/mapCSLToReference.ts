@@ -127,10 +127,6 @@ export function mapContributors(
         lastName: contributor.family || "",
     }));
 }
-// function parsePages(page: string): number | undefined {
-//     const pageNumber = parseInt(page, 10);
-//     return isNaN(pageNumber) ? undefined : pageNumber;
-// }
 
 // Following EDTF Level 0 standard
 // Requires that YYYY always be present
