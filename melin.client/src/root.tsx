@@ -9,7 +9,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
     const { isAuthenticated } = useAuth();
 
     return (
-        <>
+        <div className="site-section">
             <NavBar />
 
             <div className={"flex flex-col"}>
@@ -19,12 +19,12 @@ export default function Root({ children }: { children: React.ReactNode }) {
                         <Outlet />
                     </main>
                 ) : (
-                    <main className={"mt-16 p-2"}>
+                    <main className={"mt-16"}>
                         <Workspace />
                         <Toaster />
                     </main>
                 )}
             </div>
-        </>
+        </div>
     );
 }

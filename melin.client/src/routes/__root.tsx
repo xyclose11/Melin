@@ -7,7 +7,7 @@ import { Footer } from "@/Footer.tsx";
 
 export const Route = createRootRoute({
     component: () => (
-        <>
+        <div className="max-w-[100%]">
             <CookiesProvider>
                 <Root children />
             </CookiesProvider>
@@ -15,6 +15,6 @@ export const Route = createRootRoute({
 
             <TanStackRouterDevtools />
             <ReactQueryDevtools />
-        </>
+        </div>
     ),
 });

@@ -27,7 +27,7 @@ function LibraryRoute() {
         <div>
             <SidebarProvider defaultOpen={defaultOpen}>
                 <WorkspaceToolBar />
-                <SidebarTrigger />
+                <SidebarTrigger className="max-w-[20%]" />
                 <LibraryPage initialData={loaderData.data.data} />
             </SidebarProvider>
         </div>

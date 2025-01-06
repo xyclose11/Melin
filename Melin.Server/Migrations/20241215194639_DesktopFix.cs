@@ -10,703 +10,703 @@ namespace Melin.Server.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ProceedingTitle",
-                table: "Reference");
-
-            migrationBuilder.RenameColumn(
-                name: "RadioBroadcast_ProgramTitle",
-                table: "Reference",
-                newName: "Recording_ProgramTitle");
-
-            migrationBuilder.RenameColumn(
-                name: "RadioBroadcast_Network",
-                table: "Reference",
-                newName: "Recording_Network");
-
-            migrationBuilder.RenameColumn(
-                name: "Podcast_EpisodeNumber",
-                table: "Reference",
-                newName: "Recording_EpisodeNumber");
-
-            migrationBuilder.RenameColumn(
-                name: "Hearing_DocumentNumber",
-                table: "Reference",
-                newName: "Legislation_DocumentNumber");
-
-            migrationBuilder.RenameColumn(
-                name: "Hearing_Committee",
-                table: "Reference",
-                newName: "Legislation_Committee");
-
-            migrationBuilder.RenameColumn(
-                name: "Film_Genre",
-                table: "Reference",
-                newName: "Recording_Genre");
-
-            migrationBuilder.RenameColumn(
-                name: "Film_Distributor",
-                table: "Reference",
-                newName: "Recording_Distributor");
-
-            migrationBuilder.RenameColumn(
-                name: "Email_Subject",
-                table: "Reference",
-                newName: "PrimarySource_Subject");
-
-            migrationBuilder.RenameColumn(
-                name: "Bill_Session",
-                table: "Reference",
-                newName: "Legislation_Session");
-
-            migrationBuilder.RenameColumn(
-                name: "Bill_Section",
-                table: "Reference",
-                newName: "Legislation_Section");
-
-            migrationBuilder.RenameColumn(
-                name: "Bill_LegislativeBody",
-                table: "Reference",
-                newName: "Legislation_LegislativeBody");
-
-            migrationBuilder.RenameColumn(
-                name: "Bill_History",
-                table: "Reference",
-                newName: "Legislation_History");
-
-            migrationBuilder.RenameColumn(
-                name: "Bill_CodeVolume",
-                table: "Reference",
-                newName: "Legislation_CodeVolume");
-
-            migrationBuilder.RenameColumn(
-                name: "Bill_CodePages",
-                table: "Reference",
-                newName: "Legislation_CodePages");
-
-            migrationBuilder.RenameColumn(
-                name: "Bill_Code",
-                table: "Reference",
-                newName: "Legislation_Code");
-
-            migrationBuilder.RenameColumn(
-                name: "BillNumber1",
-                table: "Reference",
-                newName: "Legislation_BillNumber");
-
-            migrationBuilder.RenameColumn(
-                name: "AudioRecording_Volume",
-                table: "Reference",
-                newName: "Book_Volume");
-
-            migrationBuilder.RenameColumn(
-                name: "AudioRecording_SeriesTitle",
-                table: "Reference",
-                newName: "Software_SeriesTitle");
-
-            migrationBuilder.RenameColumn(
-                name: "AudioRecording_RunningTime",
-                table: "Reference",
-                newName: "Recording_RunningTime");
-
-            migrationBuilder.RenameColumn(
-                name: "AudioRecording_Place",
-                table: "Reference",
-                newName: "Software_Place");
-
-            migrationBuilder.RenameColumn(
-                name: "AudioRecording_Label",
-                table: "Reference",
-                newName: "Recording_Label");
-
-            migrationBuilder.RenameColumn(
-                name: "Artwork_Medium",
-                table: "Reference",
-                newName: "PrimarySource_Medium");
-
-            migrationBuilder.RenameColumn(
-                name: "Version",
-                table: "Reference",
-                newName: "Book_SeriesTitle");
-
-            migrationBuilder.RenameColumn(
-                name: "ConferencePaper_ConferenceName",
-                table: "Reference",
-                newName: "Website_Date");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Website_ForumTitle",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "WebsiteType1",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "WebsiteTitle",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Volume",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "System",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Subject",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Session",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "SeriesTitle",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Section",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "RunningTime",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "ReportType",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "ReportNumber",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "integer",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "ProgrammingLanguage",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "ProgramTitle",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "PresentationType",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Place",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Network",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Medium",
-                table: "Reference",
-                type: "character varying(128)",
-                maxLength: 128,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "LegislativeBody",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Label",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Institution",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "History",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Genre",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "EpisodeNumber",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "integer",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "DocumentNumber",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Distributor",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "ConferenceName",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Company",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Committee",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "CodeVolume",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "CodePages",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Code",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "BillNumber",
-                table: "Reference",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(256)",
-                oldMaxLength: 256,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Recording_ProgramTitle",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Recording_Network",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_DocumentNumber",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_Committee",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Recording_Genre",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Recording_Distributor",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "PrimarySource_Subject",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_Session",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_Section",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_LegislativeBody",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_History",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_CodeVolume",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_CodePages",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_Code",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Legislation_BillNumber",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Book_Volume",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Recording_RunningTime",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Recording_Label",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
-                name: "PrimarySource_Medium",
-                table: "Reference",
-                type: "character varying(256)",
-                maxLength: 256,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "character varying(128)",
-                oldMaxLength: 128,
-                oldNullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "MeetingName",
-                table: "Reference",
-                type: "text",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Presentation_Date",
-                table: "Reference",
-                type: "text",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Presentation_Place",
-                table: "Reference",
-                type: "text",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Report_Date",
-                table: "Reference",
-                type: "text",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Report_Pages",
-                table: "Reference",
-                type: "text",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Report_Place",
-                table: "Reference",
-                type: "text",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Report_SeriesTitle",
-                table: "Reference",
-                type: "text",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Software_Date",
-                table: "Reference",
-                type: "text",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "VersionNumber",
-                table: "Reference",
-                type: "text",
-                nullable: true);
+            // migrationBuilder.DropColumn(
+            //     name: "ProceedingTitle",
+            //     table: "Reference");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "RadioBroadcast_ProgramTitle",
+            //     table: "Reference",
+            //     newName: "Recording_ProgramTitle");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "RadioBroadcast_Network",
+            //     table: "Reference",
+            //     newName: "Recording_Network");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Podcast_EpisodeNumber",
+            //     table: "Reference",
+            //     newName: "Recording_EpisodeNumber");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Hearing_DocumentNumber",
+            //     table: "Reference",
+            //     newName: "Legislation_DocumentNumber");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Hearing_Committee",
+            //     table: "Reference",
+            //     newName: "Legislation_Committee");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Film_Genre",
+            //     table: "Reference",
+            //     newName: "Recording_Genre");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Film_Distributor",
+            //     table: "Reference",
+            //     newName: "Recording_Distributor");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Email_Subject",
+            //     table: "Reference",
+            //     newName: "PrimarySource_Subject");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Bill_Session",
+            //     table: "Reference",
+            //     newName: "Legislation_Session");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Bill_Section",
+            //     table: "Reference",
+            //     newName: "Legislation_Section");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Bill_LegislativeBody",
+            //     table: "Reference",
+            //     newName: "Legislation_LegislativeBody");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Bill_History",
+            //     table: "Reference",
+            //     newName: "Legislation_History");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Bill_CodeVolume",
+            //     table: "Reference",
+            //     newName: "Legislation_CodeVolume");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Bill_CodePages",
+            //     table: "Reference",
+            //     newName: "Legislation_CodePages");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Bill_Code",
+            //     table: "Reference",
+            //     newName: "Legislation_Code");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "BillNumber1",
+            //     table: "Reference",
+            //     newName: "Legislation_BillNumber");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "AudioRecording_Volume",
+            //     table: "Reference",
+            //     newName: "Book_Volume");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "AudioRecording_SeriesTitle",
+            //     table: "Reference",
+            //     newName: "Software_SeriesTitle");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "AudioRecording_RunningTime",
+            //     table: "Reference",
+            //     newName: "Recording_RunningTime");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "AudioRecording_Place",
+            //     table: "Reference",
+            //     newName: "Software_Place");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "AudioRecording_Label",
+            //     table: "Reference",
+            //     newName: "Recording_Label");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Artwork_Medium",
+            //     table: "Reference",
+            //     newName: "PrimarySource_Medium");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "Version",
+            //     table: "Reference",
+            //     newName: "Book_SeriesTitle");
+            //
+            // migrationBuilder.RenameColumn(
+            //     name: "ConferencePaper_ConferenceName",
+            //     table: "Reference",
+            //     newName: "Website_Date");
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Website_ForumTitle",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "WebsiteType1",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "WebsiteTitle",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Volume",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "System",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Subject",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Session",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "SeriesTitle",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Section",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "RunningTime",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "ReportType",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "ReportNumber",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(int),
+            //     oldType: "integer",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "ProgrammingLanguage",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "ProgramTitle",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "PresentationType",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Place",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Network",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Medium",
+            //     table: "Reference",
+            //     type: "character varying(128)",
+            //     maxLength: 128,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "LegislativeBody",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Label",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Institution",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "History",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Genre",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "EpisodeNumber",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(int),
+            //     oldType: "integer",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "DocumentNumber",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Distributor",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "ConferenceName",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Company",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Committee",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "CodeVolume",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "CodePages",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Code",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "BillNumber",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(256)",
+            //     oldMaxLength: 256,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Recording_ProgramTitle",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Recording_Network",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_DocumentNumber",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_Committee",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Recording_Genre",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Recording_Distributor",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "PrimarySource_Subject",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_Session",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_Section",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_LegislativeBody",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_History",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_CodeVolume",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_CodePages",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_Code",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Legislation_BillNumber",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Book_Volume",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Recording_RunningTime",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "Recording_Label",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "text",
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AlterColumn<string>(
+            //     name: "PrimarySource_Medium",
+            //     table: "Reference",
+            //     type: "character varying(256)",
+            //     maxLength: 256,
+            //     nullable: true,
+            //     oldClrType: typeof(string),
+            //     oldType: "character varying(128)",
+            //     oldMaxLength: 128,
+            //     oldNullable: true);
+            //
+            // migrationBuilder.AddColumn<string>(
+            //     name: "MeetingName",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
+            //
+            // migrationBuilder.AddColumn<string>(
+            //     name: "Presentation_Date",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
+            //
+            // migrationBuilder.AddColumn<string>(
+            //     name: "Presentation_Place",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
+            //
+            // migrationBuilder.AddColumn<string>(
+            //     name: "Report_Date",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
+            //
+            // migrationBuilder.AddColumn<string>(
+            //     name: "Report_Pages",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
+            //
+            // migrationBuilder.AddColumn<string>(
+            //     name: "Report_Place",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
+            //
+            // migrationBuilder.AddColumn<string>(
+            //     name: "Report_SeriesTitle",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
+            //
+            // migrationBuilder.AddColumn<string>(
+            //     name: "Software_Date",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
+            //
+            // migrationBuilder.AddColumn<string>(
+            //     name: "VersionNumber",
+            //     table: "Reference",
+            //     type: "text",
+            //     nullable: true);
         }
 
         /// <inheritdoc />
