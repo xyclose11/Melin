@@ -90,7 +90,7 @@ export function SearchBar({
                                 given: a,
                             };
                         }),
-                        ISBN: i.volumeInfo.industryIdentifiers[0].identifier,
+                        // ISBN: i.volumeInfo.industryIdentifiers[0].identifier,
                         publisher: i.volumeInfo.publisher,
                         issued: {
                             "date-parts":

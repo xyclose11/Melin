@@ -7,7 +7,7 @@ export const Route = createLazyFileRoute("/")({
 
 function RouteComponent() {
     return (
-        <div>
+        <div className="w-screen max-w-screen">
             <Hero32 />
             <Features />
         </div>

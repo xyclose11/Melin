@@ -11,6 +11,9 @@
 
 .body {
     display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-left: 20px;
 }
 
 tr:nth-child(even) {
