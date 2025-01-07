@@ -418,6 +418,20 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         }
     }
 
+    public bool DeleteCreator(Creator creator)
+    {
+        try
+        {
+            _context.Creators.Remove(creator);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     public async Task<int> GetOwnedReferenceCount(string userEmail)
     {
         try

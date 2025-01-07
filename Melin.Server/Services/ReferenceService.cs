@@ -312,8 +312,8 @@ public class ReferenceService : IReferenceService
                     existingReference.Tags = updatedReference.Tags;
                 }
             }
-
-            await UpdateCreatorsAsync(existingReference, updatedReference);
+            
+            UpdateCreators(existingReference, updatedReference);
 
             await _referenceRepository.UpdateReferenceAsync(existingReference);
 
@@ -325,52 +325,37 @@ public class ReferenceService : IReferenceService
         }
     }
 
-    private async Task UpdateCreatorsAsync(Reference existingReference, Reference updatedReference)
+    private void UpdateCreators(Reference existingReference, Reference updatedReference)
     {
-        if (existingReference.Creators == null || updatedReference.Creators == null)
-            return;
+        var creatorsToRemove = existingReference.Creators
+            .Where(c => updatedReference.Creators.All(uc => uc.Id != c.Id))
+            .ToList();
 
-        // Replace existing creators if the existing list is empty
-        if (existingReference.Creators.Count == 0)
+        foreach (var creator in creatorsToRemove)
         {
-            existingReference.Creators = new List<Creator>(updatedReference.Creators);
+            existingReference.Creators.Remove(creator);
+            _referenceRepository.DeleteCreator(creator);
         }
-        else
+        
+        foreach (var updatedCreator in updatedReference.Creators)
         {
-            // Create a dictionary for efficient lookup of updated creators by ID
-            var updatedCreatorsMap = updatedReference.Creators.ToDictionary(c => c.Id);
-
-            // Update or detach existing creators
-            for (int i = 0; i < existingReference.Creators.Count; i++)
+            var existingCreator = existingReference.Creators
+                .FirstOrDefault(c => c.Id == updatedCreator.Id);
+            if (existingCreator != null)
             {
-                var existingCreator = existingReference.Creators.ToList()[i];
-                // LAST WORKING ON FIGURING OUT HOW TO DELETE CREATORS.
-                if (updatedCreatorsMap.TryGetValue(existingCreator.Id, out var updatedCreator))
-                {
-                    // Update existing creator's properties
-                    existingCreator.Types = updatedCreator.Types;
-                    existingCreator.FirstName = updatedCreator.FirstName;
-                    existingCreator.LastName = updatedCreator.LastName;
-
-                    // Remove from the map to mark as processed
-                    updatedCreatorsMap.Remove(existingCreator.Id);
-                }
-                else
-                {
-                    // Detach the creator if it doesn't exist in the updated list
-                    existingCreator.ReferenceId = null;
-                }
+                // Update properties of existing creator
+                existingCreator.FirstName = updatedCreator.FirstName;
+                existingCreator.LastName = updatedCreator.LastName;
+                existingCreator.Types = updatedCreator.Types;
             }
-
-            // Add new creators from the updated reference that are not already in the existing list
-            foreach (var newCreator in updatedCreatorsMap.Values)
+            else
             {
-                existingReference.Creators.Add(newCreator);
+                // Add new creator to the reference
+                existingReference.Creators.Add(updatedCreator);
             }
         }
 
-        // Persist changes asynchronously
-        await _referenceRepository.UpdateCreatorsAsync(existingReference);
+        _referenceRepository.SaveChanges();
     }
 
 

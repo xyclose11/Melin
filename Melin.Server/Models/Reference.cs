@@ -21,8 +21,7 @@ public class Reference
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ReferenceType Type { get; set; }
     [ModelBinder(BinderType = typeof(CreatorEntityBinder))]
-    [JsonIgnore]
-    public ICollection<Creator>? Creators { get; set; } = new List<Creator>();
+    public ICollection<Creator> Creators { get; set; } = new List<Creator>();
     public string Title { get; set; } = "";
     public string? ShortTitle { get; set; } = "";
 

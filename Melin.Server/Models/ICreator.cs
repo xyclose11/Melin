@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Melin.Server.Models;
@@ -37,5 +38,5 @@ public class Creator
     public string LastName { get; set; } = "";
     
     public int? ReferenceId { get; set; }
-    // public Reference? Reference { get; set; }
+    public Reference? Reference { get; set; }
 }

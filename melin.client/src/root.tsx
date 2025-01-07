@@ -13,7 +13,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
             <div className={"flex flex-col"}>
                 {!isAuthenticated ? (
-                    <main className={"mt-16"}>{children}</main>
+                    <main className={"mt-16"}>
+                        <Outlet />
+                        {children}
+                    </main>
                 ) : (
                     <main className={"mt-16 flex ml-2"}>
                         <Outlet />

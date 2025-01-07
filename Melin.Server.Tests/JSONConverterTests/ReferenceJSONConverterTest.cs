@@ -53,4 +53,5 @@ public class ReferenceJSONConverterTest
          Assert.IsType<Book>(bookObject);
          Assert.Equal("1950", bookObject.DatePublished);
     }
+    
 }
