@@ -5,6 +5,7 @@ using Melin.Server.Models.Repository;
 using Melin.Server.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Serilog;
 
 namespace Melin.Server.Services;
 
@@ -274,12 +275,9 @@ public class ReferenceService : IReferenceService
                 existingReference.Title = updatedReference.Title;
             }
 
-            if (existingReference.ShortTitle != null)
+            if (existingReference.ShortTitle != updatedReference.ShortTitle)
             {
-                if (!existingReference.ShortTitle.Equals(updatedReference.ShortTitle))
-                {
-                    existingReference.ShortTitle = updatedReference.ShortTitle;
-                }
+                existingReference.ShortTitle = updatedReference.ShortTitle;
             }
             
             if (!existingReference.Language.Equals(updatedReference.Language))
@@ -287,9 +285,9 @@ public class ReferenceService : IReferenceService
                 existingReference.Language = updatedReference.Language;
             }
 
-            if (existingReference.Rights != null)
+            if (updatedReference.Rights != null)
             {
-                if (!existingReference.Rights.Equals(updatedReference.Rights))
+                if (!existingReference.Rights.SequenceEqual(updatedReference.Rights))
                 {
                     existingReference.Rights = updatedReference.Rights;
                 }
@@ -299,6 +297,8 @@ public class ReferenceService : IReferenceService
             {
                 existingReference.DatePublished = updatedReference.DatePublished;
             }
+            
+            // LAST WORKING ON REDOING UPDATE LOGIC
 
             if (existingReference.Tags != null)
             {
@@ -308,11 +308,18 @@ public class ReferenceService : IReferenceService
                 }
             }
             
+            if (!existingReference.Tags.SequenceEqual(updatedReference.Tags))
+            {
+                existingReference.Tags = updatedReference.Tags;
+            }
+
+            
             UpdateCreators(existingReference, updatedReference);
             
         }
         catch (Exception e)
         {
+            Log.Warning("Unable to Update Reference: {Existing}, with Updated: {Updated}", existingReference, updatedReference);
             Console.WriteLine(e);
             throw;
         }
