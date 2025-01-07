@@ -94,7 +94,13 @@ export function EditReferencePage({ reference }: { reference: IReference }) {
 
     const form = useForm<z.infer<typeof refSchema>>({
         resolver: refSchema ? zodResolver(refSchema) : undefined,
-        defaultValues: reference,
+        defaultValues: {
+            ...reference,
+            datePublished:
+                reference.datePublished !== undefined
+                    ? new Date(reference.datePublished)
+                    : new Date(Date.now()),
+        },
     });
 
     const {
