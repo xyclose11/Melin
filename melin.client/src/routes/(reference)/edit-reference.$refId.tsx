@@ -18,7 +18,10 @@ function EditReferenceRoute() {
 
     const { isLoading, data } = useQuery({
         queryKey: ["single-reference", refId],
-        queryFn: () => getSingleReference(refId),
+        queryFn: async () => {
+            const data = await getSingleReference(refId);
+            return data;
+        },
         staleTime: 10000,
     });
 

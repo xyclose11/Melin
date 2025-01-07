@@ -170,8 +170,6 @@ export function EditReferencePage({ reference }: { reference: IReference }) {
         setRefSchema(newSchema);
     }, []);
 
-    console.log(errors);
-
     if (isPending) {
         return <div>LOADING... QUERY</div>;
     }
@@ -181,7 +179,7 @@ export function EditReferencePage({ reference }: { reference: IReference }) {
     }
 
     return (
-        <>
+        <div className="m-16 p-2">
             <FormProvider {...form}>
                 <Form {...form}>
                     <form
@@ -453,6 +451,6 @@ export function EditReferencePage({ reference }: { reference: IReference }) {
                 </Form>
             </FormProvider>
             <DevTool control={control} />
-        </>
+        </div>
     );
 }

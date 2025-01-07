@@ -18,7 +18,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
                         {children}
                     </main>
                 ) : (
-                    <main className={"mt-16 flex ml-2"}>
+                    <main className={"mt-16 flex justify-center ml-2"}>
                         <Outlet />
                         <Toaster />
                     </main>

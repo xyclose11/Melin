@@ -96,7 +96,6 @@ public class ReferenceController : ControllerBase
             };
         
             var pagedReferences = await _referenceService.GetOwnedReferencesAsync(filter, userEmail);
-
             var totalRefCount = await _referenceService.GetOwnedReferenceCountAsync(userEmail);
 
             if (totalRefCount == 0)
@@ -110,6 +109,13 @@ public class ReferenceController : ControllerBase
             List<ReferenceToLibraryRequest> output = new List<ReferenceToLibraryRequest>();
             foreach (var reference in pagedReferences)
             {
+                var tagDisplayRequests = new List<TagDisplayRequest>();
+                if (reference.Tags != null)
+                {
+                    tagDisplayRequests = reference.Tags
+                        .Select(tag => new TagDisplayRequest { Id = tag.Id, Text = tag.Text }).ToList();
+                }
+
                 var res = new ReferenceToLibraryRequest
                 {
                     Id = reference.Id,
@@ -119,7 +125,7 @@ public class ReferenceController : ControllerBase
                     CreatedAt = reference.CreatedAt.ToString(CultureInfo.CurrentCulture),
                     UpdatedAt = reference.UpdatedAt.ToString(CultureInfo.CurrentCulture),
                     Creators = reference.Creators?.ToList(),
-                    Tags = reference.Tags?.ToList(),
+                    Tags = tagDisplayRequests,
                     Language = reference.Language.ToString(),
                     DatePublished = reference.DatePublished,
                     GroupNames = reference.Groups?.Select(g => g.Name).ToList()
