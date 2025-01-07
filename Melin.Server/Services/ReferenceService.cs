@@ -320,35 +320,45 @@ public class ReferenceService : IReferenceService
 
     private void UpdateCreators(Reference existingReference, Reference updatedReference)
     {
-        var creatorsToRemove = existingReference.Creators
-            .Where(c => updatedReference.Creators.All(uc => uc.Id != c.Id))
-            .ToList();
-
-        foreach (var creator in creatorsToRemove)
+        try
         {
-            existingReference.Creators.Remove(creator);
-            _referenceRepository.DeleteCreator(creator);
-        }
-        
-        foreach (var updatedCreator in updatedReference.Creators)
-        {
-            var existingCreator = existingReference.Creators
-                .FirstOrDefault(c => c.Id == updatedCreator.Id);
-            if (existingCreator != null)
+            var creatorsToRemove = existingReference.Creators
+                .Where(c => updatedReference.Creators.All(uc => uc.Id != c.Id))
+                .ToList();
+            
+            foreach (var creator in creatorsToRemove)
             {
-                // Update properties of existing creator
-                existingCreator.FirstName = updatedCreator.FirstName;
-                existingCreator.LastName = updatedCreator.LastName;
-                existingCreator.Types = updatedCreator.Types;
+                existingReference.Creators.Remove(creator);
+                _referenceRepository.DeleteCreator(creator);
             }
-            else
-            {
-                // Add new creator to the reference
-                existingReference.Creators.Add(updatedCreator);
-            }
-        }
+            
+            existingReference.Creators
+                .Where(existing => updatedReference.Creators.Any(u => u.Id == existing.Id))
+                .ToList()
+                .ForEach(existing =>
+                {
+                    var updated = updatedReference.Creators.First(u => u.Id == existing.Id);
+                    existing.FirstName = updated.FirstName;
+                    existing.LastName = updated.LastName;
+                    existing.Types = updated.Types;
+                });
 
-        _referenceRepository.SaveChanges();
+            var creatorsToAdd = updatedReference.Creators
+                .Where(updated => !existingReference.Creators.Any(existing => existing.Id == updated.Id))
+                .ToList();
+
+            foreach (var creator in creatorsToAdd)
+            {
+                existingReference.Creators.Add(creator);
+            }
+
+            _referenceRepository.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
 

@@ -66,6 +66,7 @@ export function EditReferencePage({ reference }: { reference: IReference }) {
 
     const { isPending, isError, refetch, error } = useQuery({
         queryKey: ["single-reference", refId],
+        enabled: false,
     });
 
     const mutation = useMutation({
