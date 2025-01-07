@@ -128,7 +128,7 @@ public class ReferenceService : IReferenceService
     }
     
 
-    async Task<Result<bool>> IReferenceService.UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
+    public async Task<Result<bool>> UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
     {
         try
         {
@@ -264,13 +264,8 @@ public class ReferenceService : IReferenceService
         }
     }
     
-
-    public async Task<bool> UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
-    {
-        throw new NotImplementedException();
-    }
     
-    private async void UpdateGeneralFields(Reference existingReference, Reference updatedReference)
+    private void UpdateGeneralFields(Reference existingReference, Reference updatedReference)
     {
         try
         {
@@ -314,9 +309,7 @@ public class ReferenceService : IReferenceService
             }
             
             UpdateCreators(existingReference, updatedReference);
-
-            await _referenceRepository.UpdateReferenceAsync(existingReference);
-
+            
         }
         catch (Exception e)
         {
