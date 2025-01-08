@@ -192,7 +192,7 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         
     }
 
-    public async Task<bool> UpdateCreatorsAsync(Reference reference)
+    public bool UpdateCreatorsAsync(Reference reference)
     {
         try
         {
@@ -200,11 +200,11 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
             {
                 foreach (var creator in reference.Creators)
                 {
-                    _context.Creators.Update(creator);
+                    _context.Creators.Entry(creator).State = EntityState.Modified;
                 }
             }
 
-            await _context.SaveChangesAsync();
+
             return true;
         }
         catch (Exception e)

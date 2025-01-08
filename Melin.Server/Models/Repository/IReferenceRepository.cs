@@ -16,7 +16,7 @@ public interface IReferenceRepository : IGenericRepository<Reference>
 
         Task<Result<Reference>> GetReferenceByIdAsync(string userEmail, int id);
         Task<Result<Reference>> GetReferenceAllDetailsByIdAsync(string userEmail, int id);
-        Task<bool> UpdateCreatorsAsync(Reference reference);
+        bool UpdateCreatorsAsync(Reference reference);
         
         /// <summary>
         /// 

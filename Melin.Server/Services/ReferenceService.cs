@@ -270,12 +270,14 @@ public class ReferenceService : IReferenceService
     {
         try
         {
-            if (!existingReference.Title.Equals(updatedReference.Title))
+            // Update Title
+            if (!string.Equals(existingReference.Title, updatedReference.Title, StringComparison.Ordinal))
             {
                 existingReference.Title = updatedReference.Title;
             }
 
-            if (existingReference.ShortTitle != updatedReference.ShortTitle)
+            // Update ShortTitle
+            if (!string.Equals(existingReference.ShortTitle, updatedReference.ShortTitle, StringComparison.Ordinal))
             {
                 existingReference.ShortTitle = updatedReference.ShortTitle;
             }
@@ -285,32 +287,24 @@ public class ReferenceService : IReferenceService
                 existingReference.Language = updatedReference.Language;
             }
 
-            if (updatedReference.Rights != null)
+            // Update Rights
+            if (updatedReference.Rights != null && 
+                (existingReference.Rights == null || !existingReference.Rights.SequenceEqual(updatedReference.Rights)))
             {
-                if (!existingReference.Rights.SequenceEqual(updatedReference.Rights))
-                {
-                    existingReference.Rights = updatedReference.Rights;
-                }
+                existingReference.Rights = updatedReference.Rights;
             }
             
-            if (existingReference.DatePublished != null && !existingReference.DatePublished.Equals(updatedReference.DatePublished))
+            // Update DatePublished
+            if (existingReference.DatePublished != updatedReference.DatePublished)
             {
                 existingReference.DatePublished = updatedReference.DatePublished;
             }
             
-            // LAST WORKING ON REDOING UPDATE LOGIC
-
-            if (existingReference.Tags != null)
+            // Update Tags
+            if (updatedReference.Tags != null &&
+                (existingReference.Tags == null || !existingReference.Tags.SequenceEqual(updatedReference.Tags)))
             {
-                if (!existingReference.Tags.Equals(updatedReference.Tags))
-                {
-                    existingReference.Tags = updatedReference.Tags;
-                }
-            }
-            
-            if (!existingReference.Tags.SequenceEqual(updatedReference.Tags))
-            {
-                existingReference.Tags = updatedReference.Tags;
+                existingReference.Tags = updatedReference.Tags.ToList();
             }
 
             
