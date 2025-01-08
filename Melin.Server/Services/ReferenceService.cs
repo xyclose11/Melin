@@ -358,6 +358,7 @@ public class ReferenceService : IReferenceService
         catch (Exception e)
         {
             Console.WriteLine(e);
+            Log.Error("Exception thrown when attempting to update creators");
             throw;
         }
     }
@@ -365,25 +366,87 @@ public class ReferenceService : IReferenceService
 
     private static void UpdateArtworkFields(Artwork existingReference, Artwork updatedReference)
     {
-        existingReference.Medium = updatedReference.Medium;
-        existingReference.Dimensions = updatedReference.Dimensions;
-        existingReference.Scale = updatedReference.Scale;
-        existingReference.MapType = updatedReference.MapType;
+        if (updatedReference == null)
+        {
+            throw new ArgumentNullException(nameof(updatedReference), "Updated reference cannot be null.");
+        }
+
+        if (!string.Equals(existingReference.Medium, updatedReference.Medium, StringComparison.Ordinal))
+        {
+            existingReference.Medium = updatedReference.Medium;
+        }
+
+        if (!string.Equals(existingReference.Dimensions, updatedReference.Dimensions, StringComparison.Ordinal))
+        {
+            existingReference.Dimensions = updatedReference.Dimensions;
+        }
+
+        if (existingReference.Scale != updatedReference.Scale)
+        {
+            existingReference.Scale = updatedReference.Scale;
+        }
+
+        if (existingReference.MapType != updatedReference.MapType)
+        {
+            existingReference.MapType = updatedReference.MapType;
+        }
     }
+
     
     private static void UpdateAudioRecordingFields(AudioRecording existing, AudioRecording updated)
     {
-        existing.AudioRecordingFormat = updated.AudioRecordingFormat;
-        existing.SeriesTitle = updated.SeriesTitle;
-        existing.Volume = updated.Volume;
-        existing.NumberOfVolumes = updated.NumberOfVolumes;
-        existing.Place = updated.Place;
-        existing.Label = updated.Label;
-        existing.RunningTime = updated.RunningTime;
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Updated audio recording cannot be null.");
+        }
+
+        // Update textual fields
+        if (!string.Equals(existing.AudioRecordingFormat, updated.AudioRecordingFormat, StringComparison.Ordinal))
+        {
+            existing.AudioRecordingFormat = updated.AudioRecordingFormat;
+        }
+
+        if (!string.Equals(existing.SeriesTitle, updated.SeriesTitle, StringComparison.Ordinal))
+        {
+            existing.SeriesTitle = updated.SeriesTitle;
+        }
+
+        // Update numeric fields
+        if (existing.Volume != updated.Volume)
+        {
+            existing.Volume = updated.Volume;
+        }
+
+        if (existing.NumberOfVolumes != updated.NumberOfVolumes)
+        {
+            existing.NumberOfVolumes = updated.NumberOfVolumes;
+        }
+
+        // Update other fields
+        if (!string.Equals(existing.Place, updated.Place, StringComparison.Ordinal))
+        {
+            existing.Place = updated.Place;
+        }
+
+        if (!string.Equals(existing.Label, updated.Label, StringComparison.Ordinal))
+        {
+            existing.Label = updated.Label;
+        }
+
+        if (existing.RunningTime != updated.RunningTime)
+        {
+            existing.RunningTime = updated.RunningTime;
+        }
     }
+
 
     private static void UpdateBookFields(Book existing, Book updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Book cannot be null.");
+        }
+
         existing.Publication = updated.Publication;
         existing.BookTitle = updated.BookTitle;
         existing.Volume = updated.Volume;
@@ -405,6 +468,11 @@ public class ReferenceService : IReferenceService
 
     private static void UpdateBookSectionFields(BookSection existing, BookSection updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Book Section cannot be null.");
+        }
+        
         existing.BookTitle = updated.BookTitle;
         existing.Series = updated.Series;
         existing.SeriesNumber = updated.SeriesNumber;
@@ -420,12 +488,22 @@ public class ReferenceService : IReferenceService
 
     private static void UpdateDocumentFields(Document existing, Document updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Document cannot be null.");
+        }
+        
         existing.Publisher = updated.Publisher;
         existing.Date = updated.Date;
     }
 
     private static void UpdateJournalArticleFields(JournalArticle existing, JournalArticle updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Journal Article cannot be null.");
+        }
+        
         existing.PublicationTitle = updated.PublicationTitle;
         existing.Volume = updated.Volume;
         existing.Issue = updated.Issue;
@@ -441,6 +519,11 @@ public class ReferenceService : IReferenceService
 
     private static void UpdateEncyclopediaArticleFields(EncyclopediaArticle existing, EncyclopediaArticle updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Encyclopedia Article cannot be null.");
+        }
+        
         existing.EncyclopediaTitle = updated.EncyclopediaTitle;
         existing.Series = updated.Series;
         existing.SeriesNumber = updated.SeriesNumber;
