@@ -24,10 +24,10 @@ function LibraryRoute() {
     const defaultOpen = cookies["sidebar:state"];
 
     return (
-        <div>
+        <div className="justify-start">
             <SidebarProvider defaultOpen={defaultOpen}>
                 <WorkspaceToolBar />
-                <SidebarTrigger className="sticky top-20" />
+                <SidebarTrigger className=" sticky top-20" />
                 <LibraryPage initialData={loaderData.data.data} />
             </SidebarProvider>
         </div>

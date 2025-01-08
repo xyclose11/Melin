@@ -23,7 +23,7 @@ function SearchPage() {
     });
 
     return (
-        <div className="flex justify-center h-[100%]">
+        <div className="flex place-content-center h-[100%]">
             <div className="grid gap-4">
                 <SearchBar handleQueryChange={handleQueryChange} />
 
