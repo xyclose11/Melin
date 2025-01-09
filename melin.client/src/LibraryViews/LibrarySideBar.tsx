@@ -29,7 +29,7 @@ export function LibrarySideBar({
         <>
             <Card className="h-[100%] rounded-br-none rounded-tr-none">
                 <CardHeader className={"flex p-4 justify-center"}>
-                    <CardTitle className="text-sm p-1 bg-secondary rounded">
+                    <CardTitle className="text-md p-1 rounded">
                         Groups
                     </CardTitle>
                     <DropdownMenu>

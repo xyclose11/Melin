@@ -8,7 +8,6 @@ import {
     useFieldArray,
     useForm,
 } from "react-hook-form";
-import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,15 +24,7 @@ import {
     creatorFormSchema,
     CreatorInput,
 } from "@/CreateRefComponents/CreatorInput.tsx";
-import React from "react";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover.tsx";
-import { cn } from "@/lib/utils.ts";
-import { CalendarIcon, SquareX } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
+import { SquareX } from "lucide-react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { TagCreateDropdown, tagSchema } from "@/Tag/TagCreateDropdown.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
@@ -58,7 +49,7 @@ const formSchema = z.object({
     }),
     shortTitle: z.string().optional(),
     language: z.string().optional(),
-    datePublished: z.date().optional(),
+    datePublished: z.string().optional(),
     locationStored: z.string().optional(),
     rights: z.array(rightsSchema).optional(),
     extraFields: z.string().optional(),
@@ -73,7 +64,6 @@ export function BaseReferenceCreator({
     refSchema: ZodObject<any>;
     schemaName: string;
 }) {
-    const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
     const { toast } = useToast();
 
@@ -83,7 +73,7 @@ export function BaseReferenceCreator({
             type: "0",
             title: "",
             shortTitle: "",
-            datePublished: new Date(),
+            datePublished: "",
             language: "English",
             locationStored: "",
             extraFields: undefined,

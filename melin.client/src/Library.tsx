@@ -606,10 +606,10 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                                setPagination((prev) => ({
-                                    ...prev,
-                                    pageIndex: prev.pageIndex - 1,
-                                }));
+                                // setPagination((prev) => ({
+                                //     ...prev,
+                                //     pageIndex: prev.pageIndex - 1,
+                                // }));
                                 table.previousPage();
                             }}
                             disabled={
@@ -623,10 +623,10 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                                setPagination((prev) => ({
-                                    ...prev,
-                                    pageIndex: prev.pageIndex + 1,
-                                }));
+                                // setPagination((prev) => ({
+                                //     ...prev,
+                                //     pageIndex: prev.pageIndex + 1,
+                                // }));
                                 table.nextPage();
                             }}
                             disabled={isPlaceholderData}
