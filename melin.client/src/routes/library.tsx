@@ -24,7 +24,7 @@ function LibraryRoute() {
     const defaultOpen = cookies["sidebar:state"];
 
     return (
-        <div className="justify-start">
+        <div className="justify-center">
             <SidebarProvider defaultOpen={defaultOpen}>
                 <WorkspaceToolBar />
                 <SidebarTrigger className=" sticky top-20" />

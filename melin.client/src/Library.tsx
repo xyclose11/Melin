@@ -59,6 +59,12 @@ import { Link } from "@tanstack/react-router";
 import { Pagination } from "@/api/referencesQueryOptions.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { fetchReferences } from "@/api/fetchReferences.ts";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -196,25 +202,32 @@ export function Library({ initialData }: { initialData: Reference[] }) {
 
             cell: ({ row }) => {
                 const creators: Creator[] = row.getValue("creators");
+                if (creators.length <= 0) {
+                    return (
+                        <Card>
+                            <CardContent></CardContent>
+                        </Card>
+                    );
+                }
+
                 return (
-                    <div className="overflow-hidden grid grid-cols-1">
-                        {creators === undefined ? (
-                            <div> </div>
-                        ) : (
-                            creators.map((creator: Creator) => (
-                                <div
-                                    className="text-xs grid grid-cols-3"
-                                    key={creator.id}
-                                >
-                                    <div className="font-bold">
-                                        {creator.types}:
-                                    </div>
-                                    <div>{creator.firstName}</div>
-                                    <div>{creator.lastName}</div>
-                                </div>
-                            ))
-                        )}
-                    </div>
+                    <Card className="h-20 pt-2">
+                        <CardContent className="">
+                            <div className="">
+                                {creators
+                                    .slice(0, 4)
+                                    .map((creator: Creator) => (
+                                        <div
+                                            className="text-xs grid grid-cols-2 sm:text-[10px] md:text-xs"
+                                            key={creator.id}
+                                        >
+                                            <div>{creator.firstName}</div>
+                                            <div>{creator.lastName}</div>
+                                        </div>
+                                    ))}
+                            </div>
+                        </CardContent>
+                    </Card>
                 );
             },
         },
