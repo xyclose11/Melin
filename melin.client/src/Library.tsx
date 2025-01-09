@@ -59,12 +59,7 @@ import { Link } from "@tanstack/react-router";
 import { Pagination } from "@/api/referencesQueryOptions.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { fetchReferences } from "@/api/fetchReferences.ts";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card.tsx";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -252,21 +247,23 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                     <div className={"max-w-[25%]"}>
                         <div className={"flex gap-1 flex-wrap"}>
                             {tags === undefined ? (
-                                <div> </div>
+                                <div></div>
                             ) : (
-                                tags.map((tag) => (
-                                    <TagTableDisplay
-                                        key={tag.id}
-                                        tagId={
-                                            typeof tag.id === "number"
-                                                ? tag.id
-                                                : -1
-                                        }
-                                        refId={row.original.id}
-                                        name={tag.text}
-                                        handleRemoveTag={handleRemoveTag}
-                                    />
-                                ))
+                                tags
+                                    .slice(0, 5)
+                                    .map((tag) => (
+                                        <TagTableDisplay
+                                            key={tag.id}
+                                            tagId={
+                                                typeof tag.id === "number"
+                                                    ? tag.id
+                                                    : -1
+                                            }
+                                            refId={row.original.id}
+                                            name={tag.text}
+                                            handleRemoveTag={handleRemoveTag}
+                                        />
+                                    ))
                             )}
                             <div className={"justify-self-end self-end"}>
                                 <Dialog>

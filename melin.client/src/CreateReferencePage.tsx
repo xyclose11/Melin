@@ -2,7 +2,7 @@
 
 export function CreateReferencePage() {
     return (
-        <div className="">
+        <div className="flex justify-center m-8">
             <CreateReference />
         </div>
     );

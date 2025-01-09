@@ -59,6 +59,7 @@ const formSchema = z.object({
     shortTitle: z.string().optional(),
     language: z.string().optional(),
     datePublished: z.date().optional(),
+    locationStored: z.string().optional(),
     rights: z.array(rightsSchema).optional(),
     extraFields: z.string().optional(),
     creators: z.array(creatorFormSchema).optional(),
@@ -84,6 +85,7 @@ export function BaseReferenceCreator({
             shortTitle: "",
             datePublished: new Date(),
             language: "English",
+            locationStored: "",
             extraFields: undefined,
             rights: undefined,
             creators: [{}],
@@ -158,24 +160,18 @@ export function BaseReferenceCreator({
     }
 
     return (
-        <div>
+        <div className="justify-center">
             <FormProvider {...form}>
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="gap-2 justify-items-start grid grid-cols-2"
+                        className="gap-2 justify-items-start grid grid-cols-1"
                     >
-                        <Card>
-                            <CardHeader className={"text-center"}>
-                                <CardTitle>Tags</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <TagCreateDropdown />
-                            </CardContent>
-                        </Card>
                         <Card className={"w-full"}>
-                            <CardHeader className={"text-center"}>
-                                <CardTitle>General Fields*</CardTitle>
+                            <CardHeader className={"justify-center"}>
+                                <CardTitle className="justify-center">
+                                    Shared Fields
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className={"w-full"}>
                                 <FormField
@@ -235,51 +231,10 @@ export function BaseReferenceCreator({
                                                 Date Published
                                             </FormLabel>
                                             <FormControl>
-                                                <Popover>
-                                                    <PopoverTrigger asChild>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "w-[280px] justify-start text-left font-normal",
-                                                                !datePublished &&
-                                                                    "text-muted-foreground",
-                                                            )}
-                                                        >
-                                                            <CalendarIcon />
-                                                            {datePublished ? (
-                                                                format(
-                                                                    datePublished,
-                                                                    "PPP",
-                                                                )
-                                                            ) : (
-                                                                <span>
-                                                                    {" "}
-                                                                    Click Here!{" "}
-                                                                </span>
-                                                            )}
-                                                        </Button>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="w-auto p-0">
-                                                        <Calendar
-                                                            mode="single"
-                                                            selected={
-                                                                datePublished
-                                                            }
-                                                            onSelect={(
-                                                                date,
-                                                            ) => {
-                                                                setDatePublished(
-                                                                    date,
-                                                                );
-                                                                field.onChange(
-                                                                    date,
-                                                                );
-                                                            }}
-                                                            initialFocus
-                                                            {...field}
-                                                        />
-                                                    </PopoverContent>
-                                                </Popover>
+                                                <Input
+                                                    placeholder="datePublished"
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -316,6 +271,25 @@ export function BaseReferenceCreator({
                                         </FormItem>
                                     )}
                                 />
+                                <FormField
+                                    control={form.control}
+                                    name="locationStored"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Location Stored
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Bookshelf, Coffee Table,..."
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <TagCreateDropdown />
                             </CardContent>
 
                             <CardFooter>

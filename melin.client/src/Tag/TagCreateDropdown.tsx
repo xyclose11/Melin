@@ -1,4 +1,9 @@
-import { FormControl, FormField, FormItem } from "@/components/ui/form.tsx";
+import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+} from "@/components/ui/form.tsx";
 import { useFormContext } from "react-hook-form";
 import { Tag, TagInput } from "emblor";
 import React, { useEffect, useState } from "react";
@@ -76,6 +81,7 @@ export function TagCreateDropdown() {
                 name="tags"
                 render={({ field }) => (
                     <FormItem>
+                        <FormLabel>Tags</FormLabel>
                         <FormControl>
                             <TagInput
                                 {...field}
@@ -95,15 +101,18 @@ export function TagCreateDropdown() {
                                 shape={"rounded"}
                                 inlineTags={true}
                                 textCase={"capitalize"}
+                                className="font-black"
                                 styleClasses={{
-                                    input: "w-full sm:max-w-[350px]",
+                                    input: "bg-black border bg-background text-foreground sm:max-w-[350px]",
+                                    inlineTagsContainer:
+                                        "bg-gray-200 p-2 rounded",
                                     tag: {
-                                        body: "flex items-center gap-2",
+                                        body: "flex items-center p-1 gap-2",
                                         closeButton:
                                             "text-red-500 hover:text-red-600",
                                     },
                                 }}
-                                variant={"primary"}
+                                variant={"default"}
                             />
                         </FormControl>
                     </FormItem>
