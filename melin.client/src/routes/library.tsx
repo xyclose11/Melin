@@ -5,6 +5,7 @@ import { useCookies } from "react-cookie";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar.tsx";
 import { WorkspaceToolBar } from "@/CustomComponents/WorkspaceToolBar.tsx";
 import { z } from "zod";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 export const Route = createFileRoute("/library")({
     validateSearch: z.object({
         pageIndex: z.number().optional(),
@@ -36,7 +37,11 @@ function LibraryRoute() {
             <SidebarProvider defaultOpen={defaultOpen}>
                 <WorkspaceToolBar />
                 <SidebarTrigger className=" sticky top-20" />
-                <LibraryPage initialData={loaderData.data.data} />
+                <Card className="m-4 mr-16 w-full">
+                    <CardContent>
+                        <LibraryPage initialData={loaderData.data.data} />
+                    </CardContent>
+                </Card>
             </SidebarProvider>
         </div>
     );

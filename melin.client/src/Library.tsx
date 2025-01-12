@@ -104,7 +104,6 @@ export function Library({ initialData }: { initialData: Reference[] }) {
     const { selectedReferences, toggleReference, clearSelection } =
         useReferenceSelection();
 
-    // const { selectedGroup } = useGroupSelection();
     const [data, setData] = React.useState<Reference[]>(initialData);
     const [pagination] = useState<Pagination>({
         pageSize: 15,
