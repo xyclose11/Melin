@@ -18,6 +18,7 @@ import {
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
+    SidebarHeader,
     SidebarMenu,
     SidebarMenuBadge,
     SidebarMenuButton,
@@ -25,6 +26,7 @@ import {
     SidebarMenuSub,
     SidebarMenuSubItem,
     SidebarSeparator,
+    SidebarTrigger,
 } from "@/components/ui/sidebar.tsx";
 import { Roles, useAuth } from "@/utils/AuthProvider.tsx";
 import {
@@ -75,6 +77,9 @@ export function WorkspaceToolBar() {
             collapsible="icon"
             className={"flex-1 mt-16"}
         >
+            <SidebarHeader>
+                <SidebarTrigger className="sticky top-20" />
+            </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>Melin</SidebarGroupLabel>

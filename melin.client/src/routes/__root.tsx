@@ -12,7 +12,7 @@ export const Route = createRootRouteWithContext<{
     queryClient: QueryClient;
 }>()({
     component: () => (
-        <div>
+        <div className="overflow-hidden">
             <CookiesProvider>
                 <Root children />
             </CookiesProvider>

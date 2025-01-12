@@ -2,7 +2,7 @@ import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { LibraryPage } from "@/LibraryPage.tsx";
 import { referencesQueryOptions } from "@/api/referencesQueryOptions.tsx";
 import { useCookies } from "react-cookie";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar.tsx";
+import { SidebarProvider } from "@/components/ui/sidebar.tsx";
 import { WorkspaceToolBar } from "@/CustomComponents/WorkspaceToolBar.tsx";
 import { z } from "zod";
 import { Card, CardContent } from "@/components/ui/card.tsx";
@@ -36,7 +36,6 @@ function LibraryRoute() {
         <div className="justify-center">
             <SidebarProvider defaultOpen={defaultOpen}>
                 <WorkspaceToolBar />
-                <SidebarTrigger className=" sticky top-20" />
                 <Card className="m-4 mr-16 w-full">
                     <CardContent>
                         <LibraryPage initialData={loaderData.data.data} />
