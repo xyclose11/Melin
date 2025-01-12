@@ -106,7 +106,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
 
     // const { selectedGroup } = useGroupSelection();
     const [data, setData] = React.useState<Reference[]>(initialData);
-    const [pagination, setPagination] = useState<Pagination>({
+    const [pagination] = useState<Pagination>({
         pageSize: 15,
         pageIndex: 0,
     });
@@ -480,7 +480,6 @@ export function Library({ initialData }: { initialData: Reference[] }) {
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         manualPagination: true,
-        onPaginationChange: setPagination,
         columnResizeMode: "onEnd",
         columnResizeDirection: "rtl",
         rowCount: queryData?.data.totalRecords ?? data.length,
@@ -489,7 +488,6 @@ export function Library({ initialData }: { initialData: Reference[] }) {
             columnFilters,
             columnVisibility,
             rowSelection,
-            pagination,
         },
     });
 
