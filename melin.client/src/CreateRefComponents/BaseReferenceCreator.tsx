@@ -394,25 +394,6 @@ export function BaseReferenceCreator({
                             </CardContent>
                         </Card>
 
-                        {errors.creators && (
-                            <div>{errors.creators.message}</div>
-                        )}
-                        {errors.title && <div>{errors.title.message}</div>}
-                        {errors.shortTitle && (
-                            <div>{errors.shortTitle.message}</div>
-                        )}
-                        {errors.rights && <div>{errors.rights.message}</div>}
-                        {errors.datePublished && (
-                            <div>{errors.datePublished.message}</div>
-                        )}
-                        {errors.extraFields && (
-                            <div>{errors.extraFields.message}</div>
-                        )}
-                        {errors.language && (
-                            <div>{errors.language.message}</div>
-                        )}
-                        {errors.tags && <div> {errors.tags.message}</div>}
-
                         {errors.root && <div> {errors.root.message}</div>}
 
                         <Button className="col-end-2 m-2" type="submit">

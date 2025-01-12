@@ -4,8 +4,12 @@ import { referencesQueryOptions } from "@/api/referencesQueryOptions.tsx";
 import { useCookies } from "react-cookie";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar.tsx";
 import { WorkspaceToolBar } from "@/CustomComponents/WorkspaceToolBar.tsx";
-
+import { z } from "zod";
 export const Route = createFileRoute("/library")({
+    validateSearch: z.object({
+        pageIndex: z.number().optional(),
+        pageSize: z.number().optional(),
+    }),
     loaderDeps: ({ search: { pageIndex, pageSize } }) => ({
         pageIndex,
         pageSize,
@@ -22,6 +26,10 @@ function LibraryRoute() {
 
     const [cookies] = useCookies(["sidebar:state"]);
     const defaultOpen = cookies["sidebar:state"];
+
+    if (loaderData?.data === undefined) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="justify-center">

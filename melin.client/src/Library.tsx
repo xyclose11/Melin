@@ -463,7 +463,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
         }
     };
 
-    const { data: queryData, isPlaceholderData } = useQuery({
+    const { data: queryData } = useQuery({
         queryKey: ["references", pagination.pageIndex, pagination.pageSize],
         queryFn: () => fetchReferences(pagination, null),
     });
@@ -629,7 +629,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                                 // }));
                                 table.nextPage();
                             }}
-                            disabled={isPlaceholderData}
+                            disabled={!table.getCanNextPage()}
                         >
                             Next
                         </Button>
