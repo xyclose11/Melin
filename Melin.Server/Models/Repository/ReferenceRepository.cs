@@ -192,11 +192,34 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
         
     }
 
+    public bool UpdateCreatorsAsync(Reference reference)
+    {
+        try
+        {
+            if (reference.Creators != null)
+            {
+                foreach (var creator in reference.Creators)
+                {
+                    _context.Creators.Entry(creator).State = EntityState.Modified;
+                }
+            }
+
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
+    }
+
     public async Task<Result<bool>> UpdateReferenceAsync(Reference reference)
     {
         try
         {
             _context.Reference.Update(reference);
+            
             await _context.SaveChangesAsync();
             return Result<bool>.SuccessResult(true);
         }
@@ -386,6 +409,20 @@ public class ReferenceRepository : GenericRepository<Reference>, IReferenceRepos
                 }
             }
             
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public bool DeleteCreator(Creator creator)
+    {
+        try
+        {
+            _context.Creators.Remove(creator);
             return true;
         }
         catch (Exception e)

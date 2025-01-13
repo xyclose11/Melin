@@ -1,42 +1,29 @@
-import { Workspace } from "@/Workspace.tsx";
-import { WorkspaceToolBar } from "@/CustomComponents/WorkspaceToolBar.tsx";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar.tsx";
 import React from "react";
 import { NavBar } from "@/Layout.tsx";
 import { Toaster } from "@/components/ui/toaster";
 import { useAuth } from "@/utils/AuthProvider.tsx";
 import { Outlet } from "@tanstack/react-router";
-import { useCookies } from "react-cookie";
 
 export default function Root({ children }: { children: React.ReactNode }) {
     const { isAuthenticated } = useAuth();
 
-    const [cookies] = useCookies(["sidebar:state"]);
-    const defaultOpen = cookies["sidebar:state"];
-
     return (
-        <>
+        <div>
             <NavBar />
 
-            <div className={"flex flex-col h-screen"}>
+            <div className={"flex flex-col"}>
                 {!isAuthenticated ? (
-                    <main className={"mt-16 p-2"}>
-                        {children}
+                    <main className={"mt-16 ml-2"}>
                         <Outlet />
+                        {children}
                     </main>
                 ) : (
-                    <SidebarProvider defaultOpen={defaultOpen}>
-                        <WorkspaceToolBar />
-                        <main className={"mt-16 p-2"}>
-                            <SidebarTrigger className="sticky top-20">
-                                <Outlet />
-                            </SidebarTrigger>
-                            <Workspace />
-                        </main>
+                    <main className={"mt-16 ml-2"}>
+                        <Outlet />
                         <Toaster />
-                    </SidebarProvider>
+                    </main>
                 )}
             </div>
-        </>
+        </div>
     );
 }

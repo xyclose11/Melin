@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import {
@@ -33,15 +33,9 @@ import {
 } from "@/components/ui/card.tsx";
 import { TagCreateDropdown } from "@/Tag/TagCreateDropdown.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover.tsx";
+
 import { Button } from "@/components/ui/button.tsx";
-import { cn } from "@/lib/utils.ts";
-import { CalendarIcon, SquareX } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar.tsx";
+import { SquareX } from "lucide-react";
 import {
     CREATOR_TYPES,
     CreatorInput,
@@ -49,14 +43,12 @@ import {
 import { useToast } from "@/hooks/use-toast.ts";
 import { Tag } from "emblor";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { isValidDate } from "@/utils/isValidDate.ts";
 import { DevTool } from "@hookform/devtools";
+import { IReference } from "@/utils/Reference.ts";
 
 const route = getRouteApi("/(reference)/edit-reference/$refId");
 
-export function EditReferencePage({ reference }: { reference: any }) {
-    const [datePublished, setDatePublished] = React.useState<Date>();
+export function EditReferencePage({ reference }: { reference: IReference }) {
     const navigate = useNavigate();
     const { toast } = useToast();
     const { refId } = route.useParams();
@@ -65,10 +57,11 @@ export function EditReferencePage({ reference }: { reference: any }) {
 
     const { isPending, isError, refetch, error } = useQuery({
         queryKey: ["single-reference", refId],
+        enabled: false,
     });
 
     const mutation = useMutation({
-        mutationFn: (data) => {
+        mutationFn: (data: IReference) => {
             return instance.put(`Reference/update/${refId}`, data, {
                 withCredentials: true,
             });
@@ -93,7 +86,13 @@ export function EditReferencePage({ reference }: { reference: any }) {
 
     const form = useForm<z.infer<typeof refSchema>>({
         resolver: refSchema ? zodResolver(refSchema) : undefined,
-        defaultValues: reference,
+        defaultValues: {
+            ...reference,
+            datePublished:
+                reference.datePublished !== undefined
+                    ? reference.datePublished
+                    : "",
+        },
     });
 
     const {
@@ -139,7 +138,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
     useEffect(() => {
         let newSchema: ZodObject<any>;
 
-        setDatePublished(new Date(reference.datePublished));
         switch (reference.type) {
             case "Artwork":
                 newSchema = artworkSchema;
@@ -161,8 +159,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
         setRefSchema(newSchema);
     }, []);
 
-    console.log(errors);
-
     if (isPending) {
         return <div>LOADING... QUERY</div>;
     }
@@ -172,7 +168,7 @@ export function EditReferencePage({ reference }: { reference: any }) {
     }
 
     return (
-        <>
+        <div className="m-16 p-2">
             <FormProvider {...form}>
                 <Form {...form}>
                     <form
@@ -249,63 +245,28 @@ export function EditReferencePage({ reference }: { reference: any }) {
                                                 Date Published
                                             </FormLabel>
                                             <FormControl>
-                                                <Popover>
-                                                    <PopoverTrigger asChild>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "w-[280px] justify-start text-left font-normal",
-                                                                !datePublished &&
-                                                                    "text-muted-foreground",
-                                                            )}
-                                                        >
-                                                            <CalendarIcon />
-                                                            {isValidDate(
-                                                                datePublished,
-                                                            ) &&
-                                                            datePublished !==
-                                                                undefined ? (
-                                                                format(
-                                                                    datePublished,
-                                                                    "PPP",
-                                                                )
-                                                            ) : (
-                                                                <span>
-                                                                    {" "}
-                                                                    Click Here!{" "}
-                                                                </span>
-                                                            )}
-                                                        </Button>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="w-auto p-0">
-                                                        <Calendar
-                                                            mode="single"
-                                                            selected={
-                                                                datePublished
-                                                            }
-                                                            onSelect={(
-                                                                date,
-                                                            ) => {
-                                                                setDatePublished(
-                                                                    date,
-                                                                );
-                                                                field.onChange(
-                                                                    date,
-                                                                );
-                                                            }}
-                                                            disabled={(date) =>
-                                                                date >
-                                                                    new Date() ||
-                                                                date <
-                                                                    new Date(
-                                                                        "1900-01-01",
-                                                                    )
-                                                            }
-                                                            initialFocus
-                                                            {...field}
-                                                        />
-                                                    </PopoverContent>
-                                                </Popover>
+                                                <Input
+                                                    placeholder="datePublished"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="locationStored"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Location Stored
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Bookshelf, Coffee Table,..."
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -444,6 +405,6 @@ export function EditReferencePage({ reference }: { reference: any }) {
                 </Form>
             </FormProvider>
             <DevTool control={control} />
-        </>
+        </div>
     );
 }

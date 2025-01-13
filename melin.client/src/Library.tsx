@@ -56,9 +56,9 @@ import {
 } from "@/components/ui/dialog";
 import { AddTagToReference } from "@/Tag/AddTagToReference.tsx";
 import { Link } from "@tanstack/react-router";
-import { Pagination } from "@/api/referencesQueryOptions.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { fetchReferences } from "@/api/fetchReferences.ts";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 
 export enum CREATOR_TYPES {
     Author = "Author",
@@ -93,16 +93,18 @@ export function Library({ initialData }: { initialData: Reference[] }) {
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({});
+        React.useState<VisibilityState>({
+            createdAt: false,
+            updatedAt: false,
+        });
     const [rowSelection, setRowSelection] = React.useState({});
     const { toast } = useToast();
 
     const { selectedReferences, toggleReference, clearSelection } =
         useReferenceSelection();
 
-    // const { selectedGroup } = useGroupSelection();
     const [data, setData] = React.useState<Reference[]>(initialData);
-    const [pagination, setPagination] = useState<Pagination>({
+    const [pagination, setPagination] = useState({
         pageSize: 15,
         pageIndex: 0,
     });
@@ -113,6 +115,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
             header: ({ table }) => (
                 <Checkbox
                     checked={
+                        selectedReferences.length === pagination.pageSize ||
                         table.getIsAllPageRowsSelected() ||
                         (table.getIsSomePageRowsSelected() && "indeterminate")
                     }
@@ -139,7 +142,6 @@ export function Library({ initialData }: { initialData: Reference[] }) {
             ),
             enableSorting: false,
             enableHiding: false,
-            size: 250,
             enableResizing: true,
         },
         {
@@ -161,7 +163,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
             },
             cell: ({ row }) => (
                 <Link
-                    className="capitalize"
+                    className="capitalize text-xs"
                     to={`/edit-reference/${row.original.id}`}
                 >
                     {row.getValue("title")}
@@ -193,25 +195,32 @@ export function Library({ initialData }: { initialData: Reference[] }) {
 
             cell: ({ row }) => {
                 const creators: Creator[] = row.getValue("creators");
+                if (creators.length <= 0) {
+                    return (
+                        <Card>
+                            <CardContent></CardContent>
+                        </Card>
+                    );
+                }
+
                 return (
-                    <div className="overflow-hidden grid grid-cols-1">
-                        {creators === undefined ? (
-                            <div> </div>
-                        ) : (
-                            creators.map((creator: Creator) => (
-                                <div
-                                    className="text-xs grid grid-cols-3"
-                                    key={creator.id}
-                                >
-                                    <div className="font-bold">
-                                        {creator.types}:
-                                    </div>
-                                    <div>{creator.firstName}</div>
-                                    <div>{creator.lastName}</div>
-                                </div>
-                            ))
-                        )}
-                    </div>
+                    <Card className="h-20 pt-2">
+                        <CardContent className="">
+                            <div className="">
+                                {creators
+                                    .slice(0, 4)
+                                    .map((creator: Creator) => (
+                                        <div
+                                            className="text-xs grid grid-cols-2 sm:text-[10px] md:text-xs"
+                                            key={creator.id}
+                                        >
+                                            <div>{creator.firstName}</div>
+                                            <div>{creator.lastName}</div>
+                                        </div>
+                                    ))}
+                            </div>
+                        </CardContent>
+                    </Card>
                 );
             },
         },
@@ -236,21 +245,23 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                     <div className={"max-w-[25%]"}>
                         <div className={"flex gap-1 flex-wrap"}>
                             {tags === undefined ? (
-                                <div> </div>
+                                <div></div>
                             ) : (
-                                tags.map((tag) => (
-                                    <TagTableDisplay
-                                        key={tag.id}
-                                        tagId={
-                                            typeof tag.id === "number"
-                                                ? tag.id
-                                                : -1
-                                        }
-                                        refId={row.original.id}
-                                        name={tag.text}
-                                        handleRemoveTag={handleRemoveTag}
-                                    />
-                                ))
+                                tags
+                                    .slice(0, 5)
+                                    .map((tag) => (
+                                        <TagTableDisplay
+                                            key={tag.id}
+                                            tagId={
+                                                typeof tag.id === "number"
+                                                    ? tag.id
+                                                    : -1
+                                            }
+                                            refId={row.original.id}
+                                            name={tag.text}
+                                            handleRemoveTag={handleRemoveTag}
+                                        />
+                                    ))
                             )}
                             <div className={"justify-self-end self-end"}>
                                 <Dialog>
@@ -318,7 +329,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
             },
             cell: ({ row }) => (
                 <div className="capitalize">
-                    {formatRowDate(row.getValue("datePublished"))}
+                    {row.getValue("datePublished")}
                 </div>
             ),
             enableSorting: true,
@@ -450,9 +461,10 @@ export function Library({ initialData }: { initialData: Reference[] }) {
         }
     };
 
-    const { data: queryData, isPlaceholderData } = useQuery({
+    const { data: queryData } = useQuery({
         queryKey: ["references", pagination.pageIndex, pagination.pageSize],
         queryFn: () => fetchReferences(pagination, null),
+        enabled: false,
     });
 
     const table = useReactTable({
@@ -466,11 +478,11 @@ export function Library({ initialData }: { initialData: Reference[] }) {
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
-        manualPagination: true,
-        onPaginationChange: setPagination,
+        manualPagination: false,
         columnResizeMode: "onEnd",
         columnResizeDirection: "rtl",
         rowCount: queryData?.data.totalRecords ?? data.length,
+        onPaginationChange: setPagination,
         state: {
             sorting,
             columnFilters,
@@ -481,9 +493,9 @@ export function Library({ initialData }: { initialData: Reference[] }) {
     });
 
     return (
-        <div className={"flex gap-3"}>
+        <div className={"flex gap-0"}>
             <div className="w-full light">
-                <div className="flex items-center py-4">
+                <div className="flex items-center py-4 mr-1 ml-1">
                     <Input
                         placeholder="Filter references..."
                         value={
@@ -525,7 +537,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <div className="rounded-md border">
+                <div className="min-h-[100vh] rounded-md border">
                     <Table
                         className={
                             "w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -584,19 +596,15 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                 </div>
                 <div className="flex items-center justify-end space-x-2 py-4">
                     <div className="flex-1 text-sm text-muted-foreground">
-                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                        {table.getFilteredRowModel().rows.length} row(s)
-                        selected.
+                        {selectedReferences.length} of{" "}
+                        {table.getRowModel().rows.length} row(s) selected.
                     </div>
                     <div className="space-x-2">
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                                setPagination((prev) => ({
-                                    ...prev,
-                                    pageIndex: prev.pageIndex - 1,
-                                }));
+                                clearSelection();
                                 table.previousPage();
                             }}
                             disabled={
@@ -610,13 +618,10 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                                setPagination((prev) => ({
-                                    ...prev,
-                                    pageIndex: prev.pageIndex + 1,
-                                }));
+                                clearSelection();
                                 table.nextPage();
                             }}
-                            disabled={isPlaceholderData}
+                            disabled={!table.getCanNextPage()}
                         >
                             Next
                         </Button>

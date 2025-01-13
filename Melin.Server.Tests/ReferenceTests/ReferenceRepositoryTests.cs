@@ -23,7 +23,23 @@ public class ReferenceRepositoryTests
         
         _context = new ReferenceContext(options);
 
-        _context.Reference.Add(new Reference { Id = 1, OwnerEmail = "test@example.com", Title = "Reference 1" });
+        _context.Reference.Add(new Reference { Id = 1, OwnerEmail = "test@example.com", Title = "Reference 1", Creators = new List<Creator>
+        {
+            new Creator
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                ReferenceId = 1,
+                Types = CreatorTypes.Artist
+            },
+            new Creator
+            {
+                FirstName = "Racheal",
+                LastName = "Zane",
+                ReferenceId = 1,
+                Types = CreatorTypes.Artist
+            }
+        }});
         _context.Reference.Add(new Reference { Id = 2, OwnerEmail = "test@example.com", Title = "Reference 2" });
         _context.Reference.Add(new Reference { Id = 3, OwnerEmail = "otheruser@example.com", Title = "Reference 3" });
         _context.Reference.Add(new Reference { Id = 4, OwnerEmail = "test@example.com", Title = "DELETE ME!" });
@@ -76,7 +92,6 @@ public class ReferenceRepositoryTests
         Assert.False(result.Success);
         Assert.Equal("Reference not found.", result.ErrorMessage);
     }
-
     
 
 }

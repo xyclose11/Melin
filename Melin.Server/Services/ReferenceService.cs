@@ -5,6 +5,7 @@ using Melin.Server.Models.Repository;
 using Melin.Server.Wrappers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Serilog;
 
 namespace Melin.Server.Services;
 
@@ -128,7 +129,7 @@ public class ReferenceService : IReferenceService
     }
     
 
-    async Task<Result<bool>> IReferenceService.UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
+    public async Task<Result<bool>> UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
     {
         try
         {
@@ -264,27 +265,21 @@ public class ReferenceService : IReferenceService
         }
     }
     
-
-    public async Task<bool> UpdateReferenceAsync(string userEmail, int referenceId, Reference updatedReference)
-    {
-        throw new NotImplementedException();
-    }
     
     private void UpdateGeneralFields(Reference existingReference, Reference updatedReference)
     {
         try
         {
-            if (!existingReference.Title.Equals(updatedReference.Title))
+            // Update Title
+            if (!string.Equals(existingReference.Title, updatedReference.Title, StringComparison.Ordinal))
             {
                 existingReference.Title = updatedReference.Title;
             }
 
-            if (existingReference.ShortTitle != null)
+            // Update ShortTitle
+            if (!string.Equals(existingReference.ShortTitle, updatedReference.ShortTitle, StringComparison.Ordinal))
             {
-                if (!existingReference.ShortTitle.Equals(updatedReference.ShortTitle))
-                {
-                    existingReference.ShortTitle = updatedReference.ShortTitle;
-                }
+                existingReference.ShortTitle = updatedReference.ShortTitle;
             }
             
             if (!existingReference.Language.Equals(updatedReference.Language))
@@ -292,64 +287,171 @@ public class ReferenceService : IReferenceService
                 existingReference.Language = updatedReference.Language;
             }
 
-            if (existingReference.Rights != null)
+            if (existingReference.LocationStored != null && !existingReference.LocationStored.Equals(updatedReference.LocationStored))
             {
-                if (!existingReference.Rights.Equals(updatedReference.Rights))
-                {
-                    existingReference.Rights = updatedReference.Rights;
-                }
+                existingReference.LocationStored = updatedReference.LocationStored;
+            }
+
+            // Update Rights
+            if (updatedReference.Rights != null && 
+                (existingReference.Rights == null || !existingReference.Rights.SequenceEqual(updatedReference.Rights)))
+            {
+                existingReference.Rights = updatedReference.Rights;
             }
             
-            if (!existingReference.DatePublished.Equals(updatedReference.DatePublished))
+            // Update DatePublished
+            if (existingReference.DatePublished != updatedReference.DatePublished)
             {
                 existingReference.DatePublished = updatedReference.DatePublished;
             }
-
-            if (existingReference.Creators != null)
+            
+            // Update Tags
+            if (updatedReference.Tags != null &&
+                (existingReference.Tags == null || !existingReference.Tags.SequenceEqual(updatedReference.Tags)))
             {
-                if (!existingReference.Creators.Equals(updatedReference.Creators))
-                {
-                    existingReference.Creators = updatedReference.Creators;
-                }
+                existingReference.Tags = updatedReference.Tags.ToList();
             }
 
-            if (existingReference.Tags != null)
-            {
-                if (!existingReference.Tags.Equals(updatedReference.Tags))
-                {
-                    existingReference.Tags = updatedReference.Tags;
-                }
-            }
-
+            
+            UpdateCreators(existingReference, updatedReference);
+            
         }
         catch (Exception e)
         {
+            Log.Warning("Unable to Update Reference: {Existing}, with Updated: {Updated}", existingReference, updatedReference);
             Console.WriteLine(e);
             throw;
         }
     }
 
+    private void UpdateCreators(Reference existingReference, Reference updatedReference)
+    {
+        try
+        {
+            var creatorsToRemove = existingReference.Creators
+                .Where(c => updatedReference.Creators.All(uc => uc.Id != c.Id))
+                .ToList();
+            
+            foreach (var creator in creatorsToRemove)
+            {
+                existingReference.Creators.Remove(creator);
+                _referenceRepository.DeleteCreator(creator);
+            }
+            
+            existingReference.Creators
+                .Where(existing => updatedReference.Creators.Any(u => u.Id == existing.Id))
+                .ToList()
+                .ForEach(existing =>
+                {
+                    var updated = updatedReference.Creators.First(u => u.Id == existing.Id);
+                    existing.FirstName = updated.FirstName;
+                    existing.LastName = updated.LastName;
+                    existing.Types = updated.Types;
+                });
+
+            var creatorsToAdd = updatedReference.Creators
+                .Where(updated => !existingReference.Creators.Any(existing => existing.Id == updated.Id))
+                .ToList();
+
+            foreach (var creator in creatorsToAdd)
+            {
+                existingReference.Creators.Add(creator);
+            }
+
+            _referenceRepository.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            Log.Error("Exception thrown when attempting to update creators");
+            throw;
+        }
+    }
+
+
     private static void UpdateArtworkFields(Artwork existingReference, Artwork updatedReference)
     {
-        existingReference.Medium = updatedReference.Medium;
-        existingReference.Dimensions = updatedReference.Dimensions;
-        existingReference.Scale = updatedReference.Scale;
-        existingReference.MapType = updatedReference.MapType;
+        if (updatedReference == null)
+        {
+            throw new ArgumentNullException(nameof(updatedReference), "Updated reference cannot be null.");
+        }
+
+        if (!string.Equals(existingReference.Medium, updatedReference.Medium, StringComparison.Ordinal))
+        {
+            existingReference.Medium = updatedReference.Medium;
+        }
+
+        if (!string.Equals(existingReference.Dimensions, updatedReference.Dimensions, StringComparison.Ordinal))
+        {
+            existingReference.Dimensions = updatedReference.Dimensions;
+        }
+
+        if (existingReference.Scale != updatedReference.Scale)
+        {
+            existingReference.Scale = updatedReference.Scale;
+        }
+
+        if (existingReference.MapType != updatedReference.MapType)
+        {
+            existingReference.MapType = updatedReference.MapType;
+        }
     }
+
     
     private static void UpdateAudioRecordingFields(AudioRecording existing, AudioRecording updated)
     {
-        existing.AudioRecordingFormat = updated.AudioRecordingFormat;
-        existing.SeriesTitle = updated.SeriesTitle;
-        existing.Volume = updated.Volume;
-        existing.NumberOfVolumes = updated.NumberOfVolumes;
-        existing.Place = updated.Place;
-        existing.Label = updated.Label;
-        existing.RunningTime = updated.RunningTime;
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Updated audio recording cannot be null.");
+        }
+
+        // Update textual fields
+        if (!string.Equals(existing.AudioRecordingFormat, updated.AudioRecordingFormat, StringComparison.Ordinal))
+        {
+            existing.AudioRecordingFormat = updated.AudioRecordingFormat;
+        }
+
+        if (!string.Equals(existing.SeriesTitle, updated.SeriesTitle, StringComparison.Ordinal))
+        {
+            existing.SeriesTitle = updated.SeriesTitle;
+        }
+
+        // Update numeric fields
+        if (existing.Volume != updated.Volume)
+        {
+            existing.Volume = updated.Volume;
+        }
+
+        if (existing.NumberOfVolumes != updated.NumberOfVolumes)
+        {
+            existing.NumberOfVolumes = updated.NumberOfVolumes;
+        }
+
+        // Update other fields
+        if (!string.Equals(existing.Place, updated.Place, StringComparison.Ordinal))
+        {
+            existing.Place = updated.Place;
+        }
+
+        if (!string.Equals(existing.Label, updated.Label, StringComparison.Ordinal))
+        {
+            existing.Label = updated.Label;
+        }
+
+        if (existing.RunningTime != updated.RunningTime)
+        {
+            existing.RunningTime = updated.RunningTime;
+        }
     }
+
 
     private static void UpdateBookFields(Book existing, Book updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Book cannot be null.");
+        }
+
         existing.Publication = updated.Publication;
         existing.BookTitle = updated.BookTitle;
         existing.Volume = updated.Volume;
@@ -371,6 +473,11 @@ public class ReferenceService : IReferenceService
 
     private static void UpdateBookSectionFields(BookSection existing, BookSection updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Book Section cannot be null.");
+        }
+        
         existing.BookTitle = updated.BookTitle;
         existing.Series = updated.Series;
         existing.SeriesNumber = updated.SeriesNumber;
@@ -386,12 +493,22 @@ public class ReferenceService : IReferenceService
 
     private static void UpdateDocumentFields(Document existing, Document updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Document cannot be null.");
+        }
+        
         existing.Publisher = updated.Publisher;
         existing.Date = updated.Date;
     }
 
     private static void UpdateJournalArticleFields(JournalArticle existing, JournalArticle updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Journal Article cannot be null.");
+        }
+        
         existing.PublicationTitle = updated.PublicationTitle;
         existing.Volume = updated.Volume;
         existing.Issue = updated.Issue;
@@ -407,6 +524,11 @@ public class ReferenceService : IReferenceService
 
     private static void UpdateEncyclopediaArticleFields(EncyclopediaArticle existing, EncyclopediaArticle updated)
     {
+        if (updated == null)
+        {
+            throw new ArgumentNullException(nameof(updated), "Update Encyclopedia Article cannot be null.");
+        }
+        
         existing.EncyclopediaTitle = updated.EncyclopediaTitle;
         existing.Series = updated.Series;
         existing.SeriesNumber = updated.SeriesNumber;

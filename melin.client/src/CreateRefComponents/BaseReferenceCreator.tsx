@@ -8,7 +8,6 @@ import {
     useFieldArray,
     useForm,
 } from "react-hook-form";
-import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,15 +24,7 @@ import {
     creatorFormSchema,
     CreatorInput,
 } from "@/CreateRefComponents/CreatorInput.tsx";
-import React from "react";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover.tsx";
-import { cn } from "@/lib/utils.ts";
-import { CalendarIcon, SquareX } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
+import { SquareX } from "lucide-react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { TagCreateDropdown, tagSchema } from "@/Tag/TagCreateDropdown.tsx";
 import { useToast } from "@/hooks/use-toast.ts";
@@ -58,7 +49,8 @@ const formSchema = z.object({
     }),
     shortTitle: z.string().optional(),
     language: z.string().optional(),
-    datePublished: z.date().optional(),
+    datePublished: z.string().optional(),
+    locationStored: z.string().optional(),
     rights: z.array(rightsSchema).optional(),
     extraFields: z.string().optional(),
     creators: z.array(creatorFormSchema).optional(),
@@ -72,7 +64,6 @@ export function BaseReferenceCreator({
     refSchema: ZodObject<any>;
     schemaName: string;
 }) {
-    const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
     const { toast } = useToast();
 
@@ -82,8 +73,9 @@ export function BaseReferenceCreator({
             type: "0",
             title: "",
             shortTitle: "",
-            datePublished: new Date(),
+            datePublished: "",
             language: "English",
+            locationStored: "",
             extraFields: undefined,
             rights: undefined,
             creators: [{}],
@@ -101,7 +93,6 @@ export function BaseReferenceCreator({
             ...tag,
             id: generateRandom32BitInteger(),
         }));
-        console.log(data);
 
         const newData = {
             ...data,
@@ -158,24 +149,18 @@ export function BaseReferenceCreator({
     }
 
     return (
-        <div>
+        <div className="justify-center">
             <FormProvider {...form}>
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="gap-2 justify-items-start grid grid-cols-2"
+                        className="gap-2 justify-items-start grid grid-cols-1"
                     >
-                        <Card>
-                            <CardHeader className={"text-center"}>
-                                <CardTitle>Tags</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <TagCreateDropdown />
-                            </CardContent>
-                        </Card>
                         <Card className={"w-full"}>
-                            <CardHeader className={"text-center"}>
-                                <CardTitle>General Fields*</CardTitle>
+                            <CardHeader className={"justify-center"}>
+                                <CardTitle className="justify-center">
+                                    Shared Fields
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className={"w-full"}>
                                 <FormField
@@ -235,51 +220,10 @@ export function BaseReferenceCreator({
                                                 Date Published
                                             </FormLabel>
                                             <FormControl>
-                                                <Popover>
-                                                    <PopoverTrigger asChild>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "w-[280px] justify-start text-left font-normal",
-                                                                !datePublished &&
-                                                                    "text-muted-foreground",
-                                                            )}
-                                                        >
-                                                            <CalendarIcon />
-                                                            {datePublished ? (
-                                                                format(
-                                                                    datePublished,
-                                                                    "PPP",
-                                                                )
-                                                            ) : (
-                                                                <span>
-                                                                    {" "}
-                                                                    Click Here!{" "}
-                                                                </span>
-                                                            )}
-                                                        </Button>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="w-auto p-0">
-                                                        <Calendar
-                                                            mode="single"
-                                                            selected={
-                                                                datePublished
-                                                            }
-                                                            onSelect={(
-                                                                date,
-                                                            ) => {
-                                                                setDatePublished(
-                                                                    date,
-                                                                );
-                                                                field.onChange(
-                                                                    date,
-                                                                );
-                                                            }}
-                                                            initialFocus
-                                                            {...field}
-                                                        />
-                                                    </PopoverContent>
-                                                </Popover>
+                                                <Input
+                                                    placeholder="datePublished"
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -316,6 +260,25 @@ export function BaseReferenceCreator({
                                         </FormItem>
                                     )}
                                 />
+                                <FormField
+                                    control={form.control}
+                                    name="locationStored"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Location Stored
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Bookshelf, Coffee Table,..."
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <TagCreateDropdown />
                             </CardContent>
 
                             <CardFooter>
@@ -429,25 +392,6 @@ export function BaseReferenceCreator({
                                     ))}
                             </CardContent>
                         </Card>
-
-                        {errors.creators && (
-                            <div>{errors.creators.message}</div>
-                        )}
-                        {errors.title && <div>{errors.title.message}</div>}
-                        {errors.shortTitle && (
-                            <div>{errors.shortTitle.message}</div>
-                        )}
-                        {errors.rights && <div>{errors.rights.message}</div>}
-                        {errors.datePublished && (
-                            <div>{errors.datePublished.message}</div>
-                        )}
-                        {errors.extraFields && (
-                            <div>{errors.extraFields.message}</div>
-                        )}
-                        {errors.language && (
-                            <div>{errors.language.message}</div>
-                        )}
-                        {errors.tags && <div> {errors.tags.message}</div>}
 
                         {errors.root && <div> {errors.root.message}</div>}
 

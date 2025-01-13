@@ -129,12 +129,9 @@ export const columns: ColumnDef<Group>[] = [
 
             const handleGroupDelete = async () => {
                 try {
-                    const response = await instance.delete(
-                        `delete-group?groupId=${group.id}`,
-                        {
-                            withCredentials: true,
-                        },
-                    );
+                    await instance.delete(`delete-group?groupId=${group.id}`, {
+                        withCredentials: true,
+                    });
                 } catch (error) {
                     console.error("Unable to delete group:", error);
                 }

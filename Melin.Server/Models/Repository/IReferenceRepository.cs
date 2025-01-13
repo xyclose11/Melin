@@ -16,7 +16,7 @@ public interface IReferenceRepository : IGenericRepository<Reference>
 
         Task<Result<Reference>> GetReferenceByIdAsync(string userEmail, int id);
         Task<Result<Reference>> GetReferenceAllDetailsByIdAsync(string userEmail, int id);
-        
+        bool UpdateCreatorsAsync(Reference reference);
         
         /// <summary>
         /// 
@@ -29,6 +29,7 @@ public interface IReferenceRepository : IGenericRepository<Reference>
         Task<bool> DeleteAsync(string userEmail, int id);
         Task<bool> DeleteRangeAsync(string userEmail, List<int> ids);
 
+        bool DeleteCreator(Creator creator);
         #endregion
 
         Task<int> GetOwnedReferenceCount(string userEmail);

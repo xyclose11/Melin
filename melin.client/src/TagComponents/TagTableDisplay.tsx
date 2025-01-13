@@ -22,6 +22,10 @@ export function TagTableDisplay({
     refId: number;
     handleRemoveTag: (tagToRemoveId: any) => void;
 }) {
+    if (name === undefined) {
+        name = "";
+    }
+
     const removeTagFromRef = async () => {
         try {
             const res = await instance.post(

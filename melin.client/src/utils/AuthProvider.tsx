@@ -15,7 +15,7 @@ const checkRole = async () => {
     return await instance.get(`api/Auth/user-role`, { withCredentials: true });
 };
 
-interface AuthContextType {
+export interface AuthContextType {
     isAuthenticated: boolean;
     setIsAuthenticated: (value: boolean) => void;
     userRole: string;

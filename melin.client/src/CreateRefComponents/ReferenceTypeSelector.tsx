@@ -81,7 +81,7 @@ export function ReferenceTypeSelector({ handleState }: any) {
     function handleChange() {
         handleState(form.getValues().refType);
     }
-    
+
     return (
         <Form {...form}>
             <form className="space-y-6">
@@ -116,7 +116,10 @@ export function ReferenceTypeSelector({ handleState }: any) {
                                 </PopoverTrigger>
                                 <PopoverContent className="w-[200px] p-0">
                                     <Command>
-                                        <CommandInput placeholder="Search Reference Types..." />
+                                        <CommandInput
+                                            className="bg-background p-0 m-0"
+                                            placeholder="Search Reference Types..."
+                                        />
                                         <CommandList>
                                             <CommandEmpty>
                                                 No reference type found.

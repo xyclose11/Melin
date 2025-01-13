@@ -49,6 +49,10 @@ export function SearchNode({ data }: { data: CSLJSON }) {
                         <h3 className="font-bold">Language:</h3>
                         <p className="capitalize">{data.language}</p>
                     </div>
+                    <div className="flex gap-2">
+                        <h3 className="font-bold">Publisher:</h3>
+                        <p className="capitalize">{data.publisher}</p>
+                    </div>
 
                     {data.issued !== undefined && (
                         <div className="flex gap-2">

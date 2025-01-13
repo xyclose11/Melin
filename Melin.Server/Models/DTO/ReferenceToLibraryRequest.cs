@@ -10,7 +10,7 @@ public class ReferenceToLibraryRequest
     public required string UpdatedAt;
     public required string CreatedAt;
     public List<Creator>? Creators;
-    public List<Tag>? Tags;
+    public List<TagDisplayRequest>? Tags;
     public string? Language;
     public List<string>? GroupNames;
 }
