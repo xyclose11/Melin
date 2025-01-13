@@ -15,7 +15,7 @@ export const Route = createFileRoute("/library")({
         pageIndex,
         pageSize,
     }),
-    loader: ({ context: { queryClient }, deps: { pageIndex, pageSize } }) =>
+    loader: ({ context: { queryClient } }) =>
         queryClient.ensureQueryData(
             referencesQueryOptions({ pageIndex: 0, pageSize: 1000 }),
         ),

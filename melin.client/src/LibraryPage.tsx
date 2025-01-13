@@ -149,11 +149,7 @@ export function LibraryPage({ initialData }: { initialData: Reference[] }) {
     };
 
     return (
-        <div
-            className={
-                "mr-10 w-full mt-16 mb-12 ml-4 justify-center flex gap-4"
-            }
-        >
+        <div className={"mr-10 w-full mt-16 mb-12 justify-center flex gap-4"}>
             <ReferenceSelectionProvider>
                 <GroupSelectedProvider>
                     <ResizablePanelGroup

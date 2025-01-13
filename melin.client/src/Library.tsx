@@ -115,6 +115,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
             header: ({ table }) => (
                 <Checkbox
                     checked={
+                        selectedReferences.length === pagination.pageSize ||
                         table.getIsAllPageRowsSelected() ||
                         (table.getIsSomePageRowsSelected() && "indeterminate")
                     }
@@ -603,6 +604,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                             variant="outline"
                             size="sm"
                             onClick={() => {
+                                clearSelection();
                                 table.previousPage();
                             }}
                             disabled={
@@ -616,6 +618,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                             variant="outline"
                             size="sm"
                             onClick={() => {
+                                clearSelection();
                                 table.nextPage();
                             }}
                             disabled={!table.getCanNextPage()}
