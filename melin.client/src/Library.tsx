@@ -56,7 +56,6 @@ import {
 } from "@/components/ui/dialog";
 import { AddTagToReference } from "@/Tag/AddTagToReference.tsx";
 import { Link } from "@tanstack/react-router";
-import { Pagination } from "@/api/referencesQueryOptions.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { fetchReferences } from "@/api/fetchReferences.ts";
 import { Card, CardContent } from "@/components/ui/card.tsx";
@@ -105,7 +104,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
         useReferenceSelection();
 
     const [data, setData] = React.useState<Reference[]>(initialData);
-    const [pagination] = useState<Pagination>({
+    const [pagination, setPagination] = useState({
         pageSize: 15,
         pageIndex: 0,
     });
@@ -142,7 +141,6 @@ export function Library({ initialData }: { initialData: Reference[] }) {
             ),
             enableSorting: false,
             enableHiding: false,
-            size: 250,
             enableResizing: true,
         },
         {
@@ -465,6 +463,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
     const { data: queryData } = useQuery({
         queryKey: ["references", pagination.pageIndex, pagination.pageSize],
         queryFn: () => fetchReferences(pagination, null),
+        enabled: false,
     });
 
     const table = useReactTable({
@@ -478,15 +477,17 @@ export function Library({ initialData }: { initialData: Reference[] }) {
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
-        manualPagination: true,
+        manualPagination: false,
         columnResizeMode: "onEnd",
         columnResizeDirection: "rtl",
         rowCount: queryData?.data.totalRecords ?? data.length,
+        onPaginationChange: setPagination,
         state: {
             sorting,
             columnFilters,
             columnVisibility,
             rowSelection,
+            pagination,
         },
     });
 
@@ -594,19 +595,14 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                 </div>
                 <div className="flex items-center justify-end space-x-2 py-4">
                     <div className="flex-1 text-sm text-muted-foreground">
-                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                        {table.getFilteredRowModel().rows.length} row(s)
-                        selected.
+                        {selectedReferences.length} of{" "}
+                        {table.getRowModel().rows.length} row(s) selected.
                     </div>
                     <div className="space-x-2">
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                                // setPagination((prev) => ({
-                                //     ...prev,
-                                //     pageIndex: prev.pageIndex - 1,
-                                // }));
                                 table.previousPage();
                             }}
                             disabled={
@@ -620,10 +616,6 @@ export function Library({ initialData }: { initialData: Reference[] }) {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                                // setPagination((prev) => ({
-                                //     ...prev,
-                                //     pageIndex: prev.pageIndex + 1,
-                                // }));
                                 table.nextPage();
                             }}
                             disabled={!table.getCanNextPage()}
