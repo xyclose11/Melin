@@ -26,7 +26,7 @@ function LibraryRoute() {
     const loaderData = useLoaderData({ from: Route.id });
 
     const [cookies] = useCookies(["sidebar:state"]);
-    const defaultOpen = cookies["sidebar:state"];
+    const defaultOpen = cookies["sidebar:state"] ?? true;
 
     if (loaderData?.data === undefined) {
         return <div>Loading...</div>;
@@ -34,7 +34,7 @@ function LibraryRoute() {
 
     return (
         <div className="justify-center">
-            <SidebarProvider defaultOpen={defaultOpen}>
+            <SidebarProvider defaultOpen={!defaultOpen}>
                 <WorkspaceToolBar />
                 <Card className="m-4 mr-16 w-full">
                     <CardContent>
