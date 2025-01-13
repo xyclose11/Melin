@@ -72,7 +72,6 @@ export function LibraryPage({ initialData }: { initialData: Reference[] }) {
                     <ToastAction altText={"Try Again"}>Try Again</ToastAction>
                 ),
             });
-            console.log(e);
         }
     };
 

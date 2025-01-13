@@ -93,7 +93,6 @@ export function BaseReferenceCreator({
             ...tag,
             id: generateRandom32BitInteger(),
         }));
-        console.log(data);
 
         const newData = {
             ...data,

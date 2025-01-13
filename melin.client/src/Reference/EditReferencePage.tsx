@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import {
@@ -33,15 +33,9 @@ import {
 } from "@/components/ui/card.tsx";
 import { TagCreateDropdown } from "@/Tag/TagCreateDropdown.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover.tsx";
+
 import { Button } from "@/components/ui/button.tsx";
-import { cn } from "@/lib/utils.ts";
-import { CalendarIcon, SquareX } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar.tsx";
+import { SquareX } from "lucide-react";
 import {
     CREATOR_TYPES,
     CreatorInput,
@@ -49,15 +43,12 @@ import {
 import { useToast } from "@/hooks/use-toast.ts";
 import { Tag } from "emblor";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { isValidDate } from "@/utils/isValidDate.ts";
 import { DevTool } from "@hookform/devtools";
 import { IReference } from "@/utils/Reference.ts";
 
 const route = getRouteApi("/(reference)/edit-reference/$refId");
 
 export function EditReferencePage({ reference }: { reference: IReference }) {
-    const [datePublished, setDatePublished] = React.useState<Date>();
     const navigate = useNavigate();
     const { toast } = useToast();
     const { refId } = route.useParams();
@@ -99,8 +90,8 @@ export function EditReferencePage({ reference }: { reference: IReference }) {
             ...reference,
             datePublished:
                 reference.datePublished !== undefined
-                    ? new Date(reference.datePublished)
-                    : new Date(Date.now()),
+                    ? reference.datePublished
+                    : "",
         },
     });
 
@@ -147,9 +138,6 @@ export function EditReferencePage({ reference }: { reference: IReference }) {
     useEffect(() => {
         let newSchema: ZodObject<any>;
 
-        if (reference?.datePublished != null) {
-            setDatePublished(new Date(Date.parse(reference?.datePublished)));
-        }
         switch (reference.type) {
             case "Artwork":
                 newSchema = artworkSchema;
@@ -257,63 +245,10 @@ export function EditReferencePage({ reference }: { reference: IReference }) {
                                                 Date Published
                                             </FormLabel>
                                             <FormControl>
-                                                <Popover>
-                                                    <PopoverTrigger asChild>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "w-[280px] justify-start text-left font-normal",
-                                                                !datePublished &&
-                                                                    "text-muted-foreground",
-                                                            )}
-                                                        >
-                                                            <CalendarIcon />
-                                                            {isValidDate(
-                                                                datePublished,
-                                                            ) &&
-                                                            datePublished !==
-                                                                undefined ? (
-                                                                format(
-                                                                    datePublished,
-                                                                    "PPP",
-                                                                )
-                                                            ) : (
-                                                                <span>
-                                                                    {" "}
-                                                                    Click Here!{" "}
-                                                                </span>
-                                                            )}
-                                                        </Button>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="w-auto p-0">
-                                                        <Calendar
-                                                            mode="single"
-                                                            selected={
-                                                                datePublished
-                                                            }
-                                                            onSelect={(
-                                                                date,
-                                                            ) => {
-                                                                setDatePublished(
-                                                                    date,
-                                                                );
-                                                                field.onChange(
-                                                                    date,
-                                                                );
-                                                            }}
-                                                            disabled={(date) =>
-                                                                date >
-                                                                    new Date() ||
-                                                                date <
-                                                                    new Date(
-                                                                        "1900-01-01",
-                                                                    )
-                                                            }
-                                                            initialFocus
-                                                            {...field}
-                                                        />
-                                                    </PopoverContent>
-                                                </Popover>
+                                                <Input
+                                                    placeholder="datePublished"
+                                                    {...field}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

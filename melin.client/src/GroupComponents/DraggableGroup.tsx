@@ -294,7 +294,7 @@ export function DraggableGroup({
                         </SidebarMenuButton>
 
                         {references.map((gn: GroupReferenceSchema) => (
-                            <CollapsibleContent>
+                            <CollapsibleContent key={gn.id}>
                                 <div key={gn.id}>
                                     <GroupReferenceDisplay
                                         gn={gn}
