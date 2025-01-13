@@ -8,6 +8,7 @@ export const baseReferenceSchema = z.object({
     shortTitle: z.string().optional(),
     language: z.string().optional(),
     datePublished: z.string().optional().nullable(),
+    locationStored: z.string().optional(),
     // rights: z.string().array().optional(),
     // extraFields: z.string().array().optional(),
     creators: z.array(creatorFormSchema).optional(),

@@ -287,6 +287,11 @@ public class ReferenceService : IReferenceService
                 existingReference.Language = updatedReference.Language;
             }
 
+            if (existingReference.LocationStored != null && !existingReference.LocationStored.Equals(updatedReference.LocationStored))
+            {
+                existingReference.LocationStored = updatedReference.LocationStored;
+            }
+
             // Update Rights
             if (updatedReference.Rights != null && 
                 (existingReference.Rights == null || !existingReference.Rights.SequenceEqual(updatedReference.Rights)))

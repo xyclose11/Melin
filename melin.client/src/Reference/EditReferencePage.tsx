@@ -254,6 +254,24 @@ export function EditReferencePage({ reference }: { reference: IReference }) {
                                         </FormItem>
                                     )}
                                 />
+                                <FormField
+                                    control={form.control}
+                                    name="locationStored"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                Location Stored
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Bookshelf, Coffee Table,..."
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                                 {/*<FormField*/}
                                 {/*    control={form.control}*/}
                                 {/*    name="rights"*/}
