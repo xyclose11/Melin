@@ -481,7 +481,7 @@ export function Library({ initialData }: { initialData: Reference[] }) {
         manualPagination: false,
         columnResizeMode: "onEnd",
         columnResizeDirection: "rtl",
-        rowCount: queryData?.data.totalRecords ?? data.length,
+        rowCount: queryData?.data.totalRecords ?? data.length ?? 0,
         onPaginationChange: setPagination,
         state: {
             sorting,

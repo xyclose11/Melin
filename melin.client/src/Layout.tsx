@@ -62,7 +62,7 @@ export function NavBar() {
                     </div>
                 </form>
                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                    <DropdownMenuTrigger className="mr-0.5" asChild>
                         <Button
                             variant="secondary"
                             size="icon"

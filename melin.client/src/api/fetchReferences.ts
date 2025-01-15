@@ -16,10 +16,16 @@ export const fetchReferences = async (
             fetchUrl += `get-references-from-multiple-groups?groupNames=${fromGroups.groupNames}`;
         }
 
-        return await instance.get(fetchUrl, {
+        const res = await instance.get(fetchUrl, {
             withCredentials: true,
         });
+
+        if (res.status === 200) {
+            return res.data.data;
+        } else {
+            return {};
+        }
     } catch (e) {
-        console.error(e);
+        return {};
     }
 };

@@ -28,7 +28,7 @@ function LibraryRoute() {
     const [cookies] = useCookies(["sidebar:state"]);
     const defaultOpen = cookies["sidebar:state"] ?? true;
 
-    if (loaderData?.data === undefined) {
+    if (loaderData === undefined) {
         return <div>Loading...</div>;
     }
 
@@ -38,7 +38,7 @@ function LibraryRoute() {
                 <WorkspaceToolBar />
                 <Card className="m-4 mr-16 w-full">
                     <CardContent>
-                        <LibraryPage initialData={loaderData.data.data} />
+                        <LibraryPage initialData={loaderData} />
                     </CardContent>
                 </Card>
             </SidebarProvider>

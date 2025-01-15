@@ -8,9 +8,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { instance } from "@/utils/axiosInstance.ts";
+import { useToast } from "@/hooks/use-toast.ts";
 
 export const description =
     "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account";
@@ -18,12 +19,30 @@ export const description =
 export function SignUpForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const { toast } = useToast();
+    const navigate = useNavigate();
 
     const handleRegistration = async (e: any) => {
         e.preventDefault();
         try {
-            await instance.post("api/Auth/sign-up", { email, password });
-            console.log("SUCCESS");
+            await instance
+                .post("api/Auth/sign-up", { email, password })
+                .then((response) => {
+                    if (response.status === 200) {
+                        toast({
+                            title: "Account Creation Successful!",
+                            description: "Please login to get started.",
+                        });
+
+                        navigate({ to: "/login" });
+                    } else {
+                        toast({
+                            variant: "destructive",
+                            title: "Unable to create Account",
+                            description: "Please Try Again",
+                        });
+                    }
+                });
         } catch (error) {
             console.error("Registration failed:", error);
         }
