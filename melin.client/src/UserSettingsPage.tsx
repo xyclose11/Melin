@@ -13,6 +13,7 @@ import getUserDetails from "@/api/getUserDetails.ts";
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -20,27 +21,56 @@ import {
 } from "@/components/ui/form.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { instance } from "@/utils/axiosInstance.ts";
+import { useToast } from "@/hooks/use-toast.ts";
 
 export const description =
     "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account";
 
 const userSettingsSchema = z
     .object({
-        firstName: z.string().min(2).max(256),
+        firstName: z.string().min(2).max(256).optional().or(z.literal("")),
         lastName: z
             .string()
             .min(2)
-            .max(512, { message: "Max length of 512 Characters" }),
-        email: z.string().email({ message: "Invalid Email Address." }).max(512),
-        confirmEmail: z
-            .string()
-            .email({ message: "Invalid Email Address." })
-            .max(512),
-        password: z.string().min(8).max(128),
-        confirmPassword: z.string().min(8).max(128),
+            .max(512, { message: "Max length of 512 Characters" })
+            .optional()
+            .or(z.literal("")),
+        email: z.object({
+            email: z
+                .string()
+                .email({ message: "Invalid Email Address." })
+                .max(512)
+                .optional()
+                .or(z.literal("")),
+            confirmEmail: z
+                .string()
+                .email({ message: "Invalid Email Address." })
+                .max(512)
+                .optional()
+                .or(z.literal("")),
+        }),
+        password: z.object({
+            password: z.string().min(8).max(128).optional().or(z.literal("")),
+            confirmPassword: z
+                .string()
+                .min(8)
+                .max(128)
+                .optional()
+                .or(z.literal("")),
+        }),
+        currentPassword: z.string().min(8).max(128),
     })
-    .superRefine(({ password, confirmPassword, email, confirmEmail }, ctx) => {
-        if (password !== confirmPassword) {
+    .superRefine(({ currentPassword, password, email }, ctx) => {
+        if (currentPassword === password.password) {
+            ctx.addIssue({
+                code: "custom",
+                message: "New Password Cannot be the same as the old password",
+                path: ["confirmPassword"],
+            });
+        }
+
+        if (password.password !== password.confirmPassword) {
             ctx.addIssue({
                 code: "custom",
                 message: "The passwords do not match",
@@ -48,7 +78,7 @@ const userSettingsSchema = z
             });
         }
 
-        if (email !== confirmEmail) {
+        if (email.email !== email.confirmEmail) {
             ctx.addIssue({
                 code: "custom",
                 message: "The provided emails do not match",
@@ -60,24 +90,58 @@ const userSettingsSchema = z
 export function UserSettings() {
     const [currentEmail, setCurrentEmail] = useState("");
 
+    const { toast } = useToast();
     const form = useForm<z.infer<typeof userSettingsSchema>>({
         resolver: zodResolver(userSettingsSchema),
         defaultValues: {
             firstName: "",
             lastName: "",
-            email: "",
-            confirmEmail: "",
-            password: "",
-            confirmPassword: "",
+            email: {
+                email: "",
+                confirmEmail: "",
+            },
+            password: {
+                password: "",
+                confirmPassword: "",
+            },
+            currentPassword: "",
         },
     });
 
-    function onSubmit(values: z.infer<typeof userSettingsSchema>) {
-        console.log(values);
+    async function onSubmit(values: z.infer<typeof userSettingsSchema>) {
+        try {
+            const response = await instance.post(
+                "api/auth/User/Update-User-Details",
+                values,
+                { withCredentials: true },
+            );
+
+            if (response.status === 200) {
+                if (response.data) {
+                    toast({
+                        title: "Account Successfully Updated!",
+                    });
+                } else {
+                    toast({
+                        variant: "destructive",
+                        title: "Error Updating Account",
+                        description: "Please Try Again",
+                    });
+                }
+            }
+        } catch (e) {
+            toast({
+                variant: "destructive",
+                title: "Error Updating Account",
+                description: "Please Try Again",
+            });
+        }
     }
 
     useEffect(() => {
-        getUserDetails().then((r) => setCurrentEmail(r.email));
+        getUserDetails()
+            .then((r) => setCurrentEmail(r.email))
+            .catch((c) => console.error(c));
     }, []);
 
     return (
@@ -120,7 +184,7 @@ export function UserSettings() {
                         />
                         <FormField
                             control={form.control}
-                            name="email"
+                            name="email.email"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
@@ -137,7 +201,7 @@ export function UserSettings() {
                         />
                         <FormField
                             control={form.control}
-                            name="confirmEmail"
+                            name="email.confirmEmail"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Confirm Email</FormLabel>
@@ -150,7 +214,7 @@ export function UserSettings() {
                         />
                         <FormField
                             control={form.control}
-                            name="password"
+                            name="password.password"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>New Password</FormLabel>
@@ -163,13 +227,31 @@ export function UserSettings() {
                         />
                         <FormField
                             control={form.control}
-                            name="confirmPassword"
+                            name="password.confirmPassword"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Confirm New Password</FormLabel>
                                     <FormControl>
                                         <Input type="password" {...field} />
                                     </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="currentPassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Current Password</FormLabel>
+
+                                    <FormControl>
+                                        <Input type="password" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        **Current Password Required for
+                                        modification of any field**
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
