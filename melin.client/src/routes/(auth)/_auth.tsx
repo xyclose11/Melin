@@ -11,4 +11,9 @@ export const Route = createFileRoute('/(auth)/_auth')({
       })
     }
   },
+  component: AuthLayout,
 })
+
+function AuthLayout() {
+  return <div>Hi</div>
+}
