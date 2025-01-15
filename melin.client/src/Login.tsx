@@ -45,7 +45,7 @@ export function LoginForm() {
                         setIsAuthenticated(true);
 
                         // route user
-                        navigate({ to: "/library" });
+                        navigate({ to: "/library", reloadDocument: true });
                     } else {
                         toast({
                             title: "Login Failed",
