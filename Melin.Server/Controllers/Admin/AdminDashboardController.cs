@@ -1,5 +1,7 @@
-﻿using Melin.Server.Filter;
+﻿using Castle.Components.DictionaryAdapter;
+using Melin.Server.Filter;
 using Melin.Server.Models;
+using Melin.Server.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,14 +26,13 @@ public class AdminDashboardController : ControllerBase
     /// <summary>
     /// Retrieves a Paginated List of all users in the current instance of the application
     /// </summary>
-    /// <param name="paginationFilter">A PaginationFilter Object <see cref="PaginationFilter"/></param>
     /// <returns>A List of IdentityUser <see cref="IdentityUser{TKey}"/></returns>
     [HttpGet("all-users")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ActionResult<List<IdentityUser>>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<List<IdentityUser>>> GetUsers([FromQuery] UserPaginationFilter paginationFilter)
+    public async Task<ActionResult<List<UserTableViewDto>>> GetUsers()
     {
         if (!ModelState.IsValid)
         {
@@ -45,30 +46,31 @@ public class AdminDashboardController : ControllerBase
                Log.Information("Unauthenticated Attempt to GetUsers for Admin Dashboard");
                return Unauthorized();
             }
-            
-            // Validate filter to ensure non-negative values
-            if (paginationFilter.PageNumber < 0)
-            {
-                return BadRequest("Page Number cannot be negative");
-            }
-
-            if (paginationFilter.PageSize < 0)
-            {
-                return BadRequest("Page Size cannot be negative");
-            }
-            
-            var validFilter = new PaginationFilter(
-                paginationFilter.PageNumber > 0 ? paginationFilter.PageNumber : 1, 
-                paginationFilter.PageSize > 0 ? paginationFilter.PageSize : 10
-            );
 
             var users = await _userManager.Users
-                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                .Take(validFilter.PageSize)
                 .ToListAsync();
+
+            List<UserTableViewDto> userTableViewList = new EditableList<UserTableViewDto>();
+            foreach (var user in users)
+            {
+                var mappedUser = new UserTableViewDto
+                {
+                    Id = user.Id,
+                    FullName = "", // Not currently implemented in the user model
+                    Email = user.Email ?? "N/A",
+                    LastLoginDate = DateTime.Now, // Not currently implemented
+                    AccessFailedCount = user.AccessFailedCount,
+                    PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                    EmailConfirmed = user.EmailConfirmed,
+                    LockoutEnabled = user.LockoutEnabled,
+                    UserName = user.UserName ?? "N/A",
+                };
+                
+                userTableViewList.Add(mappedUser);
+            }
             
             Log.Information("Admin User: {AdminUser} Retrieved {UserCount} Users", User.Identity.Name, users.Count);
-            return Ok(users);
+            return Ok(userTableViewList);
         }
         catch (Exception e)
         {
