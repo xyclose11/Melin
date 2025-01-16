@@ -3,6 +3,7 @@ import {
     Card,
     CardContent,
     CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
@@ -22,11 +23,16 @@ export const description =
 export function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
     const { setIsAuthenticated } = useAuth(); // Get the function to update auth state
     const { toast } = useToast();
     const navigate = useNavigate();
 
     const handleLogin = async (e: any) => {
+        setLoading(true);
+        setError("");
         e.preventDefault();
         try {
             await instance
@@ -56,12 +62,28 @@ export function LoginForm() {
                                 </ToastAction>
                             ),
                         });
+                        setError("Username or Password incorrect.");
+
                         setIsAuthenticated(false);
+                    }
+                })
+                .catch((e) => {
+                    if (e.response.status === 401) {
+                        toast({
+                            variant: "destructive",
+                            title: "Incorrect username or password",
+                        });
+                        setError("Username or Password is incorrect.");
                     }
                 });
         } catch (error) {
-            console.error("Login failed:", error);
+            toast({
+                variant: "destructive",
+                title: "I",
+            });
+            setError("Username or Password is incorrect.");
         }
+        setLoading(false);
     };
 
     return (
@@ -108,10 +130,18 @@ export function LoginForm() {
                                     </Link>
                                 </div>
                             </div>
-                            <Button type="submit" className="w-full">
+                            <Button
+                                disabled={loading}
+                                type="submit"
+                                className="w-full"
+                            >
                                 Login
                             </Button>
-                            <Button variant="outline" className="w-full">
+                            <Button
+                                disabled={loading}
+                                variant="outline"
+                                className="w-full"
+                            >
                                 Login with Google
                             </Button>
                         </div>
@@ -119,11 +149,20 @@ export function LoginForm() {
 
                     <div className="mt-4 text-center text-sm">
                         Don&apos;t have an account?{" "}
-                        <Link to={"/signup"} className="underline">
+                        <Link
+                            disabled={loading}
+                            to={"/signup"}
+                            className="underline"
+                        >
                             Sign up
                         </Link>
                     </div>
                 </CardContent>
+                <CardFooter className="justify-center">
+                    {error.length !== 0 && (
+                        <p className={"font-bold text-destructive"}>{error}</p>
+                    )}
+                </CardFooter>
             </Card>
         </div>
     );
