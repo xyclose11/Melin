@@ -26,6 +26,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+
 import { Input } from "@/components/ui/input";
 import {
     Table,
@@ -84,7 +92,7 @@ export const columns: ColumnDef<UserTableView>[] = [
         accessorKey: "id",
         header: "ID",
         cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("id")}</div>
+            <div className="capitalize text-xs">{row.getValue("id")}</div>
         ),
     },
     {
@@ -110,7 +118,24 @@ export const columns: ColumnDef<UserTableView>[] = [
         accessorKey: "roles",
         header: () => <div>Roles</div>,
         cell: ({ row }) => {
-            return <div>{row.getValue("roles")}</div>;
+            return (
+                <Select>
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder={row.getValue("roles")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {(Object.keys(Roles) as Array<keyof typeof Roles>).map(
+                            (key) => {
+                                return (
+                                    <SelectItem key={key} value={key}>
+                                        {key}
+                                    </SelectItem>
+                                );
+                            },
+                        )}
+                    </SelectContent>
+                </Select>
+            );
         },
     },
     {
@@ -200,8 +225,12 @@ export const columns: ColumnDef<UserTableView>[] = [
                             Copy User ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View User</DropdownMenuItem>
                         <DropdownMenuItem>View User Details</DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Remove User Auth Session
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>Reset User Password</DropdownMenuItem>
+                        <DropdownMenuItem>Delete User</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
@@ -266,6 +295,16 @@ export default function AdminUserTable() {
                     }
                     className="max-w-sm"
                 />
+                <Button
+                    className="ml-4 mr-4"
+                    type="reset"
+                    variant="destructive"
+                >
+                    Cancel
+                </Button>
+                <Button type="submit" variant="secondary">
+                    Save Changes
+                </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
