@@ -299,10 +299,21 @@ export default function AdminUserTable() {
                     className="ml-4 mr-4"
                     type="reset"
                     variant="destructive"
+                    disabled={
+                        !table.getIsAllPageRowsSelected() &&
+                        !table.getIsSomePageRowsSelected()
+                    }
                 >
                     Cancel
                 </Button>
-                <Button type="submit" variant="secondary">
+                <Button
+                    type="submit"
+                    variant="secondary"
+                    disabled={
+                        !table.getIsAllPageRowsSelected() &&
+                        !table.getIsSomePageRowsSelected()
+                    }
+                >
                     Save Changes
                 </Button>
                 <DropdownMenu>
