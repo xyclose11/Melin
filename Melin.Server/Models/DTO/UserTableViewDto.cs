@@ -14,6 +14,6 @@ public class UserTableViewDto
     public required bool LockoutEnabled;
     public required string UserName;
     public int? ReferenceCount;
-    public Claim? Roles;
+    public IList<string>? Roles;
     public string? Status;
 }

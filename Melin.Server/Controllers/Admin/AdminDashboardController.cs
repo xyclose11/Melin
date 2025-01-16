@@ -63,6 +63,7 @@ public class AdminDashboardController : ControllerBase
                     PhoneNumberConfirmed = user.PhoneNumberConfirmed,
                     EmailConfirmed = user.EmailConfirmed,
                     LockoutEnabled = user.LockoutEnabled,
+                    Roles = await _userManager.GetRolesAsync(user),
                     UserName = user.UserName ?? "N/A",
                 };
                 
