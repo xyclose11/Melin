@@ -55,15 +55,19 @@ public class AuthController : ControllerBase
             
             if (result.Succeeded)
             {
-                // TODO test claims.RoleClaimType.First()
                 Log.Information("Successful Login: {userEmail}. Authorization Level: {AuthLevel}", user.Email, claims.RoleClaimType.First());
                 return Ok(claims);
             }
+
+            await userManager.AccessFailedAsync(user);
+            await userManager.UpdateAsync(user);
+
         } catch(Exception e) {
             Log.Warning("Exception Hit during Login attempt. {UserEmail}", model.Email);
             return BadRequest(e);
         }
         Log.Information("Failed Login Attempt. {userEmail}", model.Email);
+        
         return Unauthorized();
     }
 
