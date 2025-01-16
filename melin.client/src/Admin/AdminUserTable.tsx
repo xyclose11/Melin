@@ -81,10 +81,10 @@ export const columns: ColumnDef<UserTableView>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "status",
-        header: "Status",
+        accessorKey: "id",
+        header: "ID",
         cell: ({ row }) => (
-            <div className="capitalize">{row.getValue("status")}</div>
+            <div className="capitalize">{row.getValue("id")}</div>
         ),
     },
     {
@@ -107,18 +107,73 @@ export const columns: ColumnDef<UserTableView>[] = [
         ),
     },
     {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
+        accessorKey: "roles",
+        header: () => <div>Roles</div>,
         cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"));
-
-            // Format the amount as a dollar amount
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-            }).format(amount);
-
-            return <div className="text-right font-medium">{formatted}</div>;
+            return <div>{row.getValue("roles")}</div>;
+        },
+    },
+    {
+        accessorKey: "phoneNumberConfirmed",
+        header: () => <div>Phone Number Confirmed?</div>,
+        cell: ({ row }) => {
+            return (
+                <div>
+                    {row.getValue("phoneNumberConfirmed") ? "true" : "false"}
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "emailConfirmed",
+        header: () => <div>Email Confirmed?</div>,
+        cell: ({ row }) => {
+            return (
+                <div>{row.getValue("emailConfirmed") ? "true" : "false"}</div>
+            );
+        },
+    },
+    {
+        accessorKey: "lockoutEnabled",
+        header: () => <div>Lockout Enabled</div>,
+        cell: ({ row }) => {
+            return (
+                <div>{row.getValue("lockoutEnabled") ? "true" : "false"}</div>
+            );
+        },
+    },
+    {
+        accessorKey: "twoFactorEnabled",
+        header: () => <div>2FA</div>,
+        cell: ({ row }) => {
+            return (
+                <div>{row.getValue("twoFactorEnabled") ? "true" : "false"}</div>
+            );
+        },
+    },
+    {
+        accessorKey: "referenceCount", // TODO: Implement accordion that will display the users references
+        header: () => <div>Reference Count</div>,
+        cell: ({ row }) => {
+            return <div>{row.getValue("referenceCount")}</div>;
+        },
+    },
+    {
+        accessorKey: "fullName",
+        header: () => <div>Name *Not Currently Implemented*</div>,
+        cell: ({ row }) => {
+            return <div>{row.getValue("fullName")}</div>;
+        },
+    },
+    {
+        accessorKey: "accessFailedCount",
+        header: () => <div className="text-right">Failed Access Count</div>,
+        cell: ({ row }) => {
+            return (
+                <div className="text-right font-medium">
+                    {row.getValue("accessFailedCount")}
+                </div>
+            );
         },
     },
     {
@@ -142,13 +197,11 @@ export const columns: ColumnDef<UserTableView>[] = [
                                 navigator.clipboard.writeText(payment.id)
                             }
                         >
-                            Copy payment ID
+                            Copy User ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>
-                            View payment details
-                        </DropdownMenuItem>
+                        <DropdownMenuItem>View User</DropdownMenuItem>
+                        <DropdownMenuItem>View User Details</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
